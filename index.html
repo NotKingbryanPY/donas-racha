@@ -7,25 +7,25 @@
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <style>
-  /* ===== RESET & BASE ===== */
+  /* ==== RESET & BASE ==== */
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
   body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0f2ff;min-height:100vh;overflow-x:hidden}
   button{cursor:pointer;border:none;outline:none}
   input{outline:none;border:none}
 
-  /* ===== SCREENS ===== */
+  /* ==== SCREENS ==== */
   .screen{display:none;min-height:100vh;padding-bottom:40px}
   .screen.active{display:block}
 
-  /* ===== HEADER ===== */
+  /* ==== HEADER ==== */
   .header{background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:20px;text-align:center;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(102,126,234,.4)}
   .header h1{font-size:20px;font-weight:800}
   .header p{font-size:12px;opacity:.85;margin-top:2px}
 
-  /* ===== BOTÓN ADMIN (esquina) ===== */
+  /* ==== BOTÓN ADMIN (esquina) ==== */
   .admin-fab{position:fixed;bottom:24px;right:20px;z-index:200;background:linear-gradient(135deg,#764ba2,#667eea);color:white;border-radius:50px;padding:12px 18px;font-size:13px;font-weight:700;box-shadow:0 6px 20px rgba(118,75,162,.5)}
 
-  /* ===== HOME SCREEN ===== */
+  /* ==== HOME SCREEN ==== */
   .home-body{padding:20px}
 
   /* Búsqueda hero */
@@ -66,7 +66,7 @@
 
   .empty-msg{text-align:center;padding:20px;color:#bbb;font-size:13px}
 
-  /* ===== CLIENT SCREEN ===== */
+  /* ==== CLIENT SCREEN ==== */
   .client-body{padding:20px}
   .back-btn{display:flex;align-items:center;gap:6px;background:none;color:#667eea;font-size:15px;font-weight:700;padding:0;margin-bottom:18px}
 
@@ -105,7 +105,7 @@
   .h-type{font-size:13px;font-weight:600;color:#333}
   .h-date{font-size:11px;color:#aaa;margin-top:1px}
 
-  /* ===== NEW CLIENT SCREEN ===== */
+  /* ==== NEW CLIENT SCREEN ==== */
   .form-body{padding:20px}
   .form-card{background:white;border-radius:20px;padding:24px;box-shadow:0 4px 20px rgba(0,0,0,.07)}
   .form-card h2{font-size:18px;font-weight:800;color:#1a1a2e;margin-bottom:6px}
@@ -125,7 +125,7 @@
   .btn-dl{background:linear-gradient(135deg,#667eea,#764ba2);color:white;border-radius:12px;padding:11px 18px;font-size:13px;font-weight:700}
   .btn-wa{background:linear-gradient(135deg,#25d366,#128c7e);color:white;border-radius:12px;padding:11px 18px;font-size:13px;font-weight:700}
 
-  /* ===== ADMIN SCREEN ===== */
+  /* ==== ADMIN SCREEN ==== */
   .admin-body{padding:16px}
   .stat-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
   .stat-card{background:white;border-radius:16px;padding:18px 16px;box-shadow:0 4px 16px rgba(0,0,0,.06);text-align:center}
@@ -142,12 +142,37 @@
   .streak-badge{background:linear-gradient(135deg,#f093fb,#f5576c);color:white;border-radius:20px;padding:3px 10px;font-size:12px;font-weight:700;display:inline-block}
   .btn-del{background:#fff0f0;color:#e74c3c;border-radius:8px;padding:5px 10px;font-size:12px;font-weight:600}
 
-  /* ===== TOAST ===== */
+  /* ==== TOAST ==== */
   .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:rgba(30,30,40,.92);color:white;padding:12px 22px;border-radius:30px;font-size:13px;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999;white-space:nowrap;backdrop-filter:blur(10px)}
   .toast.show{opacity:1}
 
-  /* ===== LOADING ===== */
+  /* ==== LOADING ==== */
   .loading{text-align:center;padding:30px;color:#bbb;font-size:14px}
+
+  /* ==== LOGIN OVERLAY ==== */
+  #loginScreen{position:fixed;inset:0;background:linear-gradient(135deg,#1a1a2e,#16213e);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;padding:2rem}
+  .login-box{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:2.5rem 2rem;width:100%;max-width:320px;text-align:center;backdrop-filter:blur(10px)}
+  .login-box .logo{font-size:3.5rem;margin-bottom:0.5rem}
+  .login-box h2{color:white;font-size:1.4rem;margin-bottom:0.3rem}
+  .login-box p{color:rgba(255,255,255,.5);font-size:0.85rem;margin-bottom:1.5rem}
+  .login-input{width:100%;padding:14px 16px;border-radius:12px;border:2px solid rgba(255,255,255,.15);background:rgba(255,255,255,.08);color:white;font-size:1rem;margin-bottom:12px;text-align:center;letter-spacing:3px}
+  .login-input::placeholder{letter-spacing:normal;color:rgba(255,255,255,.35)}
+  .login-input:focus{outline:none;border-color:#667eea}
+  .login-btn{width:100%;background:linear-gradient(135deg,#667eea,#764ba2);color:white;border:none;padding:14px;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;transition:opacity .2s}
+  .login-btn:active{opacity:.85}
+  .login-error{color:#ff6b6b;font-size:0.85rem;margin-top:10px;display:none}
+
+  /* ==== RANKING PÚBLICO ==== */
+  .public-ranking{background:white;border-radius:20px;padding:20px 18px;box-shadow:0 4px 20px rgba(0,0,0,.07);margin-bottom:16px}
+  .public-ranking h2{font-size:14px;color:#555;font-weight:700;margin-bottom:14px}
+  .rank-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #f5f5f5}
+  .rank-item:last-child{border-bottom:none}
+  .rank-pos{font-size:20px;width:32px;text-align:center;flex-shrink:0}
+  .rank-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);color:white;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;flex-shrink:0}
+  .rank-info{flex:1}
+  .rank-name{font-weight:700;font-size:14px;color:#1a1a2e}
+  .rank-sub{font-size:11px;color:#aaa;margin-top:1px}
+  .rank-streak{background:linear-gradient(135deg,#f093fb,#f5576c);color:white;border-radius:20px;padding:4px 11px;font-size:13px;font-weight:700;flex-shrink:0}
 
   @media(min-width:600px){
     .home-body,.client-body,.form-body,.admin-body{max-width:480px;margin:0 auto}
@@ -157,13 +182,32 @@
 </head>
 <body>
 
-<!-- ══════════════ HOME SCREEN ══════════════ -->
+<!-- ════ LOGIN OVERLAY ════ -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="logo">🍩</div>
+    <h2>Donas Racha</h2>
+    <p>Acceso para vendedores</p>
+    <input id="loginInput" class="login-input" type="password" placeholder="Contraseña"
+      onkeydown="if(event.key==='Enter') checkLogin()">
+    <button class="login-btn" onclick="checkLogin()">Entrar →</button>
+    <div class="login-error" id="loginError">❌ Contraseña incorrecta</div>
+  </div>
+</div>
+
+<!-- ════ HOME SCREEN ════ -->
 <div id="screen-home" class="screen active">
   <div class="header">
     <h1>🍩 Donas Racha</h1>
     <p>Registra compras y acumula rachas</p>
   </div>
   <div class="home-body">
+
+    <!-- Ranking Público -->
+    <div class="public-ranking">
+      <h2>🏆 Ranking de Rachas</h2>
+      <div id="public-ranking-list"><div class="empty-msg">Cargando...</div></div>
+    </div>
 
     <!-- Búsqueda -->
     <div class="search-card">
@@ -195,7 +239,7 @@
   </div>
 </div>
 
-<!-- ══════════════ CLIENT SCREEN ══════════════ -->
+<!-- ════ CLIENT SCREEN ════ -->
 <div id="screen-client" class="screen">
   <div class="header">
     <h1>🍩 Perfil del Cliente</h1>
@@ -231,7 +275,7 @@
   </div>
 </div>
 
-<!-- ══════════════ NEW CLIENT SCREEN ══════════════ -->
+<!-- ════ NEW CLIENT SCREEN ════ -->
 <div id="screen-new" class="screen">
   <div class="header">
     <h1>➕ Nuevo Cliente</h1>
@@ -264,13 +308,16 @@
   </div>
 </div>
 
-<!-- ══════════════ ADMIN SCREEN ══════════════ -->
+<!-- ════ ADMIN SCREEN ════ -->
 <div id="screen-admin" class="screen">
   <div class="header">
     <h1>⚙️ Panel Admin</h1>
   </div>
   <div class="admin-body">
-    <button class="back-btn" onclick="goHome()" style="margin-bottom:14px">← Volver</button>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <button class="back-btn" onclick="goHome()" style="margin-bottom:0">← Volver</button>
+      <button onclick="logout()" style="background:#fff0f0;color:#e74c3c;border-radius:10px;padding:8px 14px;font-size:13px;font-weight:700">🔒 Cerrar sesión</button>
+    </div>
 
     <!-- Stats -->
     <div class="stat-cards" id="admin-stats">
@@ -301,11 +348,11 @@
 <div class="toast" id="toast"></div>
 
 <script>
-// ══════════════════════════════════════════════════
+// ════
 //  ⚠️  CAMBIA ESTA URL POR LA TUYA  ⚠️
-// ══════════════════════════════════════════════════
+// ════
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbx4lUy4ohHM2oFAaA6ympnRSb41k2bsES9_aiLKH1T_r8RWugsqgS3gLxMbHgH8MYgp/exec';
-// ══════════════════════════════════════════════════
+// ════
 
 let currentClient  = null;
 let newClientData  = null;
@@ -313,7 +360,71 @@ let html5QrCode    = null;
 let scannerStarted = false;
 let scannerOpen    = false;
 
-// ────────────────── API ──────────────────
+// ──── AUTH ────
+async function checkLogin() {
+  const pass = document.getElementById('loginInput').value;
+  if (!pass) return;
+  const btn = document.querySelector('.login-btn');
+  btn.textContent = '⏳ Verificando...';
+  btn.disabled = true;
+  try {
+    const res  = await fetch(`${BACKEND_URL}?action=verificarPassword&password=${encodeURIComponent(pass)}`);
+    const data = await res.json();
+    if (data.ok) {
+      sessionStorage.setItem('donasAuth', 'true');
+      document.getElementById('loginScreen').style.display = 'none';
+    } else {
+      document.getElementById('loginError').style.display = 'block';
+      document.getElementById('loginInput').value = '';
+    }
+  } catch(e) {
+    document.getElementById('loginError').textContent = '❌ Error de conexión';
+    document.getElementById('loginError').style.display = 'block';
+  }
+  btn.textContent = 'Entrar →';
+  btn.disabled = false;
+}
+
+function logout() {
+  sessionStorage.removeItem('donasAuth');
+  document.getElementById('loginInput').value = '';
+  document.getElementById('loginError').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  goHome();
+}
+
+function initAuth() {
+  if (sessionStorage.getItem('donasAuth') === 'true') {
+    document.getElementById('loginScreen').style.display = 'none';
+  }
+}
+
+// ──── RANKING PÚBLICO ────
+async function loadPublicRanking() {
+  const el = document.getElementById('public-ranking-list');
+  try {
+    const data = await api('getPublicData');
+    if (!data.ranking || data.ranking.length === 0) {
+      el.innerHTML = '<div class="empty-msg">Aún no hay rachas activas 🍩</div>';
+      return;
+    }
+    const medals = ['🥇','🥈','🥉'];
+    el.innerHTML = data.ranking.map((c, i) => `
+      <div class="rank-item">
+        <div class="rank-pos">${medals[i] || (i+1)}</div>
+        <div class="rank-avatar">${c.nombre.charAt(0).toUpperCase()}</div>
+        <div class="rank-info">
+          <div class="rank-name">${c.nombre}</div>
+          <div class="rank-sub">${c.totalCompras} compras totales</div>
+        </div>
+        <div class="rank-streak">🔥 ${c.streak}</div>
+      </div>`).join('');
+  } catch(e) {
+    el.innerHTML = '<div class="empty-msg">No se pudo cargar el ranking</div>';
+  }
+}
+
+// ──── API ────
 async function api(action, params = {}) {
   const url  = new URL(BACKEND_URL);
   url.searchParams.set('action', action);
@@ -330,7 +441,7 @@ async function apiPost(action, body = {}) {
   return res.json();
 }
 
-// ────────────────── SCREENS ──────────────────
+// ──── SCREENS ────
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
@@ -345,7 +456,7 @@ function goHome() {
   showScreen('screen-home');
 }
 
-// ────────────────── BÚSQUEDA ──────────────────
+// ──── BÚSQUEDA ────
 const searchInput = document.getElementById('search-input');
 searchInput.addEventListener('keyup', e => {
   if (e.key === 'Enter') doSearch();
@@ -379,8 +490,19 @@ async function doSearch() {
   }
 }
 
-// ────────────────── QR SCANNER ──────────────────
+// ──── GUARD AUTH ────
+function requireAuth(action) {
+  if (sessionStorage.getItem('donasAuth') !== 'true') {
+    showToast('🔒 Debes iniciar sesión para esta acción');
+    document.getElementById('loginScreen').style.display = 'flex';
+    return false;
+  }
+  return true;
+}
+
+// ──── QR SCANNER ────
 function toggleScanner() {
+  if (!requireAuth()) return;
   scannerOpen = !scannerOpen;
   const wrap = document.getElementById('scanner-wrap');
   const btn  = document.getElementById('qr-toggle-btn');
@@ -451,7 +573,7 @@ function onQRScanned(text) {
   openClient(text);
 }
 
-// ────────────────── CLIENTE ──────────────────
+// ──── CLIENTE ────
 async function openClient(id) {
   stopScanner();
   showScreen('screen-client');
@@ -510,6 +632,7 @@ function renderClient(c) {
 
 async function registerPurchase() {
   if (!currentClient) return;
+  if (!requireAuth()) return;
   const btn = document.getElementById('buy-btn');
   btn.disabled = true;
   btn.innerHTML = '⏳ Registrando...';
@@ -536,8 +659,9 @@ async function registerPurchase() {
   }
 }
 
-// ────────────────── NUEVO CLIENTE ──────────────────
+// ──── NUEVO CLIENTE ────
 async function createClient() {
+  if (!requireAuth()) return;
   const name = document.getElementById('new-name').value.trim();
   const wa   = document.getElementById('new-wa').value.trim();
   if (!name) { showToast('⚠️ Escribe el nombre del cliente'); return; }
@@ -611,7 +735,7 @@ async function shareWA() {
   }
 }
 
-// ────────────────── ADMIN ──────────────────
+// ──── ADMIN ────
 async function showAdmin() {
   showScreen('screen-admin');
   document.getElementById('admin-ranking').innerHTML  = '<div class="loading">Cargando...</div>';
@@ -679,7 +803,7 @@ async function deleteClient(id, name) {
   } catch(e) { showToast('❌ Error de conexión'); }
 }
 
-// ────────────────── UTILS ──────────────────
+// ──── UTILS ────
 function showConfetti() {
   confetti({ particleCount: 120, spread: 80, origin: { y: 0.5 },
              colors: ['#667eea','#764ba2','#f093fb','#f5576c','#ffd700'] });
