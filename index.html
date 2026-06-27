@@ -575,11 +575,40 @@ function downloadQR() {
   a.click();
 }
 
-function shareWA() {
+async function shareWA() {
   if (!newClientData) return;
-  const wa  = (newClientData.whatsapp || '').replace(/[^\d+]/g,'');
-  const msg = encodeURIComponent('🍩 Hola ' + newClientData.name + '! Tu QR de Donas Racha: ' + newClientData.qrUrl);
-  window.open('https://wa.me/' + wa + '?text=' + msg, '_blank');
+  const wa = (newClientData.whatsapp || '').replace(/[^\d+]/g, '');
+  const clientName = newClientData.name;
+  const qrUrl = newClientData.qrUrl;
+
+  try {
+    const response = await fetch(qrUrl);
+    const blob = await response.blob();
+    const file = new File([blob], `QR_${clientName}.png`, { type: 'image/png' });
+
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      // Chrome móvil: comparte el PNG directamente
+      await navigator.share({
+        files: [file],
+        title: `QR de ${clientName}`,
+        text: `🍩 Hola ${clientName}! Tu QR de Donas Racha`
+      });
+    } else {
+      // Fallback PC: descarga el PNG y abre WhatsApp
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `QR_${clientName}.png`;
+      a.click();
+      URL.revokeObjectURL(url);
+      const msg = encodeURIComponent(`🍩 Hola ${clientName}! Tu QR de Donas Racha está en el archivo adjunto.`);
+      setTimeout(() => window.open(`https://wa.me/${wa}?text=${msg}`, '_blank'), 1000);
+    }
+  } catch (e) {
+    // Si falla el fetch del QR, manda solo el link
+    const msg = encodeURIComponent(`🍩 Hola ${clientName}! Tu QR de Donas Racha: ${qrUrl}`);
+    window.open(`https://wa.me/${wa}?text=${msg}`, '_blank');
+  }
 }
 
 // ────────────────── ADMIN ──────────────────
