@@ -403,8 +403,8 @@ function initAuth() {
 async function loadPublicRanking() {
   const el = document.getElementById('public-ranking-list');
   try {
-    const data = await api('getPublicData');
-    if (!data.ranking || data.ranking.length === 0) {
+    const data = await api('getRanking', { limit: 5 });  // ← cambio aquí
+    if (!data.ok || !data.ranking || data.ranking.length === 0) {
       el.innerHTML = '<div class="empty-msg">Aún no hay rachas activas 🍩</div>';
       return;
     }
@@ -412,18 +412,18 @@ async function loadPublicRanking() {
     el.innerHTML = data.ranking.map((c, i) => `
       <div class="rank-item">
         <div class="rank-pos">${medals[i] || (i+1)}</div>
-        <div class="rank-avatar">${c.nombre.charAt(0).toUpperCase()}</div>
+        <div class="rank-avatar">${c.name.charAt(0).toUpperCase()}</div>
         <div class="rank-info">
-          <div class="rank-name">${c.nombre}</div>
-          <div class="rank-sub">${c.totalCompras} compras totales</div>
+          <div class="rank-name">${c.name}</div>
+          <div class="rank-sub">${c.totalPurchases} compras totales</div>
         </div>
-        <div class="rank-streak">🔥 ${c.streak}</div>
+        <div class="rank-streak">🔥 ${c.currentStreak}</div>
       </div>`).join('');
   } catch(e) {
     el.innerHTML = '<div class="empty-msg">No se pudo cargar el ranking</div>';
   }
 }
-
+  
 // ──── API ────
 async function api(action, params = {}) {
   const url  = new URL(BACKEND_URL);
