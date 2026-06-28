@@ -375,7 +375,7 @@
     <p>Los clientes más fieles</p>
   </div>
   <div class="ranking-body">
-    <button class="back-btn" onclick="backFromRanking()">← Volver</button>
+    <button class="back-btn" onclick="goToLogin()">🔒 Iniciar sesión</button>
 
     <div class="ranking-tabs">
       <button class="ranking-tab active" id="tab-compras" onclick="switchRankingTab('compras')">🍩 Más compras</button>
@@ -437,12 +437,11 @@ async function showPublicRanking() {
   }
 }
 
-function backFromRanking() {
-  // Si no hay sesión activa, volver a mostrar el login
-  if (sessionStorage.getItem('donasAuth') !== 'true') {
-    document.getElementById('loginScreen').style.display = 'flex';
-  }
-  goHome();
+function goToLogin() {
+  sessionStorage.removeItem('donasAuth');
+  document.getElementById('loginInput').value = '';
+  document.getElementById('loginError').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
 }
 
 function switchRankingTab(tab) {
