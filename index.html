@@ -174,9 +174,35 @@
   .rank-sub{font-size:11px;color:#aaa;margin-top:1px}
   .rank-streak{background:linear-gradient(135deg,#f093fb,#f5576c);color:white;border-radius:20px;padding:4px 11px;font-size:13px;font-weight:700;flex-shrink:0}
 
+  /* ==== BOTÓN RANKING EN LOGIN ==== */
+  .login-ranking-btn{width:100%;background:transparent;color:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.2);padding:12px;border-radius:12px;font-size:0.9rem;font-weight:600;cursor:pointer;margin-top:10px;transition:all .2s}
+  .login-ranking-btn:active{background:rgba(255,255,255,.1);color:white}
+
+  /* ==== RANKING PÚBLICO SCREEN ==== */
+  #screen-ranking{background:#f0f2ff}
+  .ranking-body{padding:20px}
+  .ranking-tabs{display:flex;gap:8px;margin-bottom:18px;background:white;border-radius:14px;padding:6px;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+  .ranking-tab{flex:1;padding:10px 6px;border-radius:10px;font-size:13px;font-weight:700;color:#999;background:transparent;transition:all .2s;text-align:center}
+  .ranking-tab.active{background:linear-gradient(135deg,#667eea,#764ba2);color:white}
+  .ranking-list{background:white;border-radius:20px;padding:18px;box-shadow:0 4px 20px rgba(0,0,0,.07)}
+  .rank-item-full{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #f5f5f5}
+  .rank-item-full:last-child{border-bottom:none}
+  .rank-pos-full{font-size:22px;width:36px;text-align:center;flex-shrink:0}
+  .rank-avatar-full{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);color:white;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;flex-shrink:0}
+  .rank-avatar-full.gold{background:linear-gradient(135deg,#f6d365,#fda085)}
+  .rank-avatar-full.silver{background:linear-gradient(135deg,#b8c6db,#8a9bb0)}
+  .rank-avatar-full.bronze{background:linear-gradient(135deg,#d4a574,#a0724a)}
+  .rank-info-full{flex:1;min-width:0}
+  .rank-name-full{font-weight:700;font-size:15px;color:#1a1a2e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .rank-sub-full{font-size:11px;color:#aaa;margin-top:2px}
+  .rank-val{font-size:18px;font-weight:800;color:#667eea;flex-shrink:0;text-align:right}
+  .rank-val span{display:block;font-size:10px;color:#bbb;font-weight:600;text-align:right}
+  .rank-val.streak-val{color:#f5576c}
+
   @media(min-width:600px){
     .home-body,.client-body,.form-body,.admin-body{max-width:480px;margin:0 auto}
     .admin-body{max-width:800px}
+    .ranking-body{max-width:480px;margin:0 auto}
   }
 </style>
 </head>
@@ -192,6 +218,7 @@
       onkeydown="if(event.key==='Enter') checkLogin()">
     <button class="login-btn" onclick="checkLogin()">Entrar →</button>
     <div class="login-error" id="loginError">❌ Contraseña incorrecta</div>
+    <button class="login-ranking-btn" onclick="showPublicRanking()">🏆 Ver Ranking de Clientes</button>
   </div>
 </div>
 
@@ -341,6 +368,27 @@
   </div>
 </div>
 
+<!-- ════ RANKING PÚBLICO SCREEN ════ -->
+<div id="screen-ranking" class="screen">
+  <div class="header">
+    <h1>🏆 Ranking Donas Racha</h1>
+    <p>Los clientes más fieles</p>
+  </div>
+  <div class="ranking-body">
+    <button class="back-btn" onclick="backFromRanking()">← Volver</button>
+
+    <div class="ranking-tabs">
+      <button class="ranking-tab active" id="tab-compras" onclick="switchRankingTab('compras')">🍩 Más compras</button>
+      <button class="ranking-tab" id="tab-racha" onclick="switchRankingTab('racha')">🔥 Mejor racha</button>
+      <button class="ranking-tab" id="tab-premios" onclick="switchRankingTab('premios')">🎁 Más premios</button>
+    </div>
+
+    <div class="ranking-list" id="public-full-ranking">
+      <div class="loading">Cargando ranking...</div>
+    </div>
+  </div>
+</div>
+
 <!-- FAB Admin -->
 <button class="admin-fab" onclick="showAdmin()">⚙️ Admin</button>
 
@@ -359,6 +407,108 @@ let newClientData  = null;
 let html5QrCode    = null;
 let scannerStarted = false;
 let scannerOpen    = false;
+
+// ──── RANKING PÚBLICO (pantalla completa) ────
+let rankingAllClients = [];
+let currentRankingTab = 'compras';
+
+async function showPublicRanking() {
+  // Ocultar login si está visible, ir a screen-ranking
+  document.getElementById('loginScreen').style.display = 'none';
+  showScreen('screen-ranking');
+  currentRankingTab = 'compras';
+  document.getElementById('tab-compras').classList.add('active');
+  document.getElementById('tab-racha').classList.remove('active');
+  document.getElementById('tab-premios').classList.remove('active');
+
+  const el = document.getElementById('public-full-ranking');
+  el.innerHTML = '<div class="loading">Cargando ranking...</div>';
+
+  try {
+    const data = await api('getTodosClientes');
+    if (!data.ok || !data.clients || data.clients.length === 0) {
+      el.innerHTML = '<div class="empty-msg">Aún no hay clientes registrados 🍩</div>';
+      return;
+    }
+    rankingAllClients = data.clients;
+    renderRankingTab('compras');
+  } catch(e) {
+    el.innerHTML = '<div class="empty-msg">❌ Error de conexión</div>';
+  }
+}
+
+function backFromRanking() {
+  // Si no hay sesión activa, volver a mostrar el login
+  if (sessionStorage.getItem('donasAuth') !== 'true') {
+    document.getElementById('loginScreen').style.display = 'flex';
+  }
+  goHome();
+}
+
+function switchRankingTab(tab) {
+  currentRankingTab = tab;
+  ['compras','racha','premios'].forEach(t => {
+    document.getElementById('tab-' + t).classList.toggle('active', t === tab);
+  });
+  renderRankingTab(tab);
+}
+
+function renderRankingTab(tab) {
+  const el = document.getElementById('public-full-ranking');
+  if (!rankingAllClients.length) return;
+
+  const medals = ['gold','silver','bronze'];
+  const medalEmoji = ['🥇','🥈','🥉'];
+
+  let sorted;
+  if (tab === 'compras') {
+    sorted = [...rankingAllClients].sort((a,b) => b.totalPurchases - a.totalPurchases);
+  } else if (tab === 'racha') {
+    sorted = [...rankingAllClients].sort((a,b) => b.currentStreak - a.currentStreak);
+  } else {
+    sorted = [...rankingAllClients].sort((a,b) => b.rewardsEarned - a.rewardsEarned);
+  }
+
+  if (sorted.every(c => {
+    if (tab === 'compras') return c.totalPurchases === 0;
+    if (tab === 'racha')   return c.currentStreak === 0;
+    return c.rewardsEarned === 0;
+  })) {
+    el.innerHTML = '<div class="empty-msg">Sin datos para este ranking aún 🍩</div>';
+    return;
+  }
+
+  el.innerHTML = sorted.map((c, i) => {
+    const avatarClass = 'rank-avatar-full' + (i < 3 ? ' ' + medals[i] : '');
+    const pos = i < 3 ? medalEmoji[i] : (i + 1);
+    let val, sub, valClass;
+
+    if (tab === 'compras') {
+      val = c.totalPurchases;
+      sub = 'compras totales';
+      valClass = 'rank-val';
+    } else if (tab === 'racha') {
+      val = c.currentStreak;
+      sub = 'días seguidos';
+      valClass = 'rank-val streak-val';
+    } else {
+      val = c.rewardsEarned;
+      sub = 'premios ganados';
+      valClass = 'rank-val';
+    }
+
+    return `
+      <div class="rank-item-full">
+        <div class="rank-pos-full">${pos}</div>
+        <div class="${avatarClass}">${c.name.charAt(0).toUpperCase()}</div>
+        <div class="rank-info-full">
+          <div class="rank-name-full">${c.name}</div>
+          <div class="rank-sub-full">${tab === 'compras' ? '🔥 Racha: ' + c.currentStreak : '🍩 Compras: ' + c.totalPurchases}</div>
+        </div>
+        <div class="${valClass}">${val}<span>${sub}</span></div>
+      </div>`;
+  }).join('');
+}
 
 // ──── AUTH ────
 async function checkLogin() {
