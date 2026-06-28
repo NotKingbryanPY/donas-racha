@@ -390,7 +390,7 @@
 </div>
 
 <!-- FAB Admin -->
-<button class="admin-fab" onclick="showAdmin()">⚙️ Admin</button>
+<button class="admin-fab" onclick="tryShowAdmin()">⚙️ Admin</button>
 
 <!-- Toast -->
 <div class="toast" id="toast"></div>
@@ -522,6 +522,10 @@ async function checkLogin() {
     if (data.ok) {
       sessionStorage.setItem('donasAuth', 'true');
       document.getElementById('loginScreen').style.display = 'none';
+      if (sessionStorage.getItem('loginRedirect') === 'admin') {
+        sessionStorage.removeItem('loginRedirect');
+        showAdmin();
+      }
     } else {
       document.getElementById('loginError').style.display = 'block';
       document.getElementById('loginInput').value = '';
@@ -642,11 +646,19 @@ async function doSearch() {
 // ──── GUARD AUTH ────
 function requireAuth(action) {
   if (sessionStorage.getItem('donasAuth') !== 'true') {
-    showToast('🔒 Debes iniciar sesión para esta acción');
-    document.getElementById('loginScreen').style.display = 'flex';
+    goToLogin();
     return false;
   }
   return true;
+}
+
+function tryShowAdmin() {
+  if (sessionStorage.getItem('donasAuth') !== 'true') {
+    sessionStorage.setItem('loginRedirect', 'admin');
+    goToLogin();
+    return;
+  }
+  showAdmin();
 }
 
 // ──── QR SCANNER ────
