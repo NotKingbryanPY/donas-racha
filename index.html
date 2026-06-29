@@ -161,7 +161,11 @@
   .user-box h2{color:white;font-size:1.3rem;font-weight:800;margin-bottom:0.3rem}
   .user-box p{color:rgba(255,255,255,.45);font-size:0.82rem;margin-bottom:1.5rem}
   #user-qr-reader{border-radius:14px;overflow:hidden;margin-bottom:14px;background:#000}
-  .user-scan-btn{width:100%;background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:14px;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;margin-bottom:10px}
+  .user-btn-row{display:flex;gap:10px;margin-bottom:10px}
+  .user-scan-btn{flex:1;background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:14px;border-radius:12px;font-size:0.9rem;font-weight:700;cursor:pointer}
+  .user-gallery-btn{flex:1;background:rgba(255,255,255,.1);color:white;border:2px solid rgba(255,255,255,.2)!important;padding:14px;border-radius:12px;font-size:0.9rem;font-weight:700;cursor:pointer}
+  .user-gallery-btn:active{background:rgba(255,255,255,.2)}
+  #user-file-input{display:none}
   .user-scan-status{font-size:13px;color:rgba(255,255,255,.5);min-height:20px;margin-bottom:12px}
   .user-ranking-wrap{margin-top:16px;background:rgba(255,255,255,.06);border-radius:16px;padding:14px;text-align:left;max-height:260px;overflow-y:auto}
   .user-ranking-wrap h3{color:rgba(255,255,255,.7);font-size:12px;font-weight:700;letter-spacing:.5px;margin-bottom:10px;text-align:center}
@@ -256,9 +260,13 @@
     <p>Escanea tu código QR para ver tu perfil, rachas y premios</p>
 
     <div id="user-qr-reader"></div>
-    <div class="user-scan-status" id="user-scan-status">Presiona el botón para activar la cámara</div>
+    <div class="user-scan-status" id="user-scan-status">Elige una opción para identificarte</div>
 
-    <button class="user-scan-btn" id="user-scan-btn" onclick="toggleUserScanner()">📷 Activar cámara</button>
+    <div class="user-btn-row">
+      <button class="user-gallery-btn" onclick="document.getElementById('user-file-input').click()">🖼️ Subir QR</button>
+      <button class="user-scan-btn" id="user-scan-btn" onclick="toggleUserScanner()">📷 Cámara</button>
+    </div>
+    <input type="file" id="user-file-input" accept="image/*" onchange="readQRFromFile(event)">
 
     <!-- Ranking mini dentro del login usuario -->
     <div class="user-ranking-wrap">
@@ -443,7 +451,7 @@
 
 <script>
 // ════ CAMBIA ESTA URL POR LA TUYA ════
-const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbz--nBWkhR0wgl2-TqCrteZmsf-bmY_ss5Ets8IFCtEoo5k9Y_j6-zsQKzcW2xNszwKgw/exec';
+const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbwNhWIAWd6h4XvRpzUyfjW61fwHBlnVWM13kL06ddXjEHdm2-W_89P3kuhCSJxdSzk/exec';
 // ════
 
 let currentClient    = null;
@@ -559,7 +567,7 @@ function startUserScanner() {
     })
     .then(() => {
       userScannerOn = true;
-      btn.textContent = '⏹ Detener cámara';
+      btn.textContent = '⏹ Detener';
       st.textContent  = '📷 Apunta tu QR al centro del recuadro';
     })
     .catch(err => {
@@ -578,10 +586,34 @@ function stopUserScanner() {
   }
   const btn = document.getElementById('user-scan-btn');
   const st  = document.getElementById('user-scan-status');
-  if (btn) btn.textContent = '📷 Activar cámara';
+  if (btn) btn.textContent = '📷 Cámara';
   if (st)  st.textContent  = 'Presiona el botón para activar la cámara';
   const el = document.getElementById('user-qr-reader');
   if (el) el.innerHTML = '';
+}
+
+// Leer QR desde imagen de galería
+async function readQRFromFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  // Limpiar input para permitir seleccionar el mismo archivo otra vez
+  event.target.value = '';
+
+  const st = document.getElementById('user-scan-status');
+  st.textContent = '🔄 Leyendo imagen...';
+  stopUserScanner();
+
+  try {
+    // Html5Qrcode puede leer desde archivo directamente
+    const tmpId = 'user-qr-reader';
+    const scanner = new Html5Qrcode(tmpId);
+    const result  = await scanner.scanFile(file, false);
+    await scanner.clear().catch(() => {});
+    st.textContent = '✅ QR leído correctamente';
+    onUserQRScanned(result);
+  } catch(err) {
+    document.getElementById('user-scan-status').textContent = '❌ No se encontró un QR válido en la imagen';
+  }
 }
 
 function onUserQRScanned(text) {
