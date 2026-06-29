@@ -451,7 +451,7 @@
 
 <script>
 // ════ CAMBIA ESTA URL POR LA TUYA ════
-const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbz--nBWkhR0wgl2-TqCrteZmsf-bmY_ss5Ets8IFCtEoo5k9Y_j6-zsQKzcW2xNszwKgw/exec';
+const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbwNhWIAWd6h4XvRpzUyfjW61fwHBlnVWM13kL06ddXjEHdm2-W_89P3kuhCSJxdSzk/exec';
 // ════
 
 let currentClient    = null;
@@ -592,28 +592,81 @@ function stopUserScanner() {
   if (el) el.innerHTML = '';
 }
 
-// Leer QR desde imagen de galería
+// Leer QR desde imagen de galería — intenta 3 métodos en orden
 async function readQRFromFile(event) {
   const file = event.target.files[0];
   if (!file) return;
-  // Limpiar input para permitir seleccionar el mismo archivo otra vez
-  event.target.value = '';
+  event.target.value = ''; // reset para poder elegir el mismo archivo de nuevo
 
   const st = document.getElementById('user-scan-status');
   st.textContent = '🔄 Leyendo imagen...';
   stopUserScanner();
 
+  // Cargar la imagen como elemento <img> (necesario para los métodos 2 y 3)
+  const imgUrl = await new Promise(res => {
+    const reader = new FileReader();
+    reader.onload = e => res(e.target.result);
+    reader.readAsDataURL(file);
+  });
+
+  // ── Método 1: BarcodeDetector (nativo, el más confiable en Android/Chrome) ──
+  if ('BarcodeDetector' in window) {
+    try {
+      const detector = new BarcodeDetector({ formats: ['qr_code'] });
+      const img      = new Image();
+      img.src        = imgUrl;
+      await new Promise(res => { img.onload = res; });
+      const codes    = await detector.detect(img);
+      if (codes.length > 0) {
+        st.textContent = '✅ QR leído';
+        onUserQRScanned(codes[0].rawValue);
+        return;
+      }
+    } catch(e) { /* sigue al método 2 */ }
+  }
+
+  // ── Método 2: html5-qrcode scanFile ──
   try {
-    // Html5Qrcode puede leer desde archivo directamente
-    const tmpId = 'user-qr-reader';
-    const scanner = new Html5Qrcode(tmpId);
+    const el = document.getElementById('user-qr-reader');
+    el.innerHTML = '';
+    const scanner = new Html5Qrcode('user-qr-reader');
     const result  = await scanner.scanFile(file, false);
     await scanner.clear().catch(() => {});
-    st.textContent = '✅ QR leído correctamente';
+    el.innerHTML  = '';
+    st.textContent = '✅ QR leído';
     onUserQRScanned(result);
-  } catch(err) {
-    document.getElementById('user-scan-status').textContent = '❌ No se encontró un QR válido en la imagen';
-  }
+    return;
+  } catch(e) { /* sigue al método 3 */ }
+
+  // ── Método 3: dibujar en canvas y pasarlo a html5-qrcode como blob ──
+  try {
+    const img = new Image();
+    img.src   = imgUrl;
+    await new Promise(res => { img.onload = res; });
+
+    // Escalar a 1024px máximo para mejorar detección
+    const MAX  = 1024;
+    const scale = Math.min(1, MAX / Math.max(img.width, img.height));
+    const canvas = document.createElement('canvas');
+    canvas.width  = img.width  * scale;
+    canvas.height = img.height * scale;
+    canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+
+    const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
+    const scaledFile = new File([blob], 'qr.png', { type: 'image/png' });
+
+    const el = document.getElementById('user-qr-reader');
+    el.innerHTML = '';
+    const scanner2 = new Html5Qrcode('user-qr-reader');
+    const result2  = await scanner2.scanFile(scaledFile, false);
+    await scanner2.clear().catch(() => {});
+    el.innerHTML   = '';
+    st.textContent = '✅ QR leído';
+    onUserQRScanned(result2);
+    return;
+  } catch(e) { /* todos los métodos fallaron */ }
+
+  st.textContent = '❌ No se pudo leer el QR — intenta con mejor iluminación o más zoom';
 }
 
 function onUserQRScanned(text) {
