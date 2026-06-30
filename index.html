@@ -242,8 +242,8 @@ window.addEventListener('load', () => {
     goHome();
   } else {
     goToRoleScreen();
+    loadHomeRanking();
   }
-  loadHomeRanking();
 });
 
 function backendConfigured() {
@@ -553,7 +553,54 @@ function renderRankingItems(list, type, compact) {
 async function showAdmin() {
   if (!requireAuth()) { goToAdminLogin(); return; }
   showScreen('screen-admin');
-  await Promise.all([loadAdminStats(), loadAdminRanking('compras'), loadAdminClients(), loadConfig()]);
+  await loadAdminDashboard('compras');
+}
+
+async function loadAdminDashboard(type='compras') {
+  ['compras','puntos','racha','nivel','premios'].forEach(t => document.getElementById('admin-tab-'+t).classList.toggle('active', t===type));
+  document.getElementById('adminRanking').innerHTML = '<div class="empty">Cargando...</div>';
+  document.getElementById('adminClients').innerHTML = '<div class="empty">Cargando...</div>';
+  try {
+    const data = await apiPost('getAdminDashboard', { rankingType:type, limit:20 });
+    if (!data.ok) throw new Error(data.error || 'No se pudo cargar panel');
+    renderAdminStats(data.stats || {});
+    renderAdminConfig(data.config || {});
+    renderAdminRanking(data.ranking || [], type);
+    renderAdminClients(data.clients || []);
+  } catch (err) {
+    showToast('No se pudo cargar panel admin');
+    document.getElementById('adminRanking').innerHTML = '<div class="empty">Error al cargar ranking</div>';
+    document.getElementById('adminClients').innerHTML = '<div class="empty">Error al cargar clientes</div>';
+  }
+}
+
+function renderAdminStats(s) {
+  document.getElementById('sToday').textContent = s.today ?? 0;
+  document.getElementById('sWeek').textContent = s.week ?? 0;
+  document.getElementById('sMonth').textContent = s.month ?? 0;
+  document.getElementById('sClients').textContent = s.totalClients ?? 0;
+  document.getElementById('sPoints').textContent = s.pointsDelivered ?? 0;
+  document.getElementById('sRewards').textContent = s.rewardsDelivered ?? 0;
+  const m = document.getElementById('migrationState');
+  m.textContent = s.migrationComplete ? 'Completada' : 'Pendiente';
+  m.className = 'pill ' + (s.migrationComplete ? 'migration-ok' : 'migration-pending');
+}
+
+function renderAdminConfig(c) {
+  document.getElementById('cfgTolerance').value = c.DIAS_TOLERANCIA ?? 3;
+  document.getElementById('cfgReward').value = c.COMPRAS_RECOMPENSA ?? 5;
+  document.getElementById('cfgPoints').value = c.PUNTOS_POR_COMPRA ?? 10;
+  document.getElementById('cfgPrice').value = c.PRECIO_DONA ?? 1;
+}
+
+function renderAdminRanking(list, type) {
+  document.getElementById('adminRanking').innerHTML = renderRankingItems(list, type, false);
+}
+
+function renderAdminClients(clients) {
+  const el = document.getElementById('adminClients');
+  if (!clients.length) { el.innerHTML = '<div class="empty">Sin clientes</div>'; return; }
+  el.innerHTML = `<table class="admin-table"><thead><tr><th>Cliente</th><th>Nivel</th><th>Puntos</th><th>Compras</th><th>Racha</th><th>Premios</th><th></th></tr></thead><tbody>${clients.map(c => `<tr><td><b>${safe(c.name)}</b><br><span class="sub">${safe(c.whatsapp||'')}</span></td><td>${c.levelEmoji||'ðŸ¥‰'} ${safe(c.levelName||'Bronce')}</td><td>${c.pointsTotal||0}</td><td>${c.totalPurchases||0}</td><td>${c.currentStreak||0}</td><td>${c.rewardsEarned||0}</td><td><button class="btn btn-ghost" onclick="openClient('${esc(c.id)}', false)">Ver</button></td></tr>`).join('')}</tbody></table>`;
 }
 async function loadAdminStats() {
   try {
