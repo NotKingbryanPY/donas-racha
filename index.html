@@ -12,6 +12,9 @@
 /* Modal informativo Donas Racha */
 .login-box{position:relative}.info-menu-btn{position:absolute;right:14px;top:14px;width:38px;height:38px;border-radius:13px;background:rgba(255,255,255,.12);color:white;border:1px solid rgba(255,255,255,.18);font-size:20px;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.16);transition:transform .18s,background .18s}.info-menu-btn:hover{background:rgba(255,255,255,.2);transform:translateY(-1px)}.info-menu-btn:active{transform:scale(.96)}.info-modal{position:fixed;inset:0;z-index:10050;background:rgba(12,12,28,.72);display:flex;align-items:center;justify-content:center;padding:18px;backdrop-filter:blur(8px)}.info-modal.hidden{display:none}.info-box{width:100%;max-width:520px;max-height:88vh;overflow:auto;background:#fff;border-radius:26px;padding:24px 20px 20px;color:#171729;box-shadow:0 24px 70px rgba(0,0,0,.36);position:relative}.info-close{position:sticky;top:0;float:right;margin:-8px -6px 4px 10px;width:36px;height:36px;border-radius:12px;background:#f1f2ff;color:#667eea;font-size:24px;font-weight:900;line-height:1;display:flex;align-items:center;justify-content:center}.info-box h2{font-size:22px;font-weight:950;margin-bottom:14px;color:#171729;padding-right:38px}.info-section{background:#f8f8ff;border:1px solid #ececff;border-radius:18px;padding:14px;margin-top:10px}.info-section h3{font-size:15px;font-weight:950;color:#667eea;margin-bottom:6px}.info-section p,.info-section li{font-size:13px;line-height:1.45;color:#36364c}.info-section ul{padding-left:18px;margin-top:6px}.info-levels,.info-badges{display:grid;gap:7px;margin-top:8px}.info-chip{background:white;border:1px solid #ececff;border-radius:13px;padding:9px 10px;font-size:13px;font-weight:850;color:#36364c}.info-note{margin-top:14px;background:linear-gradient(135deg,#667eea,#764ba2);color:white;border-radius:18px;padding:14px;font-size:13px;line-height:1.45;font-weight:800}.info-note b{font-weight:950}@media(max-width:420px){.info-box{padding:22px 16px 16px;border-radius:22px}.info-box h2{font-size:20px}.info-section p,.info-section li,.info-chip,.info-note{font-size:12px}}
 
+/* Tienda de recompensas */
+.client-tabs{margin-top:14px}.shop-grid{display:grid;gap:12px}.shop-item{border:1px solid #ececff;background:#fbfbff;border-radius:18px;padding:14px;display:grid;grid-template-columns:auto 1fr;gap:11px;align-items:start}.shop-emoji{width:44px;height:44px;border-radius:15px;background:linear-gradient(135deg,#667eea,#764ba2);color:white;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 8px 20px rgba(102,126,234,.23)}.shop-name{font-weight:950;color:#171729}.shop-desc{font-size:12px;color:#8e8ea3;margin-top:3px;line-height:1.35}.shop-meta{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;flex-wrap:wrap}.shop-cost{background:#f3f0ff;color:#667eea;border-radius:999px;padding:7px 10px;font-size:12px;font-weight:950}.shop-buy{border-radius:12px;padding:10px 12px;font-size:12px;font-weight:950}.points-rule-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}.points-rule{background:#f8f8ff;border:1px solid #ececff;border-radius:14px;padding:10px;text-align:center}.points-rule b{display:block;color:#667eea;font-size:18px}.points-rule span{font-size:11px;color:#8e8ea3;font-weight:800}.client-id-box{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:12px;margin-top:12px}.client-id-box label{display:block;font-size:12px;font-weight:900;color:rgba(255,255,255,.75);margin-bottom:8px;text-align:left}.mini-note{font-size:11px;color:rgba(255,255,255,.52);line-height:1.35;margin-top:8px}.redemption-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f1f1f6}.redemption-item:last-child{border-bottom:0}@media(max-width:420px){.points-rule-grid{grid-template-columns:1fr}.shop-meta{align-items:stretch}.shop-buy{width:100%}}
+
 </style>
 </head>
 <body>
@@ -56,8 +59,8 @@
     </div>
 
     <div class="info-section">
-      <h3>Premios</h3>
-      <p>Cada 5 compras ganas 1 dona gratis 🎁. El vendedor lo registra y te la entrega en el momento.</p>
+      <h3>Tienda de recompensas</h3>
+      <p>Los premios automáticos por cantidad de compras quedan reemplazados por una tienda. Tus puntos disponibles funcionan como moneda para canjear donas gratis, descuentos y recompensas configuradas.</p>
     </div>
 
     <div class="info-section">
@@ -74,7 +77,7 @@
     </div>
 
     <div class="info-note">
-      <b>Tu QR personal:</b> al registrarte recibes un código QR único. Muéstraselo al vendedor en cada visita para que registre tu compra, o ábrelo tú mismo desde la app para ver tu perfil, racha y premios.
+      <b>Tu QR e ID personal:</b> al registrarte recibes un código QR único y un IDCliente. Muéstraselo al vendedor en cada visita para registrar compras, o entra como cliente con cámara/ID para ver tu perfil, racha, puntos y tienda.
     </div>
   </div>
 </div>
@@ -95,14 +98,16 @@
   <div class="login-box">
     <div class="logo">🍩</div>
     <h2>Perfil de cliente</h2>
-    <p>Escanea o sube tu QR para ver tus puntos, nivel e insignias</p>
+    <p>Escanea tu QR con cámara o entra colocando tu IDCliente.</p>
     <div id="user-qr-reader"></div>
     <div id="userScanStatus" style="min-height:22px;font-size:12px;color:rgba(255,255,255,.6);margin:12px 0">Elige una opción</div>
-    <div class="row">
-      <button id="userScanBtn" class="btn btn-primary" style="flex:1" onclick="toggleUserScanner()">📷 Cámara</button>
-      <button class="btn btn-dark" style="flex:1" onclick="document.getElementById('userFileInput').click()">🖼️ Subir QR</button>
+    <button id="userScanBtn" class="btn btn-primary" style="width:100%" onclick="toggleUserScanner()">📷 Escanear QR con cámara</button>
+    <div class="client-id-box">
+      <label for="userClientIdInput">IDCliente</label>
+      <input id="userClientIdInput" class="dark-field" style="margin-bottom:10px" placeholder="Ejemplo: C1712345678901" onkeydown="if(event.key==='Enter') openUserById()">
+      <button class="btn btn-dark" style="width:100%" onclick="openUserById()">🪪 Entrar con ID</button>
+      <div class="mini-note">Tu ID aparece en el QR o te lo puede dar el vendedor al registrarte.</div>
     </div>
-    <input id="userFileInput" type="file" accept="image/*" style="display:none" onchange="readQRFromFile(event)">
     <button class="btn btn-dark" style="width:100%;margin-top:10px" onclick="goToRoleScreen()">← Volver</button>
   </div>
 </div>
@@ -142,46 +147,73 @@
       <div id="clientSince" class="muted" style="color:rgba(255,255,255,.72);margin-top:3px"></div>
       <div id="clientLevel" class="level-badge">🥉 Bronce</div>
       <div class="hero-stats">
-        <div class="hero-stat"><b id="clientPoints">0</b><span>⭐ Puntos</span></div>
+        <div class="hero-stat"><b id="clientPoints">0</b><span>⭐ Puntos totales</span></div>
         <div class="hero-stat"><b id="clientTotal">0</b><span>🍩 Compras</span></div>
         <div class="hero-stat"><b id="clientStreak">0</b><span>🔥 Racha</span></div>
       </div>
     </div>
 
-    <div class="card">
-      <div class="card-title">📈 Progreso al siguiente nivel</div>
-      <div class="progress-track"><div id="levelProgress" class="progress-fill" style="width:0%"></div></div>
-      <div class="progress-meta"><span id="levelText">0%</span><span id="nextLevelText">Siguiente nivel</span></div>
+    <div id="clientUserTabs" class="tabs client-tabs" style="display:none">
+      <button id="client-tab-profile" class="tab active" onclick="setClientTab('profile')">👤 Perfil</button>
+      <button id="client-tab-shop" class="tab" onclick="setClientTab('shop')">🛍️ Tienda</button>
     </div>
 
-    <div class="grid2">
-      <div class="stat-card"><div id="clientAvailable" class="big">0</div><div class="lbl">Puntos disponibles</div></div>
-      <div class="stat-card"><div id="clientRewards" class="big">0</div><div class="lbl">Premios ganados</div></div>
+    <div id="clientProfileSection">
+      <div class="card">
+        <div class="card-title">📈 Progreso al siguiente nivel</div>
+        <div class="progress-track"><div id="levelProgress" class="progress-fill" style="width:0%"></div></div>
+        <div class="progress-meta"><span id="levelText">0%</span><span id="nextLevelText">Siguiente nivel</span></div>
+      </div>
+
+      <div class="grid2">
+        <div class="stat-card"><div id="clientAvailable" class="big">0</div><div class="lbl">Puntos disponibles</div></div>
+        <div class="stat-card"><div id="clientNextPoints" class="big">10</div><div class="lbl">Próxima compra</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🔥 Puntos por racha</div>
+        <p class="muted">Mientras más alta sea tu racha, más puntos ganas por compra.</p>
+        <div id="pointsRulesWrap" class="points-rule-grid"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🔥 Hitos de racha</div>
+        <div id="hitosWrap" class="hitos"></div>
+        <p class="muted" style="margin-top:10px">Al completar 30 compras se registra una temporada y la racha se reinicia para competir de nuevo.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🏅 Insignias</div>
+        <div id="badgesWrap" class="badge-grid"></div>
+      </div>
+
+      <div id="alreadyMsg" class="already">✅ Ya se registró una compra hoy para este cliente</div>
+      <button id="buyBtn" class="btn btn-green" style="width:100%;font-size:17px;margin-bottom:14px" onclick="registerPurchase()">🍩 Registrar compra</button>
+
+      <div class="card qr-box">
+        <div class="card-title">📱 QR del cliente</div>
+        <img id="clientQr" alt="QR cliente"><br>
+        <div class="muted" style="margin-top:8px">IDCliente: <b id="clientIdLabel"></b></div>
+        <button class="btn btn-outline" style="margin-top:12px" onclick="downloadCurrentQR()">⬇️ Descargar QR</button>
+      </div>
+
+      <div class="card">
+        <div class="card-title">📋 Historial reciente</div>
+        <div id="historyWrap"><div class="empty">Sin historial</div></div>
+      </div>
     </div>
 
-    <div class="card">
-      <div class="card-title">🔥 Hitos de racha</div>
-      <div id="hitosWrap" class="hitos"></div>
-      <p class="muted" style="margin-top:10px">Al completar 30 compras se registra una temporada y la racha se reinicia para competir de nuevo.</p>
-    </div>
-
-    <div class="card">
-      <div class="card-title">🏅 Insignias</div>
-      <div id="badgesWrap" class="badge-grid"></div>
-    </div>
-
-    <div id="alreadyMsg" class="already">✅ Ya se registró una compra hoy para este cliente</div>
-    <button id="buyBtn" class="btn btn-green" style="width:100%;font-size:17px;margin-bottom:14px" onclick="registerPurchase()">🍩 Registrar compra (+10 pts)</button>
-
-    <div class="card qr-box">
-      <div class="card-title">📱 QR del cliente</div>
-      <img id="clientQr" alt="QR cliente"><br>
-      <button class="btn btn-outline" style="margin-top:12px" onclick="downloadCurrentQR()">⬇️ Descargar QR</button>
-    </div>
-
-    <div class="card">
-      <div class="card-title">📋 Historial reciente</div>
-      <div id="historyWrap"><div class="empty">Sin historial</div></div>
+    <div id="clientShopSection" style="display:none">
+      <div class="card">
+        <div class="card-title">🛍️ Tienda de recompensas</div>
+        <p class="muted">Usa tus puntos disponibles como moneda para canjear descuentos, donas gratis y recompensas.</p>
+        <div class="stat-card" style="margin:14px 0"><div id="shopAvailablePoints" class="big">0</div><div class="lbl">Puntos para gastar</div></div>
+        <div id="shopItems" class="shop-grid"><div class="empty">Cargando tienda...</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">🎁 Mis canjes recientes</div>
+        <div id="redemptionsWrap"><div class="empty">Aún no has canjeado recompensas.</div></div>
+      </div>
     </div>
   </div>
 </div>
@@ -217,7 +249,7 @@
       <button id="tab-puntos" class="tab" onclick="loadRanking('puntos')">⭐ Puntos</button>
       <button id="tab-racha" class="tab" onclick="loadRanking('racha')">🔥 Racha</button>
       <button id="tab-nivel" class="tab" onclick="loadRanking('nivel')">👑 Nivel</button>
-      <button id="tab-premios" class="tab" onclick="loadRanking('premios')">🎁 Premios</button>
+      <button id="tab-canjes" class="tab" onclick="loadRanking('canjes')">🎁 Canjes</button>
     </div>
     <div class="card"><div id="rankingList"><div class="empty">Cargando...</div></div></div>
   </div>
@@ -233,7 +265,7 @@
       <div class="stat-card"><div id="sMonth" class="big">—</div><div class="lbl">Mes</div></div>
       <div class="stat-card"><div id="sClients" class="big">—</div><div class="lbl">Clientes</div></div>
       <div class="stat-card"><div id="sPoints" class="big">—</div><div class="lbl">Puntos</div></div>
-      <div class="stat-card"><div id="sRewards" class="big">—</div><div class="lbl">Premios</div></div>
+      <div class="stat-card"><div id="sRewards" class="big">—</div><div class="lbl">Canjes</div></div>
     </div>
 
     <div class="admin-grid">
@@ -248,9 +280,11 @@
         <div class="card-title">⚙️ Config rápida</div>
         <div class="grid2">
           <input id="cfgTolerance" class="field" placeholder="Tolerancia días">
-          <input id="cfgReward" class="field" placeholder="Compras/premio">
-          <input id="cfgPoints" class="field" placeholder="Puntos/compra">
           <input id="cfgPrice" class="field" placeholder="Precio dona">
+          <input id="cfgPointsBase" class="field" placeholder="Pts racha 1-2">
+          <input id="cfgPoints3" class="field" placeholder="Pts racha 3+">
+          <input id="cfgPoints7" class="field" placeholder="Pts racha 7+">
+          <input id="cfgPoints14" class="field" placeholder="Pts racha 14+">
         </div>
         <button class="btn btn-primary" style="width:100%;margin-top:12px" onclick="saveQuickConfig()">Guardar config</button>
       </div>
@@ -261,7 +295,7 @@
           <button class="tab" id="admin-tab-puntos" onclick="loadAdminRanking('puntos')">Puntos</button>
           <button class="tab" id="admin-tab-racha" onclick="loadAdminRanking('racha')">Racha</button>
           <button class="tab" id="admin-tab-nivel" onclick="loadAdminRanking('nivel')">Nivel</button>
-          <button class="tab" id="admin-tab-premios" onclick="loadAdminRanking('premios')">Premios</button>
+          <button class="tab" id="admin-tab-canjes" onclick="loadAdminRanking('canjes')">Canjes</button>
         </div>
         <div id="adminRanking"><div class="empty">Cargando...</div></div>
       </div>
@@ -364,7 +398,8 @@ function goToAdminLogin() {
 function goToUserLogin() {
   document.getElementById('roleOverlay').classList.add('hidden');
   document.getElementById('userOverlay').classList.remove('hidden');
-  document.getElementById('userScanStatus').textContent = 'Elige una opción';
+  document.getElementById('userScanStatus').textContent = 'Escanea tu QR o escribe tu IDCliente';
+  const idInput = document.getElementById('userClientIdInput'); if (idInput) idInput.value = '';
 }
 
 async function checkLogin() {
@@ -484,17 +519,13 @@ function stopUserScanner() {
   const btn = document.getElementById('userScanBtn'); if (btn) btn.textContent = '📷 Cámara';
   const el = document.getElementById('user-qr-reader'); if (el) el.innerHTML = '';
 }
-async function readQRFromFile(event) {
-  const file = event.target.files[0]; event.target.value = '';
-  if (!file) return;
-  document.getElementById('userScanStatus').textContent = 'Leyendo imagen...';
-  stopUserScanner();
-  try {
-    const tmp = new Html5Qrcode('user-qr-reader');
-    const result = await tmp.scanFile(file, false);
-    await tmp.clear().catch(()=>{});
-    onUserQRScanned(result);
-  } catch (err) { document.getElementById('userScanStatus').textContent = 'No se encontró un QR válido'; }
+function openUserById() {
+  const input = document.getElementById('userClientIdInput');
+  const id = input ? input.value.trim() : '';
+  if (!id) { showToast('Escribe tu IDCliente'); return; }
+  openedAsUser = true;
+  hideOverlays();
+  openClient(id, true);
 }
 function onUserQRScanned(text) {
   stopUserScanner();
@@ -525,7 +556,7 @@ async function openClient(id, asUser) {
 }
 
 function renderClient(c, asUser) {
-  document.getElementById('clientHeaderSub').textContent = asUser ? 'Modo cliente' : 'Modo vendedor/admin';
+  document.getElementById('clientHeaderSub').textContent = asUser ? 'Mi perfil y tienda' : 'Modo vendedor/admin';
   document.getElementById('clientAvatar').textContent = initial(c.name);
   document.getElementById('clientName').textContent = c.name || 'Cliente';
   document.getElementById('clientSince').textContent = c.registrationDate ? 'Cliente desde ' + fmtDate(c.registrationDate) : '';
@@ -534,16 +565,26 @@ function renderClient(c, asUser) {
   document.getElementById('clientTotal').textContent = c.totalPurchases || 0;
   document.getElementById('clientStreak').textContent = c.currentStreak || 0;
   document.getElementById('clientAvailable').textContent = c.pointsAvailable || 0;
-  document.getElementById('clientRewards').textContent = c.rewardsEarned || 0;
+  document.getElementById('shopAvailablePoints').textContent = c.pointsAvailable || 0;
+  document.getElementById('clientNextPoints').textContent = c.nextPurchasePoints || 10;
+  document.getElementById('clientIdLabel').textContent = c.id || '';
   document.getElementById('levelProgress').style.width = (c.progressLevelPct || 0) + '%';
   document.getElementById('levelText').textContent = (c.progressLevelPct || 0) + '% completado';
   document.getElementById('nextLevelText').textContent = c.nextLevel ? `${c.pointsToNextLevel} pts para ${c.nextLevel.emoji} ${c.nextLevel.name}` : 'Nivel máximo alcanzado';
   document.getElementById('clientQr').src = c.qrUrl || '';
   document.getElementById('alreadyMsg').style.display = (!asUser && c.purchasedToday) ? 'block' : 'none';
+  document.getElementById('buyBtn').style.display = asUser ? 'none' : '';
   document.getElementById('buyBtn').disabled = !!c.purchasedToday;
+  document.getElementById('buyBtn').textContent = `🍩 Registrar compra (+${c.nextPurchasePoints || 10} pts)`;
+  document.getElementById('clientUserTabs').style.display = asUser ? '' : 'none';
   renderHitos(c.hitosRacha || []);
   renderBadges(c.badges || []);
   renderHistory(c.recentHistory || []);
+  renderPointRules(c.pointsRules || []);
+  renderShop(c.shopItems || [], c.pointsAvailable || 0);
+  renderRedemptions(c.recentRedemptions || []);
+  setClientTab(asUser ? 'profile' : 'profile');
+  if (!asUser) document.getElementById('clientShopSection').style.display = 'none';
 }
 function renderHitos(active) {
   const set = new Set((active || []).map(Number));
@@ -557,7 +598,55 @@ function renderBadges(badges) {
 function renderHistory(hist) {
   const el = document.getElementById('historyWrap');
   if (!hist.length) { el.innerHTML = '<div class="empty">Sin historial</div>'; return; }
-  el.innerHTML = hist.map(h => `<div class="history-item"><div style="font-size:20px">${h.type==='reward'?'🎁':'🍩'}</div><div class="grow"><div class="name">${h.type==='reward'?'Premio ganado':'Compra registrada'}</div><div class="sub">${fmtDateTime(h.date)} ${h.points?`· +${h.points} pts`:''}</div></div></div>`).join('');
+  el.innerHTML = hist.map(h => { const isRedeem = h.type === 'redeem'; const icon = isRedeem ? '🎁' : '🍩'; const title = isRedeem ? 'Canje realizado' : 'Compra registrada'; const pts = h.points ? ` · ${h.points > 0 ? '+' : ''}${h.points} pts` : ''; return `<div class="history-item"><div style="font-size:20px">${icon}</div><div class="grow"><div class="name">${title}</div><div class="sub">${fmtDateTime(h.date)}${pts}</div></div></div>`; }).join('');
+}
+
+function setClientTab(tab) {
+  const isShop = tab === 'shop';
+  const profile = document.getElementById('clientProfileSection');
+  const shop = document.getElementById('clientShopSection');
+  if (profile) profile.style.display = isShop ? 'none' : '';
+  if (shop) shop.style.display = isShop ? '' : 'none';
+  const pTab = document.getElementById('client-tab-profile');
+  const sTab = document.getElementById('client-tab-shop');
+  if (pTab) pTab.classList.toggle('active', !isShop);
+  if (sTab) sTab.classList.toggle('active', isShop);
+}
+function renderPointRules(rules) {
+  const el = document.getElementById('pointsRulesWrap');
+  if (!el) return;
+  if (!rules.length) { el.innerHTML = '<div class="empty">Sin reglas configuradas.</div>'; return; }
+  el.innerHTML = rules.map(r => `<div class="points-rule"><b>+${r.points}</b><span>${safe(r.label || ('Racha ' + r.minStreak + '+'))}</span></div>`).join('');
+}
+function renderShop(items, available) {
+  const el = document.getElementById('shopItems');
+  if (!el) return;
+  if (!items.length) { el.innerHTML = '<div class="empty">No hay recompensas activas todavía.</div>'; return; }
+  el.innerHTML = items.map(item => {
+    const canBuy = available >= (item.cost || 0);
+    return `<div class="shop-item"><div class="shop-emoji">${safe(item.emoji || '🎁')}</div><div><div class="shop-name">${safe(item.name)}</div><div class="shop-desc">${safe(item.description || item.value || '')}</div><div class="shop-meta"><span class="shop-cost">⭐ ${item.cost || 0} pts</span><button class="shop-buy ${canBuy?'btn-primary':'btn-ghost'}" ${canBuy?'':'disabled'} onclick="redeemItem('${esc(item.id)}')">${canBuy?'Canjear':'Faltan puntos'}</button></div></div></div>`;
+  }).join('');
+}
+function renderRedemptions(items) {
+  const el = document.getElementById('redemptionsWrap');
+  if (!el) return;
+  if (!items.length) { el.innerHTML = '<div class="empty">Aún no has canjeado recompensas.</div>'; return; }
+  el.innerHTML = items.map(r => `<div class="redemption-item"><div style="font-size:20px">🎁</div><div class="grow"><div class="name">${safe(r.itemName || 'Canje')}</div><div class="sub">${fmtDateTime(r.date)} · -${r.points || 0} pts · ${safe(r.status || 'pendiente')}</div></div></div>`).join('');
+}
+async function redeemItem(itemId) {
+  if (!currentClient) return;
+  const item = (currentClient.shopItems || []).find(i => String(i.id) === String(itemId));
+  if (!item) { showToast('Recompensa no encontrada'); return; }
+  if ((currentClient.pointsAvailable || 0) < (item.cost || 0)) { showToast('Puntos insuficientes'); return; }
+  if (!confirm(`¿Canjear ${item.name} por ${item.cost} puntos?`)) return;
+  try {
+    const data = await apiPost('canjearRecompensa', { clientId: currentClient.id, itemId:itemId });
+    if (!data.ok) throw new Error(data.error || 'No se pudo canjear');
+    currentClient = data.client;
+    renderClient(currentClient, true);
+    setClientTab('shop');
+    showToast('✅ ' + (data.message || 'Canje realizado'), 4600);
+  } catch (err) { showToast('❌ ' + err.message); }
 }
 
 async function registerPurchase() {
@@ -570,7 +659,6 @@ async function registerPurchase() {
     currentClient = data.client;
     renderClient(data.client, false);
     let msg = `✅ Compra registrada · +${data.pointsEarned || 10} pts`;
-    if (data.rewardEarned) msg += ' · premio ganado 🎁';
     if (data.completedSeason) msg += ' · temporada completada 🔥';
     if (data.badgesAssigned && data.badgesAssigned.length) msg += ' · nueva insignia 🏅';
     showToast(msg, 4600);
@@ -580,7 +668,7 @@ async function registerPurchase() {
     showToast('❌ ' + err.message);
   } finally {
     btn.disabled = currentClient && currentClient.purchasedToday;
-    btn.textContent = '🍩 Registrar compra (+10 pts)';
+    btn.textContent = `🍩 Registrar compra (+${currentClient && currentClient.nextPurchasePoints ? currentClient.nextPurchasePoints : 10} pts)`;
   }
 }
 
@@ -611,7 +699,7 @@ function sendNewWA(){ if(!newClientData) return; const phone=(newClientData.what
 
 function showPublicRanking() { lastRankingEntry = requireAuth() ? 'home' : 'role'; hideOverlays(); showScreen('screen-ranking'); loadRanking('compras'); }
 async function loadRanking(type) {
-  ['compras','puntos','racha','nivel','premios'].forEach(t => document.getElementById('tab-'+t).classList.toggle('active', t===type));
+  ['compras','puntos','racha','nivel','canjes'].forEach(t => document.getElementById('tab-'+t).classList.toggle('active', t===type));
   const el = document.getElementById('rankingList'); el.innerHTML = '<div class="empty">Cargando...</div>';
   try { const data = await api('getRanking', { type, limit:50 }); el.innerHTML = renderRankingItems(data.ranking || [], type, false); }
   catch (err) { el.innerHTML = '<div class="empty">No se pudo cargar.</div>'; }
@@ -620,7 +708,7 @@ function renderRankingItems(list, type, compact) {
   if (!list.length) return '<div class="empty">Sin datos todavía</div>';
   const medals = ['🥇','🥈','🥉']; const classes = ['gold','silver','bronze'];
   return list.map((c,i) => {
-    const val = type==='compras'?`${c.totalPurchases||0} 🍩`:type==='puntos'?`${c.pointsTotal||0} pts`:type==='premios'?`${c.rewardsEarned||0} 🎁`:type==='nivel'?`${c.levelEmoji||'🥉'} ${safe(c.levelName||'Bronce')}`:`${c.currentStreak||0} 🔥`;
+    const val = type==='compras'?`${c.totalPurchases||0} 🍩`:type==='puntos'?`${c.pointsTotal||0} pts`:type==='canjes'?`${c.redemptionsMade||c.rewardsEarned||0} 🎁`:type==='nivel'?`${c.levelEmoji||'🥉'} ${safe(c.levelName||'Bronce')}`:`${c.currentStreak||0} 🔥`;
     return `<div class="rank-item" onclick="${requireAuth()?`openClient('${esc(c.id)}', false)`:''}"><div style="width:30px;text-align:center;font-size:20px;font-weight:900">${medals[i]||i+1}</div><div class="avatar ${classes[i]||''}">${initial(c.name)}</div><div class="grow"><div class="name">${safe(c.name)}</div><div class="sub">${c.levelEmoji||'🥉'} ${safe(c.levelName||'Bronce')} · ${c.totalPurchases||0} compras · ${c.pointsTotal||0} pts</div></div><div class="pill ${type==='racha'?'hot':''}">${val}</div></div>`;
   }).join('');
 }
@@ -632,7 +720,7 @@ async function showAdmin() {
 }
 
 async function loadAdminDashboard(type='compras') {
-  ['compras','puntos','racha','nivel','premios'].forEach(t => document.getElementById('admin-tab-'+t).classList.toggle('active', t===type));
+  ['compras','puntos','racha','nivel','canjes'].forEach(t => document.getElementById('admin-tab-'+t).classList.toggle('active', t===type));
   document.getElementById('adminRanking').innerHTML = '<div class="empty">Cargando...</div>';
   document.getElementById('adminClients').innerHTML = '<div class="empty">Cargando...</div>';
   try {
@@ -663,9 +751,11 @@ function renderAdminStats(s) {
 
 function renderAdminConfig(c) {
   document.getElementById('cfgTolerance').value = c.DIAS_TOLERANCIA ?? 3;
-  document.getElementById('cfgReward').value = c.COMPRAS_RECOMPENSA ?? 5;
-  document.getElementById('cfgPoints').value = c.PUNTOS_POR_COMPRA ?? 10;
   document.getElementById('cfgPrice').value = c.PRECIO_DONA ?? 1;
+  document.getElementById('cfgPointsBase').value = c.PUNTOS_RACHA_BASE ?? c.PUNTOS_POR_COMPRA ?? 10;
+  document.getElementById('cfgPoints3').value = c.PUNTOS_RACHA_3 ?? 12;
+  document.getElementById('cfgPoints7').value = c.PUNTOS_RACHA_7 ?? 15;
+  document.getElementById('cfgPoints14').value = c.PUNTOS_RACHA_14 ?? 17;
 }
 
 function renderAdminRanking(list, type) {
@@ -675,7 +765,7 @@ function renderAdminRanking(list, type) {
 function renderAdminClients(clients) {
   const el = document.getElementById('adminClients');
   if (!clients.length) { el.innerHTML = '<div class="empty">Sin clientes</div>'; return; }
-  el.innerHTML = `<table class="admin-table"><thead><tr><th>Cliente</th><th>Nivel</th><th>Puntos</th><th>Compras</th><th>Racha</th><th>Premios</th><th></th></tr></thead><tbody>${clients.map(c => `<tr><td><b>${safe(c.name)}</b><br><span class="sub">${safe(c.whatsapp||'')}</span></td><td>${c.levelEmoji||'ðŸ¥‰'} ${safe(c.levelName||'Bronce')}</td><td>${c.pointsTotal||0}</td><td>${c.totalPurchases||0}</td><td>${c.currentStreak||0}</td><td>${c.rewardsEarned||0}</td><td><button class="btn btn-ghost" onclick="openClient('${esc(c.id)}', false)">Ver</button></td></tr>`).join('')}</tbody></table>`;
+  el.innerHTML = `<table class="admin-table"><thead><tr><th>Cliente</th><th>Nivel</th><th>Puntos</th><th>Compras</th><th>Racha</th><th>Canjes</th><th></th></tr></thead><tbody>${clients.map(c => `<tr><td><b>${safe(c.name)}</b><br><span class="sub">${safe(c.whatsapp||'')}</span></td><td>${c.levelEmoji||'🥉'} ${safe(c.levelName||'Bronce')}</td><td>${c.pointsTotal||0}</td><td>${c.totalPurchases||0}</td><td>${c.currentStreak||0}</td><td>${c.redemptionsMade||c.rewardsEarned||0}</td><td><button class="btn btn-ghost" onclick="openClient('${esc(c.id)}', false)">Ver</button></td></tr>`).join('')}</tbody></table>`;
 }
 async function loadAdminStats() {
   try {
@@ -692,14 +782,22 @@ async function loadAdminStats() {
   } catch (err) { showToast('No se pudieron cargar estadísticas'); }
 }
 async function loadConfig() {
-  try { const data = await api('getConfig'); const c = data.config || {}; document.getElementById('cfgTolerance').value = c.DIAS_TOLERANCIA ?? 3; document.getElementById('cfgReward').value = c.COMPRAS_RECOMPENSA ?? 5; document.getElementById('cfgPoints').value = c.PUNTOS_POR_COMPRA ?? 10; document.getElementById('cfgPrice').value = c.PRECIO_DONA ?? 1; } catch(e) {}
+  try { const data = await api('getConfig'); renderAdminConfig(data.config || {}); } catch(e) {}
 }
 async function saveQuickConfig() {
-  const config = { DIAS_TOLERANCIA:document.getElementById('cfgTolerance').value, COMPRAS_RECOMPENSA:document.getElementById('cfgReward').value, PUNTOS_POR_COMPRA:document.getElementById('cfgPoints').value, PRECIO_DONA:document.getElementById('cfgPrice').value };
+  const config = {
+    DIAS_TOLERANCIA:document.getElementById('cfgTolerance').value,
+    PRECIO_DONA:document.getElementById('cfgPrice').value,
+    PUNTOS_RACHA_BASE:document.getElementById('cfgPointsBase').value,
+    PUNTOS_RACHA_3:document.getElementById('cfgPoints3').value,
+    PUNTOS_RACHA_7:document.getElementById('cfgPoints7').value,
+    PUNTOS_RACHA_14:document.getElementById('cfgPoints14').value,
+    COMPRAS_RECOMPENSA:0
+  };
   try { const data = await apiPost('saveConfig', { config }); if(!data.ok) throw new Error(data.error); showToast('✅ Config guardada'); } catch(err) { showToast('❌ ' + err.message); }
 }
 async function loadAdminRanking(type) {
-  ['compras','puntos','racha','nivel','premios'].forEach(t => document.getElementById('admin-tab-'+t).classList.toggle('active', t===type));
+  ['compras','puntos','racha','nivel','canjes'].forEach(t => document.getElementById('admin-tab-'+t).classList.toggle('active', t===type));
   const el = document.getElementById('adminRanking'); el.innerHTML = '<div class="empty">Cargando...</div>';
   try { const data = await api('getRanking', { type, limit:20 }); el.innerHTML = renderRankingItems(data.ranking || [], type, false); } catch(err) { el.innerHTML = '<div class="empty">Error al cargar ranking</div>'; }
 }
@@ -708,7 +806,7 @@ async function loadAdminClients() {
   try {
     const data = await api('getTodosClientes'); const clients = data.clients || [];
     if (!clients.length) { el.innerHTML = '<div class="empty">Sin clientes</div>'; return; }
-    el.innerHTML = `<table class="admin-table"><thead><tr><th>Cliente</th><th>Nivel</th><th>Puntos</th><th>Compras</th><th>Racha</th><th>Premios</th><th></th></tr></thead><tbody>${clients.map(c => `<tr><td><b>${safe(c.name)}</b><br><span class="sub">${safe(c.whatsapp||'')}</span></td><td>${c.levelEmoji||'🥉'} ${safe(c.levelName||'Bronce')}</td><td>${c.pointsTotal||0}</td><td>${c.totalPurchases||0}</td><td>${c.currentStreak||0}</td><td>${c.rewardsEarned||0}</td><td><button class="btn btn-ghost" onclick="openClient('${esc(c.id)}', false)">Ver</button></td></tr>`).join('')}</tbody></table>`;
+    el.innerHTML = `<table class="admin-table"><thead><tr><th>Cliente</th><th>Nivel</th><th>Puntos</th><th>Compras</th><th>Racha</th><th>Canjes</th><th></th></tr></thead><tbody>${clients.map(c => `<tr><td><b>${safe(c.name)}</b><br><span class="sub">${safe(c.whatsapp||'')}</span></td><td>${c.levelEmoji||'🥉'} ${safe(c.levelName||'Bronce')}</td><td>${c.pointsTotal||0}</td><td>${c.totalPurchases||0}</td><td>${c.currentStreak||0}</td><td>${c.redemptionsMade||c.rewardsEarned||0}</td><td><button class="btn btn-ghost" onclick="openClient('${esc(c.id)}', false)">Ver</button></td></tr>`).join('')}</tbody></table>`;
   } catch(err) { el.innerHTML = '<div class="empty">Error al cargar clientes</div>'; }
 }
 async function runInitSheets() {
