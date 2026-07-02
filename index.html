@@ -4,10 +4,36 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>🍩 Donas Racha V2</title>
-<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js">
+function openInfo(){ document.getElementById('infoBackdrop').classList.add('open'); document.body.style.overflow='hidden'; }
+function closeInfo(){ document.getElementById('infoBackdrop').classList.remove('open'); document.body.style.overflow=''; }
+function closeInfoOutside(e){ if(e.target===document.getElementById('infoBackdrop')) closeInfo(); }
+
+</script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f1f2ff;color:#181827;min-height:100vh;overflow-x:hidden}button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{border:0;outline:0}.screen{display:none;min-height:100vh;padding-bottom:48px}.screen.active{display:block}.header{position:sticky;top:0;z-index:90;background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:18px 20px;text-align:center;box-shadow:0 8px 28px rgba(102,126,234,.35)}.header h1{font-size:20px;font-weight:900}.header p{font-size:12px;opacity:.82;margin-top:3px}.wrap{padding:18px;max-width:520px;margin:0 auto}.admin-wrap{padding:16px;max-width:980px;margin:0 auto}.card{background:white;border-radius:22px;padding:18px;box-shadow:0 6px 24px rgba(25,25,50,.075);margin-bottom:16px}.card-title{font-size:13px;color:#555;font-weight:900;letter-spacing:.35px;margin-bottom:12px;text-transform:uppercase}.muted{color:#9aa;font-size:12px}.row{display:flex;gap:10px;align-items:center}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.btn{border-radius:14px;padding:13px 16px;font-weight:900;display:inline-flex;align-items:center;justify-content:center;gap:8px}.btn-primary{background:linear-gradient(135deg,#667eea,#764ba2);color:white;box-shadow:0 7px 18px rgba(102,126,234,.3)}.btn-green{background:linear-gradient(135deg,#11998e,#38ef7d);color:white;box-shadow:0 8px 22px rgba(17,153,142,.28)}.btn-red{background:#fff0f0;color:#e74c3c}.btn-ghost{background:#f6f7ff;color:#667eea}.btn-outline{background:white;color:#667eea;border:2px solid #667eea}.btn-dark{background:#202037;color:white}.btn:disabled{opacity:.55;cursor:not-allowed}.back-btn{background:transparent;color:#667eea;font-weight:900;margin-bottom:14px;display:flex;gap:6px;align-items:center}.field{width:100%;background:#f8f8fb;border:2px solid #e8e8ee;border-radius:14px;padding:13px 14px;font-size:15px}.field:focus{background:white;border-color:#667eea}.search-row{display:flex;gap:10px}.search-row .field{flex:1}.result-item,.rank-item,.history-item{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid #f1f1f6}.result-item:last-child,.rank-item:last-child,.history-item:last-child{border-bottom:0}.avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);color:white;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0}.avatar.gold{background:linear-gradient(135deg,#f6d365,#fda085)}.avatar.silver{background:linear-gradient(135deg,#b8c6db,#8a9bb0)}.avatar.bronze{background:linear-gradient(135deg,#d4a574,#a0724a)}.grow{flex:1;min-width:0}.name{font-weight:900;color:#171729;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sub{font-size:11px;color:#98a;margin-top:2px}.pill{display:inline-flex;align-items:center;gap:5px;background:#f3f0ff;color:#667eea;border-radius:999px;padding:5px 10px;font-size:12px;font-weight:900}.pill.hot{background:#fff0f4;color:#f5576c}.pill.green{background:#eafff5;color:#11998e}.tabs{display:flex;gap:7px;background:white;border-radius:16px;padding:6px;box-shadow:0 3px 16px rgba(0,0,0,.05);margin-bottom:14px;overflow:auto}.tab{white-space:nowrap;flex:1;background:transparent;color:#98a;border-radius:12px;padding:10px 9px;font-size:12px;font-weight:900}.tab.active{background:linear-gradient(135deg,#667eea,#764ba2);color:white}.stat-card{background:white;border-radius:18px;padding:17px 12px;text-align:center;box-shadow:0 5px 18px rgba(25,25,50,.07)}.stat-card .big{font-size:28px;color:#667eea;font-weight:950}.stat-card .lbl{font-size:11px;color:#98a;font-weight:800;margin-top:4px}.client-hero{background:linear-gradient(135deg,#667eea,#764ba2);border-radius:26px;color:white;padding:24px 18px;text-align:center;box-shadow:0 10px 30px rgba(102,126,234,.34)}.client-avatar{width:78px;height:78px;border-radius:50%;margin:0 auto 12px;background:rgba(255,255,255,.18);border:3px solid rgba(255,255,255,.35);font-size:32px;font-weight:950;display:flex;align-items:center;justify-content:center}.client-name{font-size:22px;font-weight:950}.level-badge{display:inline-flex;align-items:center;gap:6px;margin-top:9px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:7px 12px;font-size:13px;font-weight:900}.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:17px}.hero-stat{background:rgba(255,255,255,.15);border-radius:16px;padding:11px 6px}.hero-stat b{display:block;font-size:21px}.hero-stat span{font-size:10px;opacity:.85}.progress-track{height:12px;background:#ececf5;border-radius:999px;overflow:hidden}.progress-fill{height:100%;background:linear-gradient(90deg,#667eea,#764ba2);border-radius:999px;transition:width .35s}.progress-meta{display:flex;justify-content:space-between;gap:8px;font-size:11px;color:#8e8ea3;margin-top:7px}.badge-grid{display:flex;gap:8px;flex-wrap:wrap}.badge{background:#f8f5ff;border:1px solid #ece5ff;color:#5b45a2;border-radius:14px;padding:9px 10px;font-size:12px;font-weight:900}.hitos{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.hito{background:#f3f3f7;border-radius:15px;text-align:center;padding:11px 4px;color:#aaa;font-weight:900;font-size:12px}.hito.active{background:linear-gradient(135deg,#f093fb,#f5576c);color:white}.already{display:none;background:#fff8e8;border:2px solid #f59e0b;color:#c06d00;border-radius:16px;padding:12px;text-align:center;font-weight:800;font-size:13px;margin-bottom:12px}.qr-box{text-align:center}.qr-box img{width:210px;height:210px;border-radius:14px;border:3px solid #667eea;background:white}.admin-fab{position:fixed;right:18px;bottom:22px;z-index:120;border-radius:999px;background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:13px 16px;font-weight:950;box-shadow:0 9px 26px rgba(102,126,234,.38)}.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:rgba(20,20,32,.94);color:white;border-radius:999px;padding:12px 18px;font-size:13px;font-weight:800;z-index:99999;opacity:0;pointer-events:none;transition:opacity .25s;max-width:92vw;text-align:center}.toast.show{opacity:1}.overlay{position:fixed;inset:0;background:linear-gradient(135deg,#171729,#20274a);display:flex;align-items:center;justify-content:center;padding:24px;z-index:9999}.overlay.hidden{display:none}.login-box{width:100%;max-width:350px;text-align:center;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:26px;padding:28px 20px;color:white;backdrop-filter:blur(10px)}.logo{font-size:56px}.login-box h2{font-size:24px;font-weight:950;margin:8px 0 4px}.login-box p{font-size:13px;color:rgba(255,255,255,.55);margin-bottom:22px}.role-btn{width:100%;border-radius:18px;padding:17px;margin-bottom:12px;display:flex;gap:13px;align-items:center;justify-content:center;text-align:left;font-weight:900}.role-btn span:first-child{font-size:26px}.role-btn small{display:block;font-size:11px;opacity:.7;font-weight:700;margin-top:2px}.dark-field{width:100%;border-radius:14px;padding:14px;background:rgba(255,255,255,.08);border:2px solid rgba(255,255,255,.14);color:white;text-align:center;margin-bottom:12px}.dark-field::placeholder{color:rgba(255,255,255,.35)}#qr-reader,#user-qr-reader{border-radius:16px;overflow:hidden;background:#111}.scanner-wrap{display:none}.scanner-wrap.open{display:block}.admin-table{width:100%;border-collapse:collapse;font-size:13px}.admin-table th{background:#f5f5ff;color:#667;font-size:11px;text-transform:uppercase;letter-spacing:.3px;text-align:left;padding:10px 8px}.admin-table td{padding:10px 8px;border-bottom:1px solid #f3f3f6}.admin-table tr:last-child td{border-bottom:0}.wide-card{overflow:auto}.empty{text-align:center;color:#a0a0b4;font-size:13px;padding:18px 8px}.migration-ok{background:#eafff5;color:#11998e}.migration-pending{background:#fff8e8;color:#b66a00}@media(min-width:760px){.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.admin-grid .card{margin-bottom:0}.admin-wide{grid-column:1/-1}.wrap{padding-top:24px}.grid3.stats{grid-template-columns:repeat(6,1fr)}}
+
+.info-pill{position:fixed;top:12px;right:12px;z-index:199;background:rgba(255,255,255,.18);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.28);color:white;border-radius:999px;padding:5px 12px;font-size:11px;font-weight:800;letter-spacing:.3px;display:flex;align-items:center;gap:5px;box-shadow:0 2px 10px rgba(0,0,0,.15);transition:background .2s;cursor:pointer}
+.info-pill:hover{background:rgba(255,255,255,.28)}
+.info-backdrop{position:fixed;inset:0;background:rgba(10,10,25,.72);backdrop-filter:blur(4px);z-index:9990;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s}
+.info-backdrop.open{opacity:1;pointer-events:all}
+.info-sheet{background:white;border-radius:28px 28px 0 0;padding:24px 20px 40px;width:100%;max-width:540px;max-height:86vh;overflow-y:auto;transform:translateY(100%);transition:transform .3s cubic-bezier(.32,.72,0,1)}
+.info-backdrop.open .info-sheet{transform:translateY(0)}
+.info-handle{width:40px;height:4px;background:#e0e0e8;border-radius:999px;margin:0 auto 18px}
+.info-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.info-header h2{font-size:18px;font-weight:950;color:#171729}
+.info-close{background:#f4f4f8;border-radius:50%;width:32px;height:32px;font-size:16px;display:flex;align-items:center;justify-content:center;color:#667eea;flex-shrink:0;cursor:pointer;border:none}
+.info-section{margin-bottom:18px}
+.info-section h3{font-size:12px;font-weight:900;color:#667eea;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.info-section p{font-size:14px;color:#444;line-height:1.7}
+.info-level-row{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.info-level{display:flex;align-items:center;gap:10px;background:#f8f8fc;border-radius:12px;padding:9px 12px}
+.info-level .il-e{font-size:18px;width:26px;text-align:center}
+.info-level .il-n{font-size:13px;font-weight:800;color:#333;flex:1}
+.info-level .il-p{font-size:11px;color:#aaa;font-weight:700}
+.info-badge-grid{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+.info-badge{background:#f4f0ff;border:1px solid #e0d5ff;border-radius:11px;padding:7px 10px;font-size:12px;font-weight:800;color:#5b45a2}
 </style>
 </head>
 <body>
@@ -654,5 +680,65 @@ function initial(name){ return safe(name || 'D').trim().charAt(0).toUpperCase() 
 function safe(s){ return String(s ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
 function esc(s){ return String(s ?? '').replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
 </script>
+
+<!-- ── Info pill button ── -->
+<button class="info-pill" onclick="openInfo()">❓ ¿Cómo funciona?</button>
+
+<!-- ── Info modal ── -->
+<div id="infoBackdrop" class="info-backdrop" onclick="closeInfoOutside(event)">
+  <div class="info-sheet" id="infoSheet">
+    <div class="info-handle"></div>
+    <div class="info-header">
+      <h2>🍩 ¿Cómo funciona Donas Racha?</h2>
+      <button class="info-close" onclick="closeInfo()">✕</button>
+    </div>
+
+    <div class="info-section">
+      <h3>🔥 Sistema de racha</h3>
+      <p>Cada vez que compras una dona, el vendedor registra tu compra y tu racha sube. Si compras seguido — con máximo 3 días de tolerancia entre compras — la racha sigue creciendo. Si pasas más días sin comprar, se reinicia desde 1. ¡La constancia es la clave!</p>
+    </div>
+
+    <div class="info-section">
+      <h3>🏟️ Temporadas</h3>
+      <p>Cada temporada dura <strong>30 compras</strong>. Al completarla, tu racha se reinicia para el nuevo reto, pero tus puntos, nivel e insignias se quedan contigo para siempre.</p>
+    </div>
+
+    <div class="info-section">
+      <h3>⭐ Puntos y niveles</h3>
+      <p>Cada compra te da <strong>10 puntos</strong>. Con más puntos subes de nivel:</p>
+      <div class="info-level-row">
+        <div class="info-level"><span class="il-e">🥉</span><span class="il-n">Bronce</span><span class="il-p">Nivel inicial</span></div>
+        <div class="info-level"><span class="il-e">🥈</span><span class="il-n">Plata</span><span class="il-p">200 puntos</span></div>
+        <div class="info-level"><span class="il-e">🥇</span><span class="il-n">Oro</span><span class="il-p">500 puntos</span></div>
+        <div class="info-level"><span class="il-e">💎</span><span class="il-n">Diamante</span><span class="il-p">1,000 puntos</span></div>
+        <div class="info-level"><span class="il-e">👑</span><span class="il-n">Maestro Donero</span><span class="il-p">2,000 puntos</span></div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h3>🎁 Premios</h3>
+      <p>Cada <strong>5 compras</strong> ganas <strong>1 dona gratis</strong>. El vendedor lo registra y te la entrega en el momento. ¡El premio se acumula aunque cambies de temporada!</p>
+    </div>
+
+    <div class="info-section">
+      <h3>🏅 Insignias</h3>
+      <div class="info-badge-grid">
+        <div class="info-badge">🥉 Primer Mordisco</div>
+        <div class="info-badge">🥈 Cliente Frecuente</div>
+        <div class="info-badge">🥇 Dona Lover</div>
+        <div class="info-badge">👑 Rey de las Donas</div>
+        <div class="info-badge">🔥 Maestro de Rachas</div>
+        <div class="info-badge">🎉 Cliente VIP</div>
+      </div>
+      <p style="margin-top:10px;font-size:13px;color:#888">Se desbloquean automáticamente según tus compras y logros.</p>
+    </div>
+
+    <div class="info-section">
+      <h3>📱 Tu QR personal</h3>
+      <p>Al registrarte recibes un QR único. Muéstraselo al vendedor en cada visita para registrar tu compra, o ábrelo tú desde la app para ver tu perfil, racha y premios.</p>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
