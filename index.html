@@ -695,7 +695,47 @@ function downloadCurrentQR(){ if(currentClient) downloadUrl(currentClient.qrUrl,
 function downloadNewQR(){ if(newClientData) downloadUrl(newClientData.qrUrl, `QR_${newClientData.name}.png`); }
 function downloadUrl(url, name){ const a=document.createElement('a'); a.href=url; a.download=name; a.target='_blank'; document.body.appendChild(a); a.click(); a.remove(); }
 async function shareNewQR(){ if(!newClientData) return; const text=`🍩 Tu QR de Donas Racha: ${newClientData.qrUrl}`; if(navigator.share) await navigator.share({title:'Donas Racha',text}); else { await navigator.clipboard.writeText(text); showToast('Copiado'); } }
-function sendNewWA(){ if(!newClientData) return; const phone=(newClientData.whatsapp||'').replace(/\D/g,''); const msg=encodeURIComponent(`🍩 Hola ${newClientData.name}, este es tu QR de Donas Racha: ${newClientData.qrUrl}`); window.open(phone?`https://wa.me/${phone}?text=${msg}`:`https://wa.me/?text=${msg}`,'_blank'); }
+function sendNewWA() {
+  if (!newClientData) return;
+
+  const phone = (newClientData.whatsapp || '').replace(/\D/g, '');
+
+  const web = "https://notkingbryanpy.github.io/donas-racha/";
+
+  const msg = encodeURIComponent(
+`🍩 ¡Hola ${newClientData.name}!
+
+¡Bienvenido a Donas Racha! 🎉
+
+Ya formas parte de nuestro programa de fidelización.
+
+🌐 Ingresa a la plataforma:
+${web}
+
+Desde ahí podrás:
+
+✅ Ver tu racha 🔥
+✅ Consultar tus puntos ⭐
+✅ Revisar tu nivel e insignias 🏅
+✅ Conocer cómo funciona el sistema 📖
+✅ Canjear tus puntos en la tienda 🛍️
+
+🆔 Tu ID de cliente es:
+
+${newClientData.id}
+
+💡 Guarda este mensaje, ya que ese será tu ID permanente para ingresar a tu perfil.
+
+¡Gracias por ser parte de Donas Racha! 🍩💜`
+  );
+
+  window.open(
+    phone
+      ? `https://wa.me/${phone}?text=${msg}`
+      : `https://wa.me/?text=${msg}`,
+    "_blank"
+  );
+}
 
 function showPublicRanking() { lastRankingEntry = requireAuth() ? 'home' : 'role'; hideOverlays(); showScreen('screen-ranking'); loadRanking('compras'); }
 async function loadRanking(type) {
