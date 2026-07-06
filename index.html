@@ -7,118 +7,176 @@
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f1f2ff;color:#181827;min-height:100vh;overflow-x:hidden}button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{border:0;outline:0}.screen{display:none;min-height:100vh;padding-bottom:48px}.screen.active{display:block}.header{position:sticky;top:0;z-index:90;background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:18px 20px;text-align:center;box-shadow:0 8px 28px rgba(102,126,234,.35)}.header h1{font-size:20px;font-weight:900}.header p{font-size:12px;opacity:.82;margin-top:3px}.wrap{padding:18px;max-width:520px;margin:0 auto}.admin-wrap{padding:16px;max-width:980px;margin:0 auto}.card{background:white;border-radius:22px;padding:18px;box-shadow:0 6px 24px rgba(25,25,50,.075);margin-bottom:16px}.card-title{font-size:13px;color:#555;font-weight:900;letter-spacing:.35px;margin-bottom:12px;text-transform:uppercase}.muted{color:#9aa;font-size:12px}.row{display:flex;gap:10px;align-items:center}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.btn{border-radius:14px;padding:13px 16px;font-weight:900;display:inline-flex;align-items:center;justify-content:center;gap:8px}.btn-primary{background:linear-gradient(135deg,#667eea,#764ba2);color:white;box-shadow:0 7px 18px rgba(102,126,234,.3)}.btn-green{background:linear-gradient(135deg,#11998e,#38ef7d);color:white;box-shadow:0 8px 22px rgba(17,153,142,.28)}.btn-red{background:#fff0f0;color:#e74c3c}.btn-ghost{background:#f6f7ff;color:#667eea}.btn-outline{background:white;color:#667eea;border:2px solid #667eea}.btn-dark{background:#202037;color:white}.btn:disabled{opacity:.55;cursor:not-allowed}.back-btn{background:transparent;color:#667eea;font-weight:900;margin-bottom:14px;display:flex;gap:6px;align-items:center}.field{width:100%;background:#f8f8fb;border:2px solid #e8e8ee;border-radius:14px;padding:13px 14px;font-size:15px}.field:focus{background:white;border-color:#667eea}.search-row{display:flex;gap:10px}.search-row .field{flex:1}.result-item,.rank-item,.history-item{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid #f1f1f6}.result-item:last-child,.rank-item:last-child,.history-item:last-child{border-bottom:0}.avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);color:white;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0}.avatar.gold{background:linear-gradient(135deg,#f6d365,#fda085)}.avatar.silver{background:linear-gradient(135deg,#b8c6db,#8a9bb0)}.avatar.bronze{background:linear-gradient(135deg,#d4a574,#a0724a)}.grow{flex:1;min-width:0}.name{font-weight:900;color:#171729;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sub{font-size:11px;color:#98a;margin-top:2px}.pill{display:inline-flex;align-items:center;gap:5px;background:#f3f0ff;color:#667eea;border-radius:999px;padding:5px 10px;font-size:12px;font-weight:900}.pill.hot{background:#fff0f4;color:#f5576c}.pill.green{background:#eafff5;color:#11998e}.tabs{display:flex;gap:7px;background:white;border-radius:16px;padding:6px;box-shadow:0 3px 16px rgba(0,0,0,.05);margin-bottom:14px;overflow:auto}.tab{white-space:nowrap;flex:1;background:transparent;color:#98a;border-radius:12px;padding:10px 9px;font-size:12px;font-weight:900}.tab.active{background:linear-gradient(135deg,#667eea,#764ba2);color:white}.stat-card{background:white;border-radius:18px;padding:17px 12px;text-align:center;box-shadow:0 5px 18px rgba(25,25,50,.07)}.stat-card .big{font-size:28px;color:#667eea;font-weight:950}.stat-card .lbl{font-size:11px;color:#98a;font-weight:800;margin-top:4px}.client-hero{background:linear-gradient(135deg,#667eea,#764ba2);border-radius:26px;color:white;padding:24px 18px;text-align:center;box-shadow:0 10px 30px rgba(102,126,234,.34)}.client-avatar{width:78px;height:78px;border-radius:50%;margin:0 auto 12px;background:rgba(255,255,255,.18);border:3px solid rgba(255,255,255,.35);font-size:32px;font-weight:950;display:flex;align-items:center;justify-content:center}.client-name{font-size:22px;font-weight:950}.level-badge{display:inline-flex;align-items:center;gap:6px;margin-top:9px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:7px 12px;font-size:13px;font-weight:900}.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:17px}.hero-stat{background:rgba(255,255,255,.15);border-radius:16px;padding:11px 6px}.hero-stat b{display:block;font-size:21px}.hero-stat span{font-size:10px;opacity:.85}.progress-track{height:12px;background:#ececf5;border-radius:999px;overflow:hidden}.progress-fill{height:100%;background:linear-gradient(90deg,#667eea,#764ba2);border-radius:999px;transition:width .35s}.progress-meta{display:flex;justify-content:space-between;gap:8px;font-size:11px;color:#8e8ea3;margin-top:7px}.badge-grid{display:flex;gap:8px;flex-wrap:wrap}.badge{background:#f8f5ff;border:1px solid #ece5ff;color:#5b45a2;border-radius:14px;padding:9px 10px;font-size:12px;font-weight:900}.hitos{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.hito{background:#f3f3f7;border-radius:15px;text-align:center;padding:11px 4px;color:#aaa;font-weight:900;font-size:12px}.hito.active{background:linear-gradient(135deg,#f093fb,#f5576c);color:white}.already{display:none;background:#fff8e8;border:2px solid #f59e0b;color:#c06d00;border-radius:16px;padding:12px;text-align:center;font-weight:800;font-size:13px;margin-bottom:12px}.qr-box{text-align:center}.qr-box img{width:210px;height:210px;border-radius:14px;border:3px solid #667eea;background:white}.admin-fab{position:fixed;right:18px;bottom:22px;z-index:120;border-radius:999px;background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:13px 16px;font-weight:950;box-shadow:0 9px 26px rgba(102,126,234,.38)}.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:rgba(20,20,32,.94);color:white;border-radius:999px;padding:12px 18px;font-size:13px;font-weight:800;z-index:99999;opacity:0;pointer-events:none;transition:opacity .25s;max-width:92vw;text-align:center}.toast.show{opacity:1}.overlay{position:fixed;inset:0;background:linear-gradient(135deg,#171729,#20274a);display:flex;align-items:center;justify-content:center;padding:24px;z-index:9999}.overlay.hidden{display:none}.login-box{width:100%;max-width:350px;text-align:center;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:26px;padding:28px 20px;color:white;backdrop-filter:blur(10px)}.logo{font-size:56px}.login-box h2{font-size:24px;font-weight:950;margin:8px 0 4px}.login-box p{font-size:13px;color:rgba(255,255,255,.55);margin-bottom:22px}.role-btn{width:100%;border-radius:18px;padding:17px;margin-bottom:12px;display:flex;gap:13px;align-items:center;justify-content:center;text-align:left;font-weight:900}.role-btn span:first-child{font-size:26px}.role-btn small{display:block;font-size:11px;opacity:.7;font-weight:700;margin-top:2px}.dark-field{width:100%;border-radius:14px;padding:14px;background:rgba(255,255,255,.08);border:2px solid rgba(255,255,255,.14);color:white;text-align:center;margin-bottom:12px}.dark-field::placeholder{color:rgba(255,255,255,.35)}#qr-reader,#user-qr-reader{border-radius:16px;overflow:hidden;background:#111}.scanner-wrap{display:none}.scanner-wrap.open{display:block}.admin-table{width:100%;border-collapse:collapse;font-size:13px}.admin-table th{background:#f5f5ff;color:#667;font-size:11px;text-transform:uppercase;letter-spacing:.3px;text-align:left;padding:10px 8px}.admin-table td{padding:10px 8px;border-bottom:1px solid #f3f3f6}.admin-table tr:last-child td{border-bottom:0}.wide-card{overflow:auto}.empty{text-align:center;color:#a0a0b4;font-size:13px;padding:18px 8px}.migration-ok{background:#eafff5;color:#11998e}.migration-pending{background:#fff8e8;color:#b66a00}@media(min-width:760px){.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.admin-grid .card{margin-bottom:0}.admin-wide{grid-column:1/-1}.wrap{padding-top:24px}.grid3.stats{grid-template-columns:repeat(6,1fr)}}
-
-/* Modal informativo Donas Racha */
-.login-box{position:relative}.info-menu-btn{position:absolute;right:14px;top:14px;width:38px;height:38px;border-radius:13px;background:rgba(255,255,255,.12);color:white;border:1px solid rgba(255,255,255,.18);font-size:20px;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.16);transition:transform .18s,background .18s}.info-menu-btn:hover{background:rgba(255,255,255,.2);transform:translateY(-1px)}.info-menu-btn:active{transform:scale(.96)}.info-modal{position:fixed;inset:0;z-index:10050;background:rgba(12,12,28,.72);display:flex;align-items:center;justify-content:center;padding:18px;backdrop-filter:blur(8px)}.info-modal.hidden{display:none}.info-box{width:100%;max-width:520px;max-height:88vh;overflow:auto;background:#fff;border-radius:26px;padding:24px 20px 20px;color:#171729;box-shadow:0 24px 70px rgba(0,0,0,.36);position:relative}.info-close{position:sticky;top:0;float:right;margin:-8px -6px 4px 10px;width:36px;height:36px;border-radius:12px;background:#f1f2ff;color:#667eea;font-size:24px;font-weight:900;line-height:1;display:flex;align-items:center;justify-content:center}.info-box h2{font-size:22px;font-weight:950;margin-bottom:14px;color:#171729;padding-right:38px}.info-section{background:#f8f8ff;border:1px solid #ececff;border-radius:18px;padding:14px;margin-top:10px}.info-section h3{font-size:15px;font-weight:950;color:#667eea;margin-bottom:6px}.info-section p,.info-section li{font-size:13px;line-height:1.45;color:#36364c}.info-section ul{padding-left:18px;margin-top:6px}.info-levels,.info-badges{display:grid;gap:7px;margin-top:8px}.info-chip{background:white;border:1px solid #ececff;border-radius:13px;padding:9px 10px;font-size:13px;font-weight:850;color:#36364c}.info-note{margin-top:14px;background:linear-gradient(135deg,#667eea,#764ba2);color:white;border-radius:18px;padding:14px;font-size:13px;line-height:1.45;font-weight:800}.info-note b{font-weight:950}@media(max-width:420px){.info-box{padding:22px 16px 16px;border-radius:22px}.info-box h2{font-size:20px}.info-section p,.info-section li,.info-chip,.info-note{font-size:12px}}
-
-/* Tienda de recompensas */
-.client-tabs{margin-top:14px}.shop-grid{display:grid;gap:12px}.shop-item{border:1px solid #ececff;background:#fbfbff;border-radius:18px;padding:14px;display:grid;grid-template-columns:auto 1fr;gap:11px;align-items:start}.shop-emoji{width:44px;height:44px;border-radius:15px;background:linear-gradient(135deg,#667eea,#764ba2);color:white;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 8px 20px rgba(102,126,234,.23)}.shop-name{font-weight:950;color:#171729}.shop-desc{font-size:12px;color:#8e8ea3;margin-top:3px;line-height:1.35}.shop-meta{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;flex-wrap:wrap}.shop-cost{background:#f3f0ff;color:#667eea;border-radius:999px;padding:7px 10px;font-size:12px;font-weight:950}.shop-buy{border-radius:12px;padding:10px 12px;font-size:12px;font-weight:950}.points-rule-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}.points-rule{background:#f8f8ff;border:1px solid #ececff;border-radius:14px;padding:10px;text-align:center}.points-rule b{display:block;color:#667eea;font-size:18px}.points-rule span{font-size:11px;color:#8e8ea3;font-weight:800}.client-id-box{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:12px;margin-top:12px}.client-id-box label{display:block;font-size:12px;font-weight:900;color:rgba(255,255,255,.75);margin-bottom:8px;text-align:left}.mini-note{font-size:11px;color:rgba(255,255,255,.52);line-height:1.35;margin-top:8px}.redemption-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f1f1f6}.redemption-item:last-child{border-bottom:0}@media(max-width:420px){.points-rule-grid{grid-template-columns:1fr}.shop-meta{align-items:stretch}.shop-buy{width:100%}}
-
+:root{
+  --bg:#0d0b16;
+  --bg2:#151126;
+  --panel:rgba(255,255,255,.075);
+  --panel2:rgba(255,255,255,.11);
+  --card:#171427;
+  --card2:#201a35;
+  --text:#fbfaff;
+  --muted:rgba(255,255,255,.62);
+  --muted2:rgba(255,255,255,.42);
+  --line:rgba(255,255,255,.1);
+  --purple:#8b5cf6;
+  --purple2:#667eea;
+  --pink:#f5576c;
+  --rose:#f093fb;
+  --green:#38ef7d;
+  --warning:#f59e0b;
+  --danger:#ff6b7a;
+  --white:#fff;
+  --shadow:0 24px 80px rgba(0,0,0,.32);
+  --shadow-soft:0 16px 44px rgba(0,0,0,.22);
+  --radius:24px;
+  --radius-sm:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Roboto,Arial,sans-serif;
+  background:
+    radial-gradient(circle at 20% 5%,rgba(139,92,246,.38),transparent 34%),
+    radial-gradient(circle at 85% 10%,rgba(245,87,108,.26),transparent 32%),
+    linear-gradient(180deg,#0b0912 0%,#141020 46%,#0d0b16 100%);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+body:before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
+  background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.026) 1px,transparent 1px);
+  background-size:48px 48px;
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,.8),transparent 78%);
+}
+button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{border:0;outline:0}
+.screen{display:none;min-height:100vh;padding-bottom:48px;animation:fadeUp .28s ease both}.screen.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.header{
+  position:sticky;top:0;z-index:90;
+  background:rgba(13,11,22,.72);
+  color:var(--text);
+  padding:16px 20px 14px;text-align:center;
+  border-bottom:1px solid var(--line);
+  backdrop-filter:blur(18px);
+  box-shadow:0 10px 34px rgba(0,0,0,.2)
+}
+.header h1{font-size:18px;font-weight:950;letter-spacing:-.02em}.header p{font-size:12px;color:var(--muted);margin-top:3px}
+.wrap{padding:18px;max-width:560px;margin:0 auto}.admin-wrap{padding:16px;max-width:1120px;margin:0 auto}
+.card{
+  background:linear-gradient(180deg,rgba(255,255,255,.105),rgba(255,255,255,.065));
+  border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;box-shadow:var(--shadow-soft);margin-bottom:16px;
+  backdrop-filter:blur(18px);transition:transform .2s ease,border-color .2s ease,background .2s ease
+}
+.card:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.16)}
+.card-title{font-size:12px;color:var(--muted);font-weight:950;letter-spacing:.42px;margin-bottom:12px;text-transform:uppercase}
+.muted{color:var(--muted);font-size:12px;line-height:1.45}.row{display:flex;gap:10px;align-items:center}.grow{flex:1;min-width:0}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.btn{border-radius:16px;padding:13px 16px;font-weight:950;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .18s ease,filter .18s ease,box-shadow .18s ease}
+.btn:hover{transform:translateY(-1px);filter:brightness(1.04)}.btn:active{transform:scale(.98)}.btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.btn-primary{background:linear-gradient(135deg,var(--purple2),var(--purple) 48%,var(--pink));color:white;box-shadow:0 14px 34px rgba(139,92,246,.32)}
+.btn-green{background:linear-gradient(135deg,#11998e,var(--green));color:#08120f;box-shadow:0 12px 28px rgba(56,239,125,.26)}
+.btn-red{background:rgba(255,107,122,.12);color:#ffb1ba;border:1px solid rgba(255,107,122,.22)}
+.btn-ghost{background:rgba(255,255,255,.08);color:var(--text);border:1px solid var(--line)}
+.btn-outline{background:rgba(255,255,255,.045);color:var(--text);border:1px solid rgba(255,255,255,.16)}
+.btn-dark{background:#ffffff;color:#141020;box-shadow:0 12px 28px rgba(255,255,255,.12)}
+.back-btn{background:transparent;color:rgba(255,255,255,.75);font-weight:950;margin-bottom:14px;display:flex;gap:6px;align-items:center;transition:color .2s}.back-btn:hover{color:#fff}
+.field,.dark-field{width:100%;border-radius:16px;padding:14px;background:rgba(255,255,255,.075);border:1px solid rgba(255,255,255,.12);color:white;margin-bottom:12px;transition:border-color .2s,background .2s,box-shadow .2s}
+.field::placeholder,.dark-field::placeholder{color:rgba(255,255,255,.34)}.field:focus,.dark-field:focus{background:rgba(255,255,255,.1);border-color:rgba(139,92,246,.78);box-shadow:0 0 0 4px rgba(139,92,246,.16)}
+.search-row{display:flex;gap:10px}.search-row .field{flex:1;margin-bottom:0}
+.result-item,.rank-item,.history-item,.redemption-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.075);transition:background .18s ease}.result-item:last-child,.rank-item:last-child,.history-item:last-child,.redemption-item:last-child{border-bottom:0}.result-item:hover,.rank-item:hover{background:rgba(255,255,255,.035)}
+.avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--purple2),var(--purple));color:white;font-weight:950;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 10px 20px rgba(139,92,246,.18)}.avatar.gold{background:linear-gradient(135deg,#f6d365,#fda085)}.avatar.silver{background:linear-gradient(135deg,#d9e4f5,#8a9bb0)}.avatar.bronze{background:linear-gradient(135deg,#d4a574,#a0724a)}
+.name{font-weight:950;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sub{font-size:11px;color:var(--muted2);margin-top:2px}.pill{display:inline-flex;align-items:center;gap:5px;background:rgba(139,92,246,.16);color:#d6c5ff;border:1px solid rgba(139,92,246,.22);border-radius:999px;padding:6px 10px;font-size:12px;font-weight:950;white-space:nowrap}.pill.hot{background:rgba(245,87,108,.15);color:#ffb3c0;border-color:rgba(245,87,108,.25)}.pill.green{background:rgba(56,239,125,.12);color:#a6ffd0;border-color:rgba(56,239,125,.22)}
+.tabs{display:flex;gap:7px;background:rgba(255,255,255,.07);border:1px solid var(--line);border-radius:18px;padding:6px;margin-bottom:14px;overflow:auto;box-shadow:0 10px 28px rgba(0,0,0,.16);backdrop-filter:blur(14px)}.tab{white-space:nowrap;flex:1;background:transparent;color:rgba(255,255,255,.55);border-radius:13px;padding:10px 9px;font-size:12px;font-weight:950;transition:background .2s,color .2s,transform .2s}.tab.active{background:linear-gradient(135deg,var(--purple2),var(--purple));color:white;box-shadow:0 10px 22px rgba(139,92,246,.22)}
+.stat-card{background:linear-gradient(180deg,rgba(255,255,255,.11),rgba(255,255,255,.065));border:1px solid var(--line);border-radius:20px;padding:17px 12px;text-align:center;box-shadow:var(--shadow-soft)}.stat-card .big{font-size:28px;color:#fff;font-weight:950;letter-spacing:-.04em}.stat-card .lbl{font-size:11px;color:var(--muted);font-weight:850;margin-top:4px}
+.overlay{position:fixed;inset:0;background:radial-gradient(circle at 20% 10%,rgba(139,92,246,.42),transparent 38%),radial-gradient(circle at 88% 6%,rgba(245,87,108,.28),transparent 32%),linear-gradient(180deg,#0b0912,#151126);display:flex;align-items:center;justify-content:center;padding:18px;z-index:9999;overflow:auto}.overlay.hidden{display:none}
+.login-box,.welcome-card{width:100%;max-width:390px;text-align:center;background:rgba(255,255,255,.075);border:1px solid rgba(255,255,255,.12);border-radius:30px;padding:28px 20px;color:white;backdrop-filter:blur(20px);box-shadow:var(--shadow);animation:fadeUp .35s ease both}.welcome-card{max-width:480px;text-align:left;padding:24px}.logo,.brand-logo{font-size:56px;line-height:1}.brand-row{display:flex;align-items:center;gap:12px;margin-bottom:14px}.brand-copy h1,.login-box h2{font-size:28px;font-weight:980;letter-spacing:-.04em}.brand-copy p,.login-box p{font-size:13px;color:var(--muted);line-height:1.45}.welcome-title{font-size:34px;font-weight:980;letter-spacing:-.05em;line-height:1.02;margin:12px 0 10px}.welcome-desc{font-size:15px;color:rgba(255,255,255,.72);line-height:1.5;margin-bottom:18px}.role-client-cta{width:100%;min-height:62px;border-radius:22px;font-size:17px;margin:8px 0 10px}.admin-text-link{display:block;margin:8px auto 0;background:transparent;color:rgba(255,255,255,.36);font-size:12px;font-weight:800;text-align:center}.admin-text-link:hover{color:rgba(255,255,255,.72)}.feature-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0}.feature-card{background:rgba(255,255,255,.07);border:1px solid var(--line);border-radius:18px;padding:13px}.feature-card b{display:block;font-size:13px;margin-bottom:4px}.feature-card span{display:block;font-size:11px;color:var(--muted);line-height:1.35}.landing-note{font-size:12px;color:var(--muted2);line-height:1.4;text-align:center;margin-top:12px}.role-btn{width:100%;border-radius:18px;padding:17px;margin-bottom:12px;display:flex;gap:13px;align-items:center;justify-content:center;text-align:left;font-weight:950}.role-btn span:first-child{font-size:26px}.role-btn small{display:block;font-size:11px;opacity:.66;font-weight:750;margin-top:2px}
+#qr-reader,#user-qr-reader{border-radius:18px;overflow:hidden;background:#0a0a0f;border:1px solid var(--line)}.scanner-wrap{display:none}.scanner-wrap.open{display:block}
+.client-hero{position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(102,126,234,.95),rgba(139,92,246,.9) 52%,rgba(245,87,108,.85));border:1px solid rgba(255,255,255,.18);border-radius:32px;color:white;padding:24px 18px;text-align:left;box-shadow:0 24px 70px rgba(139,92,246,.28);margin-bottom:16px}.client-hero:after{content:"";position:absolute;right:-70px;top:-80px;width:190px;height:190px;border-radius:50%;background:rgba(255,255,255,.13)}.client-avatar{width:64px;height:64px;border-radius:22px;margin:0 0 14px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.24);font-size:28px;font-weight:950;display:flex;align-items:center;justify-content:center}.client-name{font-size:25px;font-weight:980;letter-spacing:-.035em;position:relative;z-index:1}.level-badge{display:inline-flex;align-items:center;gap:6px;margin-top:9px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:7px 12px;font-size:13px;font-weight:950}.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:18px}.hero-stat{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:12px 8px;text-align:center}.hero-stat b{display:block;font-size:22px}.hero-stat span{font-size:10px;opacity:.82}.progress-track{height:12px;background:rgba(255,255,255,.09);border-radius:999px;overflow:hidden;border:1px solid rgba(255,255,255,.08)}.progress-fill{height:100%;background:linear-gradient(90deg,var(--rose),var(--pink));border-radius:999px;transition:width .45s cubic-bezier(.2,.8,.2,1)}.progress-meta{display:flex;justify-content:space-between;gap:8px;font-size:11px;color:var(--muted);margin-top:8px}.badge-grid{display:flex;gap:8px;flex-wrap:wrap}.badge{background:rgba(139,92,246,.13);border:1px solid rgba(139,92,246,.25);color:#e6dcff;border-radius:14px;padding:9px 10px;font-size:12px;font-weight:950}.hitos{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.hito{background:rgba(255,255,255,.075);border:1px solid var(--line);border-radius:15px;text-align:center;padding:11px 4px;color:rgba(255,255,255,.45);font-weight:950;font-size:12px}.hito.active{background:linear-gradient(135deg,var(--rose),var(--pink));color:white;border-color:rgba(255,255,255,.14)}.already{display:none;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);color:#ffd18a;border-radius:16px;padding:12px;text-align:center;font-weight:850;font-size:13px;margin-bottom:12px}.qr-box{text-align:center}.qr-box img{width:210px;height:210px;border-radius:18px;border:1px solid rgba(255,255,255,.16);background:white;padding:6px}.client-tabs{position:sticky;top:74px;z-index:70;margin-top:8px}.client-section{animation:fadeUp .22s ease both}.inline-ranking-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}.inline-ranking-head .pill{font-size:11px}
+.shop-grid{display:grid;gap:12px}.shop-item{border:1px solid var(--line);background:rgba(255,255,255,.06);border-radius:20px;padding:14px;display:grid;grid-template-columns:auto 1fr;gap:11px;align-items:start}.shop-emoji{width:46px;height:46px;border-radius:16px;background:linear-gradient(135deg,var(--purple2),var(--purple));color:white;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 8px 20px rgba(139,92,246,.24)}.shop-name{font-weight:950;color:#fff}.shop-desc{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.35}.shop-meta{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;flex-wrap:wrap}.shop-cost{background:rgba(139,92,246,.14);color:#e6dcff;border:1px solid rgba(139,92,246,.22);border-radius:999px;padding:7px 10px;font-size:12px;font-weight:950}.shop-buy{border-radius:12px;padding:10px 12px;font-size:12px;font-weight:950}.points-rule-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}.points-rule{background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:14px;padding:10px;text-align:center}.points-rule b{display:block;color:#fff;font-size:18px}.points-rule span{font-size:11px;color:var(--muted);font-weight:850}.client-id-box{background:rgba(255,255,255,.065);border:1px solid var(--line);border-radius:20px;padding:12px;margin-top:12px}.client-id-box label{display:block;font-size:12px;font-weight:950;color:var(--muted);margin-bottom:8px;text-align:left}.mini-note{font-size:11px;color:var(--muted2);line-height:1.35;margin-top:8px}.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:rgba(255,255,255,.94);color:#151126;border-radius:999px;padding:12px 18px;font-size:13px;font-weight:850;z-index:99999;opacity:0;pointer-events:none;transition:opacity .25s;max-width:92vw;text-align:center;box-shadow:0 18px 50px rgba(0,0,0,.34)}.toast.show{opacity:1}.empty{text-align:center;color:var(--muted2);font-size:13px;padding:18px 8px}
+.admin-fab{display:none}.admin-table{width:100%;border-collapse:collapse;font-size:13px;color:var(--text)}.admin-table th{background:rgba(255,255,255,.065);color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.3px;text-align:left;padding:10px 8px}.admin-table td{padding:11px 8px;border-bottom:1px solid rgba(255,255,255,.075)}.admin-table tr:last-child td{border-bottom:0}.wide-card{overflow:auto}.migration-ok{background:rgba(56,239,125,.12);color:#a6ffd0;border-color:rgba(56,239,125,.24)}.migration-pending{background:rgba(245,158,11,.12);color:#ffd18a;border-color:rgba(245,158,11,.28)}.admin-home-hero{border-radius:30px;padding:22px;background:linear-gradient(135deg,rgba(255,255,255,.105),rgba(255,255,255,.055));border:1px solid var(--line);box-shadow:var(--shadow-soft);margin-bottom:16px}.admin-home-hero h2{font-size:25px;font-weight:980;letter-spacing:-.04em}.admin-home-hero p{color:var(--muted);font-size:13px;margin-top:5px;line-height:1.45}.quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.quick-actions .btn{width:100%}
+.info-menu-btn,.info-modal{display:none!important}
+@media(min-width:760px){.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.admin-grid .card{margin-bottom:0}.admin-wide{grid-column:1/-1}.wrap{padding-top:24px}.grid3.stats{grid-template-columns:repeat(6,1fr)}.welcome-card{padding:30px}.welcome-title{font-size:42px}.feature-grid{grid-template-columns:repeat(4,1fr)}.quick-actions{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:420px){.grid2{gap:9px}.feature-grid{grid-template-columns:1fr 1fr}.points-rule-grid{grid-template-columns:1fr}.shop-meta{align-items:stretch}.shop-buy{width:100%}.welcome-title{font-size:31px}.header{padding-left:14px;padding-right:14px}.wrap{padding-left:14px;padding-right:14px}.client-tabs .tab{font-size:11px;padding:10px 7px}}
 </style>
 </head>
 <body>
 
 <div id="roleOverlay" class="overlay">
-  <div class="login-box">
-    <button class="info-menu-btn" onclick="openInfoModal()" aria-label="Ver información de Donas Racha" title="Información">📖</button>
-    <div class="logo">🍩</div>
-    <h2>Donas Racha</h2>
-    <p>Fidelización para estudiantes UTP</p>
-    <button class="role-btn btn-primary" onclick="goToAdminLogin()"><span>⚙️</span><strong>Soy vendedor/admin<small>Registrar compras y administrar</small></strong></button>
-    <button class="role-btn btn-dark" onclick="goToUserLogin()"><span>📱</span><strong>Soy cliente<small>Escanear QR y ver perfil</small></strong></button>
-    <button class="role-btn btn-ghost" onclick="showPublicRanking()"><span>🏆</span><strong>Ver ranking<small>Top clientes Donas Racha</small></strong></button>
-  </div>
-</div>
-
-<div id="infoModal" class="info-modal hidden" role="dialog" aria-modal="true" aria-labelledby="infoTitle" onclick="if(event.target.id==='infoModal') closeInfoModal()">
-  <div class="info-box">
-    <button class="info-close" onclick="closeInfoModal()" aria-label="Cerrar información">×</button>
-    <h2 id="infoTitle">🍩 ¿Cómo funciona Donas Racha?</h2>
-
-    <div class="info-section">
-      <h3>El sistema de racha</h3>
-      <p>Cada vez que compras una dona, el vendedor registra tu compra y tu racha sube. Si compras seguido, con máximo 3 días sin saltarte, tu racha sigue creciendo. Si pasas más días sin comprar, la racha se reinicia desde 1. ¡La constancia es la clave!</p>
-    </div>
-
-    <div class="info-section">
-      <h3>Temporadas</h3>
-      <p>Cada temporada dura 30 compras. Cuando completas una temporada, tu racha se reinicia, pero tus puntos, nivel e insignias se quedan. ¡Es un nuevo reto cada vez!</p>
-    </div>
-
-    <div class="info-section">
-      <h3>Puntos y niveles</h3>
-      <p>Cada compra te da puntos. Con más puntos subes de nivel:</p>
-      <div class="info-levels">
-        <div class="info-chip">🥉 Bronce — nivel inicial</div>
-        <div class="info-chip">🥈 Plata — 200 puntos</div>
-        <div class="info-chip">🥇 Oro — 500 puntos</div>
-        <div class="info-chip">💎 Diamante — 1,000 puntos</div>
-        <div class="info-chip">👑 Maestro Donero — 2,000 puntos</div>
+  <div class="welcome-card">
+    <div class="brand-row">
+      <div class="brand-logo">🍩</div>
+      <div class="brand-copy">
+        <h1>Donas Racha</h1>
+        <p>Rewards de donas para clientes constantes.</p>
       </div>
     </div>
 
-    <div class="info-section">
-      <h3>Tienda de recompensas</h3>
-      <p>Los premios automáticos por cantidad de compras quedan reemplazados por una tienda. Tus puntos disponibles funcionan como moneda para canjear donas gratis, descuentos y recompensas configuradas.</p>
+    <h2 class="welcome-title">Compra donas, mantén tu racha y desbloquea recompensas.</h2>
+    <p class="welcome-desc">Acumula puntos con cada compra, sube de nivel y compite en el ranking desde tu perfil.</p>
+
+    <div class="feature-grid" aria-label="Beneficios de Donas Racha">
+      <div class="feature-card"><b>🔥 Mantén tu racha</b><span>Compra seguido y aumenta tu progreso.</span></div>
+      <div class="feature-card"><b>⭐ Gana puntos</b><span>Cada compra suma para canjear premios.</span></div>
+      <div class="feature-card"><b>🏆 Sube de nivel</b><span>Bronce, Plata, Oro, Diamante y más.</span></div>
+      <div class="feature-card"><b>🎁 Canjea recompensas</b><span>Usa tus puntos en la tienda.</span></div>
     </div>
 
-    <div class="info-section">
-      <h3>Insignias</h3>
-      <p>Vas desbloqueando insignias según tus logros:</p>
-      <div class="info-badges">
-        <div class="info-chip">🥉 Primer Mordisco — tu primera compra</div>
-        <div class="info-chip">🥈 Cliente Frecuente — 5 compras</div>
-        <div class="info-chip">🥇 Dona Lover — 20 compras</div>
-        <div class="info-chip">👑 Rey de las Donas — 50 compras</div>
-        <div class="info-chip">🔥 Maestro de Rachas — completar una temporada de 30</div>
-        <div class="info-chip">🎉 Cliente VIP — 100 compras</div>
-      </div>
-    </div>
-
-    <div class="info-note">
-      <b>Tu QR e ID personal:</b> al registrarte recibes un código QR único y un IDCliente. Muéstraselo al vendedor en cada visita para registrar compras, o entra como cliente con cámara/ID para ver tu perfil, racha, puntos y tienda.
-    </div>
+    <button class="btn btn-primary role-client-cta" onclick="goToUserLogin()">🍩 Entrar como cliente</button>
+    <button class="admin-text-link" onclick="goToAdminLogin()">¿Eres administrador?</button>
+    <p class="landing-note">Entra con tu QR o IDCliente para ver tu perfil, puntos, ranking y tienda.</p>
   </div>
 </div>
+
+<div id="infoModal" class="info-modal hidden" aria-hidden="true"></div>
 
 <div id="loginOverlay" class="overlay hidden">
   <div class="login-box">
     <div class="logo">🍩</div>
-    <h2>Acceso vendedor</h2>
-    <p>Ingresa tu contraseña de administrador</p>
+    <h2>Acceso para vendedores</h2>
+    <p>Panel privado para registrar compras y administrar Donas Racha.</p>
     <input id="loginInput" class="dark-field" type="password" placeholder="Contraseña" onkeydown="if(event.key==='Enter') checkLogin()">
-    <button id="loginBtn" class="btn btn-primary" style="width:100%" onclick="checkLogin()">Entrar →</button>
-    <button class="btn btn-dark" style="width:100%;margin-top:10px" onclick="goToRoleScreen()">← Volver</button>
-    <div id="loginError" style="display:none;color:#ff8080;font-weight:800;font-size:13px;margin-top:12px">Contraseña incorrecta</div>
+    <button id="loginBtn" class="btn btn-primary" style="width:100%" onclick="checkLogin()">Entrar al panel →</button>
+    <button class="btn btn-ghost" style="width:100%;margin-top:10px" onclick="goToRoleScreen()">← Volver al inicio</button>
+    <div id="loginError" style="display:none;color:#ffb1ba;font-weight:800;font-size:13px;margin-top:12px">Contraseña incorrecta</div>
   </div>
 </div>
 
 <div id="userOverlay" class="overlay hidden">
   <div class="login-box">
     <div class="logo">🍩</div>
-    <h2>Perfil de cliente</h2>
-    <p>Escanea tu QR con cámara o entra colocando tu IDCliente.</p>
+    <h2>Entrar como cliente</h2>
+    <p>Escanea tu QR o coloca tu IDCliente para ver tu racha, puntos, ranking y recompensas.</p>
     <div id="user-qr-reader"></div>
-    <div id="userScanStatus" style="min-height:22px;font-size:12px;color:rgba(255,255,255,.6);margin:12px 0">Elige una opción</div>
-    <button id="userScanBtn" class="btn btn-primary" style="width:100%" onclick="toggleUserScanner()">📷 Escanear QR con cámara</button>
+    <div id="userScanStatus" style="min-height:22px;font-size:12px;color:rgba(255,255,255,.6);margin:12px 0">Elige una opción para continuar</div>
+    <button id="userScanBtn" class="btn btn-primary" style="width:100%" onclick="toggleUserScanner()">📷 Escanear QR</button>
     <div class="client-id-box">
       <label for="userClientIdInput">IDCliente</label>
       <input id="userClientIdInput" class="dark-field" style="margin-bottom:10px" placeholder="Ejemplo: C1712345678901" onkeydown="if(event.key==='Enter') openUserById()">
       <button class="btn btn-dark" style="width:100%" onclick="openUserById()">🪪 Entrar con ID</button>
       <div class="mini-note">Tu ID aparece en el QR o te lo puede dar el vendedor al registrarte.</div>
     </div>
-    <button class="btn btn-dark" style="width:100%;margin-top:10px" onclick="goToRoleScreen()">← Volver</button>
+    <button class="btn btn-ghost" style="width:100%;margin-top:10px" onclick="goToRoleScreen()">← Volver al inicio</button>
   </div>
 </div>
 
 <div id="screen-home" class="screen active">
-  <div class="header"><h1>🍩 Donas Racha</h1><p>Core V2 · puntos, niveles, rachas e insignias</p></div>
+  <div class="header"><h1>🍩 Donas Racha</h1><p>Workspace privado de vendedores</p></div>
   <div class="wrap">
-    <div class="card">
-      <div class="card-title">🏆 Ranking público</div>
-      <div id="home-ranking"><div class="empty">Cargando ranking...</div></div>
-      <button class="btn btn-outline" style="width:100%;margin-top:12px" onclick="showPublicRanking()">Ver ranking completo</button>
+    <div class="admin-home-hero">
+      <h2>Centro de ventas</h2>
+      <p>Busca clientes, registra compras por QR y administra el programa sin mostrar opciones internas al cliente.</p>
+      <div class="quick-actions">
+        <button class="btn btn-primary" onclick="showScreen('screen-new')">➕ Nuevo cliente</button>
+        <button id="qrToggleBtn" class="btn btn-outline" onclick="toggleScanner()">📷 Escanear QR</button>
+        <button class="btn btn-ghost" onclick="showAdmin()">📊 Dashboard</button>
+        <button class="btn btn-red" onclick="logout()">Cerrar sesión</button>
+      </div>
+    </div>
+
+    <div id="scannerWrap" class="card scanner-wrap">
+      <div class="row" style="justify-content:space-between;margin-bottom:12px"><b>Escáner QR</b><button class="btn btn-ghost" onclick="toggleScanner()">Cerrar</button></div>
+      <div id="qr-reader"></div>
     </div>
 
     <div class="card">
@@ -127,18 +185,15 @@
       <div id="searchResults" style="margin-top:12px"></div>
     </div>
 
-    <button id="qrToggleBtn" class="btn btn-outline" style="width:100%;margin-bottom:14px" onclick="toggleScanner()">📷 Escanear QR</button>
-    <div id="scannerWrap" class="card scanner-wrap">
-      <div class="row" style="justify-content:space-between;margin-bottom:12px"><b>Escáner QR</b><button class="btn btn-ghost" onclick="toggleScanner()">Cerrar</button></div>
-      <div id="qr-reader"></div>
+    <div class="card">
+      <div class="card-title">🔥 Top rachas</div>
+      <div id="home-ranking"><div class="empty">Cargando ranking...</div></div>
     </div>
-
-    <button class="btn btn-primary" style="width:100%" onclick="showScreen('screen-new')">➕ Registrar nuevo cliente</button>
   </div>
 </div>
 
 <div id="screen-client" class="screen">
-  <div class="header"><h1>🍩 Perfil</h1><p id="clientHeaderSub">Cliente Donas Racha</p></div>
+  <div class="header"><h1>🍩 Donas Racha</h1><p id="clientHeaderSub">Perfil del cliente</p></div>
   <div class="wrap">
     <button class="back-btn" onclick="clientGoBack()">← Volver</button>
     <div class="client-hero">
@@ -147,27 +202,40 @@
       <div id="clientSince" class="muted" style="color:rgba(255,255,255,.72);margin-top:3px"></div>
       <div id="clientLevel" class="level-badge">🥉 Bronce</div>
       <div class="hero-stats">
-        <div class="hero-stat"><b id="clientPoints">0</b><span>⭐ Puntos totales</span></div>
+        <div class="hero-stat"><b id="clientStreak">0</b><span>🔥 Racha actual</span></div>
+        <div class="hero-stat"><b id="clientPoints">0</b><span>⭐ Puntos</span></div>
         <div class="hero-stat"><b id="clientTotal">0</b><span>🍩 Compras</span></div>
-        <div class="hero-stat"><b id="clientStreak">0</b><span>🔥 Racha</span></div>
       </div>
     </div>
 
     <div id="clientUserTabs" class="tabs client-tabs" style="display:none">
       <button id="client-tab-profile" class="tab active" onclick="setClientTab('profile')">👤 Perfil</button>
+      <button id="client-tab-ranking" class="tab" onclick="setClientTab('ranking')">🏆 Ranking</button>
       <button id="client-tab-shop" class="tab" onclick="setClientTab('shop')">🛍️ Tienda</button>
+      <button id="client-tab-history" class="tab" onclick="setClientTab('history')">📋 Historial</button>
     </div>
 
-    <div id="clientProfileSection">
+    <div id="clientProfileSection" class="client-section">
       <div class="card">
         <div class="card-title">📈 Progreso al siguiente nivel</div>
         <div class="progress-track"><div id="levelProgress" class="progress-fill" style="width:0%"></div></div>
         <div class="progress-meta"><span id="levelText">0%</span><span id="nextLevelText">Siguiente nivel</span></div>
       </div>
 
-      <div class="grid2">
+      <div class="grid2" style="margin-bottom:16px">
         <div class="stat-card"><div id="clientAvailable" class="big">0</div><div class="lbl">Puntos disponibles</div></div>
         <div class="stat-card"><div id="clientNextPoints" class="big">10</div><div class="lbl">Próxima compra</div></div>
+      </div>
+
+      <div class="card">
+        <div class="inline-ranking-head">
+          <div>
+            <div class="card-title" style="margin-bottom:3px">🏆 Ranking Top 10</div>
+            <p class="muted">El ranking aparece automáticamente dentro de tu perfil.</p>
+          </div>
+          <span class="pill hot">🔥 Racha</span>
+        </div>
+        <div id="clientInlineRanking"><div class="empty">Cargando ranking...</div></div>
       </div>
 
       <div class="card">
@@ -196,14 +264,22 @@
         <div class="muted" style="margin-top:8px">IDCliente: <b id="clientIdLabel"></b></div>
         <button class="btn btn-outline" style="margin-top:12px" onclick="downloadCurrentQR()">⬇️ Descargar QR</button>
       </div>
+    </div>
 
+    <div id="clientRankingSection" class="client-section" style="display:none">
+      <div class="tabs">
+        <button id="client-rank-tab-compras" class="tab" onclick="setClientRanking('compras')">🍩 Compras</button>
+        <button id="client-rank-tab-puntos" class="tab" onclick="setClientRanking('puntos')">⭐ Puntos</button>
+        <button id="client-rank-tab-racha" class="tab active" onclick="setClientRanking('racha')">🔥 Racha</button>
+        <button id="client-rank-tab-nivel" class="tab" onclick="setClientRanking('nivel')">👑 Nivel</button>
+      </div>
       <div class="card">
-        <div class="card-title">📋 Historial reciente</div>
-        <div id="historyWrap"><div class="empty">Sin historial</div></div>
+        <div class="card-title">🏆 Ranking completo</div>
+        <div id="clientRankingList"><div class="empty">Cargando ranking...</div></div>
       </div>
     </div>
 
-    <div id="clientShopSection" style="display:none">
+    <div id="clientShopSection" class="client-section" style="display:none">
       <div class="card">
         <div class="card-title">🛍️ Tienda de recompensas</div>
         <p class="muted">Usa tus puntos disponibles como moneda para canjear descuentos, donas gratis y recompensas.</p>
@@ -213,6 +289,13 @@
       <div class="card">
         <div class="card-title">🎁 Mis canjes recientes</div>
         <div id="redemptionsWrap"><div class="empty">Aún no has canjeado recompensas.</div></div>
+      </div>
+    </div>
+
+    <div id="clientHistorySection" class="client-section" style="display:none">
+      <div class="card">
+        <div class="card-title">📋 Historial reciente</div>
+        <div id="historyWrap"><div class="empty">Sin historial</div></div>
       </div>
     </div>
   </div>
@@ -334,7 +417,6 @@ window.addEventListener('load', () => {
     goToRoleScreen();
     loadHomeRanking();
   }
-  setTimeout(openInfoModal, 250);
 });
 
 document.addEventListener('keydown', e => {
@@ -490,7 +572,7 @@ function stopScanner() {
   if (scanner && scannerOpen) scanner.stop().catch(()=>{});
   scanner = null; scannerOpen = false;
   document.getElementById('scannerWrap').classList.remove('open');
-  document.getElementById('qrToggleBtn').textContent = '📷 Escanear QR';
+  const qrBtn = document.getElementById('qrToggleBtn'); if (qrBtn) qrBtn.textContent = '📷 Escanear QR';
   const el = document.getElementById('qr-reader'); if (el) el.innerHTML = '';
 }
 
@@ -556,9 +638,9 @@ async function openClient(id, asUser) {
 }
 
 function renderClient(c, asUser) {
-  document.getElementById('clientHeaderSub').textContent = asUser ? 'Mi perfil y tienda' : 'Modo vendedor/admin';
+  document.getElementById('clientHeaderSub').textContent = asUser ? 'Mi perfil, ranking y tienda' : 'Modo vendedor/admin';
   document.getElementById('clientAvatar').textContent = initial(c.name);
-  document.getElementById('clientName').textContent = c.name || 'Cliente';
+  document.getElementById('clientName').textContent = asUser ? `Hola ${c.name || 'Cliente'} 👋` : (c.name || 'Cliente');
   document.getElementById('clientSince').textContent = c.registrationDate ? 'Cliente desde ' + fmtDate(c.registrationDate) : '';
   document.getElementById('clientLevel').textContent = `${c.levelEmoji || '🥉'} ${c.levelName || 'Bronce'}`;
   document.getElementById('clientPoints').textContent = c.pointsTotal || 0;
@@ -583,8 +665,18 @@ function renderClient(c, asUser) {
   renderPointRules(c.pointsRules || []);
   renderShop(c.shopItems || [], c.pointsAvailable || 0);
   renderRedemptions(c.recentRedemptions || []);
-  setClientTab(asUser ? 'profile' : 'profile');
-  if (!asUser) document.getElementById('clientShopSection').style.display = 'none';
+  loadClientInlineRanking('racha');
+  setClientTab('profile');
+  if (!asUser) {
+    const tabs = document.getElementById('clientUserTabs');
+    const ranking = document.getElementById('clientRankingSection');
+    const shop = document.getElementById('clientShopSection');
+    const history = document.getElementById('clientHistorySection');
+    if (tabs) tabs.style.display = 'none';
+    if (ranking) ranking.style.display = 'none';
+    if (shop) shop.style.display = 'none';
+    if (history) history.style.display = '';
+  }
 }
 function renderHitos(active) {
   const set = new Set((active || []).map(Number));
@@ -602,15 +694,49 @@ function renderHistory(hist) {
 }
 
 function setClientTab(tab) {
-  const isShop = tab === 'shop';
-  const profile = document.getElementById('clientProfileSection');
-  const shop = document.getElementById('clientShopSection');
-  if (profile) profile.style.display = isShop ? 'none' : '';
-  if (shop) shop.style.display = isShop ? '' : 'none';
-  const pTab = document.getElementById('client-tab-profile');
-  const sTab = document.getElementById('client-tab-shop');
-  if (pTab) pTab.classList.toggle('active', !isShop);
-  if (sTab) sTab.classList.toggle('active', isShop);
+  const sections = {
+    profile: document.getElementById('clientProfileSection'),
+    ranking: document.getElementById('clientRankingSection'),
+    shop: document.getElementById('clientShopSection'),
+    history: document.getElementById('clientHistorySection')
+  };
+  Object.keys(sections).forEach(key => { if (sections[key]) sections[key].style.display = key === tab ? '' : 'none'; });
+  ['profile','ranking','shop','history'].forEach(key => {
+    const btn = document.getElementById('client-tab-' + key);
+    if (btn) btn.classList.toggle('active', key === tab);
+  });
+  if (tab === 'ranking') loadClientInlineRanking('racha');
+}
+
+function setClientRanking(type) {
+  ['compras','puntos','racha','nivel'].forEach(t => {
+    const btn = document.getElementById('client-rank-tab-' + t);
+    if (btn) btn.classList.toggle('active', t === type);
+  });
+  loadClientInlineRanking(type);
+}
+
+async function loadClientInlineRanking(type='racha') {
+  const inlineEl = document.getElementById('clientInlineRanking');
+  const listEl = document.getElementById('clientRankingList');
+  if (!backendConfigured()) {
+    const msg = '<div class="empty">Configura BACKEND_URL para cargar el ranking.</div>';
+    if (inlineEl) inlineEl.innerHTML = msg;
+    if (listEl) listEl.innerHTML = msg;
+    return;
+  }
+  try {
+    if (inlineEl && type === 'racha') inlineEl.innerHTML = '<div class="empty">Cargando ranking...</div>';
+    if (listEl) listEl.innerHTML = '<div class="empty">Cargando ranking...</div>';
+    const data = await api('getRanking', { type, limit:10 });
+    const html = renderRankingItems(data.ranking || [], type, true);
+    if (inlineEl && type === 'racha') inlineEl.innerHTML = html;
+    if (listEl) listEl.innerHTML = html;
+  } catch (err) {
+    const msg = '<div class="empty">No se pudo cargar el ranking.</div>';
+    if (inlineEl && type === 'racha') inlineEl.innerHTML = msg;
+    if (listEl) listEl.innerHTML = msg;
+  }
 }
 function renderPointRules(rules) {
   const el = document.getElementById('pointsRulesWrap');
