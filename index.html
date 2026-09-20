@@ -408,6 +408,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
 <button class="admin-fab" onclick="tryShowAdmin()">⚙️ Admin</button>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
+<script src="assets/js/api-client.js"></script>
 <script>
 // ═══════════════════════════════════════════════════════════════
 // PEGA AQUÍ LA URL /exec DEL DESPLIEGUE DE GOOGLE APPS SCRIPT
@@ -415,6 +416,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbxaHiL9kFBJgB4lIn7fGqP_WmkUJhM-24ecb3Ai2T3Crr6RfKfJlpyf5l4gVhVWOSvdgw/exec';
 
 let currentClient = null;
+let clientRequestVersion = 0;
 let newClientData = null;
 let scanner = null;
 let scannerOpen = false;
@@ -458,18 +460,13 @@ function backendConfigured() {
 
 async function api(action, params = {}) {
   if (!backendConfigured()) throw new Error('Configura BACKEND_URL en el HTML');
-  const url = new URL(BACKEND_URL);
-  url.searchParams.set('action', action);
-  Object.keys(params).forEach(k => url.searchParams.set(k, params[k]));
-  const res = await fetch(url.toString());
-  return await res.json();
+  return DonasApi.get(BACKEND_URL, action, params);
 }
 
 async function apiPost(action, body = {}) {
   if (!backendConfigured()) throw new Error('Configura BACKEND_URL en el HTML');
   const payload = { action, adminPassword: sessionStorage.getItem('donasPass') || '', ...body };
-  const res = await fetch(BACKEND_URL, { method:'POST', body: JSON.stringify(payload) });
-  return await res.json();
+  return DonasApi.post(BACKEND_URL, payload);
 }
 
 function hideOverlays() {
@@ -523,6 +520,9 @@ async function checkLogin() {
 }
 
 function logout() {
+  DonasApi.invalidate();
+  clientRequestVersion++;
+  currentClient = null;
   sessionStorage.removeItem('donasAuth');
   sessionStorage.removeItem('donasPass');
   currentClient = null;
@@ -533,6 +533,7 @@ function requireAuth() { return sessionStorage.getItem('donasAuth') === 'true'; 
 function tryShowAdmin() { requireAuth() ? showAdmin() : goToAdminLogin(); }
 
 function showScreen(id) {
+  clientRequestVersion++;
   hideOverlays(); stopScanner(); stopUserScanner();
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
@@ -639,14 +640,19 @@ function extractIdFromQR(text) {
 async function openClient(id, asUser) {
   openedAsUser = !!asUser;
   showScreen('screen-client');
+  const requestVersion = clientRequestVersion;
+  currentClient = null;
+  document.getElementById('buyBtn').disabled = true;
   document.getElementById('clientName').textContent = 'Cargando...';
   document.getElementById('buyBtn').style.display = asUser ? 'none' : '';
   try {
     const data = await api('getCliente', { id });
+    if (requestVersion !== clientRequestVersion) return;
     if (!data.ok) throw new Error(data.error || 'Cliente no encontrado');
     currentClient = data.client;
     renderClient(data.client, asUser);
   } catch (err) {
+    if (requestVersion !== clientRequestVersion) return;
     showToast('❌ ' + err.message);
     asUser ? goToUserLogin() : goHome();
   }
@@ -1016,3 +1022,4 @@ function esc(s){ return String(s ?? '').replace(/\\/g,'\\\\').replace(/'/g,"\\'"
 <script src="assets/js/motion.js"></script>
 </body>
 </html>
+

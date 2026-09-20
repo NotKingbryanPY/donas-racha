@@ -1,0 +1,146 @@
+{
+  "passed": true,
+  "fixture": {
+    "clients": 50,
+    "historyRows": 100
+  },
+  "reports": [
+    {
+      "action": "getCliente",
+      "case": "existing",
+      "before": {
+        "reads": 15,
+        "cells": 4686,
+        "writes": 0,
+        "formats": 0
+      },
+      "after": {
+        "reads": 12,
+        "cells": 1325,
+        "writes": 0,
+        "formats": 0
+      }
+    },
+    {
+      "action": "getCliente",
+      "case": "missing",
+      "before": {
+        "reads": 2,
+        "cells": 1173,
+        "writes": 0,
+        "formats": 0
+      },
+      "after": {
+        "reads": 2,
+        "cells": 73,
+        "writes": 0,
+        "formats": 0
+      }
+    },
+    {
+      "action": "getRanking",
+      "before": {
+        "reads": 3,
+        "cells": 1203,
+        "writes": 0,
+        "formats": 0
+      },
+      "after": {
+        "reads": 3,
+        "cells": 1203,
+        "writes": 0,
+        "formats": 0
+      }
+    },
+    {
+      "action": "getTodosClientes",
+      "before": {
+        "reads": 603,
+        "cells": 175353,
+        "writes": 0,
+        "formats": 0
+      },
+      "after": {
+        "reads": 11,
+        "cells": 2402,
+        "writes": 0,
+        "formats": 0
+      }
+    },
+    {
+      "action": "getStats",
+      "before": {
+        "reads": 8,
+        "cells": 3484,
+        "writes": 0,
+        "formats": 0
+      },
+      "after": {
+        "reads": 7,
+        "cells": 2334,
+        "writes": 0,
+        "formats": 0
+      }
+    },
+    {
+      "action": "buscarCliente",
+      "before": {
+        "reads": 3,
+        "cells": 1203,
+        "writes": 0,
+        "formats": 0
+      },
+      "after": {
+        "reads": 3,
+        "cells": 1203,
+        "writes": 0,
+        "formats": 0
+      }
+    },
+    {
+      "action": "registrarCompra",
+      "before": {
+        "reads": 58,
+        "cells": 8449,
+        "writes": 25,
+        "formats": 45
+      },
+      "after": {
+        "reads": 29,
+        "cells": 2679,
+        "writes": 3,
+        "formats": 0
+      }
+    },
+    {
+      "action": "canjearRecompensa",
+      "before": {
+        "reads": 52,
+        "cells": 6149,
+        "writes": 25,
+        "formats": 45
+      },
+      "after": {
+        "reads": 25,
+        "cells": 1560,
+        "writes": 3,
+        "formats": 0
+      }
+    },
+    {
+      "action": "nuevoCliente",
+      "before": {
+        "reads": 48,
+        "cells": 6113,
+        "writes": 23,
+        "formats": 45
+      },
+      "after": {
+        "reads": 17,
+        "cells": 2536,
+        "writes": 1,
+        "formats": 0
+      }
+    }
+  ]
+}
