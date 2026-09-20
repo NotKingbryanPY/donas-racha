@@ -40,7 +40,7 @@ Recorrido web: 31 → 25 requests por tamaño, reducción 19,4 %. PASS en cinco 
 
 ## Límites y riesgos pendientes
 
-La mejora en segundos aún no está medida. Falta acceso al proyecto Apps Script, backup de hojas y prueba desplegada en copia. No se asegura reducción de 5,8 s a ningún tiempo concreto. No se ejecutó testAPI: inicializa/modifica datos.
+La mejora en segundos aún no está medida. Se verificó acceso al editor y coincidencia con el código original, se creó un respaldo privado de Sheets y se guardó el código optimizado en una copia del proyecto. Su ejecución quedó pendiente de completar la autorización de Google. Por preferencia del propietario, el flujo continúa con GitHub y entrega de texto para copiar/pegar, sin navegador. Falta validación real y medición posterior al despliegue. No se asegura reducción de 5,8 s a ningún tiempo concreto. No se ejecutó testAPI: inicializa/modifica datos.
 
 Se conserva deliberadamente el contrato de acceso legacy en esta propuesta de rendimiento: perfil/listados públicos, campo WhatsApp del ranking y canje sin autenticar siguen siendo riesgos conocidos. El plan inicial contemplaba corregirlos en fase 1, pero cerrar esos accesos requiere acordar y entregar un mecanismo de identidad de cliente; hacerlo solo en frontend no protege datos, y exigir contraseña administrativa a todo cliente rompe el flujo actual. Esta parte queda pendiente explícita, no se declara resuelta. La retirada de contraseña de respaldo sí está implementada.
 

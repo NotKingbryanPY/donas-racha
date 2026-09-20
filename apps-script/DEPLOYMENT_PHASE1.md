@@ -1,14 +1,29 @@
-# Preparación y actualización reversible
+# Fase 1: entrega por GitHub y copiar/pegar
 
-Esta rama no actualiza automáticamente Apps Script. Code.gs debe probarse primero en un proyecto de copia. No fusionar pensando que el backend se despliega desde Vercel.
+Los cambios web están en el PR #3: https://github.com/NotKingbryanPY/donas-racha/pull/3. No se han fusionado a main ni publicado en producción.
 
-1. Guardar versión actual del código Apps Script, propiedades, configuración de despliegue y copia íntegra de Sheets. La fixture redaccionada de tests no sustituye ese respaldo.
-2. Crear copia de prueba y configurar SPREADSHEET_ID con el ID de la copia. Configurar ADMIN_PASSWORD como propiedad del script, o conservar una credencial no vacía en la hoja Config. No pegar valores en GitHub. Mantener zona horaria del proyecto y de la hoja original.
-3. Sustituir código por Code.gs en la copia. No inventar manifiesto ni permisos: revisar y conservar los del proyecto real. Comprobar las siete hojas operativas y cabeceras. Si están incompletas, revisar la copia y ejecutar initSheets explícitamente; esa acción puede sembrar/actualizar datos y formato.
-4. Desplegar una versión de prueba. Activar PERF_LOG=true para comparar llamadas agregadas. Validar perfil, ranking, búsqueda, compra y canje con clientes de prueba, incluidas repetición, saldo insuficiente y configuración. Revisar saldos y eventos directamente en Sheets.
-5. Tomar varias muestras antes/después con el mismo conjunto de datos y entorno; documentar latencia de red y logs por separado. Validar también la web nueva contra backend viejo y nuevo. La suite simulada cubre el contrato, no reemplaza esa prueba.
-6. Solo tras verificar copia y backup, actualizar la versión del despliegue existente conservando su URL /exec; no reemplazar IDs/QR. Publicar la web de la rama cuando se apruebe la revisión. Los contratos GET/POST no cambian.
+## Apps Script
 
-Rollback web: revertir commit de fase 1 o volver al despliegue anterior en Vercel. Backend: seleccionar la versión anterior del despliegue Apps Script. No hay migración de estructura ni cambio de reglas que revertir; conservar las operaciones legítimas realizadas. Si se detecta inconsistencia de datos, pausar escrituras y conciliar con el backup y Registros/Canjes; no restaurar una copia antigua ciegamente.
+1. Descarga DONAS_RACHA_FASE_1.txt y copia TODO su contenido en el archivo code.gs de tu proyecto. Sustituye el contenido anterior; no lo añadas al final. El archivo incluye runPhase1ReadOnlyCheck: no dupliques esa función en otro archivo.
+2. En Configuración del proyecto → Propiedades de script, configura SPREADSHEET_ID con el ID de la hoja que quieras usar. Para pruebas usa la copia; para producción, la hoja original. El código no contiene un ID ni contraseña de respaldo.
+3. Conserva una contraseña administrativa no vacía en Config, o usa ADMIN_PASSWORD en Propiedades de script. No necesitas escribirla en GitHub ni enviarla al chat. Mantén la zona horaria actual.
+4. Guarda. En la copia de pruebas, selecciona runPhase1ReadOnlyCheck y pulsa Ejecutar. Esta función comprueba las cabeceras y lee tres perfiles, sin modificar hojas. No selecciones testAPI: llama a initSheets y escribe datos.
+5. Tras validar la copia, para actualizar producción: Implementar → Gestionar implementaciones → selecciona la implementación cuya URL utiliza la web → Editar → Nueva versión → Implementar. Conserva la URL /exec actual y la versión anterior para revertir.
 
-Para medir una consulta, usar un cliente de prueba y registrar solo duración/estado/tamaño, nunca contraseña, teléfono o cuerpo del perfil. Evitar usar getTodosClientes con detalles en producción como benchmark de carga.
+El archivo adjuntado más recientemente coincide con el código optimizado y la comprobación preparada, salvo espacios/saltos de línea. Si ya pegaste exactamente ese contenido, no hace falta volver a pegarlo.
+
+## Resultado verificado
+
+- Backend local: respuestas conservadas en perfil, ranking, búsqueda, compras, canjes y altas; pruebas de invalidación y errores aprobadas.
+- Perfil de fixture: 4686 → 1325 celdas leídas (71,7 % menos).
+- Recorrido web: 31 → 25 solicitudes, pruebas aprobadas en cinco tamaños.
+- Pruebas de transporte: aprobadas; sin repetición automática de escrituras.
+- Estos resultados no son una medición de velocidad del nuevo backend en producción. La comprobación en Google no terminó: solicitó autorización. El usuario autorizó concederla, pero se cambió a entrega manual antes de completarla.
+
+Se creó una copia privada de Sheets y se respaldó el código original. El proyecto de pruebas contiene el código preparado y apunta a esa copia. No se cambiaron datos de producción ni se desplegó el backend.
+
+## Pendiente
+
+Validar la copia y medir tiempos reales antes de publicar. Siguen pendientes los riesgos legacy: acceso público a datos/WhatsApp, canjes sin identidad e idempotencia. La hoja original también muestra acceso para cualquiera con el enlace; revisar sus permisos. Esta entrega optimiza rendimiento y no declara resueltos esos riesgos.
+
+No se ha iniciado fase 2. A partir de ahora se trabajará con GitHub y archivos de Apps Script, sin automatizar el navegador salvo solicitud explícita del propietario.
