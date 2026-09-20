@@ -58,7 +58,7 @@ create table public.pickup_locations (
 
 create table public.orders (
   id uuid primary key default gen_random_uuid(),
-  public_code text not null unique default ('DR-' || upper(substr(encode(extensions.gen_random_bytes(6), 'hex'), 1, 8))),
+  public_code text not null unique default ('DR-' || upper(substr(replace(gen_random_uuid()::text, '-', ''), 1, 10))),
   customer_id uuid references public.customers(id) on delete restrict,
   pickup_location_id uuid not null references public.pickup_locations(id) on delete restrict,
   status public.order_status not null default 'PENDING',
