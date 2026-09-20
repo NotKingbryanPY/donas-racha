@@ -1,6 +1,6 @@
 # Fase 1 — Resultado de implementación y pruebas
 
-Estado: propuesta probada localmente; nuevo backend todavía no desplegado ni medido en Google. No se inició fase 2.
+Estado: backend `2.1.1-performance` desplegado por el propietario y medido mediante su nueva URL `/exec`. La web actualizada permanece en el PR #3; no se ha fusionado ni publicado. No se inició fase 2.
 
 ## Cambios
 
@@ -30,6 +30,21 @@ Perfil: 71,7 % menos celdas; compra: 50 % menos lecturas. En compra/canje/alta s
 
 Recorrido web: 31 → 25 requests por tamaño, reducción 19,4 %. PASS en cinco tamaños, sin excepciones JS. La suite sigue simulando API/cámara y no escribe en producción.
 
+## Medición del despliegue nuevo
+
+Muestra secuencial desde el mismo entorno, con tiempo de pared y redirecciones incluidas:
+
+| Operación | Resultado |
+|---|---|
+| Health | HTTP 200, `2.1.1-performance`, 2342 ms |
+| Config pública | HTTP 200, 3517 ms |
+| Tienda, 5 elementos | HTTP 200, 2256 ms |
+| ID inexistente | HTTP 200 y error esperado, 2540 ms |
+| Ranking, límite 1 | HTTP 200, 2770 ms |
+| Perfil existente | 3756 / 5560 / 4225 ms; mediana 4225 ms |
+
+La línea base del perfil fue 6569 / 5821 / 3746 ms, mediana 5821 ms. La mediana observada bajó 27,4 %, pero la muestra es pequeña y variable; no representa p95 ni permite prometer un tiempo. Apps Script continúa aportando una latencia mínima elevada incluso en rutas sencillas.
+
 ## Pruebas
 
 `node tests/backend.cjs`: respuestas idénticas frente al fixture legacy para perfil, ID inexistente, ranking, listado detallado, estadísticas, búsqueda, compra, canje y alta. Verifica compra del mismo día, saldo insuficiente, configuración, eliminación, datos antiguos, ausencia de caché entre requests, credencial vacía rechazada, esquema incompleto sin escrituras y saldo modificado durante espera de lock.
@@ -40,7 +55,7 @@ Recorrido web: 31 → 25 requests por tamaño, reducción 19,4 %. PASS en cinco 
 
 ## Límites y riesgos pendientes
 
-La mejora en segundos aún no está medida. Se verificó acceso al editor y coincidencia con el código original, se creó un respaldo privado de Sheets y se guardó el código optimizado en una copia del proyecto. Su ejecución quedó pendiente de completar la autorización de Google. Por preferencia del propietario, el flujo continúa con GitHub y entrega de texto para copiar/pegar, sin navegador. Falta validación real y medición posterior al despliegue. No se asegura reducción de 5,8 s a ningún tiempo concreto. No se ejecutó testAPI: inicializa/modifica datos.
+La medición real confirma una mejora moderada, pero no elimina la espera. Se verificó la versión publicada y las rutas de lectura sin escribir datos. Por preferencia del propietario, el flujo continúa con GitHub y entrega de texto para copiar/pegar, sin navegador. No se ejecutó `testAPI`: inicializa/modifica datos.
 
 Se conserva deliberadamente el contrato de acceso legacy en esta propuesta de rendimiento: perfil/listados públicos, campo WhatsApp del ranking y canje sin autenticar siguen siendo riesgos conocidos. El plan inicial contemplaba corregirlos en fase 1, pero cerrar esos accesos requiere acordar y entregar un mecanismo de identidad de cliente; hacerlo solo en frontend no protege datos, y exigir contraseña administrativa a todo cliente rompe el flujo actual. Esta parte queda pendiente explícita, no se declara resuelta. La retirada de contraseña de respaldo sí está implementada.
 
