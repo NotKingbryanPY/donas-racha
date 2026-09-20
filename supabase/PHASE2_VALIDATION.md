@@ -2,9 +2,7 @@
 
 ## Resultado local
 
-Las tres migraciones se aplicaron completas en un motor PostgreSQL embebido (PGlite): se crearon 18 tablas, todas reportaron RLS activo, se cargaron los cinco niveles y quedaron cero privilegios de tabla para `anon`/`authenticated`. Una inserción con `public_id` inválido fue rechazada. Después se ejecutó la reversión y quedaron cero tablas en `public`.
-
-PGlite no incluye `pgcrypto`; únicamente para esta prueba se sustituyeron los dos generadores de códigos aleatorios por valores constantes. La sintaxis original de `pgcrypto` debe comprobarse en Supabase, donde esa extensión está disponible.
+Las tres migraciones se aplicaron sin modificar en un motor PostgreSQL embebido (PGlite): se crearon 18 tablas, todas reportaron RLS activo, se cargaron los cinco niveles y quedaron cero privilegios de tabla para `anon`/`authenticated`. Una inserción con `public_id` inválido fue rechazada. Después se ejecutó la reversión y quedaron cero tablas en `public`.
 
 Además se ejecutó `tests/schema-contract.cjs`:
 
