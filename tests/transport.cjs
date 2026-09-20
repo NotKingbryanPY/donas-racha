@@ -46,4 +46,3 @@ const complete=(item,data={ok:true})=>item.resolve({ok:true,json:async()=>data})
   assert.deepEqual(rendered,['new']);
   console.log('PASS: ranking deduplication/cache, invalidation, errors, timeout, no retry, profile response ordering');
 })().catch(e=>{console.error(e);process.exit(1)});
-

@@ -23,4 +23,3 @@ La comparación backend reproducible usa 50 clientes y 100 filas de historial, m
 | Alta | 48 | 6113 | 23 | 45 |
 
 Los contadores no incluyen todos los métodos remotos (por ejemplo getLastRow), y no deben convertirse en una predicción de segundos.
-

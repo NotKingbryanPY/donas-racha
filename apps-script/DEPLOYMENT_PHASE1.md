@@ -12,4 +12,3 @@ Esta rama no actualiza automáticamente Apps Script. Code.gs debe probarse prime
 Rollback web: revertir commit de fase 1 o volver al despliegue anterior en Vercel. Backend: seleccionar la versión anterior del despliegue Apps Script. No hay migración de estructura ni cambio de reglas que revertir; conservar las operaciones legítimas realizadas. Si se detecta inconsistencia de datos, pausar escrituras y conciliar con el backup y Registros/Canjes; no restaurar una copia antigua ciegamente.
 
 Para medir una consulta, usar un cliente de prueba y registrar solo duración/estado/tamaño, nunca contraseña, teléfono o cuerpo del perfil. Evitar usar getTodosClientes con detalles en producción como benchmark de carga.
-

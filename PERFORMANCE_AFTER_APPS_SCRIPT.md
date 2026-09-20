@@ -47,4 +47,3 @@ Se conserva deliberadamente el contrato de acceso legacy en esta propuesta de re
 Tampoco se agregan transacciones, idempotencia ni corrección de la racha semanal; los fallos parciales del backend original siguen siendo posibles. Cachear el ranking 15 s implica esa posible demora en reflejar operaciones de otros dispositivos; se invalida inmediatamente para las escrituras de esta pestaña.
 
 Base técnica consultada: [buenas prácticas oficiales de Apps Script](https://developers.google.com/apps-script/guides/support/best-practices), minimizar accesos externos y trabajar por lotes. Aquí se prefiere memoria del request para no introducir un caché compartido de saldos con invalidación incierta.
-

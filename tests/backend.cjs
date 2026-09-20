@@ -125,5 +125,3 @@ for(const [action,args] of [['registrarCompra',{clientId:'C0'}],['canjearRecompe
 }
 fs.writeFileSync(path.join(__dirname,'backend-results.json'),JSON.stringify({passed:true,fixture:{clients:50,historyRows:100},reports},null,2));
 console.log(JSON.stringify({passed:true,reports},null,2));
-
-
