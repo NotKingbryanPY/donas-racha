@@ -1,8 +1,5 @@
 begin;
 
-create schema if not exists extensions;
-create extension if not exists pgcrypto with schema extensions;
-
 create type public.customer_status as enum ('ACTIVE', 'INACTIVE');
 create type public.loyalty_entry_type as enum (
   'OPENING_BALANCE', 'PURCHASE_EARN', 'REDEMPTION_SPEND', 'ADJUSTMENT', 'EXPIRATION', 'REVERSAL'
@@ -185,7 +182,7 @@ create index rewards_active_order_idx on public.rewards (display_order) where ac
 
 create table public.reward_redemptions (
   id uuid primary key default gen_random_uuid(),
-  public_code text not null unique default upper(substr(encode(extensions.gen_random_bytes(8), 'hex'), 1, 12)),
+  public_code text not null unique default upper(substr(replace(gen_random_uuid()::text, '-', ''), 1, 12)),
   customer_id uuid not null references public.customers(id) on delete restrict,
   reward_id uuid not null references public.rewards(id) on delete restrict,
   loyalty_transaction_id uuid unique references public.loyalty_transactions(id) on delete restrict,
