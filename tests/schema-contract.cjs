@@ -7,11 +7,11 @@ const path = require('node:path');
 const root = path.join(__dirname, '..');
 const migrationsDir = path.join(root, 'supabase', 'migrations');
 const files = fs.readdirSync(migrationsDir).filter((name) => name.endsWith('.sql')).sort();
-assert.deepEqual(files, [
+assert.deepEqual(files.slice(0, 3), [
   '202609200001_core_customers_loyalty.sql',
   '202609200002_catalog_orders.sql',
   '202609200003_reference_data_and_rls.sql'
-]);
+], 'phase 2 migrations must remain first and unchanged in order');
 
 const sql = files.map((name) => fs.readFileSync(path.join(migrationsDir, name), 'utf8')).join('\n');
 const rollback = fs.readFileSync(
@@ -49,4 +49,5 @@ assert.equal((sql.match(/insert into public\.rewards/gi) || []).length, 1);
 assert.equal((sql.match(/\('(?:BRONCE|PLATA|ORO|DIAMANTE|MAESTRO)'/g) || []).length, 5);
 
 console.log(`PASS schema contract: ${files.length} migrations, ${tables.length} tables, RLS closed by default`);
+
 
