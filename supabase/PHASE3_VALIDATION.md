@@ -41,5 +41,20 @@ La web y Apps Script no se modifican en esta fase.
 
 ## Supabase remoto
 
-Pendiente de aplicar la migración en el proyecto de desarrollo y ejecutar las consultas de `PHASE3_SETUP.md`. No se crearán usuarios ni se asignará el primer administrador durante esa comprobación.
+La migración exacta de fase 3 se aplicó mediante el editor SQL al proyecto `yopntnzhcfudaabudbld`. Supabase respondió `Success. No rows returned`.
+
+La consulta de verificación devolvió:
+
+```json
+{
+  "phase3_tables": 2,
+  "phase3_functions": 4,
+  "policies": 38,
+  "all_public_tables_rls": true,
+  "assigned_roles": 0,
+  "auth_users": 0
+}
+```
+
+Esto confirma que las tablas auxiliares, funciones y 38 políticas están instaladas, y que RLS continúa activo en todas las tablas públicas. No se crearon usuarios ni se asignó un administrador durante la validación.
 
