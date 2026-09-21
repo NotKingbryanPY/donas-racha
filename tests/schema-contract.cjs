@@ -48,6 +48,6 @@ assert.equal((sql.match(/insert into public\.badges/gi) || []).length, 1);
 assert.equal((sql.match(/insert into public\.rewards/gi) || []).length, 1);
 assert.equal((sql.match(/\('(?:BRONCE|PLATA|ORO|DIAMANTE|MAESTRO)'/g) || []).length, 5);
 
-console.log(`PASS schema contract: ${files.length} migrations, ${tables.length} tables, RLS closed by default`);
+console.log(`PASS schema contract: ${files.length} migrations, ${tables.length} core tables, RLS closed by default`);
 
 
