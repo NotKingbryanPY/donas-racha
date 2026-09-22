@@ -45,4 +45,17 @@ PASS transport cache/timeouts/profile ordering
 
 ## Pendiente
 
-La migración real permanece bloqueada hasta recibir la exportación privada generada por el propietario. Se ejecutará primero en `DRY RUN`; cualquier fila inválida impedirá automáticamente la escritura en Supabase.
+La exportación real procesó 67 filas y preparó 150 registros. Se detectaron 14 subtotales heredados de puntos por compras superiores al total; se limitaron al total para conservar niveles y rankings. Una insignia pertenecía a un cliente eliminado y se omitió como dato huérfano. No hubo errores bloqueantes.
+
+La migración se aplicó en Supabase el 22 de septiembre de 2026 dentro de una sola transacción. La consulta final confirmó:
+
+```json
+{
+  "customers": 21,
+  "accounts": 21,
+  "transactions": 18,
+  "badges": 16
+}
+```
+
+Google Sheets y Apps Script no se modificaron. El reporte, el SQL aplicado y la reversión específica del lote se conservan fuera de Git porque contienen identificadores y datos privados.

@@ -208,10 +208,12 @@ export function transformExport(payload) {
     if (text(row.WhatsApp) && !phone) issue(issues, 'warning', 'Clientes', row.__row, 'INVALID_PHONE', 'WhatsApp no pudo normalizarse a E.164 y se dejó vacío.', publicId);
 
     const available = Math.max(0, integer(row.PuntosDisponibles));
-    const purchase = Math.max(0, integer(row.PuntosPorCompras, integer(row.TotalCompras) * 10));
-    const statedLifetime = Math.max(0, integer(row.PuntosTotales, purchase));
-    const lifetime = Math.max(statedLifetime, available, purchase);
-    if (lifetime !== statedLifetime) issue(issues, 'warning', 'Clientes', row.__row, 'POINT_TOTAL_ADJUSTED', 'PuntosTotales se elevó para cubrir saldos derivados.', publicId);
+    const statedPurchase = Math.max(0, integer(row.PuntosPorCompras, integer(row.TotalCompras) * 10));
+    const statedLifetime = Math.max(0, integer(row.PuntosTotales, statedPurchase));
+    const lifetime = Math.max(statedLifetime, available);
+    const purchase = Math.min(statedPurchase, lifetime);
+    if (lifetime !== statedLifetime) issue(issues, 'warning', 'Clientes', row.__row, 'POINT_TOTAL_ADJUSTED', 'PuntosTotales se elevó para cubrir el saldo disponible.', publicId);
+    if (purchase !== statedPurchase) issue(issues, 'warning', 'Clientes', row.__row, 'PURCHASE_POINTS_CAPPED', 'PuntosPorCompras superaba PuntosTotales y se limitó para conservar el total y el nivel.', publicId);
     let levelKey = normalizeLevel(row.NivelClave, lifetime);
     if (!text(row.NivelClave) || !LEVELS.some(([key]) => key === text(row.NivelClave).toUpperCase())) {
       issue(issues, 'warning', 'Clientes', row.__row, 'LEVEL_NORMALIZED', 'El nivel se calculó a partir de los puntos acumulados.', publicId);
@@ -333,8 +335,12 @@ export function transformExport(payload) {
     if (!publicId && !text(row.InsigniaID)) continue;
     const customer = sourceCustomers.get(publicId);
     const badgeKey = text(row.InsigniaID).toUpperCase();
-    if (!customer || !badgeKeys.has(badgeKey)) {
-      issue(issues, 'error', 'ClienteInsignias', row.__row, 'INVALID_BADGE_ASSIGNMENT', 'Cliente o insignia desconocidos.', sourceId);
+    if (!customer) {
+      issue(issues, 'warning', 'ClienteInsignias', row.__row, 'ORPHAN_BADGE_SKIPPED', 'La insignia pertenece a un cliente que ya no existe y se omitió.', sourceId);
+      continue;
+    }
+    if (!badgeKeys.has(badgeKey)) {
+      issue(issues, 'error', 'ClienteInsignias', row.__row, 'INVALID_BADGE_ASSIGNMENT', 'La insignia no existe en las definiciones exportadas.', sourceId);
       continue;
     }
     customerBadges.push({ customer_id: customer.id, badge_key: badgeKey, awarded_at: iso(row.FechaAsignacion) || exportedAt, source_system: 'GOOGLE_SHEETS', source_id: `CLIENTE_INSIGNIAS:${sourceId}` });
@@ -416,14 +422,15 @@ export function transformExport(payload) {
     redemptions: deduplicate(redemptions, item => `${item.source_system}:${item.source_id}`, 'reward_redemptions')
   };
   const processed = SHEETS.reduce((sum, name) => sum + (payload.sheets?.[name]?.rows?.length || 0), 0);
-  const invalid = issues.filter(item => item.severity === 'error').length;
+  const blockingErrors = issues.filter(item => item.severity === 'error').length;
+  const invalid = blockingErrors + issues.filter(item => item.code.startsWith('ORPHAN_')).length;
   const duplicates = issues.filter(item => item.code.startsWith('DUPLICATE')).length;
   return {
     data,
     report: {
       schemaVersion: 1, sourceExportedAt: exportedAt, generatedAt: new Date().toISOString(), mode: 'DRY_RUN',
       fingerprint: sha256(canonical(payload)),
-      summary: { rowsProcessed: processed, recordsPrepared: Object.values(data).reduce((sum, rows) => sum + rows.length, 0), duplicates, invalid, errors: 0 },
+      summary: { rowsProcessed: processed, recordsPrepared: Object.values(data).reduce((sum, rows) => sum + rows.length, 0), duplicates, invalid, blockingErrors, errors: 0 },
       entities: Object.fromEntries(Object.entries(data).map(([name, rows]) => [name, { prepared: rows.length }])),
       issues
     }
@@ -431,11 +438,12 @@ export function transformExport(payload) {
 }
 
 function parseArgs(argv) {
-  const args = { input: null, report: 'migration-report.json', rollback: 'migration-rollback.sql', apply: false, confirm: null };
+  const args = { input: null, report: 'migration-report.json', rollback: 'migration-rollback.sql', sqlOut: null, apply: false, confirm: null };
   for (let i = 0; i < argv.length; i++) {
     if (argv[i] === '--input') args.input = argv[++i];
     else if (argv[i] === '--report') args.report = argv[++i];
     else if (argv[i] === '--rollback') args.rollback = argv[++i];
+    else if (argv[i] === '--sql-out') args.sqlOut = argv[++i];
     else if (argv[i] === '--apply') args.apply = true;
     else if (argv[i] === '--confirm') args.confirm = argv[++i];
     else if (argv[i] === '--dry-run') args.apply = false;
@@ -538,6 +546,45 @@ function sqlLiteral(value) {
   return `'${String(value).replaceAll("'", "''")}'`;
 }
 
+export function buildApplySql(data, fingerprint) {
+  const tag = `$phase5_${fingerprint.slice(0, 12)}$`;
+  const json = rows => {
+    const value = JSON.stringify(rows);
+    if (value.includes(tag)) throw new Error('La exportación contiene el delimitador SQL reservado.');
+    return `${tag}${value}${tag}::jsonb`;
+  };
+  const insert = (table, columns, rows) => rows.length
+    ? `insert into public.${table} (${columns.join(',')}) select ${columns.join(',')} from jsonb_populate_recordset(null::public.${table}, ${json(rows)}) on conflict do nothing;\n`
+    : '';
+  const uuidArray = rows => rows.length ? rows.map(item => `${sqlLiteral(item.id)}::uuid`).join(',') : 'null::uuid';
+  const sourceArray = rows => rows.length ? rows.map(item => sqlLiteral(item.source_id)).join(',') : 'null';
+  let sql = `-- Donas Racha fase 5 — lote ${fingerprint}\n-- Generado desde el DRY RUN; transacción atómica e idempotente.\nbegin;\n`;
+  sql += insert('badges', ['key','name','emoji','condition_type','condition_threshold','description','display_order','active'], data.badges);
+  sql += insert('rewards', ['key','name','emoji','points_cost','reward_type','reward_value','description','display_order','active'], data.rewards);
+  sql += insert('customers', ['id','public_id','display_name','whatsapp_e164','status','registered_at','last_purchase_at'], data.customers);
+  sql += insert('customer_aliases', ['id','customer_id','alias_type','alias_value'], data.aliases);
+  sql += insert('loyalty_accounts', ['customer_id','available_points','lifetime_points','purchase_points','level_key'], data.accounts);
+  sql += insert('customer_streaks', ['customer_id','current_count','best_count','current_season_number','last_qualified_at'], data.streaks);
+  sql += insert('loyalty_transactions', ['id','customer_id','entry_type','points_delta','balance_after','source_system','source_id','description','metadata','occurred_at'], data.transactions);
+  sql += insert('streak_seasons', ['id','customer_id','season_number','started_at','ended_at','completed_streak','milestones','preserved_points','preserved_level_key','status','source_system','source_id'], data.seasons);
+  if (data.customerBadges.length) sql += `insert into public.customer_badges (customer_id,badge_id,awarded_at,source_system,source_id)
+select x.customer_id,b.id,x.awarded_at,x.source_system,x.source_id
+from jsonb_to_recordset(${json(data.customerBadges)}) as x(customer_id uuid,badge_key text,awarded_at timestamptz,source_system text,source_id text)
+join public.badges b on b.key=x.badge_key on conflict do nothing;\n`;
+  if (data.redemptions.length) sql += `insert into public.reward_redemptions (id,public_code,customer_id,reward_id,loyalty_transaction_id,points_cost_snapshot,reward_name_snapshot,status,idempotency_key,source_system,source_id,notes,created_at,fulfilled_at)
+select x.id,x.public_code,x.customer_id,r.id,x.loyalty_transaction_id,x.points_cost_snapshot,x.reward_name_snapshot,x.status,x.idempotency_key,x.source_system,x.source_id,x.notes,x.created_at,x.fulfilled_at
+from jsonb_to_recordset(${json(data.redemptions)}) as x(id uuid,public_code text,customer_id uuid,reward_key text,loyalty_transaction_id uuid,points_cost_snapshot integer,reward_name_snapshot text,status public.redemption_status,idempotency_key uuid,source_system text,source_id text,notes text,created_at timestamptz,fulfilled_at timestamptz)
+join public.rewards r on r.key=x.reward_key on conflict do nothing;\n`;
+  sql += `do $$ begin
+  if (select count(*) from public.customers where id in (${uuidArray(data.customers)})) <> ${data.customers.length} then raise exception 'PHASE5_CUSTOMER_COUNT_MISMATCH'; end if;
+  if (select count(*) from public.loyalty_accounts where customer_id in (${data.accounts.length ? data.accounts.map(item => `${sqlLiteral(item.customer_id)}::uuid`).join(',') : 'null::uuid'})) <> ${data.accounts.length} then raise exception 'PHASE5_ACCOUNT_COUNT_MISMATCH'; end if;
+  if (select count(*) from public.loyalty_transactions where source_system='GOOGLE_SHEETS' and source_id in (${sourceArray(data.transactions)})) <> ${data.transactions.length} then raise exception 'PHASE5_TRANSACTION_COUNT_MISMATCH'; end if;
+  if (select count(*) from public.customer_badges where source_system='GOOGLE_SHEETS' and source_id in (${sourceArray(data.customerBadges)})) <> ${data.customerBadges.length} then raise exception 'PHASE5_BADGE_COUNT_MISMATCH'; end if;
+end $$;\ncommit;\n`;
+  sql += `select jsonb_build_object('customers',(select count(*) from public.customers where id in (${uuidArray(data.customers)})),'accounts',(select count(*) from public.loyalty_accounts where customer_id in (${data.accounts.length ? data.accounts.map(item => `${sqlLiteral(item.customer_id)}::uuid`).join(',') : 'null::uuid'})),'transactions',(select count(*) from public.loyalty_transactions where source_system='GOOGLE_SHEETS' and source_id in (${sourceArray(data.transactions)})),'badges',(select count(*) from public.customer_badges where source_system='GOOGLE_SHEETS' and source_id in (${sourceArray(data.customerBadges)}))) as phase5_result;\n`;
+  return sql;
+}
+
 function buildRollbackSql(data, fingerprint, references = { newBadgeKeys: [], newRewardKeys: [] }) {
   const customerIds = data.customers.map(item => `${sqlLiteral(item.id)}::uuid`).join(',\n    ');
   const list = customerIds || 'null::uuid';
@@ -563,9 +610,17 @@ async function main() {
   const args = parseArgs(process.argv.slice(2));
   const payload = JSON.parse(await fs.readFile(path.resolve(args.input), 'utf8'));
   const result = transformExport(payload);
+  if (args.sqlOut) {
+    if (args.confirm !== result.report.fingerprint) throw new Error(`Confirmación requerida. Ejecuta primero DRY RUN y luego usa --confirm ${result.report.fingerprint}`);
+    if (result.report.summary.blockingErrors > 0) throw new Error('No se generó SQL porque el DRY RUN contiene errores bloqueantes.');
+    await fs.writeFile(path.resolve(args.sqlOut), buildApplySql(result.data, result.report.fingerprint), 'utf8');
+    await fs.writeFile(path.resolve(args.rollback), buildRollbackSql(result.data, result.report.fingerprint), 'utf8');
+    result.report.sqlFile = path.resolve(args.sqlOut);
+    result.report.rollbackFile = path.resolve(args.rollback);
+  }
   if (args.apply) {
     if (args.confirm !== result.report.fingerprint) throw new Error(`Confirmación requerida. Ejecuta primero DRY RUN y luego usa --confirm ${result.report.fingerprint}`);
-    if (result.report.summary.invalid > 0) throw new Error('La aplicación se bloqueó porque el DRY RUN contiene errores de datos.');
+    if (result.report.summary.blockingErrors > 0) throw new Error('La aplicación se bloqueó porque el DRY RUN contiene errores de datos.');
     await fs.writeFile(path.resolve(args.rollback), buildRollbackSql(result.data, result.report.fingerprint), 'utf8');
     const insertedReferences = await applyMigration(result, process.env);
     result.report.mode = 'APPLY';

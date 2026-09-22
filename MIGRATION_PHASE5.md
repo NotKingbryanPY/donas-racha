@@ -56,7 +56,19 @@ El importador usa identificadores UUID deterministas y referencias `GOOGLE_SHEET
 
 ## Reversión
 
-Al aplicar, el importador crea `migration-rollback.sql` con los UUID y referencias exactos del lote. Debe conservarse junto al reporte, fuera de Git. La reversión falla de forma segura si pedidos u otros datos posteriores ya referencian clientes migrados.
+Al aplicar o generar SQL, el importador crea `migration-rollback.sql` con los UUID y referencias exactos del lote. Debe conservarse junto al reporte, fuera de Git. La reversión falla de forma segura si pedidos u otros datos posteriores ya referencian clientes migrados.
+
+Para usar una sola transacción desde el editor SQL de Supabase, se puede generar un archivo confirmado:
+
+```powershell
+node scripts/phase5-migrate.mjs `
+  --input migration-data/donas-racha-phase5.json `
+  --dry-run `
+  --confirm HUELLA_DEL_DRY_RUN `
+  --sql-out migration-apply.sql `
+  --rollback migration-rollback.sql `
+  --report migration-report.json
+```
 
 ## Datos originales
 
