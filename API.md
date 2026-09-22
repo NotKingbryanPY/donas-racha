@@ -43,6 +43,8 @@ Las rutas autenticadas reciben `Authorization: Bearer <access_token de Supabase>
 
 Cada variante incluye `available`. El vendedor puede marcar un sabor como agotado y el catálogo lo refleja en la siguiente consulta; PostgreSQL también impide pedirlo. El conteo detallado de unidades se incorporará con inventario en la fase 11. `/api/sync` se diseña con el código de Dona Control en la fase 9.
 
+Los sabores confirmados son glaseado de chocolate, glaseado de vainilla, glaseado de vainilla con chispas y glaseado de chocolate con chispas. Se cargarán como variantes cuando el propietario confirme el precio de venta; la API no usa precios provisionales.
+
 ## Crear pedido
 
 ```json

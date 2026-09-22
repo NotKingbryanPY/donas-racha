@@ -8,9 +8,10 @@ Sabores confirmados hasta ahora:
 
 - glaseado de chocolate;
 - glaseado de vainilla;
-- glaseado de vainilla con chispas.
+- glaseado de vainilla con chispas;
+- glaseado de chocolate con chispas.
 
-El mensaje original repite glaseado de chocolate, por lo que el cuarto sabor queda pendiente de confirmar. El catálogo no debe inventarlo ni cargarlo automáticamente.
+Los cuatro sabores fueron confirmados por el propietario. Su precio de venta todavía no está confirmado, por lo que el catálogo no debe asignar un precio provisional ni cargar variantes vendibles con precio cero.
 
 ## Disponibilidad
 
