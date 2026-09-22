@@ -41,6 +41,25 @@ PASS backend fixture
 PASS transport cache/timeouts/profile ordering
 ```
 
-## Supabase y Vercel remotos
+## Supabase remoto
 
-Pendiente de aplicar la migración en Supabase y configurar las tres variables de entorno privadas en Vercel. La web y Apps Script actuales no dependen de estos pasos y continúan operativos.
+La migración quedó instalada en el proyecto `yopntnzhcfudaabudbld`. Una consulta independiente confirmó:
+
+```json
+{
+  "rate_table": true,
+  "request_hash": true,
+  "api_functions": 4,
+  "rate_rls": true,
+  "service_can_create": true,
+  "anon_blocked": true,
+  "authenticated_blocked": true,
+  "phone_fixed": true
+}
+```
+
+No se crearon pedidos, pagos, clientes ni usuarios durante esta comprobación.
+
+## Vercel remoto
+
+El despliegue Preview del commit `95b20f5` terminó correctamente. El proyecto todavía no tiene variables de entorno. La API permanecerá cerrada con `API_NOT_CONFIGURED` hasta guardar las tres variables descritas en `API.md` y volver a desplegar.
