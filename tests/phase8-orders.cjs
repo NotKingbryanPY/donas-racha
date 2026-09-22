@@ -15,6 +15,8 @@ for (const fragment of [
 ]) assert.ok(html.includes(fragment), `missing phase 8 order behavior: ${fragment}`);
 
 assert.doesNotMatch(html, /PREPARING:'Preparando'/);
+assert.match(html, /return 'B\/\.' \+ amount\.toFixed\(2\)/);
 assert.match(css, /\.order-overlay/);
 assert.match(css, /\.status-timeline/);
+assert.match(css, /\.last-order-button\[hidden\]\{display:none!important\}/);
 console.log('PASS phase 8 orders: cart, delivery, pay-on-delivery and public tracking');

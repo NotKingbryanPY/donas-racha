@@ -600,7 +600,9 @@ function flavorTone(name) {
 }
 
 function formatMoney(cents, currency='USD') {
-  return new Intl.NumberFormat('es-PA', { style:'currency', currency, minimumFractionDigits:2 }).format((Number(cents) || 0) / 100).replace('US$', 'B/.');
+  const amount = (Number(cents) || 0) / 100;
+  if (currency === 'USD') return 'B/.' + amount.toFixed(2);
+  return new Intl.NumberFormat('es-PA', { style:'currency', currency, minimumFractionDigits:2 }).format(amount);
 }
 
 function renderPublicCatalog(products) {
