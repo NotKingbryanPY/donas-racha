@@ -43,7 +43,7 @@ Las rutas autenticadas reciben `Authorization: Bearer <access_token de Supabase>
 
 Cada variante incluye `available`. El vendedor puede marcar un sabor como agotado y el catálogo lo refleja en la siguiente consulta; PostgreSQL también impide pedirlo. El conteo detallado de unidades se incorporará con inventario en la fase 11. `/api/sync` se diseña con el código de Dona Control en la fase 9.
 
-Los sabores confirmados son glaseado de chocolate, glaseado de vainilla, glaseado de vainilla con chispas y glaseado de chocolate con chispas. `supabase/manual/seed_donut_flavors.sql` permite cargarlos cuando el propietario confirme el precio de venta; se detiene sin escribir datos si algún precio sigue vacío.
+Los sabores confirmados son glaseado de chocolate, glaseado de vainilla, glaseado de vainilla con chispas y glaseado de chocolate con chispas, todos a B/.1.00 por unidad. `supabase/manual/seed_donut_flavors.sql` permite cargar el catálogo y se detiene sin escribir datos si algún precio sigue vacío.
 
 ## Crear pedido
 

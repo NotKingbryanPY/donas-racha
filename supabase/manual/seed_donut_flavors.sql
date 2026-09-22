@@ -1,14 +1,13 @@
 -- Catálogo inicial de Donas Racha.
 -- Ejecutar después de 202609220001_delivery_orders.sql.
--- Sustituye cada NULL por el precio de venta de UNA dona en centavos.
--- Ejemplo: B/.1.50 se escribe 150. El script se detiene si falta un precio.
+-- Precio confirmado: B/.1.00 por dona (100 centavos).
 
 do $$
 declare
-  v_chocolate_cents integer := null;
-  v_vanilla_cents integer := null;
-  v_vanilla_sprinkles_cents integer := null;
-  v_chocolate_sprinkles_cents integer := null;
+  v_chocolate_cents integer := 100;
+  v_vanilla_cents integer := 100;
+  v_vanilla_sprinkles_cents integer := 100;
+  v_chocolate_sprinkles_cents integer := 100;
   v_product_id uuid;
 begin
   if v_chocolate_cents is null or v_chocolate_cents <= 0

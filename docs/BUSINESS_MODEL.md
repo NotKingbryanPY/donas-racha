@@ -11,7 +11,7 @@ Sabores confirmados hasta ahora:
 - glaseado de vainilla con chispas;
 - glaseado de chocolate con chispas.
 
-Los cuatro sabores fueron confirmados por el propietario. Su precio de venta todavía no está confirmado, por lo que el catálogo no debe asignar un precio provisional ni cargar variantes vendibles con precio cero.
+Los cuatro sabores fueron confirmados por el propietario y se venden a B/.1.00 por unidad.
 
 ## Disponibilidad
 

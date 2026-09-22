@@ -36,7 +36,7 @@ PASS transport cache/timeouts/profile ordering
 
 ## Supabase remoto
 
-La primera migración de fase 4 quedó instalada en el proyecto `yopntnzhcfudaabudbld`. El ajuste de entrega está listo y validado localmente, pero aún no se ha aplicado al proyecto remoto. La comprobación de la primera migración confirmó:
+La primera migración de fase 4 quedó instalada en el proyecto `yopntnzhcfudaabudbld`. El propietario confirmó el 22 de septiembre de 2026 que también ejecutó en Supabase el ajuste de entrega y la carga de los cuatro sabores a B/.1.00. La comprobación independiente anterior de la primera migración confirmó:
 
 ```json
 {
