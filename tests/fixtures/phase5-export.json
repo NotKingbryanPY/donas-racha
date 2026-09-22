@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": "GOOGLE_SHEETS",
+  "exportedAt": "2026-09-22T12:00:00.000Z",
+  "sheets": {
+    "Clientes": {
+      "headers": ["ID", "Nombre", "WhatsApp", "FechaRegistro", "RachaActual", "TotalCompras", "UltimaCompra", "PuntosTotales", "PuntosDisponibles", "PuntosPorCompras", "NivelClave", "TemporadaActual"],
+      "rows": [["C1234", "Ana", "6000-0000", "2026-01-01T00:00:00.000Z", 4, 3, "2026-09-20T12:00:00.000Z", 30, 20, 30, "BRONCE", 1]]
+    },
+    "Registros": {
+      "headers": ["IDRegistro", "IDCliente", "FechaHora", "Tipo", "RachaResultante", "PuntosOtorgados", "NivelResultante", "Fuente", "Notas"],
+      "rows": [["R1", "C1234", "2026-09-19T12:00:00.000Z", "purchase", 3, 30, "Bronce", "app", "Compra"]]
+    },
+    "Insignias": {
+      "headers": ["InsigniaID", "Nombre", "Emoji", "Tipo", "CondicionCampo", "CondicionValor", "Activa", "Descripcion", "Orden"],
+      "rows": [["PRIMER_MORDISCO", "Primer Mordisco", "🥉", "compras", "TotalCompras", 1, "TRUE", "Primera compra", 1]]
+    },
+    "ClienteInsignias": {
+      "headers": ["ID", "ClienteID", "InsigniaID", "FechaAsignacion", "Fuente"],
+      "rows": [["CI1", "C1234", "PRIMER_MORDISCO", "2026-09-19T12:00:00.000Z", "auto"]]
+    },
+    "TemporadasRacha": {
+      "headers": ["TemporadaID", "ClienteID", "NumeroTemporada", "FechaInicio", "FechaFin", "RachaCompletada", "HitosAlcanzados", "PuntosConservados", "NivelConservado", "Estado", "Fuente"],
+      "rows": [["T1", "C1234", 1, "2026-01-01T00:00:00.000Z", "2026-09-01T00:00:00.000Z", 30, "3,7,14,21,30", 30, "Bronce", "completada", "app"]]
+    },
+    "TiendaRecompensas": {
+      "headers": ["ItemID", "Nombre", "Emoji", "CostoPuntos", "Tipo", "Valor", "Activa", "Descripcion", "Orden"],
+      "rows": [["DESC_10", "10% de descuento", "🏷️", 10, "descuento", "10%", "TRUE", "Descuento", 2]]
+    },
+    "Canjes": {
+      "headers": ["CanjeID", "ClienteID", "ItemID", "NombreItem", "PuntosGastados", "FechaHora", "Estado", "Fuente", "Notas"],
+      "rows": [["X1", "C1234", "DESC_10", "10% de descuento", 10, "2026-09-20T12:00:00.000Z", "completado", "app", "Entregado"]]
+    }
+  }
+}
