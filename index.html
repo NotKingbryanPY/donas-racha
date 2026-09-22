@@ -408,6 +408,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
 <button class="admin-fab" onclick="tryShowAdmin()">⚙️ Admin</button>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
+<script src="assets/js/feature-flags.js"></script>
 <script src="assets/js/api-client.js"></script>
 <script>
 // ═══════════════════════════════════════════════════════════════
@@ -426,6 +427,7 @@ let openedAsUser = false;
 let lastRankingEntry = 'role';
 
 window.addEventListener('load', () => {
+  preloadSupabaseProducts();
   document.getElementById('searchInput').addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
   if (sessionStorage.getItem('donasAuth') === 'true') {
     hideOverlays();
@@ -460,7 +462,60 @@ function backendConfigured() {
 
 async function api(action, params = {}) {
   if (!backendConfigured()) throw new Error('Configura BACKEND_URL en el HTML');
+  if (action === 'getRanking' && window.DonasFlags?.useSupabaseRanking) {
+    return progressiveRanking(params);
+  }
+  return legacyApi(action, params);
+}
+
+function legacyApi(action, params = {}) {
   return DonasApi.get(BACKEND_URL, action, params);
+}
+
+async function vercelApi(path, params = {}, timeoutMs = 5000) {
+  const query = new URLSearchParams(params);
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const response = await fetch(`${path}?${query}`, {
+      headers: { accept:'application/json' },
+      signal: controller.signal
+    });
+    const payload = await response.json().catch(() => null);
+    if (!response.ok || !payload?.ok) throw new Error(payload?.error?.message || 'La nueva API no respondió correctamente.');
+    return payload.data;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function progressiveRanking(params = {}) {
+  const normalized = { type:params.type || 'racha', limit:params.limit || 10 };
+  try {
+    const modern = await vercelApi('/api/ranking', normalized);
+    if (window.DonasFlags?.compareLegacyReads) compareRankingInBackground(normalized, modern.ranking || []);
+    return { ok:true, type:modern.type, ranking:modern.ranking || [] };
+  } catch (error) {
+    console.info(JSON.stringify({ event:'progressive_read_fallback', action:'getRanking', reason:error.name || 'ERROR' }));
+    return legacyApi('getRanking', normalized);
+  }
+}
+
+async function compareRankingInBackground(params, modernRows) {
+  try {
+    const legacy = await legacyApi('getRanking', params);
+    const legacyRows = legacy.ranking || [];
+    const fields = row => [row.id, row.totalPurchases || 0, row.pointsTotal || 0, row.currentStreak || 0, row.redemptionsMade || row.rewardsEarned || 0].join(':');
+    const match = legacyRows.map(fields).join('|') === modernRows.map(fields).join('|');
+    console.info(JSON.stringify({ event:'progressive_read_comparison', action:'getRanking', type:params.type, match, legacyCount:legacyRows.length, modernCount:modernRows.length }));
+  } catch (_) {
+    console.info(JSON.stringify({ event:'progressive_read_comparison', action:'getRanking', type:params.type, match:false, comparisonUnavailable:true }));
+  }
+}
+
+async function preloadSupabaseProducts() {
+  if (!window.DonasFlags?.useSupabaseProducts) return;
+  try { window.__donasProducts = (await vercelApi('/api/products')).products || []; } catch (_) { window.__donasProducts = null; }
 }
 
 async function apiPost(action, body = {}) {

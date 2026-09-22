@@ -34,6 +34,8 @@ const path = require('node:path');
   assert.equal(first.data.customers.length, 1);
   assert.equal(first.data.customers[0].whatsapp_e164, '+50760000000');
   assert.equal(first.data.accounts[0].available_points, 20);
+  assert.equal(first.data.accounts[0].purchase_count, 3);
+  assert.equal(first.data.accounts[0].redemption_count, 0);
   assert.equal(first.data.transactions.length, 2);
   assert.equal(first.data.badges[0].condition_type, 'PURCHASE_COUNT');
   assert.equal(first.data.rewards[0].reward_type, 'DISCOUNT');
