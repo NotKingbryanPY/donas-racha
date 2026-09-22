@@ -62,4 +62,20 @@ No se crearon pedidos, pagos, clientes ni usuarios durante esta comprobación.
 
 ## Vercel remoto
 
-El despliegue Preview del commit `95b20f5` terminó correctamente. El proyecto todavía no tiene variables de entorno. La API permanecerá cerrada con `API_NOT_CONFIGURED` hasta guardar las tres variables descritas en `API.md` y volver a desplegar.
+Las variables `SUPABASE_URL`, `SUPABASE_ANON_KEY` y
+`SUPABASE_SERVICE_ROLE_KEY` quedaron configuradas para Production, Preview y
+Development. La clave de servicio se guardó como secreto y no se copió al
+repositorio.
+
+El commit `92c6ee6` se volvió a desplegar con la configuración actualizada. El
+despliegue `FQVDFvBvVrkKBzbQ7zZd2p95Aaxn` terminó en estado `Ready` en 7
+segundos y apunta a la rama `codex/phase-4-api`.
+
+Vercel Authentication protege las URLs Preview del proyecto. Una solicitud
+externa recibe `302` hacia el inicio de sesión de Vercel antes de alcanzar las
+funciones, por lo que no se presenta como una prueba de la API. Esta protección
+se conserva. Después de fusionar la fase se deben comprobar en Producción:
+
+- `GET /api/products` devuelve `200` y JSON;
+- `GET /api/customer/profile` sin token devuelve `401`;
+- `GET /api/orders/NO-EXISTE` devuelve `404`.
