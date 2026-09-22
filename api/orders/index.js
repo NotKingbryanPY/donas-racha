@@ -10,7 +10,7 @@ module.exports = withApi(['POST'], async (req, context) => {
   const user = await optionalUser(req);
   await enforceRateLimit(req, 'create_order', 10, 600, user ? user.id : undefined);
   const payload = {
-    pickupLocationId: order.pickupLocationId,
+    deliveryLocation: order.deliveryLocation,
     paymentMethod: order.paymentMethod,
     customerName: order.customerName,
     customerPhone: order.customerPhone,
@@ -21,7 +21,7 @@ module.exports = withApi(['POST'], async (req, context) => {
     p_auth_user_id: user ? user.id : null,
     p_idempotency_key: order.idempotencyKey,
     p_request_hash: fingerprint(payload),
-    p_pickup_location_id: order.pickupLocationId,
+    p_delivery_location: order.deliveryLocation,
     p_payment_method: order.paymentMethod,
     p_customer_name: order.customerName,
     p_customer_phone: order.customerPhone,

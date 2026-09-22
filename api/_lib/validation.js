@@ -36,7 +36,7 @@ function validateOrder(body) {
   if (items.length < 1 || items.length > 25) throw new ApiError(400, 'VALIDATION_ERROR', 'El pedido debe contener entre 1 y 25 artículos.');
   const normalized = {
     idempotencyKey: uuid(body.idempotencyKey, 'idempotencyKey'),
-    pickupLocationId: uuid(body.pickupLocationId, 'pickupLocationId'),
+    deliveryLocation: requiredString(body.deliveryLocation, 'deliveryLocation', 3, 300),
     paymentMethod: enumValue(body.paymentMethod, ['CASH', 'YAPPY'], 'paymentMethod'),
     customerName: requiredString(body.customerName, 'customerName', 1, 120),
     customerPhone: body.customerPhone == null || body.customerPhone === '' ? null : String(body.customerPhone).trim(),

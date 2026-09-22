@@ -2,48 +2,41 @@
 
 ## PostgreSQL local
 
-Las cinco migraciones se aplicaron en orden en PostgreSQL embebido. La prueba creó un cliente autenticado, un administrador, un producto de $1.25, una variante y un lugar de retiro; luego ejecutó el flujo transaccional completo.
+Las seis migraciones se aplicaron en orden en PostgreSQL 18. La prueba creó un administrador, un producto de $1.25, un sabor disponible y otro agotado; luego ejecutó el flujo transaccional completo de una entrega.
 
 ```json
 {
-  "total": 250,
-  "replay": true,
-  "conflict": true,
-  "accepted": "ACCEPTED",
-  "invalidTransitionBlocked": true,
-  "payment": "CONFIRMED",
-  "paymentReplay": true,
-  "rate": [true, false],
-  "state": {
-    "total_cents": 250,
-    "payment_status": "CONFIRMED",
-    "items": 1,
-    "events": 2
-  }
+  "status": "COMPLETED",
+  "payment_status": "CONFIRMED",
+  "payment_method": "YAPPY",
+  "delivery_location": "UTP, Edificio 4, entrada principal",
+  "total_cents": 250,
+  "events": 4,
+  "unavailable_orders": 0
 }
 ```
 
-Esto confirma cálculo de precios en PostgreSQL, creación atómica, repetición segura, conflicto por reutilizar una clave, máquina de estados, pago idempotente y rate limiting persistente.
+Esto confirma el cálculo de precios en PostgreSQL, la creación atómica, la ubicación de entrega, el flujo `PENDING -> ACCEPTED -> OUT_FOR_DELIVERY -> COMPLETED` y el pago contra entrega. Intentar completar antes de confirmar el pago produjo `PAYMENT_REQUIRED`. Intentar comprar el sabor agotado produjo `OUT_OF_STOCK` y no creó un pedido.
 
 La prueba también descubrió y corrigió las restricciones E.164 heredadas que rechazaban teléfonos válidos con `+`.
 
 ## Reversión
 
-La reversión dejó las 20 tablas de fases 2 y 3, cero funciones de fase 4 y cero columnas `request_hash`. Las restricciones E.164 corregidas se conservan porque reparan un defecto anterior.
+La reversión dejó las 20 tablas de fases 2 y 3, cero funciones de fase 4 y eliminó las columnas `request_hash`, `delivery_location` y `available`. El valor de enum `OUT_FOR_DELIVERY` queda sin uso porque PostgreSQL no permite retirar de forma segura un valor individual.
 
 ## Regresión
 
 ```text
 PASS API contract: validation, server pricing, idempotency, rate limits and 8 endpoints
 PASS security contract: 38 RLS policies, hashed one-time claims, no customer writes
-PASS schema contract: 5 migrations, 18 core tables, RLS closed by default
+PASS schema contract: 6 migrations, 18 core tables, RLS closed by default
 PASS backend fixture
 PASS transport cache/timeouts/profile ordering
 ```
 
 ## Supabase remoto
 
-La migración quedó instalada en el proyecto `yopntnzhcfudaabudbld`. Una consulta independiente confirmó:
+La primera migración de fase 4 quedó instalada en el proyecto `yopntnzhcfudaabudbld`. El ajuste de entrega está listo y validado localmente, pero aún no se ha aplicado al proyecto remoto. La comprobación de la primera migración confirmó:
 
 ```json
 {

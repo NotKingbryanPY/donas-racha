@@ -24,7 +24,8 @@ async function readResponse(response) {
     const code = payload && payload.code ? payload.code : 'SUPABASE_ERROR';
     const status = response.status >= 500 ? 502 : response.status;
     if (message.includes('IDEMPOTENCY_CONFLICT')) throw new ApiError(409, 'IDEMPOTENCY_CONFLICT', 'La clave de idempotencia ya fue usada con otros datos.');
-    if (message.includes('OUT_OF_STOCK')) throw new ApiError(409, 'OUT_OF_STOCK', 'No hay disponibilidad suficiente.');
+    if (message.includes('OUT_OF_STOCK')) throw new ApiError(409, 'OUT_OF_STOCK', 'Este sabor no está disponible.');
+    if (message.includes('PAYMENT_REQUIRED')) throw new ApiError(409, 'PAYMENT_REQUIRED', 'Confirma el pago recibido antes de completar la entrega.');
     if (message.includes('INVALID_TRANSITION')) throw new ApiError(409, 'INVALID_TRANSITION', 'La transición de estado no está permitida.');
     if (message.includes('ORDER_NOT_FOUND')) throw new ApiError(404, 'ORDER_NOT_FOUND', 'No se encontró el pedido.');
     if (message.includes('CUSTOMER_NOT_LINKED')) throw new ApiError(403, 'CUSTOMER_NOT_LINKED', 'La cuenta no está vinculada a un cliente activo.');

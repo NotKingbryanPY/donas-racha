@@ -10,7 +10,7 @@ module.exports = withApi(['PATCH'], async (req, context) => {
   const body = context.parseJsonBody(req);
   const result = await rpc('api_transition_order', {
     p_order_id: uuid(req.query.id, 'id'),
-    p_to_status: enumValue(String(body.status || '').toUpperCase(), ['ACCEPTED', 'PREPARING', 'READY', 'COMPLETED', 'CANCELLED'], 'status'),
+    p_to_status: enumValue(String(body.status || '').toUpperCase(), ['ACCEPTED', 'OUT_FOR_DELIVERY', 'COMPLETED', 'CANCELLED'], 'status'),
     p_actor_user_id: user.id,
     p_note: body.note == null ? null : String(body.note).trim().slice(0, 500)
   });
