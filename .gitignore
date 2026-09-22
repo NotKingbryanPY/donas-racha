@@ -4,3 +4,7 @@
 node_modules/
 .vercel/
 .tmp-pg-*/
+migration-data/
+migration-report*.json
+migration-rollback*.sql
+migration-apply*.sql
