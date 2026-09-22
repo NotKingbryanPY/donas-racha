@@ -15,7 +15,7 @@ const insert = (table, columns, rows) => rows.length
 let sql = 'begin;\n';
 sql += insert('customers', ['id','public_id','display_name','whatsapp_e164','status','registered_at','last_purchase_at'], data.customers);
 sql += insert('customer_aliases', ['id','customer_id','alias_type','alias_value'], data.aliases);
-sql += insert('loyalty_accounts', ['customer_id','available_points','lifetime_points','purchase_points','level_key'], data.accounts);
+sql += insert('loyalty_accounts', ['customer_id','available_points','lifetime_points','purchase_points','purchase_count','redemption_count','level_key'], data.accounts);
 sql += insert('customer_streaks', ['customer_id','current_count','best_count','current_season_number','last_qualified_at'], data.streaks);
 sql += insert('loyalty_transactions', ['id','customer_id','entry_type','points_delta','balance_after','source_system','source_id','description','metadata','occurred_at'], data.transactions);
 sql += insert('streak_seasons', ['id','customer_id','season_number','started_at','ended_at','completed_streak','milestones','preserved_points','preserved_level_key','status','source_system','source_id'], data.seasons);
