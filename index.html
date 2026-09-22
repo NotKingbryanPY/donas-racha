@@ -111,7 +111,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
       <a class="brand-row" href="#" aria-label="Donas Racha, inicio" onclick="goToRoleScreen();return false">
         <span class="brand-mark" aria-hidden="true"></span><span class="brand-wordmark">DONAS<span>RACHA<span class="brand-dot">.</span></span></span>
       </a>
-      <div class="landing-nav"><button class="nav-link" onclick="showPublicRanking()">Ranking <span aria-hidden="true">↗</span></button><span class="campus-tag">HECHO PARA TU CAMPUS</span></div>
+      <div class="landing-nav"><a class="nav-link" href="#sabores">Sabores</a><button class="nav-link" onclick="showPublicRanking()">Ranking <span aria-hidden="true">↗</span></button><span class="campus-tag">HECHO PARA TU CAMPUS</span></div>
     </header>
     <section class="landing-hero">
       <div class="hero-copy">
@@ -128,6 +128,16 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
         <div class="floating-label reward-label"><span aria-hidden="true">✧</span><span>CADA COMPRA CUENTA<b>Tu racha empieza contigo</b></span></div>
         <span class="art-caption">VAINILLA · CHOCOLATE · SPRINKLES</span>
       </div>
+    </section>
+    <section id="sabores" class="catalog-section" aria-labelledby="catalogHeading">
+      <div class="catalog-heading">
+        <div><p class="eyebrow"><span></span> DISPONIBILIDAD ACTUAL</p><h2 id="catalogHeading">Elige tu favorita.</h2></div>
+        <p>Donas surtidas, listas para llevar al campus. La disponibilidad se actualiza desde nuestro catálogo.</p>
+      </div>
+      <div id="publicCatalog" class="catalog-grid" aria-live="polite" aria-busy="true">
+        <div class="catalog-skeleton"></div><div class="catalog-skeleton"></div><div class="catalog-skeleton"></div><div class="catalog-skeleton"></div>
+      </div>
+      <div class="catalog-note"><span>🍩 B/.1.00 por dona</span><span>Pago al recibir: efectivo o Yappy</span></div>
     </section>
     <section class="benefits-section" aria-labelledby="benefitsHeading">
       <div class="section-kicker"><span id="benefitsHeading">TU ANTOJO TIENE UN EXTRA</span><span>01 — 04</span></div>
@@ -514,8 +524,54 @@ async function compareRankingInBackground(params, modernRows) {
 }
 
 async function preloadSupabaseProducts() {
-  if (!window.DonasFlags?.useSupabaseProducts) return;
-  try { window.__donasProducts = (await vercelApi('/api/products')).products || []; } catch (_) { window.__donasProducts = null; }
+  if (!window.DonasFlags?.useSupabaseProducts) { renderPublicCatalog([]); return; }
+  try {
+    window.__donasProducts = (await vercelApi('/api/products')).products || [];
+    renderPublicCatalog(window.__donasProducts);
+  } catch (_) {
+    window.__donasProducts = null;
+    renderPublicCatalog(null);
+  }
+}
+
+function flattenCatalog(products) {
+  return (products || []).flatMap(product => (product.product_variants || []).map(variant => ({
+    ...variant,
+    productName: product.name,
+    description: product.description,
+    imageUrl: product.image_url
+  }))).sort((a,b) => (a.display_order || 0) - (b.display_order || 0));
+}
+
+function flavorTone(name) {
+  const value = String(name || '').toLowerCase();
+  if (value.includes('chocolate') && value.includes('chisp')) return 'cocoa-sprinkles';
+  if (value.includes('chocolate')) return 'cocoa';
+  if (value.includes('chisp')) return 'vanilla-sprinkles';
+  return 'vanilla';
+}
+
+function formatMoney(cents, currency='USD') {
+  return new Intl.NumberFormat('es-PA', { style:'currency', currency, minimumFractionDigits:2 }).format((Number(cents) || 0) / 100).replace('US$', 'B/.');
+}
+
+function renderPublicCatalog(products) {
+  const el = document.getElementById('publicCatalog');
+  if (!el) return;
+  el.setAttribute('aria-busy', 'false');
+  if (products === null) {
+    el.innerHTML = '<div class="catalog-message">No pudimos consultar los sabores en este momento. Intenta de nuevo en unos minutos.</div>';
+    return;
+  }
+  const variants = flattenCatalog(products);
+  if (!variants.length) {
+    el.innerHTML = '<div class="catalog-message">Hoy no hay sabores publicados todavía.</div>';
+    return;
+  }
+  el.innerHTML = variants.map(variant => `<article class="flavor-card ${flavorTone(variant.name)} ${variant.available ? '' : 'sold-out'}">
+    <div class="flavor-visual" aria-hidden="true"><span class="mini-donut"></span></div>
+    <div class="flavor-copy"><span class="availability ${variant.available ? 'available' : ''}">${variant.available ? 'Disponible' : 'Agotada'}</span><h3>${safe(variant.name)}</h3><p>${safe(variant.description || 'Dona surtida recién preparada.')}</p><strong>${formatMoney(variant.unit_price_cents, variant.currency_code)}</strong></div>
+  </article>`).join('');
 }
 
 async function apiPost(action, body = {}) {
