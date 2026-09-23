@@ -24,6 +24,10 @@ async function readResponse(response) {
     const code = payload && payload.code ? payload.code : 'SUPABASE_ERROR';
     const status = response.status >= 500 ? 502 : response.status;
     if (message.includes('IDEMPOTENCY_CONFLICT')) throw new ApiError(409, 'IDEMPOTENCY_CONFLICT', 'La clave de idempotencia ya fue usada con otros datos.');
+    if (message.includes('SYNC_IDEMPOTENCY_CONFLICT')) throw new ApiError(409, 'SYNC_IDEMPOTENCY_CONFLICT', 'La operación de sincronización ya existe con otros datos.');
+    if (message.includes('DEVICE_REVOKED')) throw new ApiError(403, 'DEVICE_REVOKED', 'Este dispositivo perdió autorización para sincronizar.');
+    if (message.includes('ADMIN_REQUIRED')) throw new ApiError(403, 'ADMIN_REQUIRED', 'La cuenta no tiene permisos administrativos.');
+    if (message.includes('INVALID_OPERATION')) throw new ApiError(400, 'INVALID_OPERATION', 'La operación de sincronización no es válida.');
     if (message.includes('OUT_OF_STOCK')) throw new ApiError(409, 'OUT_OF_STOCK', 'Este sabor no está disponible.');
     if (message.includes('PAYMENT_REQUIRED')) throw new ApiError(409, 'PAYMENT_REQUIRED', 'Confirma el pago recibido antes de completar la entrega.');
     if (message.includes('INVALID_TRANSITION')) throw new ApiError(409, 'INVALID_TRANSITION', 'La transición de estado no está permitida.');
