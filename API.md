@@ -10,7 +10,7 @@ Configurar en Vercel, para Production, Preview y Development:
 - `SUPABASE_ANON_KEY`: clave pública utilizada únicamente para validar la sesión recibida.
 - `SUPABASE_SERVICE_ROLE_KEY`: secreto exclusivo de las funciones de servidor. Nunca debe llevar prefijo `NEXT_PUBLIC_`, aparecer en HTML, Android, GitHub o logs.
 
-Aplicar primero `supabase/migrations/202609210002_api_transactions.sql` y después `supabase/migrations/202609220001_delivery_orders.sql`. Las migraciones crean las funciones transaccionales, la disponibilidad por sabor y un contador persistente de rate limiting que almacena solamente un HMAC de la identidad/IP.
+Las migraciones se aplican en orden por nombre. La fase 9 termina en `supabase/migrations/202609220003_android_sync.sql`; crea el registro de dispositivos, la bandeja idempotente de operaciones Android y la lectura incremental de pedidos.
 
 La migración también corrige las dos restricciones E.164 heredadas de fase 2: el escape anterior rechazaba teléfonos válidos que comenzaban por `+`.
 
@@ -40,8 +40,10 @@ Las rutas autenticadas reciben `Authorization: Bearer <access_token de Supabase>
 | `GET /api/admin/orders` | Admin | Cola de pedidos; permite filtros `status` y `limit`. |
 | `PATCH /api/admin/orders/:id/status` | Admin | Aplica solo transiciones permitidas y registra el evento. |
 | `POST /api/admin/orders/:id/payment` | Admin | Registra confirmación o fallo de pago exactamente una vez. |
+| `POST /api/sync` | Admin | Recibe hasta 50 operaciones offline de un dispositivo con acuse e idempotencia. |
+| `GET /api/sync` | Admin | Devuelve pedidos actualizados mediante un cursor estable para guardarlos en Room. |
 
-Cada variante incluye `available`. El vendedor puede marcar un sabor como agotado y el catálogo lo refleja en la siguiente consulta; PostgreSQL también impide pedirlo. El conteo detallado de unidades se incorporará con inventario en la fase 11. `/api/sync` se diseña con el código de Dona Control en la fase 9.
+Cada variante incluye `available`. El vendedor puede marcar un sabor como agotado y el catálogo lo refleja en la siguiente consulta; PostgreSQL también impide pedirlo. El conteo detallado de unidades se incorporará con inventario en la fase 11.
 
 Los sabores confirmados son glaseado de chocolate, glaseado de vainilla, glaseado de vainilla con chispas y glaseado de chocolate con chispas, todos a B/.1.00 por unidad. `supabase/manual/seed_donut_flavors.sql` permite cargar el catálogo y se detiene sin escribir datos si algún precio sigue vacío.
 
@@ -82,3 +84,5 @@ El pago se realiza contra entrega mediante efectivo o Yappy. Un pago administrat
 Los límites se almacenan en PostgreSQL para funcionar entre instancias serverless. Se aplican límites separados a catálogo, pedidos, seguimiento, perfil, fidelidad y administración.
 
 La reversión completa está en `supabase/rollback/202609220001_delivery_orders_down.sql`. Solo es segura si todavía no existen pedidos de entrega. Elimina las funciones, contadores y columnas de fase 4; antes de revertir una base con pedidos se deben exportar sus datos.
+
+La reversión aislada de sincronización está en `supabase/rollback/202609220003_android_sync_down.sql`. Elimina la bandeja y los dispositivos, por lo que debe exportarse cualquier operación pendiente antes de usarla.

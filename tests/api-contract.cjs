@@ -55,8 +55,9 @@ const endpointFiles = [
   'api/products.js', 'api/orders/index.js', 'api/orders/[publicCode].js',
   'api/ranking.js',
   'api/customer/profile.js', 'api/customer/loyalty.js', 'api/admin/orders/index.js',
-  'api/admin/orders/[id]/status.js', 'api/admin/orders/[id]/payment.js'
+  'api/admin/orders/[id]/status.js', 'api/admin/orders/[id]/payment.js',
+  'api/sync/index.js'
 ];
 for (const file of endpointFiles) assert.ok(fs.existsSync(path.join(root, file)), `missing endpoint ${file}`);
 
-console.log('PASS API contract: validation, server pricing, idempotency, rate limits and 9 endpoints');
+console.log('PASS API contract: validation, server pricing, idempotency, rate limits and 10 endpoints');
