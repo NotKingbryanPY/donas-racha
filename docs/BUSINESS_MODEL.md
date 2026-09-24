@@ -29,6 +29,8 @@ PENDING -> ACCEPTED -> OUT_FOR_DELIVERY -> COMPLETED
 
 `COMPLETED` significa que la entrega y el cobro ya ocurrieron. La ubicación exacta no se muestra en el seguimiento público del pedido.
 
+La API administrativa bloquea temporalmente la transición a `COMPLETED` con `ACCOUNTING_NOT_READY` (HTTP 409). Confirmar el cobro no crea por sí solo la venta ni descuenta el inventario. La transición se habilitará cuando una operación idempotente registre venta, existencias y puntos de forma atómica. Los pedidos ya completados antes de este bloqueo requieren conciliación manual; el cambio no reescribe datos históricos.
+
 ## Pago
 
 El cliente paga al recibir el pedido mediante:
