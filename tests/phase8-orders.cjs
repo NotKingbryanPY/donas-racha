@@ -19,4 +19,7 @@ assert.match(html, /return 'B\/\.' \+ amount\.toFixed\(2\)/);
 assert.match(css, /\.order-overlay/);
 assert.match(css, /\.status-timeline/);
 assert.match(css, /\.last-order-button\[hidden\]\{display:none!important\}/);
+assert.match(html, /location\.hostname === 'notkingbryanpy\.github\.io'/);
+assert.match(html, /location\.replace\('https:\/\/donas-racha\.vercel\.app\/'/);
+assert.match(html, /const web = "https:\/\/donas-racha\.vercel\.app\/"/);
 console.log('PASS phase 8 orders: cart, delivery, pay-on-delivery and public tracking');

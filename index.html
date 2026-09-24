@@ -6,6 +6,12 @@
 <title>Donas Racha · Tu antojo tiene recompensas</title>
 <meta name="theme-color" content="#100d17">
 <meta name="description" content="Tu próxima dona también suma. Consulta tus puntos, mantén tu racha y descubre las recompensas de Donas Racha.">
+<script>
+// GitHub Pages sirve HTML estático; los endpoints /api viven junto a la página de Vercel.
+if (location.hostname === 'notkingbryanpy.github.io' && location.pathname.startsWith('/donas-racha/')) {
+  location.replace('https://donas-racha.vercel.app/' + location.pathname.slice('/donas-racha/'.length) + location.search + location.hash);
+}
+</script>
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <style>
@@ -1113,7 +1119,7 @@ function sendNewWA() {
 
   const phone = (newClientData.whatsapp || '').replace(/\D/g, '');
 
-  const web = "https://notkingbryanpy.github.io/donas-racha/";
+  const web = "https://donas-racha.vercel.app/";
 
   const msg = encodeURIComponent(
 `🍩 ¡Hola ${newClientData.name}!
