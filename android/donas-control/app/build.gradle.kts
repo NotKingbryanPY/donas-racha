@@ -13,6 +13,7 @@ android {
         versionCode = 6
         versionName = "1.2.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        manifestPlaceholders["appLabel"] = "@string/app_name"
     }
     buildFeatures { viewBinding = true; buildConfig = true }
     compileOptions {
@@ -22,6 +23,13 @@ android {
     kotlinOptions { jvmTarget = "17" }
     testOptions { unitTests.isIncludeAndroidResources = true }
     buildTypes {
+        create("pilot") {
+            initWith(getByName("debug"))
+            applicationIdSuffix = ".pilot"
+            versionNameSuffix = "-piloto"
+            manifestPlaceholders["appLabel"] = "Donas Control Piloto"
+            matchingFallbacks += listOf("debug")
+        }
         release {
             isMinifyEnabled = true
             isShrinkResources = true

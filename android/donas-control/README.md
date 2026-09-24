@@ -42,3 +42,17 @@ JDK 17, Android SDK 35, Build Tools 35.0.0 y Gradle 8.11.1:
 Las pruebas instrumentadas se compilan con el comando anterior. Para ejecutarlas hace falta un Android conectado y autorizado: `connectedDebugAndroidTest`.
 
 El APK debug se genera en `app/build/outputs/apk/debug/app-debug.apk`. Para distribución pública debe crearse una clave release privada y conservarse para futuras actualizaciones.
+
+## Pasar desde el APK 1.1.1
+
+El APK 1.1.1 y este proyecto tienen el mismo paquete `com.bryan.donas`, pero sus certificados de firma son distintos. Android rechaza la actualización directa. Además, la base Room antigua tiene un esquema diferente: instalar encima, aunque se consiguiera la firma, no constituye una migración de datos.
+
+Para probar sin borrar la instalación antigua, compilar `assemblePilot` e instalar `app/build/outputs/apk/pilot/app-pilot.apk`. La variante **Donas Control Piloto** usa `com.bryan.donas.pilot` y almacena sus datos por separado. No registrar ventas reales en las dos apps a la vez: sus libros e inventarios no están conciliados.
+
+Antes de sustituir la app antigua, conectar el teléfono por USB con depuración autorizada y ejecutar:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools/export-legacy-debug-db.ps1
+```
+
+La herramienta conserva `donas.db` y, si existen, sus archivos WAL/SHM en `outputs/legacy-db-*`. Requiere que el APK 1.1.1 **debug** siga instalado; `run-as` no funciona con una versión release. La exportación CSV de la app antigua sirve para consultar asientos, pero no contiene toda la configuración, las cantidades ni los lotes FIFO. No desinstalar 1.1.1 hasta validar una conversión completa de la base extraída y sus saldos.
