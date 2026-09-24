@@ -7,6 +7,9 @@ import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
@@ -41,6 +44,16 @@ class OrdersActivity : AppCompatActivity() {
         root = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(18.dp, 18.dp, 18.dp, 18.dp) }
         val scroll = ScrollView(this).apply { addView(root) }
         setContentView(scroll)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        ViewCompat.setOnApplyWindowInsetsListener(scroll) { view, insets ->
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.ime())
+            view.setPadding(bars.left, bars.top, bars.right, bars.bottom)
+            insets
+        }
+        val dark = resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK ==
+            android.content.res.Configuration.UI_MODE_NIGHT_YES
+        WindowCompat.getInsetsController(window, scroll).isAppearanceLightStatusBars = !dark
+        WindowCompat.getInsetsController(window, scroll).isAppearanceLightNavigationBars = !dark
         root.addView(TextView(this).apply { text = "Pedidos"; textSize = 24f }, fullWidth())
         notice = TextView(this).apply { text = "Los pedidos requieren una cuenta administradora. La venta local se registra por separado hasta completar la conciliación." }
         root.addView(notice, fullWidth())
