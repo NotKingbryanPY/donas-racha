@@ -1,0 +1,18 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/root" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
+    <com.google.android.material.appbar.MaterialToolbar android:id="@+id/toolbar" android:layout_width="match_parent" android:layout_height="?attr/actionBarSize" app:logo="@drawable/ic_donut" app:title="@string/app_name" app:titleTextAppearance="@style/TextAppearance.Material3.TitleMedium" app:titleTextColor="?attr/colorOnSurface" />
+    <FrameLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+        <androidx.core.widget.NestedScrollView android:id="@+id/scroll" android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+                <include android:id="@+id/home" layout="@layout/page_home" />
+                <include android:id="@+id/business" layout="@layout/page_business" />
+                <include android:id="@+id/sharing" layout="@layout/page_sharing" />
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+        <LinearLayout android:id="@+id/loading" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/background" android:orientation="vertical" android:gravity="center" android:padding="24dp">
+            <ProgressBar android:id="@+id/progress" android:layout_width="48dp" android:layout_height="48dp" />
+            <TextView android:id="@+id/loadMessage" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:gravity="center" android:text="@string/loading" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/retry" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/retry" android:visibility="gone" />
+        </LinearLayout>
+    </FrameLayout>
+    <com.google.android.material.bottomnavigation.BottomNavigationView android:id="@+id/navigation" android:layout_width="match_parent" android:layout_height="wrap_content" app:menu="@menu/navigation" app:labelVisibilityMode="labeled" />
+</LinearLayout>
