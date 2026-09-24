@@ -1,0 +1,25 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:visibility="gone">
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/share_title" android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium" android:textStyle="bold" />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="@string/share_detail" android:textAppearance="@style/BodyMuted" />
+    <TextView android:id="@+id/planVersion" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:textColor="@color/secondary" android:textAppearance="@style/TextAppearance.Material3.LabelLarge" />
+    <RadioGroup android:id="@+id/modes" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp">
+        <com.google.android.material.radiobutton.MaterialRadioButton android:id="@+id/percentage" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/percentage" android:minHeight="48dp" />
+        <com.google.android.material.radiobutton.MaterialRadioButton android:id="@+id/fixed" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/fixed" android:minHeight="48dp" />
+    </RadioGroup>
+    <RadioGroup android:id="@+id/partials" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp">
+        <com.google.android.material.radiobutton.MaterialRadioButton android:id="@+id/proportional" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/proportional" android:minHeight="48dp" />
+        <com.google.android.material.radiobutton.MaterialRadioButton android:id="@+id/fullBoxes" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/full_boxes" android:minHeight="48dp" />
+    </RadioGroup>
+    <androidx.recyclerview.widget.RecyclerView android:id="@+id/members" android:layout_width="match_parent" android:layout_height="wrap_content" android:nestedScrollingEnabled="false" />
+    <com.google.android.material.button.MaterialButton android:id="@+id/add" style="@style/Widget.Material3.Button.OutlinedButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/add_partner" />
+    <TextView android:id="@+id/validation" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:textAppearance="@style/TextAppearance.Material3.BodyMedium" android:accessibilityLiveRegion="polite" />
+    <com.google.android.material.button.MaterialButton android:id="@+id/savePlan" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:text="@string/save_plan" />
+    <com.google.android.material.button.MaterialButton android:id="@+id/history" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/history" />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="24dp" android:text="@string/simulation" android:textAppearance="@style/SectionTitle" />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="@string/simulation_detail" android:textAppearance="@style/BodyMuted" />
+    <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:hint="@string/sold_hint">
+        <com.google.android.material.textfield.TextInputEditText android:id="@+id/sold" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="number" android:maxLength="7" android:importantForAutofill="no" />
+    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.button.MaterialButton android:id="@+id/simulate" style="@style/Widget.Material3.Button.OutlinedButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/simulate" />
+    <TextView android:id="@+id/result" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:layout_marginBottom="24dp" android:lineSpacingExtra="8dp" android:textAppearance="@style/TextAppearance.Material3.BodyLarge" android:accessibilityLiveRegion="polite" />
+</LinearLayout>

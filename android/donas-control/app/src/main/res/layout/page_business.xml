@@ -1,0 +1,22 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:visibility="gone">
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/business_title" android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium" android:textStyle="bold" />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="@string/business_detail" android:textAppearance="@style/BodyMuted" />
+    <TextView android:id="@+id/configVersion" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:textAppearance="@style/TextAppearance.Material3.LabelLarge" android:textColor="@color/secondary" />
+    <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="20dp" android:hint="@string/cost_hint">
+        <com.google.android.material.textfield.TextInputEditText android:id="@+id/cost" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="numberDecimal" android:maxLength="12" android:importantForAutofill="no" />
+    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:hint="@string/units_hint">
+        <com.google.android.material.textfield.TextInputEditText android:id="@+id/units" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="number" android:maxLength="5" android:importantForAutofill="no" />
+    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:hint="@string/price_hint">
+        <com.google.android.material.textfield.TextInputEditText android:id="@+id/price" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="numberDecimal" android:maxLength="12" android:importantForAutofill="no" />
+    </com.google.android.material.textfield.TextInputLayout>
+    <TextView android:id="@+id/preview" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="20dp" android:lineSpacingExtra="6dp" android:textAppearance="@style/TextAppearance.Material3.BodyLarge" android:accessibilityLiveRegion="polite" />
+    <com.google.android.material.button.MaterialButton android:id="@+id/saveConfig" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="@string/save_config" />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="32dp" android:text="@string/appearance" android:textAppearance="@style/SectionTitle" />
+    <RadioGroup android:id="@+id/themes" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp">
+        <com.google.android.material.radiobutton.MaterialRadioButton android:id="@+id/systemTheme" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/system" />
+        <com.google.android.material.radiobutton.MaterialRadioButton android:id="@+id/lightTheme" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/light" />
+        <com.google.android.material.radiobutton.MaterialRadioButton android:id="@+id/darkTheme" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/dark" />
+    </RadioGroup>
+</LinearLayout>

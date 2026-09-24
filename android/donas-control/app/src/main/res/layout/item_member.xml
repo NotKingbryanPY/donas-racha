@@ -1,0 +1,12 @@
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="16dp" android:orientation="vertical">
+        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="@string/partner_name">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/name" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textCapWords" android:maxLength="40" android:importantForAutofill="no" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout android:id="@+id/valueLayout" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:hint="@string/percentage_hint">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/value" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="numberDecimal" android:maxLength="12" android:importantForAutofill="no" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.radiobutton.MaterialRadioButton android:id="@+id/remainder" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/remainder" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/remove" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/remove" android:minHeight="48dp" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

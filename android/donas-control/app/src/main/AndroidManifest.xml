@@ -1,0 +1,19 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <application android:name=".DonasApp" android:allowBackup="false" android:fullBackupContent="@xml/backup_rules" android:dataExtractionRules="@xml/data_extraction_rules" android:label="@string/app_name" android:icon="@drawable/ic_donut" android:supportsRtl="true" android:theme="@style/Theme.Donas">
+        <activity android:name=".ui.OperationsActivity" android:exported="false" />
+        <activity android:name=".ui.OrdersActivity" android:exported="false" />
+        <receiver android:name=".ui.QuickSaleReceiver" android:exported="false" />
+        <receiver android:name=".ui.DonasWidgetProvider" android:exported="true">
+            <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/donas_widget_info" />
+        </receiver>
+        <activity android:name=".ui.MainActivity" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>

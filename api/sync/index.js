@@ -5,7 +5,7 @@ const { rpc } = require('../_lib/supabase');
 const { fingerprint } = require('../_lib/validation');
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-const TYPES = new Set(['SEED','OPENING_BALANCE','SALE','PURCHASE','EXPENSE','LOAN','LOAN_PAYMENT','PARTNER_PAYMENT','ADJUSTMENT','SESSION']);
+const TYPES = new Set(['SEED','OPENING_BALANCE','SALE','PURCHASE','EXPENSE','LOAN','LOAN_PAYMENT','PARTNER_PAYMENT','ADJUSTMENT','SESSION','SESSION_START','SESSION_CLOSE','REVERSAL','TRANSFER']);
 const ZERO_UUID = '00000000-0000-0000-0000-000000000000';
 
 function text(value, label, min, max) {

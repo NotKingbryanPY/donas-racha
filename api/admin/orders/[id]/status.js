@@ -4,7 +4,7 @@ const { enforceRateLimit } = require('../../../_lib/rate-limit');
 const { rpc } = require('../../../_lib/supabase');
 const { enumValue, uuid } = require('../../../_lib/validation');
 
-module.exports = withApi(['PATCH'], async (req, context) => {
+module.exports = withApi(['PATCH', 'POST'], async (req, context) => {
   const user = await requireAdmin(req);
   await enforceRateLimit(req, 'admin_order_status', 120, 60, user.id);
   const body = context.parseJsonBody(req);
