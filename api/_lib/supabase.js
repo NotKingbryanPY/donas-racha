@@ -68,4 +68,14 @@ async function rpc(name, body) {
   return serviceRequest(`rpc/${name}`, { method: 'POST', body });
 }
 
-module.exports = { getConfig, readResponse, rpc, serviceRequest };
+async function userRpc(name, body, authorization) {
+  const config = getConfig();
+  const response = await fetch(`${config.url}/rest/v1/rpc/${name}`, {
+    method: 'POST',
+    headers: { apikey: config.anonKey, authorization, 'content-type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  return readResponse(response);
+}
+
+module.exports = { getConfig, readResponse, rpc, serviceRequest, userRpc };

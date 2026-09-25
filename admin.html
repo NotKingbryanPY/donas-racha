@@ -22,7 +22,7 @@ label{display:block}#message{min-height:26px}#orders article{border-top:1px soli
 <section class="card"><h2>Existencias por sabor</h2><p class="muted">El conteo fija las unidades físicas actuales. No cuentes mientras haya ventas offline pendientes.</p><div id="stock"></div></section>
 <section class="card"><h2>Ventas de dispositivo por conciliar</h2><p class="muted">Recuenta físicamente los cuatro sabores después de recibir cada venta. Documenta por qué se descarta su descuento remoto.</p><div id="syncOperations"></div></section>
 <section class="card"><h2>Pedidos recientes</h2><div id="orders"></div></section>
-<section class="card"><h2>Validar cliente</h2><form id="customerForm"><label>QR temporal o ID de cliente
+<section class="card"><h2>Validar o vincular cliente</h2><form id="customerForm"><label>QR temporal o ID de cliente
 <input id="customerCode" autocomplete="off" required></label><button>Validar</button></form><div id="customerResult"></div></section>
 </section><p id="message" role="status"></p>
 </main><script>
@@ -98,12 +98,15 @@ label{display:block}#message{min-height:26px}#orders article{border-top:1px soli
       if(order.status==='PENDING')actions.push(['Aceptar','ACCEPTED'],['Cancelar','CANCELLED']);
       if(order.status==='ACCEPTED')actions.push(['En camino','OUT_FOR_DELIVERY'],['Cancelar','CANCELLED']);
       if(order.status==='OUT_FOR_DELIVERY'){
-        if(order.payment_status!=='CONFIRMED') actions.push(['Confirmar cobro','PAYMENT']);
-        else actions.push(['Completar entrega','COMPLETED']);
+        if(order.payment_status!=='CONFIRMED') actions.push(['Ya recibí el pago','PAYMENT']);
+        else actions.push(['Entrega completada · dar puntos','COMPLETED']);
         if(order.payment_status!=='CONFIRMED')actions.push(['Cancelar','CANCELLED']);
       }
       for(const [label,status] of actions){const button=text('button',label);if(status==='CANCELLED')button.className='secondary';card.append(button);
-        button.addEventListener('click',async()=>{button.disabled=true;try{
+        button.addEventListener('click',async()=>{
+          if(status==='COMPLETED' && !confirm(`¿Ya entregaste el pedido ${order.public_code}? Al confirmar se cierra la venta y se acreditan los puntos de racha si corresponde.`)) return;
+          if(status==='PAYMENT' && !confirm(`¿Ya recibiste el pago de ${order.public_code}?`)) return;
+          button.disabled=true;try{
           if(status==='PAYMENT')await api(`/api/admin/orders/${order.id}/payment`,{method:'POST',body:JSON.stringify({status:'CONFIRMED',idempotencyKey:crypto.randomUUID()})});
           else await api(`/api/admin/orders/${order.id}/status`,{method:'POST',body:JSON.stringify({status,...(status==='COMPLETED'?{idempotencyKey:crypto.randomUUID()}:{})})});
           await load();message(`${order.public_code}: ${label} registrado.`);
@@ -123,7 +126,20 @@ label{display:block}#message{min-height:26px}#orders article{border-top:1px soli
   }catch(error){message(error.message);}});
   $('customerForm').addEventListener('submit',async event=>{event.preventDefault();try{
     const code=$('customerCode').value.trim();const data=await api('/api/admin/customers/lookup',{method:'POST',body:JSON.stringify(code.length===64?{qrToken:code}:{publicId:code})});
-    const c=data.customer;$('customerResult').replaceChildren(text('p',`${c.display_name} · ${c.public_id} · ${c.available_points??c.loyalty_accounts?.[0]?.available_points??0} puntos disponibles`));
+    const c=data.customer;const result=$('customerResult');
+    result.replaceChildren(text('p',`${c.display_name} · ${c.public_id} · ${c.available_points??c.loyalty_accounts?.[0]?.available_points??0} puntos disponibles`));
+    const customerId=c.id||c.customer_id;
+    if(customerId){
+      const issue=text('button','Generar código de vinculación');issue.type='button';result.append(issue);
+      issue.addEventListener('click',async()=>{
+        issue.disabled=true;
+        try{
+          const data=await api('/api/admin/customers/claim-token',{method:'POST',body:JSON.stringify({customerId})});
+          result.append(text('p',`Código temporal (30 min): ${data.token}`));
+          message('Entrega este código solo al cliente verificado. El código anterior queda invalidado.');
+        }catch(error){message(error.message);issue.disabled=false;}
+      });
+    }
     message('Cliente validado en servidor.');
   }catch(error){$('customerResult').replaceChildren();message(error.message);}});
   $('refresh').addEventListener('click',()=>load().catch(error=>message(error.message)));

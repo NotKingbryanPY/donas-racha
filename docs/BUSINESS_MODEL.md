@@ -29,7 +29,9 @@ PENDING -> ACCEPTED -> OUT_FOR_DELIVERY -> COMPLETED
 
 `COMPLETED` significa que la entrega y el cobro ya ocurrieron. La ubicación exacta no se muestra en el seguimiento público del pedido.
 
-En el código pendiente de despliegue, la API administrativa completa el pedido con `api_complete_order`: verifica el cobro confirmado, consume la reserva de cada sabor, registra una venta única y acredita los puntos en una transacción. Confirmar el cobro por sí solo no registra una venta. Los pedidos completados antes de esta migración requieren conciliación manual; el cambio no reescribe datos históricos.
+Solo un cliente activo vinculado a una cuenta de Supabase Auth puede hacer delivery desde `customer.html`. El formulario toma el nombre de su perfil y «Mis pedidos» muestra solo los suyos. Un ID o QR heredado de Apps Script no basta para pedir. El cliente crea su acceso por correo, confirma el correo si Supabase lo exige y entra; el vendedor verifica su identidad en persona y genera desde `admin.html` un código de vinculación que caduca en 30 minutos. El cliente lo introduce en «Mi cuenta». El código anterior queda invalidado y un perfil solo puede vincularse a una cuenta.
+
+En el código pendiente de despliegue, la API administrativa completa el pedido con `api_complete_order`: verifica el cobro confirmado, consume la reserva de cada sabor, registra una venta única y acredita puntos, racha, hitos e insignias en una transacción. Crear o aceptar un pedido no acredita nada. Confirmar el cobro por sí solo tampoco: el vendedor debe confirmar después que la entrega se completó. Solo la primera entrega calificada de cada día en `America/Bogota` suma puntos y racha; los demás pedidos del día se cobran y completan sin otra recompensa. Los pedidos completados antes de esta migración requieren conciliación manual; el cambio no reescribe datos históricos.
 
 ## Pago
 

@@ -1,7 +1,7 @@
 const { ApiError, withApi } = require('../_lib/http');
-const { requireCustomer } = require('../_lib/auth');
+const { requireUser } = require('../_lib/auth');
 const { enforceRateLimit } = require('../_lib/rate-limit');
-const { getConfig } = require('../_lib/supabase');
+const { getConfig, serviceRequest } = require('../_lib/supabase');
 
 module.exports = withApi(['POST'], async (req, context) => {
   await enforceRateLimit(req, 'customer_login', 10, 300);
@@ -22,6 +22,10 @@ module.exports = withApi(['POST'], async (req, context) => {
   if (!session.access_token || !Number.isFinite(session.expires_in)) {
     throw new ApiError(502, 'AUTH_INVALID_RESPONSE', 'La autenticación devolvió una respuesta incompleta.');
   }
-  await requireCustomer({ headers:{ authorization:`Bearer ${session.access_token}` } });
-  return { accessToken:session.access_token, expiresAt:new Date(Date.now()+session.expires_in*1000).toISOString() };
+  const user = await requireUser({ headers:{ authorization:`Bearer ${session.access_token}` } });
+  const customers = await serviceRequest('customers', { query:new URLSearchParams({
+    select:'id',auth_user_id:`eq.${user.id}`,status:'eq.ACTIVE',limit:'1'
+  }).toString() });
+  return { accessToken:session.access_token, linked:!!customers?.[0],
+    expiresAt:new Date(Date.now()+session.expires_in*1000).toISOString() };
 });

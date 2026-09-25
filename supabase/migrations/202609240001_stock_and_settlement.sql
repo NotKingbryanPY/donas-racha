@@ -391,6 +391,16 @@ begin
         best_count=greatest(best_count,v_next_streak),
         current_season_number=current_season_number+case when v_next_streak>=30 then 1 else 0 end,
         last_qualified_at=now(),updated_at=now() where customer_id=v_customer.id;
+      insert into public.streak_seasons(customer_id,season_number,started_at)
+        values(v_customer.id,v_streak.current_season_number,now())
+        on conflict (customer_id,season_number) do nothing;
+      update public.streak_seasons set completed_streak=greatest(completed_streak,v_next_streak),
+        milestones=coalesce((select array_agg(distinct h order by h) from unnest(
+          milestones || array(select m from unnest(array[3,7,14,21,30]) m where m<=v_next_streak)) h),'{}'::integer[]),
+        preserved_points=v_account.lifetime_points,preserved_level_key=v_account.level_key,
+        ended_at=case when v_next_streak>=30 then now() else ended_at end,
+        status=case when v_next_streak>=30 then 'COMPLETED'::public.streak_season_status else status end
+        where customer_id=v_customer.id and season_number=v_streak.current_season_number and status='ACTIVE';
       for v_badge in select id,key from public.badges where active and
         ((condition_type='PURCHASE_COUNT' and condition_threshold<=v_account.purchase_count)
           or (condition_type='STREAK_COUNT' and condition_threshold<=v_next_streak)) loop
