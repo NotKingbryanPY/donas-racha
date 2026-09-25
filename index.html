@@ -124,7 +124,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
         <p class="eyebrow"><span></span> UN ANTOJO. MUCHAS RECOMPENSAS.</p>
         <h1 id="welcomeHeading" class="welcome-title">Lo bueno<br>se vuelve <em>racha.</em></h1>
         <p class="welcome-desc">Tu próxima dona también suma.<br>Compra, sube de nivel y convierte tus puntos en algo delicioso.</p>
-        <div class="hero-actions"><button class="btn btn-primary role-client-cta" onclick="openOrder()">Pedir donas <span aria-hidden="true">↗</span></button><button class="profile-link" onclick="goToUserLogin()">Entrar a mi perfil</button></div>
+        <div class="hero-actions"><a class="btn btn-primary role-client-cta" href="/customer.html">Pedir desde mi perfil <span aria-hidden="true">↗</span></a><a class="profile-link" href="/customer.html">Entrar a mi perfil</a></div>
         <div class="hero-footnote"><span class="small-ring" aria-hidden="true"></span> Pequeños antojos. Grandes motivos para volver.</div>
       </div>
       <div class="hero-art" aria-label="Dona de vainilla con sprinkles, presentación ilustrativa">
@@ -160,40 +160,6 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
 </div>
 
 <div id="infoModal" class="info-modal hidden" aria-hidden="true"></div>
-
-<div id="orderOverlay" class="order-overlay hidden" aria-hidden="true">
-  <main class="order-shell" aria-labelledby="orderHeading">
-    <header class="order-header"><button class="back-btn" onclick="closeOrder()">← Volver</button><span class="brand-wordmark">DONAS<span>RACHA<span class="brand-dot">.</span></span></span></header>
-    <div id="orderFormView">
-      <div class="order-intro"><p class="eyebrow"><span></span> ENTREGA EN EL CAMPUS</p><h2 id="orderHeading">Arma tu pedido.</h2><p>Elige tus sabores. Pagas cuando recibas tus donas.</p><button id="lastOrderButton" class="last-order-button" hidden onclick="viewLastOrder()">Ver mi último pedido <span id="lastOrderCode"></span></button></div>
-      <section aria-labelledby="cartHeading"><h3 id="cartHeading" class="order-step">1. Tus donas</h3><div id="orderCart" class="order-cart"></div></section>
-      <section aria-labelledby="deliveryHeading"><h3 id="deliveryHeading" class="order-step">2. ¿Dónde te encontramos?</h3>
-        <div class="order-fields">
-          <div class="field-group"><label class="field-label" for="orderName">Nombre</label><input id="orderName" class="field" maxlength="120" autocomplete="name" placeholder="Tu nombre"></div>
-          <div class="field-group"><label class="field-label" for="orderPhone">WhatsApp</label><input id="orderPhone" class="field" inputmode="tel" autocomplete="tel" placeholder="6015-0927"></div>
-          <div class="field-group order-full"><label class="field-label" for="orderLocation">Ubicación de entrega</label><input id="orderLocation" class="field" maxlength="300" placeholder="Ej.: UTP, Edificio 4, lobby"></div>
-          <div class="field-group order-full"><label class="field-label" for="orderNotes">Indicaciones (opcional)</label><input id="orderNotes" class="field" maxlength="500" placeholder="Salón, referencia o detalle útil"></div>
-        </div>
-      </section>
-      <section aria-labelledby="paymentHeading"><h3 id="paymentHeading" class="order-step">3. Pago al recibir</h3>
-        <div class="payment-options">
-          <label class="payment-option"><input type="radio" name="paymentMethod" value="CASH" checked><span><b>💵 Efectivo</b><small>Paga al momento de la entrega</small></span></label>
-          <label class="payment-option"><input type="radio" name="paymentMethod" value="YAPPY"><span><b>📱 Yappy</b><small>Envía a 6015-0927 al recibir</small></span></label>
-        </div>
-      </section>
-      <div class="order-summary"><span>Total</span><strong id="orderTotal">B/.0.00</strong></div>
-      <div id="orderError" class="order-error" role="alert"></div>
-      <button id="placeOrderBtn" class="btn btn-primary order-submit" onclick="placeOrder()">Confirmar pedido</button>
-      <p class="order-legal">Revisaremos tu pedido antes de ponerlo en camino. No se realiza ningún cobro en esta página.</p>
-    </div>
-    <div id="orderSuccessView" class="order-success" hidden>
-      <span class="success-mark" aria-hidden="true">✓</span><p class="eyebrow">PEDIDO RECIBIDO</p><h2>¡Ya lo tenemos!</h2><p>Guarda este código para consultar el estado de tu entrega.</p>
-      <strong id="successOrderCode" class="order-code"></strong>
-      <div id="successOrderStatus" class="status-panel"></div>
-      <button class="btn btn-primary" onclick="refreshCurrentOrder()">Actualizar estado</button><button class="btn btn-ghost" onclick="startAnotherOrder()">Hacer otro pedido</button>
-    </div>
-  </main>
-</div>
 
 <div id="loginOverlay" class="overlay hidden">
   <div class="login-box">
@@ -234,6 +200,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
       <div class="quick-actions">
         <button class="btn btn-primary" onclick="showScreen('screen-new')">➕ Nuevo cliente</button>
         <button id="qrToggleBtn" class="btn btn-outline" onclick="toggleScanner()">📷 Escanear QR</button>
+        <a class="btn btn-outline" href="/admin-claims.html">🔐 Vincular cliente al perfil web</a>
         <button class="btn btn-ghost" onclick="showAdmin()">📊 Dashboard</button>
         <button class="btn btn-red" onclick="logout()">Cerrar sesión</button>
       </div>
@@ -475,9 +442,6 @@ let userScanner = null;
 let userScannerOpen = false;
 let openedAsUser = false;
 let lastRankingEntry = 'role';
-let orderCart = new Map();
-let pendingOrderKey = null;
-let currentOrderCode = localStorage.getItem('donasLastOrder') || '';
 
 window.addEventListener('load', () => {
   preloadSupabaseProducts();
@@ -630,104 +594,11 @@ function renderPublicCatalog(products) {
   </article>`).join('');
 }
 
-function catalogVariants() { return flattenCatalog(window.__donasProducts || []); }
 function addToOrder(id) {
-  const variant = catalogVariants().find(item => String(item.id) === String(id) && item.available);
+  const variant = flattenCatalog(window.__donasProducts || []).find(item => String(item.id) === String(id) && item.available);
   if (!variant) { showToast('Este sabor ya no está disponible'); return; }
-  orderCart.set(String(id), Math.min(100, (orderCart.get(String(id)) || 0) + 1));
-  openOrder();
+  window.location.href = '/customer.html?flavor=' + encodeURIComponent(id);
 }
-function changeOrderQuantity(id, delta) {
-  const next = Math.max(0, Math.min(100, (orderCart.get(String(id)) || 0) + delta));
-  if (next) orderCart.set(String(id), next); else orderCart.delete(String(id));
-  pendingOrderKey = null;
-  renderOrderCart();
-}
-function openOrder() {
-  const overlay = document.getElementById('orderOverlay');
-  overlay.classList.remove('hidden'); overlay.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden';
-  document.getElementById('orderFormView').hidden = false; document.getElementById('orderSuccessView').hidden = true;
-  const lastButton = document.getElementById('lastOrderButton'); lastButton.hidden = !currentOrderCode;
-  document.getElementById('lastOrderCode').textContent = currentOrderCode;
-  renderOrderCart();
-}
-function closeOrder() {
-  const overlay = document.getElementById('orderOverlay');
-  overlay.classList.add('hidden'); overlay.setAttribute('aria-hidden','true'); document.body.style.overflow='';
-}
-function renderOrderCart() {
-  const el = document.getElementById('orderCart');
-  const variants = catalogVariants();
-  const selected = variants.filter(item => orderCart.has(String(item.id)));
-  if (!selected.length) {
-    el.innerHTML = '<div class="cart-empty">Tu carrito está vacío.<button onclick="closeOrder();document.getElementById(\'sabores\').scrollIntoView()">Ver sabores</button></div>';
-  } else {
-    el.innerHTML = selected.map(item => `<div class="cart-row"><div class="cart-donut ${flavorTone(item.name)}"><span class="mini-donut"></span></div><div class="grow"><b>${safe(item.name)}</b><small>${formatMoney(item.unit_price_cents, item.currency_code)} c/u</small></div><div class="quantity"><button aria-label="Quitar una ${safe(item.name)}" onclick="changeOrderQuantity('${esc(item.id)}',-1)">−</button><span>${orderCart.get(String(item.id))}</span><button aria-label="Agregar una ${safe(item.name)}" onclick="changeOrderQuantity('${esc(item.id)}',1)">+</button></div></div>`).join('');
-  }
-  const total = selected.reduce((sum,item) => sum + (Number(item.unit_price_cents)||0) * (orderCart.get(String(item.id))||0), 0);
-  document.getElementById('orderTotal').textContent = formatMoney(total, selected[0]?.currency_code || 'USD');
-  document.getElementById('placeOrderBtn').disabled = selected.length === 0;
-}
-function normalizedOrderPhone(value) {
-  const digits = String(value || '').replace(/\D/g,'');
-  if (!digits) return null;
-  if (digits.length === 8) return '+507' + digits;
-  return '+' + digits;
-}
-function makeUuid() {
-  if (crypto.randomUUID) return crypto.randomUUID();
-  return '10000000-1000-4000-8000-100000000000'.replace(/[018]/g, c => (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16));
-}
-async function placeOrder() {
-  const error = document.getElementById('orderError'); error.textContent = '';
-  const name = document.getElementById('orderName').value.trim();
-  const phone = normalizedOrderPhone(document.getElementById('orderPhone').value);
-  const location = document.getElementById('orderLocation').value.trim();
-  if (!orderCart.size) { error.textContent = 'Agrega al menos una dona.'; return; }
-  if (!name || !phone || !location) { error.textContent = 'Completa tu nombre, WhatsApp y ubicación de entrega.'; return; }
-  const button = document.getElementById('placeOrderBtn'); button.disabled = true; button.textContent = 'Enviando pedido…';
-  pendingOrderKey ||= makeUuid();
-  try {
-    const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
-    const result = await vercelPost('/api/orders', {
-      idempotencyKey:pendingOrderKey, deliveryLocation:location,
-      paymentMethod,
-      customerName:name, customerPhone:phone, customerNotes:document.getElementById('orderNotes').value.trim() || null,
-      items:[...orderCart].map(([productVariantId,quantity]) => ({productVariantId,quantity}))
-    });
-    currentOrderCode = result.public_code; localStorage.setItem('donasLastOrder', currentOrderCode);
-    pendingOrderKey = null; orderCart.clear();
-    showOrderSuccess({...result, payment_method:paymentMethod});
-  } catch (err) {
-    error.textContent = err.name === 'AbortError' ? 'La respuesta tardó demasiado. Pulsa de nuevo para verificar el mismo pedido.' : err.message;
-  } finally { button.disabled = false; button.textContent = 'Confirmar pedido'; }
-}
-function orderStatusLabel(status) {
-  return ({PENDING:'Pedido pendiente',ACCEPTED:'Pedido aceptado',PREPARING:'Pedido aceptado',READY:'Pedido aceptado',OUT_FOR_DELIVERY:'En camino',COMPLETED:'Entregado',CANCELLED:'Cancelado'})[status] || 'Pedido recibido';
-}
-function renderOrderStatus(order) {
-  const statuses = ['PENDING','ACCEPTED','OUT_FOR_DELIVERY','COMPLETED'];
-  const visibleStatus = ['PREPARING','READY'].includes(order.status) ? 'ACCEPTED' : order.status;
-  const activeIndex = statuses.indexOf(visibleStatus);
-  const timeline = statuses.map((status,index) => `<div class="status-step ${index <= activeIndex ? 'active' : ''}"><span>${index < activeIndex ? '✓' : index + 1}</span><b>${orderStatusLabel(status)}</b></div>`).join('');
-  return `<div class="status-title"><span>Estado</span><strong>${orderStatusLabel(order.status)}</strong></div><div class="status-timeline ${order.status === 'CANCELLED' ? 'cancelled' : ''}">${order.status === 'CANCELLED' ? '<div class="status-cancelled">Este pedido fue cancelado.</div>' : timeline}</div><p>${order.payment_status === 'CONFIRMED' ? 'Pago recibido.' : order.payment_method === 'YAPPY' ? 'Pago pendiente por Yappy al 6015-0927.' : 'Pago en efectivo pendiente al recibir.'}</p>`;
-}
-function showOrderSuccess(order) {
-  document.getElementById('orderFormView').hidden = true; document.getElementById('orderSuccessView').hidden = false;
-  document.getElementById('successOrderCode').textContent = order.public_code || currentOrderCode;
-  document.getElementById('successOrderStatus').innerHTML = renderOrderStatus(order);
-}
-async function refreshCurrentOrder() {
-  if (!currentOrderCode) return;
-  try { const data = await vercelApi('/api/orders/' + encodeURIComponent(currentOrderCode), {}, 8000); showOrderSuccess(data.order); }
-  catch (err) { showToast(err.message); }
-}
-async function viewLastOrder() {
-  document.getElementById('lastOrderButton').disabled = true;
-  try { await refreshCurrentOrder(); }
-  finally { document.getElementById('lastOrderButton').disabled = false; }
-}
-function startAnotherOrder() { currentOrderCode=''; closeOrder(); document.getElementById('sabores').scrollIntoView({behavior:'smooth'}); }
 
 async function apiPost(action, body = {}) {
   if (!backendConfigured()) throw new Error('Configura BACKEND_URL en el HTML');
@@ -736,7 +607,7 @@ async function apiPost(action, body = {}) {
 }
 
 function hideOverlays() {
-  ['roleOverlay','loginOverlay','userOverlay','orderOverlay'].forEach(id => document.getElementById(id).classList.add('hidden'));
+  ['roleOverlay','loginOverlay','userOverlay'].forEach(id => document.getElementById(id).classList.add('hidden'));
   document.body.style.overflow='';
 }
 

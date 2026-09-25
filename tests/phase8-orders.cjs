@@ -4,22 +4,20 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const root = path.join(__dirname, '..');
-const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
-const css = fs.readFileSync(path.join(root, 'assets', 'css', 'redesign.css'), 'utf8');
+const landing = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
+const profile = fs.readFileSync(path.join(root, 'customer.html'), 'utf8');
+const sql = fs.readFileSync(path.join(root, 'supabase/migrations/202609250001_customer_only_delivery.sql'), 'utf8');
 
-for (const fragment of [
-  'id="orderOverlay"', 'Pago al recibir', '6015-0927', "vercelPost('/api/orders'",
-  "vercelApi('/api/orders/'", 'crypto.randomUUID', "PENDING:'Pedido pendiente'",
-  "ACCEPTED:'Pedido aceptado'", "OUT_FOR_DELIVERY:'En camino'", "COMPLETED:'Entregado'",
-  "PREPARING:'Pedido aceptado'", 'localStorage.setItem(\'donasLastOrder\''
-]) assert.ok(html.includes(fragment), `missing phase 8 order behavior: ${fragment}`);
-
-assert.doesNotMatch(html, /PREPARING:'Preparando'/);
-assert.match(html, /return 'B\/\.' \+ amount\.toFixed\(2\)/);
-assert.match(css, /\.order-overlay/);
-assert.match(css, /\.status-timeline/);
-assert.match(css, /\.last-order-button\[hidden\]\{display:none!important\}/);
-assert.match(html, /location\.hostname === 'notkingbryanpy\.github\.io'/);
-assert.match(html, /location\.replace\('https:\/\/donas-racha\.vercel\.app\/'/);
-assert.match(html, /const web = "https:\/\/donas-racha\.vercel\.app\/"/);
-console.log('PASS phase 8 orders: cart, delivery, pay-on-delivery and public tracking');
+assert.match(landing, /href="\/customer\.html">Pedir desde mi perfil/);
+assert.match(landing, /\/customer\.html\?flavor=/);
+assert.doesNotMatch(landing, /id="orderName"|id="orderPhone"|vercelPost\('\/api\/orders'/);
+assert.match(profile, /id="profile"/);
+assert.match(profile, /id="delivery"/);
+assert.match(profile, /id="orders"/);
+assert.match(profile, /api\/customer\/profile/);
+assert.match(profile, /api\/orders/);
+assert.doesNotMatch(profile, /id="orderName"|id="orderPhone"/);
+assert.match(sql, /if p_auth_user_id is null then/);
+assert.match(sql, /v_customer\.display_name,v_customer\.whatsapp_e164/);
+assert.match(sql, /revoke execute on function public\.api_create_order_with_guest_support/);
+console.log('PASS registered delivery: profile ordering and anonymous form removed');
