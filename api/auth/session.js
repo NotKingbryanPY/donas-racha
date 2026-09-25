@@ -15,7 +15,7 @@ module.exports = withApi(['POST'], async (req, context) => {
     : { email: String(body.email || '').trim(), password: String(body.password || '') };
   if (refresh ? credentials.refresh_token.length < 20 :
     !/^[^@\s]{1,100}@[^@\s]{1,200}$/.test(credentials.email) ||
-      credentials.password.length < 8 || credentials.password.length > 200) {
+      credentials.password.length < 6 || credentials.password.length > 200) {
     throw new ApiError(400, 'VALIDATION_ERROR', 'Credenciales incompletas.');
   }
   const config = getConfig();
