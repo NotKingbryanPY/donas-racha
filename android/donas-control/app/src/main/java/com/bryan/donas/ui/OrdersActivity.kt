@@ -54,14 +54,17 @@ class OrdersActivity : AppCompatActivity() {
             android.content.res.Configuration.UI_MODE_NIGHT_YES
         WindowCompat.getInsetsController(window, scroll).isAppearanceLightStatusBars = !dark
         WindowCompat.getInsetsController(window, scroll).isAppearanceLightNavigationBars = !dark
+        root.addView(button("← Volver") { finish() }, fullWidth())
         root.addView(TextView(this).apply { text = "Pedidos"; textSize = 24f }, fullWidth())
         notice = TextView(this).apply { text = "Los pedidos requieren una cuenta administradora. Las ventas sin conexión se concilian al volver la red." }
         root.addView(notice, fullWidth())
         loginFields = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
-        email = input("Correo", false)
-        password = input("Contraseña", true)
-        loginFields.addView(email.parent as TextInputLayout, fullWidth())
-        loginFields.addView(password.parent as TextInputLayout, fullWidth())
+        val emailInput = input("Correo", false)
+        val passwordInput = input("Contraseña", true)
+        email = emailInput.editText as TextInputEditText
+        password = passwordInput.editText as TextInputEditText
+        loginFields.addView(emailInput, fullWidth())
+        loginFields.addView(passwordInput, fullWidth())
         login = button("Iniciar sesión") { signIn() }
         loginFields.addView(login, fullWidth())
         root.addView(loginFields, fullWidth())
@@ -73,7 +76,6 @@ class OrdersActivity : AppCompatActivity() {
             lifecycleScope.launch {
                 val dao = app.database.syncDao()
                 dao.clearOrders(); dao.clearState()
-                list.removeAllViews()
             }
             notice.text = "Sesión cerrada."
         }
@@ -93,14 +95,14 @@ class OrdersActivity : AppCompatActivity() {
 
     private val Int.dp get() = (this * resources.displayMetrics.density).toInt()
     private fun fullWidth() = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-    private fun input(label: String, secret: Boolean): TextInputEditText {
+    private fun input(label: String, secret: Boolean): TextInputLayout {
         val layout = TextInputLayout(this).apply { hint = label }
         val field = TextInputEditText(layout.context).apply {
             inputType = if (secret) android.text.InputType.TYPE_CLASS_TEXT or android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD
                 else android.text.InputType.TYPE_CLASS_TEXT or android.text.InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
         }
         layout.addView(field)
-        return field
+        return layout
     }
     private fun button(label: String, action: () -> Unit) = MaterialButton(this).apply { text = label; setOnClickListener { action() } }
 
@@ -108,7 +110,19 @@ class OrdersActivity : AppCompatActivity() {
         loginFields.isVisible = !client.signedIn
         logout.isVisible = client.signedIn
         sync.isVisible = client.signedIn
-        list.isVisible = client.signedIn
+        list.isVisible = true
+        if (!client.signedIn) {
+            list.removeAllViews()
+            showEmptyState("Inicia sesión para consultar pedidos. No hay pedidos visibles sin una cuenta administradora.")
+        }
+    }
+
+    private fun showEmptyState(message: String) {
+        list.addView(TextView(this).apply {
+            text = message
+            textSize = 16f
+            setPadding(0, 20.dp, 0, 20.dp)
+        }, fullWidth())
     }
 
     private fun signIn() {
@@ -122,6 +136,7 @@ class OrdersActivity : AppCompatActivity() {
                 password.setText("")
                 renderSession()
                 notice.text = "Sesión iniciada. Actualizando pedidos…"
+                loadOrders()
                 OrderSync.request(this@OrdersActivity)
             } catch (e: Exception) { notice.text = e.message ?: "No se pudo iniciar sesión." }
             finally { login.isEnabled = true }
@@ -134,7 +149,7 @@ class OrdersActivity : AppCompatActivity() {
         val rejected = app.database.syncDao().rejectedCount()
         val unbooked = orders.count { it.status == "COMPLETED" && it.settled && app.database.operationDao().eventByKey("order-${it.id}") == null }
         if (rejected > 0 || unbooked > 0) notice.text = "Requieren conciliación: $rejected ventas rechazadas por el servidor y $unbooked pedidos sin asiento local. No repitas la venta."
-        if (orders.isEmpty()) list.addView(TextView(this@OrdersActivity).apply { text = "Aún no hay pedidos sincronizados." })
+        if (orders.isEmpty()) showEmptyState("No hay pedidos todavía. Pulsa Actualizar pedidos para comprobar de nuevo.")
         orders.forEach(::renderOrder)
     }
 

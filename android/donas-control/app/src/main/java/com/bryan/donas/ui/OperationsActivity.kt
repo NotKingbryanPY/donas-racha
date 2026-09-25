@@ -297,7 +297,7 @@ class OperationsActivity : AppCompatActivity() {
     private fun form(vararg fields: Pair<String, String>): List<TextInputEditText> {
         val container = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(36, 8, 36, 0) }
         val editors = fields.map { (hint, value) ->
-            TextInputEditText(this).apply { setText(value); inputType = if (hint.contains("Descripción") || hint.contains("Persona") || hint.contains("Motivo")) InputType.TYPE_CLASS_TEXT else InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL }
+            TextInputEditText(this).apply { setText(value); inputType = if (hint.contains("Descripción") || hint.contains("Persona") || hint.contains("Motivo") || hint.contains("RESETEAR")) InputType.TYPE_CLASS_TEXT else InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL }
                 .also { editor -> container.addView(TextInputLayout(this).apply { this.hint = hint; addView(editor) }, LinearLayout.LayoutParams(-1, -2).apply { topMargin = 10 }) }
         }
         editors.first().setTag(com.bryan.donas.R.id.root, container)
