@@ -32,6 +32,12 @@ async function readResponse(response) {
     if (message.includes('PAYMENT_REQUIRED')) throw new ApiError(409, 'PAYMENT_REQUIRED', 'Confirma el pago recibido antes de completar la entrega.');
     if (message.includes('INVALID_TRANSITION')) throw new ApiError(409, 'INVALID_TRANSITION', 'La transición de estado no está permitida.');
     if (message.includes('ORDER_NOT_FOUND')) throw new ApiError(404, 'ORDER_NOT_FOUND', 'No se encontró el pedido.');
+    if (message.includes('PHONE_EXISTS')) throw new ApiError(409, 'PHONE_EXISTS', 'Ya existe un cliente activo con ese WhatsApp.');
+    if (message.includes('INSUFFICIENT_POINTS')) throw new ApiError(409, 'INSUFFICIENT_POINTS', 'No tienes puntos suficientes.');
+    if (message.includes('REWARD_NOT_FOUND')) throw new ApiError(404, 'REWARD_NOT_FOUND', 'La recompensa ya no está disponible.');
+    if (message.includes('SYSTEM_INACTIVE')) throw new ApiError(409, 'SYSTEM_INACTIVE', 'El registro de compras está pausado.');
+    if (message.includes('LOYALTY_ACCOUNT_MISSING')) throw new ApiError(409, 'LOYALTY_ACCOUNT_MISSING', 'La cuenta de puntos necesita revisión.');
+    if (message.includes('CUSTOMER_NOT_FOUND')) throw new ApiError(404, 'CUSTOMER_NOT_FOUND', 'No encontramos ese ID de cliente activo.');
     if (message.includes('CUSTOMER_NOT_LINKED')) throw new ApiError(403, 'CUSTOMER_NOT_LINKED', 'La cuenta no está vinculada a un cliente activo.');
     if (message.includes('INVALID_PASSWORD_TOKEN')) throw new ApiError(403, 'INVALID_PASSWORD_TOKEN', 'El código temporal no es válido o expiró. Pide uno nuevo al vendedor.');
     if (message.includes('CUSTOMER_PHONE_REQUIRED')) throw new ApiError(409, 'CUSTOMER_PHONE_REQUIRED', 'El cliente necesita un WhatsApp registrado antes de pedir.');

@@ -166,10 +166,11 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
     <div class="logo">🍩</div>
     <h2>Acceso para vendedores</h2>
     <p>Panel privado para registrar compras y administrar Donas Racha.</p>
-    <div class="field-group"><label class="field-label" for="loginInput">Contraseña de vendedor</label><input id="loginInput" class="dark-field" type="password" placeholder="Contraseña" onkeydown="if(event.key==='Enter') checkLogin()"></div>
+    <div class="field-group"><label class="field-label" for="loginEmail">Correo de vendedor</label><input id="loginEmail" class="dark-field" type="email" autocomplete="username" placeholder="correo@ejemplo.com" onkeydown="if(event.key==='Enter') checkLogin()"></div>
+    <div class="field-group"><label class="field-label" for="loginInput">Contraseña</label><input id="loginInput" class="dark-field" type="password" autocomplete="current-password" placeholder="Contraseña" onkeydown="if(event.key==='Enter') checkLogin()"></div>
     <button id="loginBtn" class="btn btn-primary" style="width:100%" onclick="checkLogin()">Entrar al panel →</button>
     <button class="btn btn-ghost" style="width:100%;margin-top:10px" onclick="goToRoleScreen()">← Volver al inicio</button>
-    <div id="loginError" style="display:none;color:#ffb1ba;font-weight:800;font-size:13px;margin-top:12px">Contraseña incorrecta</div>
+    <div id="loginError" style="display:none;color:#ffb1ba;font-weight:800;font-size:13px;margin-top:12px">Revisa tu correo y contraseña.</div>
   </div>
 </div>
 
@@ -414,11 +415,9 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
 
     <div class="admin-grid">
       <div class="card">
-        <div class="card-title">🛠️ Estado de migración</div>
+        <div class="card-title">🛠️ Datos en Supabase</div>
         <div id="migrationState" class="pill migration-pending">Pendiente</div>
-        <p class="muted" style="margin:12px 0">Ejecuta primero initSheets, luego migra. La migración es idempotente y evita duplicados.</p>
-        <div class="row"><button class="btn btn-dark" onclick="runInitSheets()">Crear/actualizar hojas</button><button class="btn btn-primary" onclick="runMigration()">Migrar clientes</button></div>
-        <div id="migrationResult" class="muted" style="margin-top:12px"></div>
+        <p class="muted" style="margin:12px 0">Clientes, compras, puntos, canjes y pedidos se gestionan en Supabase.</p>
       </div>
       <div class="card">
         <div class="card-title">⚙️ Config rápida</div>
@@ -455,13 +454,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
 <script src="assets/js/feature-flags.js"></script>
-<script src="assets/js/api-client.js"></script>
 <script>
-// ═══════════════════════════════════════════════════════════════
-// PEGA AQUÍ LA URL /exec DEL DESPLIEGUE DE GOOGLE APPS SCRIPT
-// ═══════════════════════════════════════════════════════════════
-const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbxhLgU5ok2j8DwE8ehSKw63pMWSvTuS3_zoV898nx4K4eG1lGZ22ycjOOlZbGtpzMCS/exec';
-
 let currentClient = null;
 let clientRequestVersion = 0;
 let newClientData = null;
@@ -476,6 +469,9 @@ let customerSelectedFlavor = null;
 let customerOrderQuantities = new Map();
 let customerOrderPendingKey = null;
 let customerOrderVariants = [];
+const pendingPurchaseKeys = new Map();
+const pendingRedeemKeys = new Map();
+let pendingRegistration = null;
 
 window.addEventListener('load', () => {
   preloadSupabaseProducts();
@@ -489,8 +485,9 @@ window.addEventListener('load', () => {
   const customerLink = new URLSearchParams(location.search);
   if (customerLink.has('flavor')) { customerSelectedFlavor = customerLink.get('flavor'); customerWantsOrder = true; }
   if (customerLink.has('profile') || customerLink.has('flavor')) {
+    if (customerLink.has('id')) document.getElementById('userClientIdInput').value = customerLink.get('id');
     goToUserLogin();
-  } else if (sessionStorage.getItem('donasAuth') === 'true') {
+  } else if (sessionStorage.getItem('donasAdminAccessToken')) {
     hideOverlays();
     goHome();
   } else {
@@ -517,20 +514,35 @@ function closeInfoModal() {
   document.body.style.overflow = '';
 }
 
-function backendConfigured() {
-  return BACKEND_URL && !BACKEND_URL.includes('PEGA_AQUI');
-}
-
 async function api(action, params = {}) {
-  if (!backendConfigured()) throw new Error('Configura BACKEND_URL en el HTML');
-  if (action === 'getRanking') {
-    return progressiveRanking(params);
-  }
-  return legacyApi(action, params);
+  if (action === 'getRanking') return progressiveRanking(params);
+  return backendRequest('GET', { action, ...params }, action === 'getCliente' && openedAsUser);
 }
 
-function legacyApi(action, params = {}) {
-  return DonasApi.get(BACKEND_URL, action, params);
+async function backendRequest(method, params, asCustomer = false, retried = false) {
+  const token = sessionStorage.getItem(asCustomer ? 'donasCustomerToken' : 'donasAdminAccessToken');
+  const url = method === 'GET' ? `/api/backend?${new URLSearchParams(params)}` : '/api/backend';
+  const response = await fetch(url, {
+    method,
+    headers:{ accept:'application/json', ...(method === 'POST' ? { 'content-type':'application/json' } : {}),
+      ...(token ? { authorization:`Bearer ${token}` } : {}) },
+    ...(method === 'POST' ? { body:JSON.stringify(params) } : {})
+  });
+  if (response.status === 401 && !asCustomer && !retried && sessionStorage.getItem('donasAdminRefreshToken')) {
+    try {
+      const session = await vercelPost('/api/auth/session', { grantType:'refresh_token', refreshToken:sessionStorage.getItem('donasAdminRefreshToken') });
+      sessionStorage.setItem('donasAdminAccessToken', session.accessToken);
+      sessionStorage.setItem('donasAdminRefreshToken', session.refreshToken);
+      return backendRequest(method,params,asCustomer,true);
+    } catch (_) { sessionStorage.removeItem('donasAdminAccessToken'); sessionStorage.removeItem('donasAdminRefreshToken'); }
+  }
+  const payload = await response.json().catch(() => null);
+  if (!response.ok || !payload?.ok) {
+    const error = new Error(payload?.error?.message || 'No pudimos conectar con Supabase.');
+    error.code = payload?.error?.code || 'API_ERROR';
+    throw error;
+  }
+  return payload.data;
 }
 
 async function vercelApi(path, params = {}, timeoutMs = 5000) {
@@ -648,9 +660,7 @@ async function customerRequest(path, options = {}) {
 }
 
 async function apiPost(action, body = {}) {
-  if (!backendConfigured()) throw new Error('Configura BACKEND_URL en el HTML');
-  const payload = { action, adminPassword: sessionStorage.getItem('donasPass') || '', ...body };
-  return DonasApi.post(BACKEND_URL, payload);
+  return backendRequest('POST', { action, ...body }, action === 'canjearRecompensa');
 }
 
 function hideOverlays() {
@@ -683,39 +693,37 @@ function goToUserLogin() {
 }
 
 async function checkLogin() {
-  const pass = document.getElementById('loginInput').value.trim();
-  if (!pass) return;
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginInput').value;
+  if (!email || !pass) return;
   const btn = document.getElementById('loginBtn');
   btn.disabled = true; btn.textContent = 'Verificando...';
   try {
-    const data = await api('verificarPassword', { password: pass });
-    if (data.ok) {
-      sessionStorage.setItem('donasAuth', 'true');
-      sessionStorage.setItem('donasPass', pass);
-      hideOverlays();
-      goHome();
-      showToast('✅ Acceso correcto');
-    } else {
-      document.getElementById('loginError').style.display = 'block';
-    }
+    const session = await vercelPost('/api/auth/session', { grantType:'password', email, password:pass });
+    sessionStorage.setItem('donasAdminAccessToken', session.accessToken);
+    sessionStorage.setItem('donasAdminRefreshToken', session.refreshToken);
+    document.getElementById('loginInput').value = '';
+    hideOverlays();
+    goHome();
+    showToast('✅ Acceso correcto');
   } catch (err) {
-    showToast('❌ ' + err.message);
+    const error = document.getElementById('loginError');
+    error.textContent = err.message;
+    error.style.display = 'block';
   } finally {
     btn.disabled = false; btn.textContent = 'Entrar →';
   }
 }
 
 function logout() {
-  DonasApi.invalidate();
   clientRequestVersion++;
   currentClient = null;
-  sessionStorage.removeItem('donasAuth');
-  sessionStorage.removeItem('donasPass');
-  currentClient = null;
+  sessionStorage.removeItem('donasAdminAccessToken');
+  sessionStorage.removeItem('donasAdminRefreshToken');
   goToRoleScreen();
 }
 
-function requireAuth() { return sessionStorage.getItem('donasAuth') === 'true'; }
+function requireAuth() { return !!sessionStorage.getItem('donasAdminAccessToken'); }
 function tryShowAdmin() { requireAuth() ? showAdmin() : goToAdminLogin(); }
 
 function showScreen(id) {
@@ -740,7 +748,6 @@ function clientGoBack() {
 
 async function loadHomeRanking() {
   const el = document.getElementById('home-ranking');
-  if (!backendConfigured()) { el.innerHTML = '<div class="empty">Configura BACKEND_URL para cargar datos.</div>'; return; }
   try {
     const data = await api('getRanking', { type:'racha', limit:5 });
     el.innerHTML = renderRankingItems(data.ranking || [], 'racha', true);
@@ -1072,12 +1079,6 @@ function setClientRanking(type) {
 async function loadClientInlineRanking(type='racha') {
   const inlineEl = document.getElementById('clientInlineRanking');
   const listEl = document.getElementById('clientRankingList');
-  if (!backendConfigured()) {
-    const msg = '<div class="empty">Configura BACKEND_URL para cargar el ranking.</div>';
-    if (inlineEl) inlineEl.innerHTML = msg;
-    if (listEl) listEl.innerHTML = msg;
-    return;
-  }
   try {
     if (inlineEl && type === 'racha') inlineEl.innerHTML = '<div class="empty">Cargando ranking...</div>';
     if (listEl) listEl.innerHTML = '<div class="empty">Cargando ranking...</div>';
@@ -1118,9 +1119,12 @@ async function redeemItem(itemId) {
   if (!item) { showToast('Recompensa no encontrada'); return; }
   if ((currentClient.pointsAvailable || 0) < (item.cost || 0)) { showToast('Puntos insuficientes'); return; }
   if (!confirm(`¿Canjear ${item.name} por ${item.cost} puntos?`)) return;
+  const operation = `${currentClient.id}:${itemId}`;
+  if (!pendingRedeemKeys.has(operation)) pendingRedeemKeys.set(operation,crypto.randomUUID());
   try {
-    const data = await apiPost('canjearRecompensa', { clientId: currentClient.id, itemId:itemId });
+    const data = await apiPost('canjearRecompensa', { clientId: currentClient.id, itemId:itemId, idempotencyKey:pendingRedeemKeys.get(operation) });
     if (!data.ok) throw new Error(data.error || 'No se pudo canjear');
+    pendingRedeemKeys.delete(operation);
     currentClient = data.client;
     renderClient(currentClient, true);
     setClientTab('shop');
@@ -1133,9 +1137,12 @@ async function registerPurchase() {
   if (!currentClient) return;
   const btn = document.getElementById('buyBtn');
   btn.disabled = true; btn.textContent = 'Registrando...';
+  const operation = currentClient.id;
+  if (!pendingPurchaseKeys.has(operation)) pendingPurchaseKeys.set(operation,crypto.randomUUID());
   try {
-    const data = await apiPost('registrarCompra', { clientId: currentClient.id });
+    const data = await apiPost('registrarCompra', { clientId: currentClient.id, idempotencyKey:pendingPurchaseKeys.get(operation) });
     if (!data.ok) throw new Error(data.error || 'No se pudo registrar');
+    pendingPurchaseKeys.delete(operation);
     const previousClient = currentClient;
     currentClient = data.client;
     renderClient(data.client, false);
@@ -1161,9 +1168,12 @@ async function createClient() {
   if (!name) { showToast('Escribe el nombre'); return; }
   const btn = document.getElementById('createBtn');
   btn.disabled = true; btn.textContent = 'Creando...';
+  const fingerprint = `${name}\u0000${whatsapp}`;
+  if (pendingRegistration?.fingerprint !== fingerprint) pendingRegistration = { fingerprint, key:crypto.randomUUID() };
   try {
-    const data = await apiPost('nuevoCliente', { name, whatsapp });
+    const data = await apiPost('nuevoCliente', { name, whatsapp, idempotencyKey:pendingRegistration.key });
     if (!data.ok) throw new Error(data.error || 'No se pudo crear');
+    pendingRegistration = null;
     newClientData = data.client;
     document.getElementById('newQrCard').style.display = 'block';
     document.getElementById('newQrName').textContent = data.client.name;
@@ -1332,16 +1342,6 @@ async function loadAdminClients() {
     el.innerHTML = `<table class="admin-table"><thead><tr><th>Cliente</th><th>Nivel</th><th>Puntos</th><th>Compras</th><th>Racha</th><th>Canjes</th><th></th></tr></thead><tbody>${clients.map(c => `<tr><td><b>${safe(c.name)}</b><br><span class="sub">${safe(c.whatsapp||'')}</span></td><td>${c.levelEmoji||'🥉'} ${safe(c.levelName||'Bronce')}</td><td>${c.pointsTotal||0}</td><td>${c.totalPurchases||0}</td><td>${c.currentStreak||0}</td><td>${c.redemptionsMade||c.rewardsEarned||0}</td><td><button class="btn btn-ghost" onclick="openClient('${esc(c.id)}', false)">Ver</button></td></tr>`).join('')}</tbody></table>`;
   } catch(err) { el.innerHTML = '<div class="empty">Error al cargar clientes</div>'; }
 }
-async function runInitSheets() {
-  const el = document.getElementById('migrationResult'); el.textContent = 'Creando/actualizando hojas...';
-  try { const data = await apiPost('initSheets'); if(!data.ok) throw new Error(data.error); el.textContent = data.message || 'Hojas actualizadas'; showToast('✅ Hojas listas'); await loadAdminStats(); } catch(err) { el.textContent = 'Error: ' + err.message; }
-}
-async function runMigration() {
-  if (!confirm('¿Ejecutar migración V2? Haz una copia de seguridad antes.')) return;
-  const el = document.getElementById('migrationResult'); el.textContent = 'Migrando clientes existentes...';
-  try { const data = await apiPost('migrarClientesExistentes'); if(!data.ok) throw new Error(data.error); el.textContent = data.alreadyMigrated ? data.message : `Procesados: ${data.processed}, actualizados: ${data.updated}, insignias: ${data.badgesAssigned}, temporadas: ${data.seasonsCreated}`; showToast('✅ Migración completada'); await showAdmin(); } catch(err) { el.textContent = 'Error: ' + err.message; showToast('❌ ' + err.message); }
-}
-
 function showToast(msg, duration=3000) { const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(window.__toastTimer); window.__toastTimer=setTimeout(()=>t.classList.remove('show'), duration); }
 function confettiBurst(){ if(window.confetti && !window.matchMedia('(prefers-reduced-motion: reduce)').matches && !navigator.connection?.saveData) confetti({particleCount:32,spread:55,ticks:48,disableForReducedMotion:true,origin:{y:.72},colors:['#b89bfa','#efafd2','#e4c581']}); }
 function fmtDate(v){ if(!v) return ''; const d=new Date(v); return isNaN(d)?'':d.toLocaleDateString('es-PA',{day:'2-digit',month:'short',year:'numeric'}); }

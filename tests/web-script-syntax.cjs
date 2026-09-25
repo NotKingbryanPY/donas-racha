@@ -1,0 +1,10 @@
+'use strict';
+const fs = require('node:fs');
+const path = require('node:path');
+const vm = require('node:vm');
+const html = fs.readFileSync(path.join(__dirname,'..','index.html'),'utf8');
+const scripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(match => match[1]);
+for (const script of scripts) new vm.Script(script,{filename:'index.html'});
+if (scripts.length < 1) throw new Error('No se encontró el script principal de la web.');
+if (/script\.google\.com|DonasApi|BACKEND_URL/.test(html)) throw new Error('La web todavía depende de Apps Script.');
+console.log(`PASS web syntax and no Apps Script runtime (${scripts.length} inline script)`);

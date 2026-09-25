@@ -1,6 +1,6 @@
 # Donas Racha — API de fase 4
 
-La API se ejecuta como funciones de Vercel dentro del mismo repositorio de la web. Supabase mantiene las transacciones y Vercel valida HTTP, sesiones, permisos, límites y respuestas. Google Apps Script continúa operativo y la web actual no cambia de backend durante esta fase.
+La API se ejecuta como funciones de Vercel dentro del mismo repositorio de la web. Supabase mantiene las transacciones y Vercel valida HTTP, sesiones, permisos, límites y respuestas. La rama de corte usa Supabase para todas las operaciones de la web; ver [procedimiento de publicación](docs/SUPABASE_CUTOVER.md). Los apartados de fases anteriores que mencionan Apps Script documentan el estado histórico previo al corte.
 
 ## Configuración
 
