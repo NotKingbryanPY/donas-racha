@@ -2,7 +2,7 @@
 const assert = require('node:assert/strict');
 const createOrder = require('../api/orders/index');
 const readOrder = require('../api/orders/[publicCode]');
-const claimCustomer = require('../api/customer/claim');
+const customerRoute = require('../api/customer/[route]');
 
 function response(){
   return {
@@ -24,7 +24,7 @@ function response(){
   assert.equal(read.body.error.code,'AUTH_REQUIRED');
 
   const claim=response();
-  await claimCustomer({method:'POST',headers:{},url:'/api/customer/claim',body:{claimToken:'a'.repeat(64)}},claim);
+  await customerRoute({method:'POST',headers:{},query:{route:'claim'},url:'/api/customer/claim',body:{claimToken:'a'.repeat(64)}},claim);
   assert.equal(claim.statusCode,401);
   assert.equal(claim.body.error.code,'AUTH_REQUIRED');
   console.log('PASS customer order and claim routes reject anonymous access');

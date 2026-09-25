@@ -1,7 +1,7 @@
-const { requireUser } = require('../_lib/auth');
-const { ApiError, withApi } = require('../_lib/http');
-const { enforceRateLimit } = require('../_lib/rate-limit');
-const { userRpc } = require('../_lib/supabase');
+const { requireUser } = require('../auth');
+const { ApiError, withApi } = require('../http');
+const { enforceRateLimit } = require('../rate-limit');
+const { userRpc } = require('../supabase');
 
 module.exports = withApi(['POST'], async (req, context) => {
   const user = await requireUser(req);

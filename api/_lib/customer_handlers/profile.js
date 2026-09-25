@@ -1,6 +1,6 @@
-const { requireCustomer } = require('../_lib/auth');
-const { withApi } = require('../_lib/http');
-const { enforceRateLimit } = require('../_lib/rate-limit');
+const { requireCustomer } = require('../auth');
+const { withApi } = require('../http');
+const { enforceRateLimit } = require('../rate-limit');
 
 module.exports = withApi(['GET'], async req => {
   const { user, customer } = await requireCustomer(req);

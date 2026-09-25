@@ -4,6 +4,8 @@
 
 La portada lleva a `/customer.html`. Una persona entra con correo y contraseña de Supabase Auth y vincula su cuenta a un cliente ya registrado mediante un código temporal emitido por un administrador que verificó su identidad. El pedido usa el nombre y WhatsApp guardados en `public.customers`; el navegador no puede cambiarlos. La API y la función SQL rechazan pedidos anónimos. Crear el pedido no acredita puntos ni racha. El abono automático al cobrar y completar la entrega pertenece al cierre conjunto de la fase 10, todavía no publicado en `main`.
 
+Los seis endpoints de cliente comparten `api/customer/[route].js` para mantener el despliegue dentro del límite de 12 funciones del plan Vercel Hobby. Sus URLs públicas no cambian.
+
 ## Preparación antes de publicar
 
 1. Revisar en Supabase SQL Editor cuántos clientes del negocio están realmente en la tabla central:

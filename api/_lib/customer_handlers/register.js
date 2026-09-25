@@ -1,6 +1,6 @@
-const { ApiError, withApi } = require('../_lib/http');
-const { enforceRateLimit } = require('../_lib/rate-limit');
-const { getConfig } = require('../_lib/supabase');
+const { ApiError, withApi } = require('../http');
+const { enforceRateLimit } = require('../rate-limit');
+const { getConfig } = require('../supabase');
 
 module.exports = withApi(['POST'], async (req, context) => {
   await enforceRateLimit(req, 'customer_register', 5, 3600);
