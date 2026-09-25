@@ -33,6 +33,7 @@ async function readResponse(response) {
     if (message.includes('INVALID_TRANSITION')) throw new ApiError(409, 'INVALID_TRANSITION', 'La transición de estado no está permitida.');
     if (message.includes('ORDER_NOT_FOUND')) throw new ApiError(404, 'ORDER_NOT_FOUND', 'No se encontró el pedido.');
     if (message.includes('CUSTOMER_NOT_LINKED')) throw new ApiError(403, 'CUSTOMER_NOT_LINKED', 'La cuenta no está vinculada a un cliente activo.');
+    if (message.includes('INVALID_PASSWORD_TOKEN')) throw new ApiError(403, 'INVALID_PASSWORD_TOKEN', 'El código temporal no es válido o expiró. Pide uno nuevo al vendedor.');
     if (message.includes('CUSTOMER_PHONE_REQUIRED')) throw new ApiError(409, 'CUSTOMER_PHONE_REQUIRED', 'El cliente necesita un WhatsApp registrado antes de pedir.');
     if (message.includes('AUTH_REQUIRED')) throw new ApiError(401, 'AUTH_REQUIRED', 'Inicia sesión para hacer pedidos.');
     if (message.includes('ORDER_FORBIDDEN')) throw new ApiError(403, 'ORDER_FORBIDDEN', 'No puedes consultar este pedido.');

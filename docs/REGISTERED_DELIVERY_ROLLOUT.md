@@ -1,27 +1,18 @@
-# Pedidos solo para clientes registrados
+# Perfil por ID y pedidos
 
-## Qué cambia
+La entrada de clientes usa el ID que el vendedor entrega por WhatsApp o QR. **No pide correo ni contraseña por defecto.** El perfil conserva el diseño, puntos, racha, ranking y tienda de la página principal; la pestaña «Pedir» permite elegir sabores, ubicación y pago al recibir. Los pedidos toman nombre y WhatsApp del registro central, nunca del formulario.
 
-La portada lleva a `/customer.html`. Una persona entra con correo y contraseña de Supabase Auth y vincula su cuenta a un cliente ya registrado mediante un código temporal emitido por un administrador que verificó su identidad. El pedido usa el nombre y WhatsApp guardados en `public.customers`; el navegador no puede cambiarlos. La API y la función SQL rechazan pedidos anónimos. Crear el pedido no acredita puntos ni racha. El abono automático al cobrar y completar la entrega pertenece al cierre conjunto de la fase 10, todavía no publicado en `main`.
+## Contraseña opcional
 
-Los seis endpoints de cliente comparten `api/customer/[route].js` para mantener el despliegue dentro del límite de 12 funciones del plan Vercel Hobby. Sus URLs públicas no cambian.
+El cliente puede dejar su perfil solo con ID. Si activa contraseña, cada nueva entrada pide primero el ID y después la contraseña. Para impedir que otra persona que conozca el ID active una contraseña ajena, el vendedor verifica la identidad y entrega un código temporal desde `/admin-claims.html`. El mismo código permite restablecer una contraseña olvidada. Dura 30 minutos, se usa una sola vez y no debe publicarse. Activar o restablecer contraseña invalida las sesiones anteriores.
 
-## Preparación antes de publicar
+**Límite consciente del acceso por ID:** quien conoce un ID sin contraseña puede abrir ese perfil y pedir en nombre de ese cliente. No se debe presentar el ID como secreto ni como prueba fuerte de identidad. La comprobación de pago y entrega sigue en manos del vendedor. El endpoint antiguo de Apps Script que muestra datos del perfil por ID sigue existiendo; la contraseña opcional protege el acceso web nuevo y sus pedidos, pero no convierte ese endpoint antiguo en privado.
 
-1. Revisar en Supabase SQL Editor cuántos clientes del negocio están realmente en la tabla central:
+## Despliegue
 
-   ```sql
-   select count(*) as clientes_activos,
-          count(*) filter (where whatsapp_e164 is null) as sin_whatsapp,
-          count(*) filter (where auth_user_id is not null) as vinculados
-   from public.customers where status = 'ACTIVE';
-   ```
+1. Ejecutar `supabase/migrations/202609250002_customer_id_access.sql` antes de desplegar la web y la API. Conserva los 21 clientes y los pedidos existentes. Agrega sesiones de cliente por ID, contraseña opcional y creación de pedidos asociados al cliente central.
+2. Comprobar que los IDs del registro por WhatsApp/Apps Script coinciden con `public.customers.public_id` y que cada cliente tiene `display_name` y `whatsapp_e164`. Si alguno falta, corregir la migración de ese cliente antes de ofrecer pedidos.
+3. Desplegar la web y la API juntas. Probar con un ID de cliente real sin contraseña: entrar, ver el perfil existente y abrir «Pedir». Probar un pedido solo con datos de prueba o coordinado con el vendedor; confirmar que `orders.customer_id` apunta al cliente y que el nombre y WhatsApp del pedido son los registrados.
+4. Probar activación de contraseña con código temporal, entrada posterior con ID + contraseña y rechazo de una sesión anterior. Probar recuperación con un segundo código temporal.
 
-   El registro antiguo en Apps Script no basta: los clientes que vayan a pedir necesitan estar migrados a `public.customers`, con nombre y WhatsApp reales. No crear clientes automáticamente a partir de un ID público ni de un número que escriba el visitante.
-
-2. Confirmar que existe una cuenta administradora en Supabase Auth con rol `ADMIN` en `public.app_user_roles`, y que el correo de registro de Supabase Auth funciona. La contraseña del panel de Apps Script es independiente.
-3. Ejecutar `supabase/migrations/202609250001_customer_only_delivery.sql` en un proyecto de prueba y comprobar permisos y reintentos. Después aplicarla en el proyecto productivo antes de desplegar la web. La migración conserva los pedidos previos, pero bloquea nuevos pedidos sin cliente vinculado.
-4. Desplegar la web y la API juntas. Entrar como administrador en `/admin-claims.html`, buscar el ID de un cliente existente, verificar su identidad presencialmente y entregarle el código temporal. El cliente crea acceso por correo en `/customer.html`, inicia sesión, vincula el código y hace su pedido dentro del perfil.
-5. Verificar en base de datos que el pedido tiene `customer_id`, `customer_name_snapshot` y `customer_phone_snapshot` correspondientes al registro, y que un `POST /api/orders` sin sesión devuelve 401. Confirmar que aparece en el panel del vendedor antes de aceptar pedidos reales.
-
-El código de vinculación dura 30 minutos y se usa una sola vez. No debe enviarse por un canal público. Los clientes que ya tienen `auth_user_id` pueden iniciar sesión directamente; los demás requieren vinculación. Los pedidos antiguos con `customer_id` nulo quedan como histórico, sin asignarse automáticamente a nadie.
+El correo de Supabase Auth queda exclusivamente para vendedores y administradores. Las rutas de registro y vinculación por correo de clientes dejan de estar disponibles. Los puntos no se acreditan al crear un pedido; el cierre automático de pago, entrega y puntos de fase 10 aún no está publicado en `main`.

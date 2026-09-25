@@ -22,14 +22,12 @@ module.exports = withApi(['POST'], async (req, context) => {
     customerNotes: order.customerNotes,
     items: order.items
   };
-  const result = await rpc('api_create_order', {
-    p_auth_user_id: user.id,
+  const result = await rpc('api_create_order_by_customer_id', {
+    p_customer_id: customer.id,
     p_idempotency_key: order.idempotencyKey,
     p_request_hash: fingerprint(payload),
     p_delivery_location: order.deliveryLocation,
     p_payment_method: order.paymentMethod,
-    p_customer_name: order.customerName,
-    p_customer_phone: order.customerPhone,
     p_customer_notes: order.customerNotes,
     p_items: order.items.map(item => ({ product_variant_id: item.productVariantId, quantity: item.quantity }))
   });
