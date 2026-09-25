@@ -17,10 +17,10 @@ assert.doesNotMatch(migration, /grant execute on function public\.api_public_ran
 assert.match(rollback, /drop function if exists public\.api_public_ranking/i);
 assert.match(endpoint, /enforceRateLimit/);
 assert.match(endpoint, /\['compras', 'puntos', 'racha', 'nivel', 'canjes'\]/);
-assert.match(flags, /useSupabaseRanking: !forceLegacy/);
 assert.match(flags, /useSupabaseUserLookup: false/);
-assert.match(html, /progressive_read_fallback/);
-assert.match(html, /compareRankingInBackground/);
+assert.match(html, /if \(action === 'getRanking'\)/);
+assert.doesNotMatch(html, /progressive_read_fallback|compareRankingInBackground/);
+assert.doesNotMatch(endpoint, /id:\s*row\.public_id/);
 assert.match(flags, /query\.get\('backend'\)/);
 
-console.log('PASS phase 6 contract: ranking read model, API, feature flag, comparison and fallback');
+console.log('PASS phase 6 contract: ranking read model and public ID privacy');
