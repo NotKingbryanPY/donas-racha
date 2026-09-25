@@ -106,7 +106,9 @@ class BackendClient(context: Context) {
     }
 
     suspend fun transition(orderId: String, status: String) = withContext(Dispatchers.IO) {
-        request("/api/admin/orders/$orderId/status", "POST", JSONObject().put("status", status), token())
+        val body = JSONObject().put("status", status)
+        if (status == "COMPLETED") body.put("idempotencyKey", UUID.nameUUIDFromBytes("$orderId:COMPLETED".toByteArray()).toString())
+        request("/api/admin/orders/$orderId/status", "POST", body, token())
     }
 
     suspend fun confirmPayment(orderId: String, idempotencyKey: String) = withContext(Dispatchers.IO) {

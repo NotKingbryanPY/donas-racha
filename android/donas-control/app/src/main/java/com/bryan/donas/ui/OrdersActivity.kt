@@ -55,7 +55,7 @@ class OrdersActivity : AppCompatActivity() {
         WindowCompat.getInsetsController(window, scroll).isAppearanceLightStatusBars = !dark
         WindowCompat.getInsetsController(window, scroll).isAppearanceLightNavigationBars = !dark
         root.addView(TextView(this).apply { text = "Pedidos"; textSize = 24f }, fullWidth())
-        notice = TextView(this).apply { text = "Los pedidos requieren una cuenta administradora. La venta local se registra por separado hasta completar la conciliación." }
+        notice = TextView(this).apply { text = "Los pedidos requieren una cuenta administradora. Las ventas sin conexión se concilian al volver la red." }
         root.addView(notice, fullWidth())
         loginFields = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         email = input("Correo", false)
@@ -131,6 +131,9 @@ class OrdersActivity : AppCompatActivity() {
     private fun loadOrders() = lifecycleScope.launch {
         list.removeAllViews()
         val orders = app.database.syncDao().recentOrders()
+        val rejected = app.database.syncDao().rejectedCount()
+        val unbooked = orders.count { it.status == "COMPLETED" && it.settled && app.database.operationDao().eventByKey("order-${it.id}") == null }
+        if (rejected > 0 || unbooked > 0) notice.text = "Requieren conciliación: $rejected ventas rechazadas por el servidor y $unbooked pedidos sin asiento local. No repitas la venta."
         if (orders.isEmpty()) list.addView(TextView(this@OrdersActivity).apply { text = "Aún no hay pedidos sincronizados." })
         orders.forEach(::renderOrder)
     }
@@ -155,8 +158,7 @@ class OrdersActivity : AppCompatActivity() {
             "ACCEPTED" -> { action("En camino", "OUT_FOR_DELIVERY"); action("Cancelar", "CANCELLED") }
             "OUT_FOR_DELIVERY" -> {
                 if (order.paymentStatus != "CONFIRMED") card.addView(button("Confirmar cobro presencial") { confirmPayment(order) }, fullWidth())
-                // Completing an order requires the server-side atomic sale, inventory and points transaction.
-                card.addView(TextView(this).apply { text = "Entrega pendiente de conciliación automática con inventario y venta." }, fullWidth())
+                else card.addView(button("Completar entrega y registrar venta") { transition(order, "COMPLETED") }, fullWidth())
             }
         }
         list.addView(card, fullWidth())

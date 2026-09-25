@@ -155,7 +155,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
       </div>
     </section>
     <section class="campus-strip"><div class="campus-identity"><img src="assets/images/utp-original.png" alt="Universidad Tecnológica de Panamá" width="48" height="48" loading="lazy"><div><b>Nos vemos en el campus.</b><p>Un proyecto estudiantil en la UTP · Edificio 4</p></div></div><span class="independent-note">Donas Racha es un emprendimiento independiente.</span></section>
-    <footer class="landing-footer"><span>DONAS RACHA <span aria-hidden="true">✦</span> UN DULCE HÁBITO.</span><button class="admin-text-link" onclick="goToAdminLogin()">Acceso de vendedores <span aria-hidden="true">↗</span></button></footer>
+    <footer class="landing-footer"><span>DONAS RACHA <span aria-hidden="true">✦</span> UN DULCE HÁBITO.</span><a class="admin-text-link" href="/customer.html">Mi cuenta y QR <span aria-hidden="true">↗</span></a><a class="admin-text-link" href="/admin.html">Panel de operación <span aria-hidden="true">↗</span></a><button class="admin-text-link" onclick="goToAdminLogin()">Acceso de vendedores anterior <span aria-hidden="true">↗</span></button></footer>
   </main>
 </div>
 
@@ -580,10 +580,13 @@ async function compareRankingInBackground(params, modernRows) {
 async function preloadSupabaseProducts() {
   if (!window.DonasFlags?.useSupabaseProducts) { renderPublicCatalog([]); return; }
   try {
-    window.__donasProducts = (await vercelApi('/api/products')).products || [];
+    const catalog = await vercelApi('/api/products');
+    window.__donasProducts = catalog.products || [];
+    window.__donasSaleMode = catalog.saleMode || { ordersEnabled:false };
     renderPublicCatalog(window.__donasProducts);
   } catch (_) {
     window.__donasProducts = null;
+    window.__donasSaleMode = { ordersEnabled:false };
     renderPublicCatalog(null);
   }
 }
@@ -626,7 +629,7 @@ function renderPublicCatalog(products) {
   }
   el.innerHTML = variants.map(variant => `<article class="flavor-card ${flavorTone(variant.name)} ${variant.available ? '' : 'sold-out'}">
     <div class="flavor-visual" aria-hidden="true"><span class="mini-donut"></span></div>
-    <div class="flavor-copy"><span class="availability ${variant.available ? 'available' : ''}">${variant.available ? 'Disponible' : 'Agotada'}</span><h3>${safe(variant.name)}</h3><p>${safe(variant.description || 'Dona surtida recién preparada.')}</p><div class="flavor-action"><strong>${formatMoney(variant.unit_price_cents, variant.currency_code)}</strong><button class="add-flavor" ${variant.available ? '' : 'disabled'} onclick="addToOrder('${esc(variant.id)}')">${variant.available ? 'Agregar' : 'Agotada'}</button></div></div>
+    <div class="flavor-copy"><span class="availability ${variant.available ? 'available' : ''}">${!variant.stock_initialized ? 'Sin conteo' : !window.__donasSaleMode?.ordersEnabled ? 'Pedidos pausados' : variant.remaining > 0 ? `${variant.remaining} restantes` : 'Agotada'}</span><h3>${safe(variant.name)}</h3><p>${safe(variant.description || 'Dona lista para disfrutar.')}</p><div class="flavor-action"><strong>${formatMoney(variant.unit_price_cents, variant.currency_code)}</strong><button class="add-flavor" ${variant.available ? '' : 'disabled'} onclick="addToOrder('${esc(variant.id)}')">${variant.available ? 'Agregar' : 'No disponible'}</button></div></div>
   </article>`).join('');
 }
 
@@ -634,11 +637,12 @@ function catalogVariants() { return flattenCatalog(window.__donasProducts || [])
 function addToOrder(id) {
   const variant = catalogVariants().find(item => String(item.id) === String(id) && item.available);
   if (!variant) { showToast('Este sabor ya no está disponible'); return; }
-  orderCart.set(String(id), Math.min(100, (orderCart.get(String(id)) || 0) + 1));
+  orderCart.set(String(id), Math.min(100, variant.remaining, (orderCart.get(String(id)) || 0) + 1));
   openOrder();
 }
 function changeOrderQuantity(id, delta) {
-  const next = Math.max(0, Math.min(100, (orderCart.get(String(id)) || 0) + delta));
+  const variant = catalogVariants().find(item => String(item.id) === String(id));
+  const next = Math.max(0, Math.min(100, variant?.remaining || 0, (orderCart.get(String(id)) || 0) + delta));
   if (next) orderCart.set(String(id), next); else orderCart.delete(String(id));
   pendingOrderKey = null;
   renderOrderCart();

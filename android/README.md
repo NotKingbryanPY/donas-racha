@@ -4,4 +4,4 @@
 
 `phase9-overlay/` se conserva como referencia histórica de la fase 9; no debe aplicarse sobre la aplicación actual. Los cambios nuevos van directamente en `donas-control/`.
 
-La parte contable sigue funcionando localmente. La pantalla de pedidos y la cola de sincronización requieren los endpoints de este repositorio, una cuenta con rol `ADMIN` y la migración SQL más reciente. La entrega final de un pedido aún requiere una operación atómica de inventario, venta, pago y puntos; la app no muestra el botón de completar hasta que esa operación exista.
+La parte contable sigue funcionando localmente. La pantalla de pedidos y la cola de sincronización requieren los endpoints de este repositorio, una cuenta con rol `ADMIN` y las migraciones SQL más recientes. El código de cierre de pedido ahora usa una operación atómica de venta, pago confirmado, inventario y puntos. Esta ruta aún debe verificarse en un entorno Supabase de prueba, emulador y teléfono antes de desplegarse; los pedidos existentes requieren conciliación previa.

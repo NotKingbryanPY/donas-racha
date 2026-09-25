@@ -1,7 +1,7 @@
 const { requireAdmin } = require('../_lib/auth');
 const { ApiError, withApi } = require('../_lib/http');
 const { enforceRateLimit } = require('../_lib/rate-limit');
-const { rpc } = require('../_lib/supabase');
+const { rpc, serviceRequest } = require('../_lib/supabase');
 const { fingerprint } = require('../_lib/validation');
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -52,6 +52,14 @@ module.exports = withApi(['GET','POST'], async (req, context) => {
     const cursor = parseCursor(req.query.cursor);
     const limit = Math.max(1, Math.min(Number(req.query.limit) || 50, 100));
     const orders = await rpc('api_pull_orders_for_device', { p_after_updated_at:cursor.updatedAt, p_after_id:cursor.id, p_limit:limit });
+    if (orders?.length) {
+      const ids = orders.map(order => order.id).join(',');
+      const rows = await serviceRequest('central_sales', { query:new URLSearchParams({
+        select:'order_id', order_id:`in.(${ids})`
+      }).toString() });
+      const settled = new Set(rows.map(row => row.order_id));
+      orders.forEach(order => { order.settled = settled.has(order.id); });
+    }
     return { orders:orders || [], nextCursor:orders && orders.length ? cursorFor(orders[orders.length - 1]) : (req.query.cursor || null), hasMore:(orders || []).length === limit, serverTime:new Date().toISOString() };
   }
   await enforceRateLimit(req, 'sync_push', 30, 60, admin.id);

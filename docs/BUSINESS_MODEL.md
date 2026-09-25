@@ -29,7 +29,7 @@ PENDING -> ACCEPTED -> OUT_FOR_DELIVERY -> COMPLETED
 
 `COMPLETED` significa que la entrega y el cobro ya ocurrieron. La ubicación exacta no se muestra en el seguimiento público del pedido.
 
-La API administrativa bloquea temporalmente la transición a `COMPLETED` con `ACCOUNTING_NOT_READY` (HTTP 409). Confirmar el cobro no crea por sí solo la venta ni descuenta el inventario. La transición se habilitará cuando una operación idempotente registre venta, existencias y puntos de forma atómica. Los pedidos ya completados antes de este bloqueo requieren conciliación manual; el cambio no reescribe datos históricos.
+En el código pendiente de despliegue, la API administrativa completa el pedido con `api_complete_order`: verifica el cobro confirmado, consume la reserva de cada sabor, registra una venta única y acredita los puntos en una transacción. Confirmar el cobro por sí solo no registra una venta. Los pedidos completados antes de esta migración requieren conciliación manual; el cambio no reescribe datos históricos.
 
 ## Pago
 
