@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Operación · Donas Racha</title><style>
+:root{color-scheme:dark}body{font:15px system-ui,sans-serif;margin:0;background:#15101e;color:#fff}main{max-width:1050px;margin:auto;padding:22px}
+a{color:#ffcf61}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}.card{background:#271b38;border:1px solid #503c65;border-radius:16px;padding:18px;margin:12px 0}
+input,button,select{font:inherit;border-radius:9px;padding:10px}input,select{box-sizing:border-box;width:100%;background:#fff;color:#111;border:0;margin:5px 0 12px}input[type=checkbox]{width:auto}
+button{background:#ffcf61;color:#241531;border:0;font-weight:700;cursor:pointer;margin:3px}button.secondary{background:#4c3a63;color:#fff}button:disabled{opacity:.5;cursor:default}
+.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.muted{color:#c9bad9}.danger{color:#ffc0c0}table{border-collapse:collapse;width:100%}td,th{text-align:left;border-bottom:1px solid #4a365d;padding:9px 4px}small{display:block;color:#c9bad9}
+label{display:block}#message{min-height:26px}#orders article{border-top:1px solid #4a365d;padding:13px 0}#orders article:first-child{border:0}
+</style></head><body><main><p><a href="/">← Donas Racha</a></p><h1>Operación</h1>
+<section id="login" class="card"><h2>Acceso administrador</h2><form id="loginForm">
+<label>Correo<input id="email" type="email" autocomplete="username" required></label>
+<label>Contraseña<input id="password" type="password" autocomplete="current-password" required></label>
+<button>Entrar</button></form></section>
+<section id="dashboard" hidden><div class="row"><button id="refresh">Actualizar</button><button id="logout" class="secondary">Cerrar sesión</button></div>
+<div class="grid"><section class="card"><h2>Modo venta</h2><form id="modeForm">
+<label><input id="ordersEnabled" type="checkbox"> Pedidos ON</label>
+<label>Ubicación actual<input id="location" maxlength="200" placeholder="Ej. Campus UTP"></label>
+<label>Tiempo estimado (minutos)<input id="eta" type="number" min="1" max="240"></label>
+<button>Guardar modo</button></form><p class="muted">Al activar pedidos, verifica antes el conteo de cada sabor y las ventas pendientes de sincronizar.</p></section>
+<section class="card"><h2>Estado y conciliación</h2><div id="health"></div></section></div>
+<section class="card"><h2>Existencias por sabor</h2><p class="muted">El conteo fija las unidades físicas actuales. No cuentes mientras haya ventas offline pendientes.</p><div id="stock"></div></section>
+<section class="card"><h2>Ventas de dispositivo por conciliar</h2><p class="muted">Recuenta físicamente los cuatro sabores después de recibir cada venta. Documenta por qué se descarta su descuento remoto.</p><div id="syncOperations"></div></section>
+<section class="card"><h2>Pedidos recientes</h2><div id="orders"></div></section>
+<section class="card"><h2>Validar o vincular cliente</h2><form id="customerForm"><label>QR temporal o ID de cliente
+<input id="customerCode" autocomplete="off" required></label><button>Validar</button></form><div id="customerResult"></div></section>
+</section><p id="message" role="status"></p>
+</main><script>
+(() => {
+  let accessToken=null, refreshToken=null, expiresAt=0;
+  const $=id=>document.getElementById(id);
+  const text=(tag,value)=>{ const el=document.createElement(tag); el.textContent=String(value??''); return el; };
+  const message=value=>{ $('message').textContent=value; };
+  async function api(path,options={}) {
+    if(accessToken && Date.now()>expiresAt-60000 && refreshToken) await renew();
+    const response=await fetch(path,{...options,headers:{'content-type':'application/json',...(accessToken?{authorization:`Bearer ${accessToken}`}:{})}});
+    const payload=await response.json();
+    if(!response.ok||!payload.ok) throw new Error((payload.error?.message||'Falló la operación.')+(payload.correlationId?` · Ref. ${payload.correlationId}`:''));
+    return payload.data;
+  }
+  async function renew(){
+    const response=await fetch('/api/auth/session',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({grantType:'refresh_token',refreshToken})});
+    const payload=await response.json();
+    if(!response.ok||!payload.ok){accessToken=null;refreshToken=null;throw new Error('La sesión expiró. Entra de nuevo.');}
+    ({accessToken,refreshToken}=payload.data);expiresAt=new Date(payload.data.expiresAt).getTime();
+  }
+  async function load(){
+    const [catalog,stock,mode,orders,health,syncOperations]=await Promise.all([
+      api('/api/products'),api('/api/admin/stock'),api('/api/sale-mode'),
+      api('/api/admin/orders?limit=50'),api('/api/admin/health'),api('/api/admin/sync-operations')]);
+    $('ordersEnabled').checked=mode.saleMode.orders_enabled;
+    $('location').value=mode.saleMode.location||'';$('eta').value=mode.saleMode.eta_minutes||'';
+    const h=health.health;const hEl=$('health');hEl.replaceChildren();
+    for(const [label,value] of [
+      ['Pedidos terminados sin venta histórica',h.historicalCompletedWithoutSale],
+      ['Ventas de dispositivo sin conciliar',h.rejectedDeviceOperations],
+      ['Otras operaciones rechazadas',h.rejectedOtherOperations],
+      ['Ventas de dispositivo recibidas sin aplicar',h.receivedDeviceSales],
+      ['Reservas activas',h.activeReservations],['Sabores sin conteo',h.uninitializedFlavors]]){
+      const line=text('p',`${label}: ${value}`);if(Number(value)>0&&label!=='Reservas activas')line.className='danger';hEl.append(line);
+    }
+    const stockById=new Map(stock.stock.map(row=>[row.variant_id,row]));const stockEl=$('stock');stockEl.replaceChildren();
+    for(const product of catalog.products) for(const variant of product.product_variants||[]){
+      const row=stockById.get(variant.id);const form=document.createElement('form');form.className='row';
+      const label=text('label',`${variant.name} · ${row?.initialized?`${row.on_hand-row.reserved} libres / ${row.reserved} reservadas`:'sin conteo'}`);
+      const input=document.createElement('input');input.type='number';input.min='0';input.max='100000';input.required=true;
+      input.value=row?.initialized?row.on_hand:'';input.style.width='110px';input.setAttribute('aria-label',`Conteo físico de ${variant.name}`);
+      let countKey=crypto.randomUUID();input.addEventListener('input',()=>{countKey=crypto.randomUUID();});
+      const button=text('button','Guardar conteo');form.append(label,input,button);stockEl.append(form);
+      form.addEventListener('submit',async event=>{event.preventDefault();button.disabled=true;
+        try{await api('/api/admin/stock',{method:'POST',body:JSON.stringify({variantId:variant.id,quantity:Number(input.value),idempotencyKey:countKey})});await load();message('Conteo guardado.');}
+        catch(error){message(error.message);}finally{button.disabled=false;}
+      });
+    }
+    const syncEl=$('syncOperations');syncEl.replaceChildren();
+    if(!syncOperations.operations.length)syncEl.append(text('p','No hay ventas pendientes de conciliación.'));
+    for(const operation of syncOperations.operations){
+      const form=document.createElement('form');form.className='card';
+      const items=(operation.payload?.details?.items||[]).map(item=>`${item.quantity}× ${item.sku}`).join(' · ');
+      form.append(text('b',`${operation.status} · ${operation.error_code||'Sin aplicar'}`),
+        text('small',`${new Date(operation.received_at).toLocaleString('es-PA')} · ${items||'Sin sabores'} · ${operation.payload?.amountCents/100||0} B/.`));
+      const reason=document.createElement('input');reason.maxLength=500;reason.minLength=10;reason.required=true;
+      reason.placeholder='Motivo y referencia del conteo físico';reason.setAttribute('aria-label','Motivo de conciliación');
+      const button=text('button','Conciliar tras conteo');form.append(reason,button);syncEl.append(form);
+      form.addEventListener('submit',async event=>{event.preventDefault();button.disabled=true;
+        try{await api('/api/admin/sync-operations',{method:'POST',body:JSON.stringify({operationId:operation.id,reason:reason.value})});
+          await load();message('Conciliación registrada.');}
+        catch(error){message(error.message);}finally{button.disabled=false;}
+      });
+    }
+    const ordersEl=$('orders');ordersEl.replaceChildren();
+    for(const order of orders.orders){
+      const card=document.createElement('article');
+      card.append(text('b',`${order.public_code} · ${order.status}`),
+        text('small',`${order.customer_name_snapshot} · ${order.delivery_location} · ${order.total_cents/100} B/. · ${order.payment_method} / ${order.payment_status}`),
+        text('small',(order.order_items||[]).map(x=>`${x.quantity}× ${x.variant_name_snapshot}`).join(' · ')));
+      const actions=[];
+      if(order.status==='PENDING')actions.push(['Aceptar','ACCEPTED'],['Cancelar','CANCELLED']);
+      if(order.status==='ACCEPTED')actions.push(['En camino','OUT_FOR_DELIVERY'],['Cancelar','CANCELLED']);
+      if(order.status==='OUT_FOR_DELIVERY'){
+        if(order.payment_status!=='CONFIRMED') actions.push(['Ya recibí el pago','PAYMENT']);
+        else actions.push(['Entrega completada · dar puntos','COMPLETED']);
+        if(order.payment_status!=='CONFIRMED')actions.push(['Cancelar','CANCELLED']);
+      }
+      for(const [label,status] of actions){const button=text('button',label);if(status==='CANCELLED')button.className='secondary';card.append(button);
+        button.addEventListener('click',async()=>{
+          if(status==='COMPLETED' && !confirm(`¿Ya entregaste el pedido ${order.public_code}? Al confirmar se cierra la venta y se acreditan los puntos de racha si corresponde.`)) return;
+          if(status==='PAYMENT' && !confirm(`¿Ya recibiste el pago de ${order.public_code}?`)) return;
+          button.disabled=true;try{
+          if(status==='PAYMENT')await api(`/api/admin/orders/${order.id}/payment`,{method:'POST',body:JSON.stringify({status:'CONFIRMED',idempotencyKey:crypto.randomUUID()})});
+          else await api(`/api/admin/orders/${order.id}/status`,{method:'POST',body:JSON.stringify({status,...(status==='COMPLETED'?{idempotencyKey:crypto.randomUUID()}:{})})});
+          await load();message(`${order.public_code}: ${label} registrado.`);
+        }catch(error){message(error.message);}finally{button.disabled=false;}});
+      }
+      ordersEl.append(card);
+    }
+  }
+  $('loginForm').addEventListener('submit',async event=>{event.preventDefault();message('Entrando…');try{
+    const session=await api('/api/auth/session',{method:'POST',body:JSON.stringify({grantType:'password',email:$('email').value,password:$('password').value})});
+    ({accessToken,refreshToken}=session);expiresAt=new Date(session.expiresAt).getTime();$('password').value='';
+    $('login').hidden=true;$('dashboard').hidden=false;await load();message('');
+  }catch(error){accessToken=null;refreshToken=null;message(error.message);}});
+  $('modeForm').addEventListener('submit',async event=>{event.preventDefault();try{
+    await api('/api/sale-mode',{method:'PATCH',body:JSON.stringify({ordersEnabled:$('ordersEnabled').checked,location:$('location').value,etaMinutes:$('eta').value?Number($('eta').value):null})});
+    await load();message('Modo venta actualizado.');
+  }catch(error){message(error.message);}});
+  $('customerForm').addEventListener('submit',async event=>{event.preventDefault();try{
+    const code=$('customerCode').value.trim();const data=await api('/api/admin/customers/lookup',{method:'POST',body:JSON.stringify(code.length===64?{qrToken:code}:{publicId:code})});
+    const c=data.customer;const result=$('customerResult');
+    result.replaceChildren(text('p',`${c.display_name} · ${c.public_id} · ${c.available_points??c.loyalty_accounts?.[0]?.available_points??0} puntos disponibles`));
+    const customerId=c.id||c.customer_id;
+    if(customerId){
+      const issue=text('button','Generar código de vinculación');issue.type='button';result.append(issue);
+      issue.addEventListener('click',async()=>{
+        issue.disabled=true;
+        try{
+          const data=await api('/api/admin/customers/claim-token',{method:'POST',body:JSON.stringify({customerId})});
+          result.append(text('p',`Código temporal (30 min): ${data.token}`));
+          message('Entrega este código solo al cliente verificado. El código anterior queda invalidado.');
+        }catch(error){message(error.message);issue.disabled=false;}
+      });
+    }
+    message('Cliente validado en servidor.');
+  }catch(error){$('customerResult').replaceChildren();message(error.message);}});
+  $('refresh').addEventListener('click',()=>load().catch(error=>message(error.message)));
+  $('logout').addEventListener('click',()=>{accessToken=null;refreshToken=null;expiresAt=0;$('dashboard').hidden=true;$('login').hidden=false;message('Sesión cerrada.');});
+})();
+</script></body></html>

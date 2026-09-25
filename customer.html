@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mi cuenta · Donas Racha</title>
+<style>
+body{font:16px system-ui,sans-serif;margin:0;background:#171021;color:#fff}main{max-width:560px;margin:auto;padding:24px}
+.card{background:#271a38;border:1px solid #4a365f;border-radius:18px;padding:20px;margin:18px 0}
+input,button{font:inherit;border-radius:10px;padding:12px}input{width:100%;box-sizing:border-box;background:#fff;color:#111;border:0;margin:6px 0 12px}
+button{border:0;background:#ffcf58;color:#25142c;font-weight:700;cursor:pointer}button:disabled{opacity:.6}
+#qr svg{display:block;max-width:100%;height:auto;margin:18px auto;background:white;padding:12px;border-radius:12px}
+.muted{color:#d7cbe3}a{color:#ffcf58}#message{min-height:24px}.nav{display:flex;gap:16px;flex-wrap:wrap}
+.flavor,.order-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid #4a365f}
+.flavor:last-child,.order-row:last-child{border-bottom:0}.flavor span{display:block;font-size:13px;color:#d7cbe3}
+.flavor input{width:76px;margin:0;text-align:center}.flavor input:disabled{opacity:.5}.total{font-size:22px;font-weight:800}
+.payment{display:flex;gap:16px;margin:12px 0}.payment input{width:auto}#deliveryMessage{min-height:22px}
+</style></head><body><main>
+<p><a href="/">← Donas Racha</a></p><h1>Mi cuenta</h1>
+<p class="muted">Inicia sesión para ver tus puntos y hacer pedidos de delivery. Los puntos se suman cuando el vendedor confirma el pago y la entrega.</p>
+<section id="login" class="card"><h2>Entrar</h2><form id="loginForm">
+<label>Correo<input id="email" type="email" autocomplete="username" required></label>
+<label>Contraseña<input id="password" type="password" autocomplete="current-password" required></label>
+<button>Iniciar sesión</button></form>
+<details><summary>Crear acceso para un cliente registrado</summary><form id="registerForm">
+<label>Correo<input id="registerEmail" type="email" autocomplete="email" required></label>
+<label>Contraseña nueva (mínimo 12 caracteres)<input id="registerPassword" type="password" autocomplete="new-password" minlength="12" required></label>
+<button>Crear acceso</button></form><p class="muted">Después de confirmar el correo, entra y vincula tu cliente con el código temporal que te entregue el vendedor.</p></details>
+</section>
+<section id="claim" class="card" hidden><h2>Vincular mi cliente</h2><p class="muted">Tu cuenta de acceso aún no está vinculada a un cliente de Donas Racha. Pide al vendedor un código temporal; el ID o QR público no basta.</p>
+<form id="claimForm"><label>Código temporal<input id="claimToken" autocomplete="off" maxlength="64" required></label><button>Vincular cuenta</button></form>
+<button id="claimLogout" type="button">Salir</button></section>
+<section id="account" class="card" hidden><h2 id="name">Cliente</h2><p id="points"></p>
+<nav class="nav"><a href="#delivery">Pedir delivery</a><a href="#orders">Mis pedidos</a></nav>
+<p class="muted">Muestra este QR al vendedor. Caduca en cinco minutos; genera uno nuevo cuando haga falta.</p>
+<button id="newQr">Generar QR</button> <button id="logout">Salir</button>
+<div id="qr" role="img" aria-label="Código QR temporal del cliente"></div><p id="expires" class="muted"></p>
+</section>
+<section id="delivery" class="card" hidden><h2>Delivery</h2><p class="muted">Elige tus donas. Pagas en efectivo o Yappy al recibir; enviar el pedido no suma puntos.</p>
+<p id="saleMode" role="status"></p><form id="deliveryForm">
+<div id="flavors"></div><p class="total">Total: <span id="deliveryTotal">B/.0.00</span></p>
+<label>WhatsApp para la entrega<input id="deliveryPhone" type="tel" autocomplete="tel" placeholder="+50760150927"></label>
+<label>Ubicación de entrega<input id="deliveryLocation" maxlength="300" required placeholder="Ej.: UTP, Edificio 4, lobby"></label>
+<label>Indicaciones (opcional)<input id="deliveryNotes" maxlength="500" placeholder="Salón o punto de referencia"></label>
+<fieldset><legend>Pago al recibir</legend><div class="payment"><label><input type="radio" name="paymentMethod" value="CASH" checked> Efectivo</label><label><input type="radio" name="paymentMethod" value="YAPPY"> Yappy</label></div></fieldset>
+<button id="submitDelivery" type="submit" disabled>Confirmar pedido</button><p id="deliveryMessage" role="status"></p>
+</form></section>
+<section id="orders" class="card" hidden><h2>Mis pedidos</h2><div id="ordersList"></div></section>
+<p id="message" role="status"></p>
+</main><script src="/assets/js/vendor/qrcode.js"></script><script>
+(() => {
+  let accessToken = null, expiryTimer = null, profile = null, variants = [], ordersEnabled = false, pendingOrderKey = null;
+  const preselectedFlavor = new URLSearchParams(location.search).get('flavor');
+  let initialFlavorUsed = false;
+  const $ = id => document.getElementById(id);
+  async function call(path, options={}) {
+    const res = await fetch(path,{...options,headers:{'content-type':'application/json',...(accessToken?{authorization:`Bearer ${accessToken}`}:{})}});
+    const body = await res.json();
+    if (!res.ok || !body.ok) throw new Error(body.error?.message || 'No se pudo completar la operación.');
+    return body.data;
+  }
+  function message(value){ $('message').textContent=value; }
+  function clearQr(){ $('qr').replaceChildren(); $('expires').textContent=''; if(expiryTimer) clearTimeout(expiryTimer); }
+  function money(cents){ return `B/.${(Number(cents || 0)/100).toFixed(2)}`; }
+  function phone(value){
+    const digits=String(value || '').replace(/\D/g,'');
+    return !digits ? null : digits.length===8 ? `+507${digits}` : `+${digits}`;
+  }
+  function status(value){ return ({PENDING:'Pendiente',ACCEPTED:'Aceptado',OUT_FOR_DELIVERY:'En camino',COMPLETED:'Entregado',CANCELLED:'Cancelado'})[value] || value; }
+  function renderTotal(){
+    const total=variants.reduce((sum,item)=>sum+item.price*Number($(`qty-${item.id}`).value || 0),0);
+    $('deliveryTotal').textContent=money(total);
+    $('submitDelivery').disabled=!ordersEnabled || total===0;
+  }
+  function renderCatalog(data){
+    variants=(data.products || []).flatMap(product=>(product.product_variants || []).map(item=>({
+      id:item.id,name:item.name,price:item.unit_price_cents,remaining:item.remaining || 0,available:!!item.available
+    })));
+    ordersEnabled=!!data.saleMode?.ordersEnabled;
+    $('saleMode').textContent=ordersEnabled ? `Entrega: ${data.saleMode.location || 'consulta ubicación'} · ${data.saleMode.etaMinutes || '—'} min aprox.` : 'Los pedidos están pausados por ahora.';
+    $('flavors').replaceChildren(...variants.map(item=>{
+      const row=document.createElement('label'); row.className='flavor';
+      const name=document.createElement('div'); name.textContent=item.name;
+      const detail=document.createElement('span'); detail.textContent=`${money(item.price)} · ${item.remaining} disponibles`; name.append(detail);
+      const quantity=document.createElement('input'); quantity.id=`qty-${item.id}`; quantity.type='number'; quantity.min='0'; quantity.max=String(Math.min(100,item.remaining)); quantity.value=!initialFlavorUsed && item.available && item.id===preselectedFlavor ? '1' : '0'; quantity.inputMode='numeric'; quantity.disabled=!item.available;
+      quantity.addEventListener('input',()=>{ pendingOrderKey=null; renderTotal(); });
+      row.append(name,quantity); return row;
+    }));
+    initialFlavorUsed=true;
+    renderTotal();
+  }
+  function renderOrders(orders){
+    $('ordersList').replaceChildren(...orders.map(order=>{
+      const row=document.createElement('div'); row.className='order-row';
+      const details=document.createElement('div');
+      const title=document.createElement('strong'); title.textContent=`${order.public_code} · ${status(order.status)}`;
+      const lines=document.createElement('small'); lines.textContent=`${new Date(order.created_at).toLocaleDateString('es-PA')} · ${money(order.total_cents)} · ${order.payment_status==='CONFIRMED'?'Pagado':'Pago al recibir'}`;
+      details.append(title,document.createElement('br'),lines);
+      const button=document.createElement('button'); button.type='button'; button.textContent='Ver';
+      button.addEventListener('click',()=>viewOrder(order.public_code)); row.append(details,button); return row;
+    }));
+    if(!orders.length) $('ordersList').textContent='Aún no tienes pedidos.';
+  }
+  async function refreshOrders(){ const data=await call('/api/customer/orders'); renderOrders(data.orders || []); }
+  async function viewOrder(code){
+    try {
+      const {order}=await call(`/api/orders/${encodeURIComponent(code)}`);
+      message(`${order.public_code}: ${status(order.status)}. ${order.payment_status==='CONFIRMED'?'Pago confirmado.':'Pago pendiente al recibir.'} Los puntos se acreditan al completar la entrega.`);
+    } catch(error){ message(error.message); }
+  }
+  $('deliveryForm').addEventListener('input',event=>{ if(!event.target.id?.startsWith('qty-')) pendingOrderKey=null; });
+  $('deliveryForm').addEventListener('submit',async event=>{
+    event.preventDefault(); $('deliveryMessage').textContent='';
+    const items=variants.map(item=>({productVariantId:item.id,quantity:Number($(`qty-${item.id}`).value || 0)})).filter(item=>item.quantity>0);
+    if(!ordersEnabled || !items.length){ $('deliveryMessage').textContent='Selecciona al menos una dona disponible.'; return; }
+    if(items.some(item=>!Number.isInteger(item.quantity) || item.quantity>variants.find(v=>v.id===item.productVariantId).remaining)){
+      $('deliveryMessage').textContent='Revisa las cantidades disponibles.'; return;
+    }
+    const submit=$('submitDelivery'); submit.disabled=true; submit.textContent='Enviando…';
+    pendingOrderKey ||= crypto.randomUUID();
+    try {
+      const order=await call('/api/orders',{method:'POST',body:JSON.stringify({
+        idempotencyKey:pendingOrderKey,deliveryLocation:$('deliveryLocation').value.trim(),
+        customerPhone:phone($('deliveryPhone').value),customerNotes:$('deliveryNotes').value.trim(),
+        paymentMethod:document.querySelector('input[name="paymentMethod"]:checked').value,items
+      })});
+      pendingOrderKey=null;
+      $('deliveryMessage').textContent=`Pedido ${order.public_code} recibido. Pagarás al recibir; todavía no se sumaron puntos.`;
+      await Promise.allSettled([refreshOrders(),call('/api/products').then(renderCatalog)]);
+      location.hash='orders';
+    } catch(error){ $('deliveryMessage').textContent=error.message; }
+    finally { submit.textContent='Confirmar pedido'; renderTotal(); }
+  });
+  async function loadAccount(){
+    const [profileResult,loyalty,products,orders] = await Promise.all([
+      call('/api/customer/profile'),call('/api/customer/loyalty'),call('/api/products'),call('/api/customer/orders')]);
+    profile=profileResult.customer;
+    $('name').textContent = profile.display_name;
+    $('points').textContent = `${loyalty.account?.available_points || 0} puntos disponibles · ${loyalty.account?.purchase_count || 0} compras`;
+    $('deliveryPhone').value=profile.whatsapp_e164 || '';
+    renderCatalog(products); renderOrders(orders.orders || []);
+    $('login').hidden=true; $('claim').hidden=true; $('account').hidden=false; $('delivery').hidden=false; $('orders').hidden=false; message('');
+    if(location.hash==='#delivery' || location.hash==='#orders') document.querySelector(location.hash).scrollIntoView();
+  }
+  $('loginForm').addEventListener('submit', async event => {
+    event.preventDefault(); message('Entrando…');
+    try {
+      const session = await call('/api/customer/session',{method:'POST',body:JSON.stringify({email:$('email').value,password:$('password').value})});
+      accessToken = session.accessToken; $('password').value='';
+      if(session.linked === false){ $('login').hidden=true; $('claim').hidden=false; message('Introduce el código temporal entregado por el vendedor.'); }
+      else await loadAccount();
+    } catch(error){ accessToken=null; message(error.message); }
+  });
+  $('registerForm').addEventListener('submit',async event=>{
+    event.preventDefault(); message('Creando acceso…');
+    try{
+      const result=await call('/api/customer/register',{method:'POST',body:JSON.stringify({
+        email:$('registerEmail').value,password:$('registerPassword').value
+      })});
+      $('registerPassword').value=''; message(result.message);
+    }catch(error){message(error.message);}
+  });
+  $('claimForm').addEventListener('submit',async event=>{
+    event.preventDefault(); message('Vinculando…');
+    try{
+      await call('/api/customer/claim',{method:'POST',body:JSON.stringify({claimToken:$('claimToken').value})});
+      $('claimToken').value=''; await loadAccount();
+    }catch(error){message(error.message);}
+  });
+  $('newQr').addEventListener('click', async () => {
+    clearQr(); message('Generando QR…');
+    try {
+      const {qr:issued} = await call('/api/customer/qr',{method:'POST'});
+      const code = qrcode(0,'M'); code.addData(issued.token); code.make();
+      $('qr').innerHTML=code.createSvgTag(6,4);
+      $('expires').textContent=`Válido hasta ${new Date(issued.expires_at).toLocaleTimeString('es-PA')}`;
+      expiryTimer=setTimeout(() => { clearQr(); message('El QR caducó. Genera uno nuevo.'); }, Math.max(0,new Date(issued.expires_at).getTime()-Date.now()));
+      message('');
+    } catch(error){ message(error.message); }
+  });
+  function logout(){ accessToken=null; profile=null; pendingOrderKey=null; clearQr(); $('account').hidden=true; $('delivery').hidden=true; $('orders').hidden=true; $('claim').hidden=true; $('login').hidden=false; message('Sesión cerrada.'); }
+  $('logout').addEventListener('click', logout);
+  $('claimLogout').addEventListener('click', logout);
+})();
+</script></body></html>

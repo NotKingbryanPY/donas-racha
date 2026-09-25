@@ -8,14 +8,14 @@ La 1.1.1 solo exporta los asientos a CSV. Ese archivo carece de lotes FIFO, cant
 
 ## Pedido entregado
 
-Confirmar un pago en la API solo registra el pago. La función SQL actual `api_transition_order` cambia el estado del pedido, pero no crea una venta, descuenta existencias ni acredita puntos. Para evitar una entrega aparentemente cerrada con contabilidad incompleta, `/api/admin/orders/:id/status` devuelve `ACCOUNTING_NOT_READY` (409) al pedir `COMPLETED`. La app Android ya mantiene esa opción deshabilitada. Aceptar, cancelar y pasar a «En camino» siguen disponibles.
+El código nuevo separa la confirmación del pago del cierre. `api_complete_order` comprueba el pago, consume la reserva, crea una venta única y acredita puntos dentro de una transacción PostgreSQL. `/api/admin/orders/:id/status` llama esta función para `COMPLETED` y Android muestra esa acción tras confirmar el pago. La compilación y pruebas instrumentadas pasaron en emulador; la migración aún no se ha aplicado en producción ni se ha probado con un teléfono. El sitio publicado conserva su estado anterior hasta el despliegue controlado.
 
-## Trabajo siguiente
+## Comprobaciones antes de activar la venta
 
-1. Definir una tabla de existencias por sabor con cantidad inicial explícita, movimientos auditables y reserva por pedido. Reservar al crear el pedido, liberar al cancelar y consumir al completar, todo bajo bloqueos de fila en PostgreSQL. Sin cantidad inicial confirmada no se debe activar la venta web basada en unidades.
-2. Sustituir la transición a `COMPLETED` por una función SQL idempotente que, en una transacción, verifique pago confirmado y reserva, registre la venta con un `order_id` único, consuma stock y registre una sola vez los puntos del cliente. Reintentos con la misma clave deben devolver el mismo resultado; claves distintas no pueden duplicar la venta del pedido.
-3. Tratar Supabase como autoridad para los pedidos web. Enviar a Android el resultado contable con una clave de origen única y aplicarlo en Room de forma idempotente. Room y PostgreSQL no comparten una transacción global: si se interrumpe la red, el sincronizador debe reintentar y conciliar, nunca crear una segunda venta.
-4. Sincronizar las ventas presenciales del widget con las existencias por sabor antes de publicar disponibilidad exacta. El widget actual registra cantidad total, sin desglose de sabores; se necesita selector de sabor o una asignación explícita de stock para esas ventas.
-5. Verificar con pedidos reales de prueba: falta de stock, cancelación tras reserva, pago fallido, doble pulsación, reintento tras corte de red y conciliación entre inventario, pagos, ventas y puntos. Solo entonces habilitar `COMPLETED` en API y Android.
+1. Respaldar la base, inventariar pedidos abiertos e históricos y conciliar ventas de dispositivos. La migración inicia el stock en cero y el modo de pedidos apagado; contar físicamente cada sabor antes de activarlo.
+2. Probar las migraciones y la API contra un proyecto Supabase de prueba con operaciones paralelas. La prueba local PGlite verifica la lógica transaccional, pero no sustituye esta prueba.
+3. Probar la instalación piloto, Room v3→v4, pérdida de red, reintentos, reversas y widget en emulador y teléfono. No instalar el APK nuevo sobre 1.1.1.
+4. Confirmar que cada pedido cerrado tiene exactamente una venta, un pago confirmado, consumo de reserva y una sola acreditación de puntos; los pedidos anteriores no se reescriben.
+5. Seguir `docs/ROLLOUT_2026-09-24.md` para despliegue, supervisión y reversión.
 
 Los pedidos que se hubieran marcado `COMPLETED` antes de este bloqueo no se modifican automáticamente; necesitan una conciliación separada para evitar duplicar ventas o puntos.

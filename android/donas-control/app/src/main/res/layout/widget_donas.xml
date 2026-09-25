@@ -1,113 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/primary_container"
-    android:orientation="vertical"
-    android:padding="8dp"
-    tools:ignore="Overdraw">
-
-    <TextView
-        android:id="@+id/widgetTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Donas Control"
-        android:textColor="@color/on_primary_container"
-        android:textSize="14sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/widgetSummary"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:maxLines="2"
-        android:text="Cargando ventas e inventario…"
-        android:textColor="@color/on_primary_container"
-        android:textSize="12sp" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Cantidad"
-            android:textColor="@color/on_primary_container"
-            android:textSize="12sp" />
-
-        <Button
-            android:id="@+id/widgetMinus"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:contentDescription="Reducir cantidad"
-            android:text="−"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/widgetQuantity"
-            android:layout_width="40dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="1"
-            android:textColor="@color/on_primary_container"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <Button
-            android:id="@+id/widgetPlus"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:contentDescription="Aumentar cantidad"
-            android:text="+"
-            android:textSize="20sp" />
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@drawable/widget_panel" android:orientation="vertical" android:padding="8dp">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="48dp"
+        android:gravity="center_vertical" android:orientation="horizontal">
+        <TextView android:id="@+id/widgetTitle" android:layout_width="0dp" android:layout_height="48dp"
+            android:layout_weight="1" android:gravity="center_vertical" android:text="Donas · venta rápida"
+            android:textColor="#FFF7F0" android:textSize="16sp" android:textStyle="bold" />
+        <TextView android:id="@+id/widgetSummary" android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:gravity="end" android:maxLines="2"
+            android:text="Stock local: —" android:textColor="#E7D4C3" android:textSize="11sp" />
     </LinearLayout>
-
-    <LinearLayout
-        style="?android:attr/buttonBarStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+    <LinearLayout android:layout_width="match_parent" android:layout_height="0dp"
+        android:layout_weight="1" android:baselineAligned="false" android:orientation="horizontal">
+        <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+            android:layout_marginStart="0dp" tools:ignore="NestedWeights" android:background="@drawable/widget_tile"
+            android:gravity="center_horizontal" android:orientation="vertical" android:padding="4dp">
+            <ImageView android:id="@+id/widgetFlavor0" android:layout_width="48dp" android:layout_height="48dp"
+                android:contentDescription="Agregar chocolate" android:src="@drawable/widget_donut_chocolate" />
+            <TextView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"
+                tools:ignore="NestedWeights" android:gravity="center" android:maxLines="1" android:text="Chocolate"
+                android:textColor="#FFF7F0" android:textSize="11sp" />
+            <LinearLayout android:layout_width="match_parent" android:layout_height="48dp"
+                android:gravity="center" android:orientation="horizontal">
+                <TextView android:id="@+id/widgetMinus0" android:layout_width="48dp" android:layout_height="48dp"
+                    android:background="@drawable/widget_stepper" android:contentDescription="Quitar chocolate"
+                    android:gravity="center" android:text="−" android:textColor="#FFF7F0" android:textSize="22sp" />
+                <TextView android:id="@+id/widgetCount0" android:layout_width="0dp" android:layout_height="48dp"
+                    android:layout_weight="1" android:gravity="center" android:text="0"
+                    android:textColor="#FFF7F0" android:textSize="16sp" android:textStyle="bold" />
+                <TextView android:id="@+id/widgetPlus0" android:layout_width="48dp" android:layout_height="48dp"
+                    android:background="@drawable/widget_stepper" android:contentDescription="Agregar chocolate"
+                    android:gravity="center" android:text="+" android:textColor="#FFF7F0" android:textSize="22sp" />
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+            android:layout_marginStart="4dp" tools:ignore="NestedWeights" android:background="@drawable/widget_tile"
+            android:gravity="center_horizontal" android:orientation="vertical" android:padding="4dp">
+            <ImageView android:id="@+id/widgetFlavor1" android:layout_width="48dp" android:layout_height="48dp"
+                android:contentDescription="Agregar vainilla" android:src="@drawable/widget_donut_vanilla" />
+            <TextView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"
+                tools:ignore="NestedWeights" android:gravity="center" android:maxLines="1" android:text="Vainilla"
+                android:textColor="#FFF7F0" android:textSize="11sp" />
+            <LinearLayout android:layout_width="match_parent" android:layout_height="48dp"
+                android:gravity="center" android:orientation="horizontal">
+                <TextView android:id="@+id/widgetMinus1" android:layout_width="48dp" android:layout_height="48dp"
+                    android:background="@drawable/widget_stepper" android:contentDescription="Quitar vainilla"
+                    android:gravity="center" android:text="−" android:textColor="#FFF7F0" android:textSize="22sp" />
+                <TextView android:id="@+id/widgetCount1" android:layout_width="0dp" android:layout_height="48dp"
+                    android:layout_weight="1" android:gravity="center" android:text="0"
+                    android:textColor="#FFF7F0" android:textSize="16sp" android:textStyle="bold" />
+                <TextView android:id="@+id/widgetPlus1" android:layout_width="48dp" android:layout_height="48dp"
+                    android:background="@drawable/widget_stepper" android:contentDescription="Agregar vainilla"
+                    android:gravity="center" android:text="+" android:textColor="#FFF7F0" android:textSize="22sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="0dp"
+        android:layout_marginTop="4dp" android:layout_weight="1" android:baselineAligned="false" android:orientation="horizontal">
+        <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+            android:layout_marginStart="0dp" tools:ignore="NestedWeights" android:background="@drawable/widget_tile"
+            android:gravity="center_horizontal" android:orientation="vertical" android:padding="4dp">
+            <ImageView android:id="@+id/widgetFlavor2" android:layout_width="48dp" android:layout_height="48dp"
+                android:contentDescription="Agregar chocolate con chispas" android:src="@drawable/widget_donut_chocolate_sprinkles" />
+            <TextView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"
+                tools:ignore="NestedWeights" android:gravity="center" android:maxLines="1" android:text="Choco + chispas"
+                android:textColor="#FFF7F0" android:textSize="11sp" />
+            <LinearLayout android:layout_width="match_parent" android:layout_height="48dp"
+                android:gravity="center" android:orientation="horizontal">
+                <TextView android:id="@+id/widgetMinus2" android:layout_width="48dp" android:layout_height="48dp"
+                    android:background="@drawable/widget_stepper" android:contentDescription="Quitar chocolate con chispas"
+                    android:gravity="center" android:text="−" android:textColor="#FFF7F0" android:textSize="22sp" />
+                <TextView android:id="@+id/widgetCount2" android:layout_width="0dp" android:layout_height="48dp"
+                    android:layout_weight="1" android:gravity="center" android:text="0"
+                    android:textColor="#FFF7F0" android:textSize="16sp" android:textStyle="bold" />
+                <TextView android:id="@+id/widgetPlus2" android:layout_width="48dp" android:layout_height="48dp"
+                    android:background="@drawable/widget_stepper" android:contentDescription="Agregar chocolate con chispas"
+                    android:gravity="center" android:text="+" android:textColor="#FFF7F0" android:textSize="22sp" />
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+            android:layout_marginStart="4dp" tools:ignore="NestedWeights" android:background="@drawable/widget_tile"
+            android:gravity="center_horizontal" android:orientation="vertical" android:padding="4dp">
+            <ImageView android:id="@+id/widgetFlavor3" android:layout_width="48dp" android:layout_height="48dp"
+                android:contentDescription="Agregar vainilla con chispas" android:src="@drawable/widget_donut_vanilla_sprinkles" />
+            <TextView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"
+                tools:ignore="NestedWeights" android:gravity="center" android:maxLines="1" android:text="Vainilla + chispas"
+                android:textColor="#FFF7F0" android:textSize="11sp" />
+            <LinearLayout android:layout_width="match_parent" android:layout_height="48dp"
+                android:gravity="center" android:orientation="horizontal">
+                <TextView android:id="@+id/widgetMinus3" android:layout_width="48dp" android:layout_height="48dp"
+                    android:background="@drawable/widget_stepper" android:contentDescription="Quitar vainilla con chispas"
+                    android:gravity="center" android:text="−" android:textColor="#FFF7F0" android:textSize="22sp" />
+                <TextView android:id="@+id/widgetCount3" android:layout_width="0dp" android:layout_height="48dp"
+                    android:layout_weight="1" android:gravity="center" android:text="0"
+                    android:textColor="#FFF7F0" android:textSize="16sp" android:textStyle="bold" />
+                <TextView android:id="@+id/widgetPlus3" android:layout_width="48dp" android:layout_height="48dp"
+                    android:background="@drawable/widget_stepper" android:contentDescription="Agregar vainilla con chispas"
+                    android:gravity="center" android:text="+" android:textColor="#FFF7F0" android:textSize="22sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+    <TextView android:id="@+id/widgetMessage" android:layout_width="match_parent"
+        android:layout_height="26dp" android:gravity="center_vertical" android:maxLines="1"
+        android:text="Elige sabores · 0 seleccionadas" android:textColor="#E7D4C3" android:textSize="11sp" />
+    <LinearLayout android:layout_width="match_parent" android:layout_height="48dp"
         android:orientation="horizontal">
-
-        <Button
-            style="?android:attr/buttonBarButtonStyle"
-            android:id="@+id/widgetCash"
-            android:layout_width="0dp"
-            android:layout_height="44dp"
-            android:layout_weight="1"
-            android:minWidth="0dp"
-            android:text="Efectivo"
-            android:textSize="12sp" />
-
-        <Button
-            style="?android:attr/buttonBarButtonStyle"
-            android:id="@+id/widgetYappy"
-            android:layout_width="0dp"
-            android:layout_height="44dp"
-            android:layout_marginStart="4dp"
-            android:layout_weight="1"
-            android:minWidth="0dp"
-            android:text="Yappy"
-            android:textSize="12sp" />
-
-        <Button
-            style="?android:attr/buttonBarButtonStyle"
-            android:id="@+id/widgetPurchase"
-            android:layout_width="0dp"
-            android:layout_height="44dp"
-            android:layout_marginStart="4dp"
-            android:layout_weight="1"
-            android:minWidth="0dp"
-            android:text="Comprar"
-            android:textSize="12sp" />
+        <TextView android:id="@+id/widgetCash" android:layout_width="0dp" android:layout_height="48dp"
+            android:layout_weight="1" android:background="@drawable/widget_cash"
+            android:contentDescription="Cobrar selección en efectivo" android:gravity="center"
+            android:text="Efectivo" android:textColor="#FFFFFF" android:textSize="14sp" android:textStyle="bold" />
+        <TextView android:id="@+id/widgetYappy" android:layout_width="0dp" android:layout_height="48dp"
+            android:layout_marginStart="6dp" android:layout_weight="1" android:background="@drawable/widget_yappy"
+            android:contentDescription="Cobrar selección por Yappy" android:gravity="center"
+            android:text="Yappy" android:textColor="#FFFFFF" android:textSize="14sp" android:textStyle="bold" />
     </LinearLayout>
 </LinearLayout>

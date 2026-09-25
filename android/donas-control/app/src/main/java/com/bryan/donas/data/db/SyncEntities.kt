@@ -31,6 +31,7 @@ data class RemoteOrderEntity(
     val createdAt: String,
     val updatedAt: String,
     val itemsJson: String,
+    val settled: Boolean = false,
 )
 
 @Entity(tableName = "sync_state")

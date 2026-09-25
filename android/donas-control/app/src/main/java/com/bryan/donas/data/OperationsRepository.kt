@@ -106,17 +106,29 @@ class OperationsRepository(private val db: AppDatabase) {
         return totalCost to used
     }
 
-    suspend fun quickSale(accountCode: String, quantity: Long = 1, requestKey: String = key()): Long = db.withTransaction {
+    suspend fun quickSale(accountCode: String, quantity: Long = 1, requestKey: String = key(), flavors: Map<String, Int> = emptyMap(), remoteOrderId: String? = null): Long = db.withTransaction {
         ops.eventByKey(requestKey)?.id?.let { return@withTransaction it }
         require(accountCode == "CASH" || accountCode == "YAPPY")
         val session = requireNotNull(ops.activeSession()) { "Inicia una jornada antes de vender." }
         require(quantity in 1..10000)
+        if (flavors.isNotEmpty()) {
+            require(flavors.keys.all { it in setOf("DR-CHOCOLATE", "DR-VAINILLA", "DR-VAINILLA-CHISPAS", "DR-CHOCOLATE-CHISPAS") }) { "Sabor inválido." }
+            require(flavors.values.all { it in 1..99 } && flavors.values.sum().toLong() == quantity) { "Las cantidades por sabor no coinciden." }
+        }
+        require(remoteOrderId == null || flavors.isEmpty())
         require(ops.stock() >= quantity) { "No hay suficientes donas." }
         val config = business.config(session.configId)
         val revenue = Math.multiplyExact(config.donutPriceCents, quantity)
         val (cost, used) = consume(quantity)
+        val details = JSONObject().put("quantity", quantity).put("unitPriceCents", config.donutPriceCents).put("costCents", cost)
+        if (flavors.isNotEmpty()) {
+            val items = org.json.JSONArray()
+            flavors.toSortedMap().forEach { (sku, count) -> items.put(JSONObject().put("sku", sku).put("quantity", count)) }
+            details.put("items", items)
+        }
+        if (remoteOrderId != null) details.put("remoteOrderId", remoteOrderId)
         val event = event("SALE", "Venta · ${account(accountCode).name}", revenue, accountCode, session.id, requestKey,
-            details = JSONObject().put("quantity", quantity).put("unitPriceCents", config.donutPriceCents).put("costCents", cost))
+            details = details)
         val sale = ops.insertSale(SaleEntity(eventId = event, sessionId = session.id, accountId = account(accountCode).id, quantity = quantity, unitPriceCents = config.donutPriceCents, revenueCents = revenue, costCents = cost, timestamp = now(), reversedAt = null))
         ops.insertAllocations(used.map { SaleLotAllocationEntity(sale, it.first.id, it.second, it.third) })
         ops.insertMovement(InventoryMovementEntity(eventId = event, type = "SALE", quantityDelta = -quantity, costDeltaCents = -cost, timestamp = now()))
@@ -124,10 +136,29 @@ class OperationsRepository(private val db: AppDatabase) {
         event
     }
 
+    suspend fun bookRemoteOrder(order: RemoteOrderEntity): Long {
+        require(order.status == "COMPLETED" && order.settled && order.paymentStatus == "CONFIRMED")
+        val requestKey = "order-${order.id}"
+        ops.eventByKey(requestKey)?.let { return it.id }
+        val items = org.json.JSONArray(order.itemsJson)
+        val quantity = (0 until items.length()).sumOf { items.getJSONObject(it).getLong("quantity") }
+        require(quantity in 1..10000) { "Cantidad de pedido inválida." }
+        val state = requireNotNull(business.state())
+        val config = business.config(state.configId)
+        require(Math.multiplyExact(config.donutPriceCents, quantity) == order.totalCents) {
+            "El precio local no coincide con el pedido; requiere conciliación."
+        }
+        if (ops.activeSession() == null) startSession(requestKey = "order-session-${order.id}")
+        return quickSale(order.paymentMethod, quantity, requestKey, remoteOrderId = order.id)
+    }
+
     suspend fun undoLastSale(requestKey: String = key()): Long = db.withTransaction {
         ops.eventByKey(requestKey)?.id?.let { return@withTransaction it }
         val sale = requireNotNull(ops.lastSale()) { "No hay una venta activa para deshacer." }
         val originalEvent = ops.event(sale.eventId)
+        require(!originalEvent.requestKey.startsWith("order-")) {
+            "Un pedido entregado requiere una devolución conciliada en el servidor."
+        }
         val event = event("REVERSAL", "Reversión · ${originalEvent.title}", -sale.revenueCents, originalEvent.accountCode, sale.sessionId, requestKey, sale.eventId)
         ops.saleAllocations(sale.id).forEach { allocation ->
             val lot = ops.lot(allocation.lotId)
@@ -243,8 +274,9 @@ class OperationsRepository(private val db: AppDatabase) {
     suspend fun unpaidAllocations() = ops.unpaidAllocations()
 
     suspend fun resetBusinessData() = db.withTransaction {
-        require(db.syncDao().pendingCount() == 0 && db.syncDao().unqueuedEvents(1).isEmpty()) {
-            "Sincroniza los movimientos pendientes antes de borrar los datos del negocio."
+        require(db.syncDao().pendingCount() == 0 && db.syncDao().rejectedCount() == 0 &&
+            db.syncDao().unqueuedEvents(1).isEmpty()) {
+            "Concilia los movimientos pendientes o rechazados antes de borrar los datos del negocio."
         }
         ops.clearPartnerPayments(); ops.clearProfitAllocations(); ops.clearLoanPayments(); ops.clearLoans(); ops.clearTransfers(); ops.clearExpenses(); ops.clearSaleAllocations(); ops.clearSales(); ops.clearMovements(); ops.clearLots(); ops.clearPurchasePayments(); ops.clearPurchases(); ops.clearEntries(); ops.clearEvents(); ops.clearSessions()
     }

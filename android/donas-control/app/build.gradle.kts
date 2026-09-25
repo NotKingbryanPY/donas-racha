@@ -22,6 +22,7 @@ android {
     }
     kotlinOptions { jvmTarget = "17" }
     testOptions { unitTests.isIncludeAndroidResources = true }
+    sourceSets.getByName("androidTest").assets.srcDir("schemas")
     buildTypes {
         create("pilot") {
             initWith(getByName("debug"))

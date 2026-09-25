@@ -16,7 +16,7 @@ Aplicación Android nativa para administrar un negocio ambulante de donas. La co
 - Reparto porcentual o monto fijo proporcional/por cajas completas; receptor del remanente.
 - Ganancia asignada y pagos a socios separados.
 - Dashboard, estadísticas de hoy/semana/mes e historial paginado con filtros.
-- Widget con selector − / cantidad / + (1–99) y venta directa de varias donas en Efectivo/Yappy; vuelve a 1 tras una venta correcta.
+- Widget de cuatro sabores con − / cantidad / + por sabor (máximo 99 donas por venta). Al tocar Efectivo o Yappy guarda la venta local directamente, sin abrir la app; el resumen muestra el stock local total. La app ofrece el mismo selector visual de sabores desde «Nueva venta».
 - Pedidos desde el backend: inicio de sesión administrador, cola local de operaciones, copia local de pedidos, aceptar/cancelar/en camino y confirmación del cobro presencial.
 - Exportación/importación SQLite, reinicio de movimientos y restablecimiento de fábrica con doble confirmación `RESETEAR`.
 - Material 3 XML, ViewBinding, modo oscuro, Room, WorkManager y DataStore. Permiso de Internet solo para pedidos y sincronización.
@@ -27,9 +27,9 @@ El dinero se almacena como `Long` en centavos. Los cálculos fraccionarios usan 
 
 El método porcentual usa mayor residuo con desempate estable. El fijo proporcional se calcula sobre las donas acumuladas, de modo que los residuos se recuperan al completar una caja. Las ventas conservan precio y costo aplicados. El cierre conserva el plan y la configuración asociados al inicio de la jornada.
 
-Room exporta esquemas en `app/schemas`, migra automáticamente de v1 a v2 y manualmente de v2 a v3 para conservar los datos al agregar la cola de sincronización. No se usa `fallbackToDestructiveMigration`. El token renovable se cifra con Android Keystore; no se guarda la contraseña.
+Room exporta esquemas en `app/schemas`, migra automáticamente de v1 a v2 y manualmente de v2 a v3 y de v3 a v4 para conservar los datos al agregar sincronización y conciliación de pedidos. No se usa `fallbackToDestructiveMigration`. El token renovable se cifra con Android Keystore; no se guarda la contraseña.
 
-La recepción del pedido y el cobro se pueden registrar. La opción de completar la entrega permanece deshabilitada hasta implementar una transacción única que reserve/descuente inventario, cree la venta, concilie el pago y otorgue puntos, sin duplicaciones entre Room y Supabase. La cola de operaciones es un registro de auditoría remoto; todavía no reemplaza el libro contable local. La API requiere la migración `202609230001_android_event_types.sql` y el endpoint `/api/auth/session` desplegados.
+La recepción del pedido, el cobro y su cierre se conectan a la transacción `api_complete_order`; Room incorpora la venta del pedido con una clave estable y sincroniza un recibo sin volver a descontar el stock central. Las ventas presenciales por sabor se encolan sin conexión y el servidor las aplica una sola vez por operación; los rechazos requieren conciliación. La cola no reemplaza el libro contable local. El widget usa una clave estable por selección para que un reintento no duplique la venta; la selección se vacía solo cuando Room confirma el registro. El inventario local aún contabiliza unidades totales, no cantidades físicas por sabor: las cifras por sabor de Supabase requieren sincronización y conteo antes de mostrarse en el widget. La API requiere las migraciones hasta `202609240002_customer_qr_and_health.sql`. Antes de desplegar, seguir `docs/ROLLOUT_2026-09-24.md` desde la raíz del repositorio.
 
 ## Compilar
 

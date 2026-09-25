@@ -1,0 +1,40 @@
+name: iPhone offline build
+
+on:
+  push:
+    paths:
+      - "ios/DonasControlOffline/**"
+      - ".github/workflows/ios-offline-build.yml"
+  workflow_dispatch:
+
+jobs:
+  compile:
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate Xcode project
+        working-directory: ios/DonasControlOffline
+        run: xcodegen generate
+      - name: Compile for iOS Simulator
+        working-directory: ios/DonasControlOffline
+        run: |
+          xcodebuild -project DonasControlOffline.xcodeproj \
+            -scheme DonasControlOffline -configuration Debug \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath build-simulator CODE_SIGNING_ALLOWED=NO build
+      - name: Compile for iPhone
+        working-directory: ios/DonasControlOffline
+        run: |
+          xcodebuild -project DonasControlOffline.xcodeproj \
+            -scheme DonasControlOffline -configuration Debug \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath build-iphone CODE_SIGNING_ALLOWED=NO build
+      - name: Save simulator build
+        uses: actions/upload-artifact@v4
+        with:
+          name: donas-control-ios-simulator
+          path: ios/DonasControlOffline/build-simulator/Build/Products/Debug-iphonesimulator/DonasControlOffline.app
+          if-no-files-found: error

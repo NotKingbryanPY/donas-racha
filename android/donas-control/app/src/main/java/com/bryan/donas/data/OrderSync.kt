@@ -22,6 +22,7 @@ class OrderSyncWorker(context: Context, params: WorkerParameters) : CoroutineWor
         val db = app.database
         val sync = db.syncDao()
         return try {
+            app.repository.initialize()
             // Backfill operations created before the outbox migration, without changing the accounting ledger.
             while (true) {
                 val events = sync.unqueuedEvents()
@@ -42,13 +43,21 @@ class OrderSyncWorker(context: Context, params: WorkerParameters) : CoroutineWor
                     sync.markAttempt(pending.map { it.clientOperationId }, e.message?.take(160) ?: "Error de red")
                     throw e
                 }
+                var awaitingApplication = false
                 db.withTransaction {
                     for (index in 0 until acks.length()) {
                         val ack = acks.getJSONObject(index)
-                        sync.acknowledge(ack.getString("clientOperationId"), ack.getLong("serverSequence"))
+                        val id = ack.getString("clientOperationId")
+                        when (ack.getString("status")) {
+                            "APPLIED" -> sync.acknowledge(id, ack.getLong("serverSequence"))
+                            "REJECTED" -> sync.reject(id, ack.getLong("serverSequence"), ack.optString("errorCode", "Requiere conciliación"))
+                            "RECEIVED" -> if (pending.firstOrNull { it.clientOperationId == id }?.type !in setOf("SALE", "REVERSAL"))
+                                sync.acknowledge(id, ack.getLong("serverSequence")) else awaitingApplication = true
+                        }
                     }
                 }
                 if (acks.length() != pending.size) return Result.retry()
+                if (awaitingApplication) return Result.retry()
             }
             var pages = 0
             do {
@@ -63,7 +72,8 @@ class OrderSyncWorker(context: Context, params: WorkerParameters) : CoroutineWor
                         deliveryLocation = item.optString("delivery_location"),
                         customerName = item.optString("customer_name"), customerPhone = item.optString("customer_phone"),
                         totalCents = item.getLong("total_cents"), createdAt = item.getString("created_at"),
-                        updatedAt = item.getString("updated_at"), itemsJson = item.getJSONArray("items").toString()
+                        updatedAt = item.getString("updated_at"), itemsJson = item.getJSONArray("items").toString(),
+                        settled = item.optBoolean("settled")
                     )
                 }
                 db.withTransaction {
@@ -72,7 +82,17 @@ class OrderSyncWorker(context: Context, params: WorkerParameters) : CoroutineWor
                 }
                 pages++
             } while (response.optBoolean("hasMore") && pages < 20)
-            Result.success()
+            var needsRetry = false
+            for (order in sync.settledOrders()) {
+                try {
+                    val before = db.operationDao().eventByKey("order-${order.id}")
+                    if (before == null) {
+                        app.operations.bookRemoteOrder(order)
+                        needsRetry = true // Push the local accounting receipt on the next pass.
+                    }
+                } catch (_: Exception) { needsRetry = true }
+            }
+            if (needsRetry) Result.retry() else Result.success()
         } catch (e: BackendException) {
             if (e.status in 400..499 && e.status != 429) Result.failure() else Result.retry()
         } catch (_: Exception) { Result.retry() }

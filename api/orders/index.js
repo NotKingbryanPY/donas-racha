@@ -1,4 +1,4 @@
-const { optionalUser } = require('../_lib/auth');
+const { requireCustomer } = require('../_lib/auth');
 const { withApi } = require('../_lib/http');
 const { enforceRateLimit } = require('../_lib/rate-limit');
 const { rpc } = require('../_lib/supabase');
@@ -6,9 +6,13 @@ const { fingerprint, validateOrder } = require('../_lib/validation');
 
 module.exports = withApi(['POST'], async (req, context) => {
   const body = context.parseJsonBody(req);
-  const order = validateOrder(body);
-  const user = await optionalUser(req);
-  await enforceRateLimit(req, 'create_order', 10, 600, user ? user.id : undefined);
+  const { user, customer } = await requireCustomer(req);
+  const order = validateOrder({
+    ...body,
+    customerName: customer.display_name,
+    customerPhone: body.customerPhone || customer.whatsapp_e164 || null
+  });
+  await enforceRateLimit(req, 'create_order', 10, 600, user.id);
   const payload = {
     deliveryLocation: order.deliveryLocation,
     paymentMethod: order.paymentMethod,
@@ -18,7 +22,7 @@ module.exports = withApi(['POST'], async (req, context) => {
     items: order.items
   };
   const result = await rpc('api_create_order', {
-    p_auth_user_id: user ? user.id : null,
+    p_auth_user_id: user.id,
     p_idempotency_key: order.idempotencyKey,
     p_request_hash: fingerprint(payload),
     p_delivery_location: order.deliveryLocation,

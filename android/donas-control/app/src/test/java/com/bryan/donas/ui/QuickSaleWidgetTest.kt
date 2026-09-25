@@ -15,28 +15,32 @@ import org.robolectric.annotation.Config
 class QuickSaleWidgetTest {
     private val context get() = ApplicationProvider.getApplicationContext<DonasApp>()
 
-    @Test fun eachWidgetKeepsItsOwnBoundedQuantity() {
+    @Test fun eachWidgetKeepsItsOwnFlavorSelection() {
         QuickSaleUi.clearQuantities(context, intArrayOf(31, 32))
-        assertEquals(1, QuickSaleUi.quantity(context, 31))
-        assertEquals(4, QuickSaleUi.changeQuantity(context, 31, 3))
-        assertEquals(1, QuickSaleUi.quantity(context, 32))
-        assertEquals(1, QuickSaleUi.changeQuantity(context, 31, -100))
-        assertEquals(99, QuickSaleUi.changeQuantity(context, 31, 200))
+        assertEquals(0, QuickSaleUi.basket(context, 31).total)
+        repeat(3) { QuickSaleUi.changeFlavor(context, 31, 0, 1) }
+        QuickSaleUi.changeFlavor(context, 31, 2, 1)
+        assertEquals(4, QuickSaleUi.basket(context, 31).total)
+        assertEquals(3, QuickSaleUi.basket(context, 31).count(0))
+        assertEquals(1, QuickSaleUi.basket(context, 31).count(2))
+        assertEquals(0, QuickSaleUi.basket(context, 32).total)
         QuickSaleUi.clearQuantities(context, intArrayOf(31, 32))
-        assertEquals(1, QuickSaleUi.quantity(context, 31))
+        assertEquals(0, QuickSaleUi.basket(context, 31).total)
     }
 
     @Test fun plusAndMinusReceiverOnlyChangeTheSelectedWidget() {
         QuickSaleUi.clearQuantities(context, intArrayOf(41, 42))
         val receiver = QuickSaleReceiver()
         val plus = Intent(context, QuickSaleReceiver::class.java)
-            .setAction(QuickSaleUi.INCREASE).putExtra(QuickSaleUi.EXTRA_WIDGET_ID, 41)
+            .setAction(QuickSaleUi.ADD_FLAVOR).putExtra(QuickSaleUi.EXTRA_WIDGET_ID, 41)
+            .putExtra(QuickSaleUi.EXTRA_FLAVOR_INDEX, 1)
         repeat(3) { receiver.onReceive(context, plus) }
-        assertEquals(4, QuickSaleUi.quantity(context, 41))
-        assertEquals(1, QuickSaleUi.quantity(context, 42))
+        assertEquals(3, QuickSaleUi.basket(context, 41).count(1))
+        assertEquals(0, QuickSaleUi.basket(context, 42).total)
         receiver.onReceive(context, Intent(context, QuickSaleReceiver::class.java)
-            .setAction(QuickSaleUi.DECREASE).putExtra(QuickSaleUi.EXTRA_WIDGET_ID, 41))
-        assertEquals(3, QuickSaleUi.quantity(context, 41))
-        assertEquals(1, QuickSaleUi.quantity(context, AppWidgetManager.INVALID_APPWIDGET_ID))
+            .setAction(QuickSaleUi.REMOVE_FLAVOR).putExtra(QuickSaleUi.EXTRA_WIDGET_ID, 41)
+            .putExtra(QuickSaleUi.EXTRA_FLAVOR_INDEX, 1))
+        assertEquals(2, QuickSaleUi.basket(context, 41).count(1))
+        assertEquals(0, QuickSaleUi.basket(context, AppWidgetManager.INVALID_APPWIDGET_ID).total)
     }
 }

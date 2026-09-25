@@ -105,8 +105,14 @@ class BackendClient(context: Context) {
         request("/api/sync?limit=100$query", bearer = token())
     }
 
+    suspend fun recentOrders(): JSONArray = withContext(Dispatchers.IO) {
+        request("/api/admin/orders?limit=100", bearer = token()).getJSONArray("orders")
+    }
+
     suspend fun transition(orderId: String, status: String) = withContext(Dispatchers.IO) {
-        request("/api/admin/orders/$orderId/status", "POST", JSONObject().put("status", status), token())
+        val body = JSONObject().put("status", status)
+        if (status == "COMPLETED") body.put("idempotencyKey", UUID.nameUUIDFromBytes("$orderId:COMPLETED".toByteArray()).toString())
+        request("/api/admin/orders/$orderId/status", "POST", body, token())
     }
 
     suspend fun confirmPayment(orderId: String, idempotencyKey: String) = withContext(Dispatchers.IO) {
