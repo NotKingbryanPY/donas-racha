@@ -453,7 +453,6 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
 <button class="admin-fab" onclick="tryShowAdmin()">⚙️ Admin</button>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-<script src="assets/js/feature-flags.js"></script>
 <script>
 let currentClient = null;
 let clientRequestVersion = 0;
@@ -580,7 +579,6 @@ async function progressiveRanking(params = {}) {
 }
 
 async function preloadSupabaseProducts() {
-  if (!window.DonasFlags?.useSupabaseProducts) { renderPublicCatalog([]); return; }
   try {
     window.__donasProducts = (await vercelApi('/api/products')).products || [];
     renderPublicCatalog(window.__donasProducts);

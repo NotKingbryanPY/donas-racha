@@ -7,4 +7,5 @@ const scripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(match =>
 for (const script of scripts) new vm.Script(script,{filename:'index.html'});
 if (scripts.length < 1) throw new Error('No se encontró el script principal de la web.');
 if (/script\.google\.com|DonasApi|BACKEND_URL/.test(html)) throw new Error('La web todavía depende de Apps Script.');
+if (/assets\/js\/(?:api-client|feature-flags)\.js/.test(html)) throw new Error('La web carga módulos del backend heredado.');
 console.log(`PASS web syntax and no Apps Script runtime (${scripts.length} inline script)`);
