@@ -1,31 +1,30 @@
+const { scrypt, timingSafeEqual } = require('node:crypto');
+const { promisify } = require('node:util');
 const { ApiError, withApi } = require('../http');
-const { requireUser } = require('../auth');
+const { accessFor, customerByPublicId, issueSession, normalizedPublicId } = require('../customer-id-session');
 const { enforceRateLimit } = require('../rate-limit');
-const { getConfig, serviceRequest } = require('../supabase');
+
+const derive = promisify(scrypt);
 
 module.exports = withApi(['POST'], async (req, context) => {
-  await enforceRateLimit(req, 'customer_login', 10, 300);
-  const body = context.parseJsonBody(req, 4096);
-  const email = typeof body.email === 'string' ? body.email.trim() : '';
-  const password = typeof body.password === 'string' ? body.password : '';
-  if (!/^[^@\s]{1,100}@[^@\s]{1,200}$/.test(email) || password.length < 8 || password.length > 200) {
-    throw new ApiError(400, 'VALIDATION_ERROR', 'Credenciales incompletas.');
+  const body = context.parseJsonBody(req, 1024);
+  const publicId = normalizedPublicId(body.publicId);
+  await enforceRateLimit(req, 'customer_id_login_ip', 15, 300);
+  await enforceRateLimit(req, 'customer_id_login_id', 8, 300, publicId);
+  const customer = await customerByPublicId(publicId);
+  const access = await accessFor(customer.id);
+  if (access.password_hash) {
+    if (typeof body.password !== 'string' || !body.password) {
+      throw new ApiError(401, 'PASSWORD_REQUIRED', 'Este cliente activó contraseña. Escríbela para continuar.');
+    }
+    if (body.password.length > 200) throw new ApiError(400, 'VALIDATION_ERROR', 'La contraseña es demasiado larga.');
+    const expected = Buffer.from(access.password_hash, 'hex');
+    const actual = await derive(body.password, Buffer.from(access.password_salt, 'hex'), 64);
+    if (expected.length !== actual.length || !timingSafeEqual(expected, actual)) {
+      throw new ApiError(401, 'INVALID_CREDENTIALS', 'La contraseña no es correcta.');
+    }
   }
-  const config = getConfig();
-  const response = await fetch(`${config.url}/auth/v1/token?grant_type=password`, {
-    method:'POST',headers:{apikey:config.anonKey,'content-type':'application/json'},
-    body:JSON.stringify({email,password})
-  });
-  if (!response.ok) throw new ApiError(response.status >= 500 ? 502 : 401,
-    'INVALID_CREDENTIALS', 'La sesión no es válida.');
-  const session = await response.json();
-  if (!session.access_token || !Number.isFinite(session.expires_in)) {
-    throw new ApiError(502, 'AUTH_INVALID_RESPONSE', 'La autenticación devolvió una respuesta incompleta.');
-  }
-  const user = await requireUser({ headers:{ authorization:`Bearer ${session.access_token}` } });
-  const customers = await serviceRequest('customers', { query:new URLSearchParams({
-    select:'id',auth_user_id:`eq.${user.id}`,status:'eq.ACTIVE',limit:'1'
-  }).toString() });
-  return { accessToken:session.access_token, linked:!!customers?.[0],
-    expiresAt:new Date(Date.now()+session.expires_in*1000).toISOString() };
+  return { accessToken: issueSession(customer.id, access.credential_version),
+    customer: { publicId: customer.public_id, name: customer.display_name,
+      whatsapp: customer.whatsapp_e164, hasPassword: !!access.password_hash } };
 });

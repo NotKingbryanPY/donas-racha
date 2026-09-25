@@ -1,4 +1,5 @@
 const { ApiError } = require('./http');
+const { requireIdCustomer } = require('./customer-id-session');
 const { getConfig, readResponse, serviceRequest } = require('./supabase');
 
 function getBearer(req) {
@@ -21,16 +22,7 @@ async function requireUser(req) {
 }
 
 async function requireCustomer(req) {
-  const user = await requireUser(req);
-  const query = new URLSearchParams({
-    select: 'id,public_id,display_name,whatsapp_e164,status,registered_at,last_purchase_at',
-    auth_user_id: `eq.${user.id}`,
-    status: 'eq.ACTIVE',
-    limit: '1'
-  }).toString();
-  const customers = await serviceRequest('customers', { query });
-  if (!customers || !customers[0]) throw new ApiError(403, 'CUSTOMER_NOT_LINKED', 'La cuenta no está vinculada a un cliente activo.');
-  return { user, customer: customers[0] };
+  return requireIdCustomer(req);
 }
 
 async function requireAdmin(req) {

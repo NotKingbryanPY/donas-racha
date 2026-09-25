@@ -1,13 +1,13 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Vincular clientes · Donas Racha</title><style>
+<title>Códigos de contraseña · Donas Racha</title><style>
 body{font:16px system-ui,sans-serif;background:#171021;color:white;margin:0}main{max-width:560px;margin:auto;padding:24px 16px}a{color:#ffcf58}
 .card{background:#271a38;border:1px solid #4a365f;border-radius:18px;padding:20px;margin:18px 0}input,button{font:inherit;border-radius:10px;padding:12px}input{display:block;width:100%;box-sizing:border-box;margin:6px 0 14px;background:white;color:#171021;border:0}button{border:0;background:#ffcf58;color:#25142c;font-weight:750;cursor:pointer}button:disabled{opacity:.5}label{display:block;margin-top:12px}p{line-height:1.45}#message{min-height:24px;color:#ffcf58}#token{overflow-wrap:anywhere;background:#120d1b;padding:12px;border-radius:8px}strong{overflow-wrap:anywhere}[hidden]{display:none!important}
 </style></head><body><main>
-<p><a href="/">← Inicio</a></p><h1>Vincular clientes</h1><p>Uso del vendedor. Verifica en persona la identidad del cliente antes de emitir el código temporal.</p>
+<p><a href="/">← Inicio</a></p><h1>Contraseña opcional</h1><p>Uso del vendedor. Verifica la identidad del cliente antes de darle un código para activar o restablecer su contraseña.</p>
 <section id="login" class="card"><h2>Acceso administrador</h2><form id="loginForm"><label>Correo<input id="email" type="email" autocomplete="username" required></label><label>Contraseña<input id="password" type="password" autocomplete="current-password" required></label><button>Entrar</button></form></section>
 <section id="panel" class="card" hidden><h2>Buscar cliente existente</h2><form id="lookupForm"><label>ID de cliente<input id="publicId" maxlength="64" required placeholder="C..."></label><button>Buscar</button></form>
-<div id="customer" hidden><p>Nombre: <strong id="name"></strong><br>WhatsApp: <strong id="phone"></strong><br>Estado: <strong id="status"></strong></p><button id="issue" type="button">Generar código de vinculación</button></div>
+<div id="customer" hidden><p>Nombre: <strong id="name"></strong><br>WhatsApp: <strong id="phone"></strong><br>Estado: <strong id="status"></strong></p><button id="issue" type="button">Generar código temporal</button></div>
 <p id="token" hidden></p><button id="logout" type="button">Salir</button></section><p id="message" role="status"></p>
 </main><script>
 (() => {
@@ -30,15 +30,15 @@ body{font:16px system-ui,sans-serif;background:#171021;color:white;margin:0}main
     event.preventDefault();customer=null;$('customer').hidden=true;$('token').hidden=true;message('Buscando…');
     try{const result=await api('/api/admin/customers/lookup',{publicId:$('publicId').value});customer=result.customer;
       $('name').textContent=customer.name;$('phone').textContent=customer.phone||'Sin WhatsApp';
-      $('status').textContent=customer.linked?'Ya vinculado':customer.status;
-      $('issue').disabled=customer.linked||customer.status!=='ACTIVE'||!customer.phone;
-      $('customer').hidden=false;message(customer.linked?'Este cliente ya tiene una cuenta vinculada.':'Verifica su identidad antes de generar el código.');
+      $('status').textContent=customer.status;
+      $('issue').disabled=customer.status!=='ACTIVE'||!customer.phone;
+      $('customer').hidden=false;message('Verifica su identidad antes de generar el código.');
     }catch(error){message(error.message);}
   });
   $('issue').addEventListener('click',async()=>{
     if(!customer)return;$('issue').disabled=true;message('Generando código…');
     try{const result=await api('/api/admin/customers/claim-token',{customerId:customer.id});
-      $('token').textContent=`Código para ${customer.name}: ${result.token} · válido ${result.expiresInMinutes} minutos.`;
+      $('token').textContent=`Código para activar o restablecer contraseña de ${customer.name}: ${result.token} · válido ${result.expiresInMinutes} minutos.`;
       $('token').hidden=false;message('Entrega el código solo al cliente cuya identidad verificaste.');
     }catch(error){message(error.message);}
     finally{$('issue').disabled=false;}

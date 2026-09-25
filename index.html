@@ -124,7 +124,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
         <p class="eyebrow"><span></span> UN ANTOJO. MUCHAS RECOMPENSAS.</p>
         <h1 id="welcomeHeading" class="welcome-title">Lo bueno<br>se vuelve <em>racha.</em></h1>
         <p class="welcome-desc">Tu próxima dona también suma.<br>Compra, sube de nivel y convierte tus puntos en algo delicioso.</p>
-        <div class="hero-actions"><a class="btn btn-primary role-client-cta" href="/customer.html">Pedir desde mi perfil <span aria-hidden="true">↗</span></a><a class="profile-link" href="/customer.html">Entrar a mi perfil</a></div>
+        <div class="hero-actions"><button class="btn btn-primary role-client-cta" onclick="beginCustomerOrder()">Pedir desde mi perfil <span aria-hidden="true">↗</span></button><button class="profile-link" onclick="goToUserLogin()">Entrar a mi perfil</button></div>
         <div class="hero-footnote"><span class="small-ring" aria-hidden="true"></span> Pequeños antojos. Grandes motivos para volver.</div>
       </div>
       <div class="hero-art" aria-label="Dona de vainilla con sprinkles, presentación ilustrativa">
@@ -177,15 +177,23 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
   <div class="login-box">
     <div class="logo">🍩</div>
     <h2>Entrar como cliente</h2>
-    <p>Escanea tu QR o coloca tu IDCliente para ver tu racha, puntos, ranking y recompensas.</p>
+    <p>Escribe el ID que recibiste por WhatsApp para ver tu perfil y pedir donas.</p>
     <div id="user-qr-reader"></div>
     <div role="status" aria-live="polite" id="userScanStatus" style="min-height:22px;font-size:12px;color:rgba(255,255,255,.6);margin:12px 0">Elige una opción para continuar</div>
     <button id="userScanBtn" class="btn btn-primary" style="width:100%" onclick="toggleUserScanner()">📷 Escanear QR</button>
     <div class="client-id-box">
       <label for="userClientIdInput">IDCliente</label>
       <input id="userClientIdInput" class="dark-field" style="margin-bottom:10px" placeholder="Ejemplo: C1712345678901" onkeydown="if(event.key==='Enter') openUserById()">
-      <button class="btn btn-dark" style="width:100%" onclick="openUserById()">🪪 Entrar con ID</button>
+      <div id="customerPasswordGroup" class="field-group" style="display:none;text-align:left"><label class="field-label" for="userPasswordInput">Contraseña de este perfil</label><input id="userPasswordInput" class="dark-field" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter') openUserById()"></div>
+      <button id="userEnterBtn" class="btn btn-dark" style="width:100%" onclick="openUserById()">Entrar con ID →</button>
+      <div id="userLoginError" role="alert" class="muted" style="color:#ffb1ba;min-height:20px"></div>
       <div class="mini-note">Tu ID aparece en el QR o te lo puede dar el vendedor al registrarte.</div>
+      <details style="margin-top:14px;text-align:left"><summary class="muted" style="cursor:pointer">Olvidé mi contraseña</summary>
+        <p class="muted">Pide un código temporal al vendedor.</p>
+      <input id="resetPasswordCode" class="dark-field" maxlength="8" autocomplete="off" placeholder="Código del vendedor">
+        <input id="resetNewPassword" class="dark-field" type="password" autocomplete="new-password" placeholder="Contraseña nueva, mínimo 8 caracteres">
+        <button class="btn btn-outline" style="width:100%" onclick="resetCustomerPassword()">Restablecer contraseña</button>
+      </details>
     </div>
     <button class="btn btn-ghost" style="width:100%;margin-top:10px" onclick="goToRoleScreen()">← Volver al inicio</button>
   </div>
@@ -200,7 +208,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
       <div class="quick-actions">
         <button class="btn btn-primary" onclick="showScreen('screen-new')">➕ Nuevo cliente</button>
         <button id="qrToggleBtn" class="btn btn-outline" onclick="toggleScanner()">📷 Escanear QR</button>
-        <a class="btn btn-outline" href="/admin-claims.html">🔐 Vincular cliente al perfil web</a>
+        <a class="btn btn-outline" href="/admin-claims.html">🔐 Códigos de contraseña</a>
         <button class="btn btn-ghost" onclick="showAdmin()">📊 Dashboard</button>
         <button class="btn btn-red" onclick="logout()">Cerrar sesión</button>
       </div>
@@ -245,6 +253,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
       <button id="client-tab-ranking" class="tab" onclick="setClientTab('ranking')">🏆 Ranking</button>
       <button id="client-tab-shop" class="tab" onclick="setClientTab('shop')">🛍️ Tienda</button>
       <button id="client-tab-history" class="tab" onclick="setClientTab('history')">📋 Historial</button>
+      <button id="client-tab-delivery" class="tab" onclick="setClientTab('delivery')">🍩 Pedir</button>
     </div>
 
     <div id="clientProfileSection" class="client-section">
@@ -296,6 +305,14 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
         <div class="muted" style="margin-top:8px">IDCliente: <b id="clientIdLabel"></b></div>
         <button class="btn btn-outline" style="margin-top:12px" onclick="downloadCurrentQR()">⬇️ Descargar QR</button>
       </div>
+      <details id="customerPasswordSettings" class="card">
+        <summary class="card-title" style="cursor:pointer;margin:0">🔒 Contraseña opcional</summary>
+        <p class="muted" style="margin-top:12px">Por defecto entras solo con tu ID. Si quieres proteger este perfil con contraseña, pide un código temporal al vendedor una sola vez.</p>
+        <label class="field-label" for="customerPasswordCode">Código del vendedor</label><input id="customerPasswordCode" class="field" autocomplete="off" maxlength="8">
+        <label class="field-label" for="customerNewPassword">Nueva contraseña</label><input id="customerNewPassword" class="field" type="password" autocomplete="new-password" minlength="8" placeholder="Mínimo 8 caracteres">
+        <button class="btn btn-outline" onclick="saveCustomerPassword()">Activar o cambiar contraseña</button>
+        <p id="customerPasswordMessage" class="muted" role="status"></p>
+      </details>
     </div>
 
     <div id="clientRankingSection" class="client-section" style="display:none">
@@ -329,6 +346,18 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
         <div class="card-title">📋 Historial reciente</div>
         <div id="historyWrap"><div class="empty">Sin historial</div></div>
       </div>
+    </div>
+    <div id="clientDeliverySection" class="client-section" style="display:none">
+      <div class="card"><div class="card-title">🍩 Tu pedido</div><p class="muted">Elige las donas; pagarás al recibir. El pedido no suma puntos hasta que se confirme la venta.</p>
+        <div id="clientFlavorList" class="order-cart"></div>
+        <div class="order-summary"><span>Total</span><strong id="clientOrderTotal">B/.0.00</strong></div>
+        <label class="field-label" for="clientDeliveryLocation">Ubicación de entrega</label><input id="clientDeliveryLocation" class="field" maxlength="300" placeholder="Ej.: UTP, Edificio 4, entrada principal">
+        <label class="field-label" for="clientDeliveryNotes">Indicaciones (opcional)</label><input id="clientDeliveryNotes" class="field" maxlength="500" placeholder="Salón o referencia">
+        <div class="payment-options"><label class="payment-option"><input type="radio" name="clientPayment" value="CASH" checked><span>💵 Efectivo al recibir</span></label><label class="payment-option"><input type="radio" name="clientPayment" value="YAPPY"><span>📱 Yappy al recibir</span></label></div>
+        <button id="clientOrderButton" class="btn btn-primary" style="width:100%;margin-top:16px" onclick="submitClientOrder()">Confirmar pedido</button>
+        <p id="clientOrderMessage" class="muted" role="status" style="margin-top:12px"></p>
+      </div>
+      <div class="card"><div class="card-title">📦 Mis pedidos</div><div id="clientOrdersList" class="muted">Cargando...</div></div>
     </div>
   </div>
 </div>
@@ -442,11 +471,26 @@ let userScanner = null;
 let userScannerOpen = false;
 let openedAsUser = false;
 let lastRankingEntry = 'role';
+let customerWantsOrder = false;
+let customerSelectedFlavor = null;
+let customerOrderQuantities = new Map();
+let customerOrderPendingKey = null;
+let customerOrderVariants = [];
 
 window.addEventListener('load', () => {
   preloadSupabaseProducts();
+  document.getElementById('userClientIdInput').addEventListener('input', () => {
+    document.getElementById('customerPasswordGroup').style.display = 'none';
+    document.getElementById('userPasswordInput').value = '';
+  });
+  ['clientDeliveryLocation','clientDeliveryNotes'].forEach(id => document.getElementById(id).addEventListener('input', () => { customerOrderPendingKey = null; }));
+  document.querySelectorAll('input[name="clientPayment"]').forEach(input => input.addEventListener('change', () => { customerOrderPendingKey = null; }));
   document.getElementById('searchInput').addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
-  if (sessionStorage.getItem('donasAuth') === 'true') {
+  const customerLink = new URLSearchParams(location.search);
+  if (customerLink.has('flavor')) { customerSelectedFlavor = customerLink.get('flavor'); customerWantsOrder = true; }
+  if (customerLink.has('profile') || customerLink.has('flavor')) {
+    goToUserLogin();
+  } else if (sessionStorage.getItem('donasAuth') === 'true') {
     hideOverlays();
     goHome();
   } else {
@@ -597,7 +641,28 @@ function renderPublicCatalog(products) {
 function addToOrder(id) {
   const variant = flattenCatalog(window.__donasProducts || []).find(item => String(item.id) === String(id) && item.available);
   if (!variant) { showToast('Este sabor ya no está disponible'); return; }
-  window.location.href = '/customer.html?flavor=' + encodeURIComponent(id);
+  customerSelectedFlavor = id;
+  beginCustomerOrder();
+}
+
+function beginCustomerOrder() {
+  customerWantsOrder = true;
+  goToUserLogin();
+}
+
+async function customerRequest(path, options = {}) {
+  const token = sessionStorage.getItem('donasCustomerToken');
+  const response = await fetch(path, { ...options, headers: {
+    accept: 'application/json', 'content-type': 'application/json',
+    ...(token ? { authorization: `Bearer ${token}` } : {})
+  } });
+  const payload = await response.json().catch(() => null);
+  if (!response.ok || !payload?.ok) {
+    const error = new Error(payload?.error?.message || 'No pudimos conectar con el servidor.');
+    error.code = payload?.error?.code || 'API_ERROR';
+    throw error;
+  }
+  return payload.data;
 }
 
 async function apiPost(action, body = {}) {
@@ -630,8 +695,9 @@ function goToAdminLogin() {
 function goToUserLogin() {
   document.getElementById('roleOverlay').classList.add('hidden');
   document.getElementById('userOverlay').classList.remove('hidden');
-  document.getElementById('userScanStatus').textContent = 'Escanea tu QR o escribe tu IDCliente';
-  const idInput = document.getElementById('userClientIdInput'); if (idInput) idInput.value = '';
+  document.getElementById('userScanStatus').textContent = 'Escribe tu ID o escanea tu QR';
+  document.getElementById('userLoginError').textContent = '';
+  document.getElementById('userClientIdInput').focus();
 }
 
 async function checkLogin() {
@@ -679,7 +745,16 @@ function showScreen(id) {
 
 function goHome() { openedAsUser = false; showScreen('screen-home'); loadHomeRanking(); }
 function rankingBack() { requireAuth() ? goHome() : goToRoleScreen(); }
-function clientGoBack() { openedAsUser ? goToUserLogin() : goHome(); }
+function clientGoBack() {
+  if (openedAsUser) {
+    sessionStorage.removeItem('donasCustomerToken');
+    sessionStorage.removeItem('donasCustomerId');
+    document.getElementById('userPasswordInput').value = '';
+    openedAsUser = false;
+    currentClient = null;
+    goToRoleScreen();
+  } else goHome();
+}
 
 async function loadHomeRanking() {
   const el = document.getElementById('home-ranking');
@@ -755,21 +830,40 @@ function stopUserScanner() {
   const btn = document.getElementById('userScanBtn'); if (btn) btn.textContent = '📷 Cámara';
   const el = document.getElementById('user-qr-reader'); if (el) el.innerHTML = '';
 }
-function openUserById() {
+async function openUserById() {
   const input = document.getElementById('userClientIdInput');
   const id = input ? input.value.trim() : '';
   if (!id) { showToast('Escribe tu IDCliente'); return; }
-  openedAsUser = true;
-  hideOverlays();
-  openClient(id, true);
+  await loginCustomerById(id);
 }
 function onUserQRScanned(text) {
   stopUserScanner();
   const id = extractIdFromQR(text);
   if (!id) { showToast('QR inválido'); return; }
-  openedAsUser = true;
-  hideOverlays();
-  openClient(id, true);
+  document.getElementById('userClientIdInput').value = id;
+  loginCustomerById(id);
+}
+async function loginCustomerById(id) {
+  const button = document.getElementById('userEnterBtn');
+  const errorEl = document.getElementById('userLoginError');
+  button.disabled = true; errorEl.textContent = '';
+  try {
+    const result = await customerRequest('/api/customer/session', { method:'POST', body:JSON.stringify({
+      publicId:id, password:document.getElementById('userPasswordInput').value
+    }) });
+    sessionStorage.setItem('donasCustomerToken', result.accessToken);
+    sessionStorage.setItem('donasCustomerId', result.customer.publicId);
+    document.getElementById('userPasswordInput').value = '';
+    openedAsUser = true;
+    hideOverlays();
+    await openClient(result.customer.publicId, true);
+  } catch (error) {
+    if (error.code === 'PASSWORD_REQUIRED') {
+      document.getElementById('customerPasswordGroup').style.display = '';
+      document.getElementById('userPasswordInput').focus();
+    }
+    errorEl.textContent = error.message;
+  } finally { button.disabled = false; }
 }
 function extractIdFromQR(text) {
   try { const url = new URL(text); return url.searchParams.get('id') || url.searchParams.get('client') || text; } catch(e) { return String(text || '').trim(); }
@@ -819,6 +913,7 @@ function renderClient(c, asUser) {
   document.getElementById('buyBtn').disabled = !!c.purchasedToday;
   document.getElementById('buyBtn').textContent = `🍩 Registrar compra (+${c.nextPurchasePoints || 10} pts)`;
   document.getElementById('clientUserTabs').style.display = asUser ? '' : 'none';
+  document.getElementById('customerPasswordSettings').style.display = asUser ? '' : 'none';
   renderHitos(c.hitosRacha || []);
   renderBadges(c.badges || []);
   renderHistory(c.recentHistory || []);
@@ -827,15 +922,26 @@ function renderClient(c, asUser) {
   renderRedemptions(c.recentRedemptions || []);
   loadClientInlineRanking('racha');
   setClientTab('profile');
+  if (asUser && customerWantsOrder) {
+    customerWantsOrder = false;
+    if (customerSelectedFlavor) {
+      customerOrderQuantities.set(customerSelectedFlavor,
+        (customerOrderQuantities.get(customerSelectedFlavor) || 0) + 1);
+      customerSelectedFlavor = null;
+    }
+    setClientTab('delivery');
+  }
   if (!asUser) {
     const tabs = document.getElementById('clientUserTabs');
     const ranking = document.getElementById('clientRankingSection');
     const shop = document.getElementById('clientShopSection');
     const history = document.getElementById('clientHistorySection');
+    const delivery = document.getElementById('clientDeliverySection');
     if (tabs) tabs.style.display = 'none';
     if (ranking) ranking.style.display = 'none';
     if (shop) shop.style.display = 'none';
     if (history) history.style.display = '';
+    if (delivery) delivery.style.display = 'none';
   }
 }
 function renderHitos(active) {
@@ -858,14 +964,119 @@ function setClientTab(tab) {
     profile: document.getElementById('clientProfileSection'),
     ranking: document.getElementById('clientRankingSection'),
     shop: document.getElementById('clientShopSection'),
-    history: document.getElementById('clientHistorySection')
+    history: document.getElementById('clientHistorySection'),
+    delivery: document.getElementById('clientDeliverySection')
   };
   Object.keys(sections).forEach(key => { if (sections[key]) sections[key].style.display = key === tab ? '' : 'none'; });
-  ['profile','ranking','shop','history'].forEach(key => {
+  ['profile','ranking','shop','history','delivery'].forEach(key => {
     const btn = document.getElementById('client-tab-' + key);
     if (btn) btn.classList.toggle('active', key === tab);
   });
   if (tab === 'ranking') loadClientInlineRanking('racha');
+  if (tab === 'delivery' && openedAsUser) loadClientDelivery();
+}
+
+async function loadClientDelivery() {
+  const list = document.getElementById('clientFlavorList');
+  list.innerHTML = '<div class="empty">Cargando sabores...</div>';
+  try {
+    const products = Array.isArray(window.__donasProducts)
+      ? window.__donasProducts : (await vercelApi('/api/products')).products || [];
+    clientOrderVariants = flattenCatalog(products).filter(item => item.available);
+    renderClientFlavors();
+  } catch (error) { list.textContent = error.message; }
+  try {
+    const result = await customerRequest('/api/customer/orders');
+    const orders = result.orders || [];
+    document.getElementById('clientOrdersList').innerHTML = orders.length
+      ? orders.map(order => `<div class="history-item"><div class="grow"><b>${safe(order.public_code)}</b><div class="sub">${safe(clientOrderStatus(order.status))} · ${formatMoney(order.total_cents,order.currency_code)} · ${safe(new Date(order.created_at).toLocaleDateString('es-PA'))}</div></div></div>`).join('')
+      : '<div class="empty">Todavía no tienes pedidos.</div>';
+  } catch (error) { document.getElementById('clientOrdersList').textContent = error.message; }
+}
+
+function clientOrderStatus(status) {
+  return ({PENDING:'Pendiente',ACCEPTED:'Aceptado',OUT_FOR_DELIVERY:'En camino',COMPLETED:'Entregado',CANCELLED:'Cancelado'})[status] || 'Recibido';
+}
+
+function renderClientFlavors() {
+  const list = document.getElementById('clientFlavorList');
+  if (!clientOrderVariants.length) { list.innerHTML = '<div class="empty">No hay sabores disponibles ahora.</div>'; updateClientOrderTotal(); return; }
+  list.innerHTML = clientOrderVariants.map(item => `<div class="cart-row"><div class="cart-donut ${flavorTone(item.name)}"><span class="mini-donut"></span></div><div class="grow"><b>${safe(item.name)}</b><small>${formatMoney(item.unit_price_cents,item.currency_code)} c/u</small></div><div class="quantity"><button aria-label="Quitar ${safe(item.name)}" onclick="changeClientOrderQty('${item.id}',-1)">−</button><span>${customerOrderQuantities.get(String(item.id)) || 0}</span><button aria-label="Añadir ${safe(item.name)}" onclick="changeClientOrderQty('${item.id}',1)">+</button></div></div>`).join('');
+  updateClientOrderTotal();
+}
+
+function changeClientOrderQty(id, delta) {
+  const quantity = Math.max(0, Math.min(100, (customerOrderQuantities.get(id) || 0) + delta));
+  if (quantity) customerOrderQuantities.set(id, quantity); else customerOrderQuantities.delete(id);
+  customerOrderPendingKey = null;
+  renderClientFlavors();
+}
+
+function updateClientOrderTotal() {
+  const total = clientOrderVariants.reduce((sum,item) => sum + item.unit_price_cents * (customerOrderQuantities.get(String(item.id)) || 0), 0);
+  document.getElementById('clientOrderTotal').textContent = formatMoney(total);
+  document.getElementById('clientOrderButton').disabled = total <= 0;
+}
+
+async function submitClientOrder() {
+  const message = document.getElementById('clientOrderMessage');
+  const locationText = document.getElementById('clientDeliveryLocation').value.trim();
+  const items = clientOrderVariants.map(item => ({productVariantId:item.id,quantity:customerOrderQuantities.get(String(item.id)) || 0})).filter(item => item.quantity);
+  if (!items.length || locationText.length < 3) { message.textContent = 'Elige tus donas y escribe tu ubicación.'; return; }
+  const button = document.getElementById('clientOrderButton');
+  button.disabled = true; button.textContent = 'Enviando...'; message.textContent = '';
+  customerOrderPendingKey ||= crypto.randomUUID();
+  try {
+    const result = await customerRequest('/api/orders', { method:'POST', body:JSON.stringify({
+      idempotencyKey:customerOrderPendingKey, deliveryLocation:locationText,
+      customerNotes:document.getElementById('clientDeliveryNotes').value.trim(),
+      paymentMethod:document.querySelector('input[name="clientPayment"]:checked').value, items
+    }) });
+    customerOrderPendingKey = null;
+    customerOrderQuantities.clear(); renderClientFlavors();
+    message.textContent = `Pedido ${result.public_code} recibido. Pagarás al recibir.`;
+    try { const recent = await customerRequest('/api/customer/orders');
+      document.getElementById('clientOrdersList').innerHTML = (recent.orders || []).map(order => `<div class="history-item"><div class="grow"><b>${safe(order.public_code)}</b><div class="sub">${safe(clientOrderStatus(order.status))} · ${formatMoney(order.total_cents,order.currency_code)}</div></div></div>`).join('');
+    } catch (_) { /* The confirmed order code above remains visible. */ }
+  } catch (error) { message.textContent = error.message; }
+  finally { button.textContent = 'Confirmar pedido'; updateClientOrderTotal(); }
+}
+
+async function saveCustomerPassword() {
+  const message = document.getElementById('customerPasswordMessage');
+  const code = document.getElementById('customerPasswordCode').value.trim();
+  const newPassword = document.getElementById('customerNewPassword').value;
+  if (!code || newPassword.length < 8) { message.textContent = 'Escribe el código del vendedor y una contraseña de al menos 8 caracteres.'; return; }
+  message.textContent = 'Guardando...';
+  try {
+    const result = await customerRequest('/api/customer/password', { method:'POST', body:JSON.stringify({
+      publicId:sessionStorage.getItem('donasCustomerId'), code, newPassword
+    }) });
+    sessionStorage.setItem('donasCustomerToken', result.accessToken);
+    document.getElementById('customerPasswordCode').value = '';
+    document.getElementById('customerNewPassword').value = '';
+    message.textContent = 'Contraseña activada. La próxima vez se pedirá después de tu ID.';
+  } catch (error) { message.textContent = error.message; }
+}
+
+async function resetCustomerPassword() {
+  const message = document.getElementById('userLoginError');
+  const publicId = document.getElementById('userClientIdInput').value.trim();
+  const code = document.getElementById('resetPasswordCode').value.trim();
+  const newPassword = document.getElementById('resetNewPassword').value;
+  if (!publicId || !code || newPassword.length < 8) {
+    message.textContent = 'Escribe tu ID, el código del vendedor y la nueva contraseña.'; return;
+  }
+  message.textContent = 'Restableciendo...';
+  try {
+    const result = await customerRequest('/api/customer/password', { method:'POST', body:JSON.stringify({ publicId, code, newPassword }) });
+    sessionStorage.setItem('donasCustomerToken', result.accessToken);
+    sessionStorage.setItem('donasCustomerId', result.customer.publicId);
+    document.getElementById('resetPasswordCode').value = '';
+    document.getElementById('resetNewPassword').value = '';
+    openedAsUser = true; hideOverlays();
+    await openClient(result.customer.publicId, true);
+  } catch (error) { message.textContent = error.message; }
 }
 
 function setClientRanking(type) {

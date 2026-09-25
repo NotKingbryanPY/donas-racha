@@ -23,9 +23,13 @@ function response(){
   assert.equal(read.statusCode,401);
   assert.equal(read.body.error.code,'AUTH_REQUIRED');
 
-  const claim=response();
-  await customerRoute({method:'POST',headers:{},query:{route:'claim'},url:'/api/customer/claim',body:{claimToken:'a'.repeat(64)}},claim);
-  assert.equal(claim.statusCode,401);
-  assert.equal(claim.body.error.code,'AUTH_REQUIRED');
-  console.log('PASS customer order and claim routes reject anonymous access');
+  const profile=response();
+  await customerRoute({method:'GET',headers:{},query:{route:'profile'},url:'/api/customer/profile'},profile);
+  assert.equal(profile.statusCode,401);
+  assert.equal(profile.body.error.code,'AUTH_REQUIRED');
+
+  const registration=response();
+  await customerRoute({method:'POST',headers:{},query:{route:'register'},url:'/api/customer/register',body:{}},registration);
+  assert.equal(registration.statusCode,404);
+  console.log('PASS ID profile routes reject missing sessions and customer email registration is closed');
 })().catch(error=>{console.error(error);process.exitCode=1});
