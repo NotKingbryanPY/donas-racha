@@ -16,7 +16,6 @@ module.exports = withApi(['GET'], async req => {
   return {
     type,
     ranking: rows.map(row => ({
-      id: row.public_id,
       name: row.display_name,
       levelKey: row.level_key,
       levelName: row.level_name,

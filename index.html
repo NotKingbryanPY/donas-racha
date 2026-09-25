@@ -523,7 +523,7 @@ function backendConfigured() {
 
 async function api(action, params = {}) {
   if (!backendConfigured()) throw new Error('Configura BACKEND_URL en el HTML');
-  if (action === 'getRanking' && window.DonasFlags?.useSupabaseRanking) {
+  if (action === 'getRanking') {
     return progressiveRanking(params);
   }
   return legacyApi(action, params);
@@ -563,26 +563,8 @@ async function vercelPost(path, body, timeoutMs = 15000) {
 
 async function progressiveRanking(params = {}) {
   const normalized = { type:params.type || 'racha', limit:params.limit || 10 };
-  try {
-    const modern = await vercelApi('/api/ranking', normalized);
-    if (window.DonasFlags?.compareLegacyReads) compareRankingInBackground(normalized, modern.ranking || []);
-    return { ok:true, type:modern.type, ranking:modern.ranking || [] };
-  } catch (error) {
-    console.info(JSON.stringify({ event:'progressive_read_fallback', action:'getRanking', reason:error.name || 'ERROR' }));
-    return legacyApi('getRanking', normalized);
-  }
-}
-
-async function compareRankingInBackground(params, modernRows) {
-  try {
-    const legacy = await legacyApi('getRanking', params);
-    const legacyRows = legacy.ranking || [];
-    const fields = row => [row.id, row.totalPurchases || 0, row.pointsTotal || 0, row.currentStreak || 0, row.redemptionsMade || row.rewardsEarned || 0].join(':');
-    const match = legacyRows.map(fields).join('|') === modernRows.map(fields).join('|');
-    console.info(JSON.stringify({ event:'progressive_read_comparison', action:'getRanking', type:params.type, match, legacyCount:legacyRows.length, modernCount:modernRows.length }));
-  } catch (_) {
-    console.info(JSON.stringify({ event:'progressive_read_comparison', action:'getRanking', type:params.type, match:false, comparisonUnavailable:true }));
-  }
+  const modern = await vercelApi('/api/ranking', normalized);
+  return { ok:true, type:modern.type, ranking:modern.ranking || [] };
 }
 
 async function preloadSupabaseProducts() {
@@ -1250,7 +1232,7 @@ function renderRankingItems(list, type, compact) {
   const medals = ['🥇','🥈','🥉']; const classes = ['gold','silver','bronze'];
   return list.map((c,i) => {
     const val = type==='compras'?`${c.totalPurchases||0} 🍩`:type==='puntos'?`${c.pointsTotal||0} pts`:type==='canjes'?`${c.redemptionsMade||c.rewardsEarned||0} 🎁`:type==='nivel'?`${c.levelEmoji||'🥉'} ${safe(c.levelName||'Bronce')}`:`${c.currentStreak||0} 🔥`;
-    return `<div class="rank-item" onclick="${requireAuth()?`openClient('${esc(c.id)}', false)`:''}"><div style="width:30px;text-align:center;font-size:20px;font-weight:900">${medals[i]||i+1}</div><div class="avatar ${classes[i]||''}">${initial(c.name)}</div><div class="grow"><div class="name">${safe(c.name)}</div><div class="sub">${c.levelEmoji||'🥉'} ${safe(c.levelName||'Bronce')} · ${c.totalPurchases||0} compras · ${c.pointsTotal||0} pts</div></div><div class="pill ${type==='racha'?'hot':''}">${val}</div></div>`;
+    return `<div class="rank-item" onclick="${requireAuth() && c.id?`openClient('${esc(c.id)}', false)`:''}"><div style="width:30px;text-align:center;font-size:20px;font-weight:900">${medals[i]||i+1}</div><div class="avatar ${classes[i]||''}">${initial(c.name)}</div><div class="grow"><div class="name">${safe(c.name)}</div><div class="sub">${c.levelEmoji||'🥉'} ${safe(c.levelName||'Bronce')} · ${c.totalPurchases||0} compras · ${c.pointsTotal||0} pts</div></div><div class="pill ${type==='racha'?'hot':''}">${val}</div></div>`;
   }).join('');
 }
 
@@ -1340,7 +1322,7 @@ async function saveQuickConfig() {
 async function loadAdminRanking(type) {
   ['compras','puntos','racha','nivel','canjes'].forEach(t => document.getElementById('admin-tab-'+t).classList.toggle('active', t===type));
   const el = document.getElementById('adminRanking'); el.innerHTML = '<div class="empty">Cargando...</div>';
-  try { const data = await api('getRanking', { type, limit:20 }); el.innerHTML = renderRankingItems(data.ranking || [], type, false); } catch(err) { el.innerHTML = '<div class="empty">Error al cargar ranking</div>'; }
+  try { const data = await apiPost('getAdminDashboard', { rankingType:type, limit:20 }); if (!data.ok) throw new Error(data.error); el.innerHTML = renderRankingItems(data.ranking || [], type, false); } catch(err) { el.innerHTML = '<div class="empty">Error al cargar ranking</div>'; }
 }
 async function loadAdminClients() {
   const el = document.getElementById('adminClients'); el.innerHTML = '<div class="empty">Cargando...</div>';
