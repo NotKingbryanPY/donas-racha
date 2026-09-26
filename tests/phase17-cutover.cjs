@@ -29,7 +29,10 @@ try {
   assert.match(sql,/source_system='GOOGLE_SHEETS'/);
   assert.match(sql,/customer_web_access/);
   assert.match(sql,/POST_IMPORT_BALANCE_MISMATCH/);
-  assert.match(sql,/commit;/);
+  const blockTag = sql.match(/do (\$dr_cutover_[0-9a-f]{12}\$) begin/)?.[1];
+  assert.ok(blockTag,'cutover must be wrapped in one DO statement');
+  assert.ok(sql.includes(`end ${blockTag};`));
+  assert.doesNotMatch(sql,/^commit;/m,'editor must execute the cutover as one statement');
   assert.ok(JSON.parse(fs.readFileSync(report,'utf8')).summary.blockingErrors === 0);
   console.log('PASS phase17 cutover: stale export blocked, guarded SQL generated');
 } finally {

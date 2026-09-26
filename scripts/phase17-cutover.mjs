@@ -22,6 +22,8 @@ if (!Number.isFinite(ageHours) || ageHours<0 || ageHours>24) {
   throw new Error(`La exportación debe tener menos de 24 horas. Antigüedad: ${ageHours.toFixed(1)} horas.`);
 }
 const tag = `$cutover_${crypto.randomBytes(6).toString('hex')}$`;
+const blockTag = `$dr_cutover_${crypto.randomBytes(6).toString('hex')}$`;
+if (JSON.stringify(data).includes(blockTag)) throw new Error('Colisión con el bloque SQL. Repite la generación.');
 function json(rows) {
   const value = JSON.stringify(rows);
   if (value.includes(tag)) throw new Error('Colisión con el delimitador SQL. Repite la generación.');
@@ -34,8 +36,9 @@ let sql = `-- Donas Racha: corte definitivo desde Google Sheets hacia Supabase.
 -- Fingerprint SHA-256: ${report.fingerprint}
 -- Exportado: ${report.sourceExportedAt}
 -- Verifica el reporte y detén las escrituras en Sheets antes de ejecutar.
-begin;
-select pg_advisory_xact_lock(hashtextextended('donas-racha-final-cutover',0));
+-- Una sola sentencia DO mantiene las tablas temporales y el corte en la misma transacción.
+do ${blockTag} begin
+perform pg_advisory_xact_lock(hashtextextended('donas-racha-final-cutover',0));
 `;
 for (const [name,table,items] of [
   ['customers','customers',data.customers],['aliases','customer_aliases',data.aliases],
@@ -51,7 +54,7 @@ create temporary table cutover_redemptions on commit drop as
     as x(id uuid,public_code text,customer_id uuid,reward_key text,loyalty_transaction_id uuid,
       points_cost_snapshot integer,reward_name_snapshot text,status public.redemption_status,
       idempotency_key uuid,source_system text,source_id text,notes text,created_at timestamptz,fulfilled_at timestamptz);
-do $guards$ begin
+-- Guardas antes de cambiar datos.
   if exists(select 1 from cutover_customers c join public.customers p
     on upper(p.public_id)=upper(c.public_id) and p.id<>c.id) then
     raise exception 'PUBLIC_ID_UUID_CONFLICT: un ID ya pertenece a otra cuenta central';
@@ -68,7 +71,7 @@ do $guards$ begin
     where o.status='COMPLETED' and o.completed_at>${literal(report.sourceExportedAt)}::timestamptz) then
     raise exception 'ORDER_AFTER_EXPORT: existe un pedido liquidado después del export';
   end if;
-end $guards$;
+
 
 insert into public.badges(key,name,emoji,condition_type,condition_threshold,description,display_order,active)
   select key,name,emoji,condition_type,condition_threshold,description,display_order,active from cutover_badges
@@ -76,7 +79,7 @@ insert into public.badges(key,name,emoji,condition_type,condition_threshold,desc
 insert into public.rewards(key,name,emoji,points_cost,reward_type,reward_value,description,display_order,active)
   select key,name,emoji,points_cost,reward_type,reward_value,description,display_order,active from cutover_rewards
   on conflict do nothing;
-do $references$ begin
+-- Comprueba referencias antes de importar clientes.
   if exists(select 1 from cutover_customer_badges cb where not exists
     (select 1 from public.badges b where b.key=cb.badge_key)) then
     raise exception 'BADGE_DEFINITION_MISSING';
@@ -85,7 +88,7 @@ do $references$ begin
     (select 1 from public.rewards w where w.key=r.reward_key)) then
     raise exception 'REWARD_DEFINITION_MISSING';
   end if;
-end $references$;
+
 insert into public.customers(id,public_id,display_name,whatsapp_e164,status,registered_at,last_purchase_at)
   select id,public_id,display_name,whatsapp_e164,status,registered_at,last_purchase_at from cutover_customers
   on conflict(id) do update set display_name=excluded.display_name,whatsapp_e164=excluded.whatsapp_e164,
@@ -134,7 +137,7 @@ insert into public.reward_redemptions(id,public_code,customer_id,reward_id,loyal
     r.notes,r.created_at,r.fulfilled_at
   from cutover_redemptions r join public.rewards w on w.key=r.reward_key;
 
-do $checks$ begin
+-- Comprobaciones finales: cualquier error revierte la sentencia completa.
   if exists(select 1 from cutover_accounts a join public.loyalty_accounts p using(customer_id)
     where (a.available_points,a.lifetime_points,a.purchase_count,a.redemption_count) is distinct from
       (p.available_points,p.lifetime_points,p.purchase_count,p.redemption_count)) then
@@ -152,9 +155,9 @@ do $checks$ begin
       where r.source_system='GOOGLE_SHEETS') <> (select count(*) from cutover_redemptions) then
     raise exception 'POST_IMPORT_REDEMPTION_MISMATCH';
   end if;
-end $checks$;
+
 update public.business_settings set legacy_imported_at=now() where id=true;
-commit;
+end ${blockTag};
 -- Confirm the customer count, points and a few recent IDs in the SQL editor after commit.
 `;
 await fs.writeFile(args['--sql-out'],sql);
