@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Donas Racha · Tu antojo tiene recompensas</title>
 <meta name="theme-color" content="#100d17">
+<link rel="icon" type="image/svg+xml" href="assets/images/donas-racha-mark.svg">
+<link rel="preload" as="image" href="assets/images/donas-racha-mark.svg">
 <meta name="description" content="Tu próxima dona también suma. Consulta tus puntos, mantén tu racha y descubre las recompensas de Donas Racha.">
 <script>
 // GitHub Pages sirve HTML estático; los endpoints /api viven junto a la página de Vercel.
@@ -163,7 +165,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
 
 <div id="loginOverlay" class="overlay hidden">
   <div class="login-box">
-    <div class="logo">🍩</div>
+    <div class="logo"><span class="brand-mark" aria-hidden="true"></span></div>
     <h2>Acceso para vendedores</h2>
     <p>Panel privado para registrar compras y administrar Donas Racha.</p>
     <div class="field-group"><label class="field-label" for="loginEmail">Correo de vendedor</label><input id="loginEmail" class="dark-field" type="email" autocomplete="username" placeholder="correo@ejemplo.com" onkeydown="if(event.key==='Enter') checkLogin()"></div>
@@ -176,7 +178,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
 
 <div id="userOverlay" class="overlay hidden">
   <div class="login-box">
-    <div class="logo">🍩</div>
+    <div class="logo"><span class="brand-mark" aria-hidden="true"></span></div>
     <h2>Entrar como cliente</h2>
     <p>Escribe el ID que recibiste por WhatsApp para ver tu perfil y pedir donas.</p>
     <div id="user-qr-reader"></div>
@@ -187,6 +189,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
       <input id="userClientIdInput" class="dark-field" style="margin-bottom:10px" placeholder="Ejemplo: C1712345678901" onkeydown="if(event.key==='Enter') openUserById()">
       <div id="customerPasswordGroup" class="field-group" style="display:none;text-align:left"><label class="field-label" for="userPasswordInput">Contraseña de este perfil</label><input id="userPasswordInput" class="dark-field" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter') openUserById()"></div>
       <button id="userEnterBtn" class="btn btn-dark" style="width:100%" onclick="openUserById()">Entrar con ID →</button>
+      <p id="userLoginStatus" class="login-status" role="status" aria-live="polite"></p>
       <div id="userLoginError" role="alert" class="muted" style="color:#ffb1ba;min-height:20px"></div>
       <div class="mini-note">Tu ID aparece en el QR o te lo puede dar el vendedor al registrarte.</div>
       <details style="margin-top:14px;text-align:left"><summary class="muted" style="cursor:pointer">Olvidé mi contraseña</summary>
@@ -668,8 +671,10 @@ function goToAdminLogin() {
 }
 
 function goToUserLogin() {
+  document.getElementById('clientLoginSuccess').hidden = true;
   document.getElementById('roleOverlay').classList.add('hidden');
   document.getElementById('userOverlay').classList.remove('hidden');
+  document.getElementById('userOverlay').inert = false;
   document.getElementById('userScanStatus').textContent = 'Escribe tu ID o escanea tu QR';
   document.getElementById('userLoginError').textContent = '';
   document.getElementById('userClientIdInput').focus();
@@ -818,8 +823,9 @@ function onUserQRScanned(text) {
 async function loginCustomerById(id) {
   const button = document.getElementById('userEnterBtn');
   const errorEl = document.getElementById('userLoginError');
+  const statusEl = document.getElementById('userLoginStatus');
   if (button.disabled) return;
-  button.disabled = true; button.classList.add('is-busy'); button.setAttribute('aria-busy','true'); button.textContent = 'Entrando'; errorEl.textContent = '';
+  button.disabled = true; button.classList.add('is-busy'); button.setAttribute('aria-busy','true'); button.textContent = 'Entrando…'; errorEl.textContent = ''; statusEl.textContent = 'Comprobando tu ID…';
   try {
     const result = await customerRequest('/api/customer/session', { method:'POST', body:JSON.stringify({
       publicId:id, password:document.getElementById('userPasswordInput').value
@@ -827,11 +833,11 @@ async function loginCustomerById(id) {
     sessionStorage.setItem('donasCustomerToken', result.accessToken);
     sessionStorage.setItem('donasCustomerId', result.customer.publicId);
     document.getElementById('userPasswordInput').value = '';
-    button.classList.remove('is-busy'); button.textContent = '✓ Listo';
+    statusEl.textContent = 'Cargando tu perfil…';
     openedAsUser = true;
     hideOverlays();
-    await openClient(result.customer.publicId, true);
-    if (currentClient && openedAsUser) {
+    const loaded = await openClient(result.customer.publicId, true);
+    if (loaded && currentClient && openedAsUser) {
       const status = document.getElementById('clientLoginSuccess');
       status.hidden = false;
       setTimeout(() => { status.hidden = true; }, 2600);
@@ -842,7 +848,7 @@ async function loginCustomerById(id) {
       document.getElementById('userPasswordInput').focus();
     }
     errorEl.textContent = error.message;
-  } finally { button.disabled = false; button.classList.remove('is-busy'); button.removeAttribute('aria-busy'); button.textContent = 'Entrar con ID →'; }
+  } finally { button.disabled = false; button.classList.remove('is-busy'); button.removeAttribute('aria-busy'); button.textContent = 'Entrar con ID →'; statusEl.textContent = ''; }
 }
 function extractIdFromQR(text) {
   try { const url = new URL(text); return url.searchParams.get('id') || url.searchParams.get('client') || text; } catch(e) { return String(text || '').trim(); }
@@ -863,6 +869,7 @@ async function openClient(id, asUser) {
     if (!data.ok) throw new Error(data.error || 'Cliente no encontrado');
     currentClient = data.client;
     renderClient(data.client, asUser);
+    return true;
   } catch (err) {
     if (requestVersion !== clientRequestVersion) return;
     showToast('❌ ' + err.message);
@@ -981,6 +988,7 @@ function setClientTab(tab) {
     const btn = document.getElementById('client-tab-' + key);
     if (btn) btn.classList.toggle('active', key === tab);
   });
+  window.DonasMotion?.panel(sections[tab]);
   if (tab === 'ranking') loadClientInlineRanking('racha');
   if (tab === 'delivery' && openedAsUser) loadClientDelivery();
 }
@@ -1017,7 +1025,8 @@ function clientOrderStatus(status) {
 function renderClientFlavors() {
   const list = document.getElementById('clientFlavorList');
   if (!clientOrderVariants.length) { list.innerHTML = '<div class="empty">No hay sabores disponibles ahora.</div>'; updateClientOrderTotal(); return; }
-  list.innerHTML = clientOrderVariants.map(item => { const left = item.inventory?.counted ? Math.max(0,Number(item.inventory.available_quantity) || 0) : 0; return `<div class="cart-row"><div class="cart-donut ${flavorTone(item.name)}"><span class="mini-donut"></span></div><div class="grow"><b>${safe(item.name)}</b><small>${formatMoney(item.unit_price_cents,item.currency_code)} c/u · <span class="flavor-remaining">${clientInventoryEnforced ? left+' disponibles' : 'por confirmar'}</span></small></div><div class="quantity"><button aria-label="Quitar ${safe(item.name)}" onclick="changeClientOrderQty('${item.id}',-1)">−</button><span>${customerOrderQuantities.get(String(item.id)) || 0}</span><button aria-label="Añadir ${safe(item.name)}" ${clientInventoryEnforced && left <= (customerOrderQuantities.get(String(item.id)) || 0) ? 'disabled' : ''} onclick="changeClientOrderQty('${item.id}',1)">+</button></div></div>`; }).join('');
+  list.innerHTML = clientOrderVariants.map(item => { const left = item.inventory?.counted ? Math.max(0,Number(item.inventory.available_quantity) || 0) : 0; return `<div class="cart-row"><div class="cart-donut ${flavorTone(item.name)}"><span class="mini-donut"></span></div><div class="grow"><b>${safe(item.name)}</b><small>${formatMoney(item.unit_price_cents,item.currency_code)} c/u · <span class="flavor-remaining">${clientInventoryEnforced ? `<span class="stock-value" data-stock-key="${safe(item.id)}" data-stock-value="${left}">${left}</span> disponibles` : 'por confirmar'}</span></small></div><div class="quantity"><button aria-label="Quitar ${safe(item.name)}" onclick="changeClientOrderQty('${item.id}',-1)">−</button><span>${customerOrderQuantities.get(String(item.id)) || 0}</span><button aria-label="Añadir ${safe(item.name)}" ${clientInventoryEnforced && left <= (customerOrderQuantities.get(String(item.id)) || 0) ? 'disabled' : ''} onclick="changeClientOrderQty('${item.id}',1)">+</button></div></div>`; }).join('');
+  window.DonasMotion?.stock(list, 'customer');
   updateClientOrderTotal();
 }
 
@@ -1027,7 +1036,14 @@ function changeClientOrderQty(id, delta) {
   const quantity = Math.max(0, Math.min(available, 100, (customerOrderQuantities.get(id) || 0) + delta));
   if (quantity) customerOrderQuantities.set(id, quantity); else customerOrderQuantities.delete(id);
   customerOrderPendingKey = null;
+  const focusedLabel = document.activeElement?.closest('#clientFlavorList button')?.getAttribute('aria-label');
   renderClientFlavors();
+  if (focusedLabel) {
+    const controls = [...document.querySelectorAll('#clientFlavorList button')];
+    const target = controls.find(el => el.getAttribute('aria-label') === focusedLabel);
+    const fallback = target?.closest('.quantity')?.querySelector('button:not(:disabled)');
+    (target?.disabled ? fallback : target)?.focus({preventScroll:true});
+  }
 }
 
 function updateClientOrderTotal() {

@@ -12,18 +12,33 @@
   reduced.addEventListener('change', syncMotion);
   connection?.addEventListener?.('change', syncMotion);
   syncMotion();
-  // One brief brand entrance per tab session; never blocks input or waits for data.
+  // Consume the entrance even when skipped, so preference changes cannot replay it.
   try {
-    if (!lite() && !sessionStorage.getItem('donasBrandIntroSeen')) {
-      sessionStorage.setItem('donasBrandIntroSeen','1');
+    const seenIntro = sessionStorage.getItem('donasBrandIntroSeen');
+    sessionStorage.setItem('donasBrandIntroSeen','1');
+    const operationalEntry = sessionStorage.getItem('donasAdminAccessToken') || new URLSearchParams(location.search).get('source') === 'widget';
+    if (!seenIntro && !lite() && !operationalEntry && !document.hidden) {
       const intro = document.createElement('div');
       intro.className='brand-intro'; intro.setAttribute('aria-hidden','true');
       intro.innerHTML='<div class="intro-lockup"><span class="intro-donut"><span class="brand-mark"></span></span><span class="brand-wordmark">DONAS<span>RACHA<span class="brand-dot">.</span></span></span></div>';
+      const dismiss = () => {
+        intro.remove(); clearTimeout(timeout);
+        document.removeEventListener('pointerdown', dismiss, true);
+        document.removeEventListener('keydown', dismiss, true);
+        document.removeEventListener('visibilitychange', dismiss);
+        reduced.removeEventListener('change', dismiss);
+        connection?.removeEventListener?.('change', dismiss);
+      };
+      const timeout = setTimeout(dismiss,1100);
+      intro.addEventListener('animationend',event=>{if(event.target===intro) dismiss();});
+      document.addEventListener('pointerdown', dismiss, true);
+      document.addEventListener('keydown', dismiss, true);
+      document.addEventListener('visibilitychange', dismiss);
+      reduced.addEventListener('change', dismiss);
+      connection?.addEventListener?.('change', dismiss);
       document.body.append(intro);
-      intro.addEventListener('animationend',event=>{if(event.target===intro) intro.remove();});
-      setTimeout(()=>intro.remove(),1200);
     }
-  } catch (_) { /* Storage may be unavailable; the page remains usable. */ }
+  } catch (_) { /* Without session storage, skip rather than replay on every visit. */ }
   const seen = new WeakSet();
   const reveals = ' .feature-card, #screen-client .card, #screen-client .stat-card, #screen-client .rank-item, #screen-client .shop-item, #screen-ranking .rank-item';
   const observer = 'IntersectionObserver' in window ? new IntersectionObserver(entries => {
@@ -81,7 +96,30 @@
   fine.addEventListener('change', resetTilt);
   reduced.addEventListener('change', resetTilt);
   let progressObserver, progressAnimation;
+  const stockSnapshots = new Map();
+  const stockAnimations = new WeakMap();
   window.DonasMotion = {
+    stock(root, scope) {
+      const previous = stockSnapshots.get(scope) || new Map();
+      const next = new Map();
+      root.querySelectorAll('[data-stock-key]').forEach(el => {
+        const key = el.dataset.stockKey, value = el.dataset.stockValue;
+        next.set(key, value);
+        if (!previous.has(key) || previous.get(key) === value || !Number.isFinite(Number(value)) || value === '' || previous.get(key) === '' || lite()) return;
+        clearTimeout(stockAnimations.get(el));
+        el.classList.remove('stock-changed'); void el.offsetWidth;
+        el.classList.add('stock-changed');
+        stockAnimations.set(el, setTimeout(() => el.classList.remove('stock-changed'), 650));
+      });
+      stockSnapshots.set(scope, next);
+    },
+    panel(next) {
+      // Keep the focused tab/button unless the action hid its originating panel.
+      const active = document.activeElement;
+      if (active && active !== document.body && active.getClientRects().length) return;
+      const target = next?.querySelector('h1,h2,h3') || next;
+      if (target) { target.tabIndex = -1; target.focus({preventScroll:true}); }
+    },
     profile(client) {
       const bar = document.getElementById('levelProgress');
       const pct = Math.max(0, Math.min(100, Number(client.progressLevelPct) || 0));
@@ -122,7 +160,7 @@
       resetTilt(); activeView = next;
       if (next) {
         const heading = next.querySelector('h1,h2');
-        if (heading) { heading.tabIndex = -1; heading.focus({preventScroll:true}); }
+        if (heading && !next.contains(document.activeElement)) { heading.tabIndex = -1; heading.focus({preventScroll:true}); }
         if (!overlay) window.scrollTo({top:0,behavior:'instant'});
       }
     }
