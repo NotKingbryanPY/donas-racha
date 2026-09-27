@@ -126,7 +126,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
         <p class="eyebrow"><span></span> UN ANTOJO. MUCHAS RECOMPENSAS.</p>
         <h1 id="welcomeHeading" class="welcome-title">Lo bueno<br>se vuelve <em>racha.</em></h1>
         <p class="welcome-desc">Tu próxima dona también suma.<br>Compra, sube de nivel y convierte tus puntos en algo delicioso.</p>
-        <div class="hero-actions"><button class="btn btn-primary role-client-cta" onclick="beginCustomerOrder()">Pedir desde mi perfil <span aria-hidden="true">↗</span></button><button class="profile-link" onclick="goToUserLogin()">Entrar a mi perfil</button></div>
+        <div class="hero-actions"><button class="btn btn-primary role-client-cta" onclick="customerWantsOrder=false;goToUserLogin()">Entrar a mi perfil <span aria-hidden="true">↗</span></button></div>
         <div class="hero-footnote"><span class="small-ring" aria-hidden="true"></span> Pequeños antojos. Grandes motivos para volver.</div>
       </div>
       <div class="hero-art" aria-label="Dona de vainilla con sprinkles, presentación ilustrativa">
@@ -138,14 +138,17 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
       </div>
     </section>
     <section id="sabores" class="catalog-section" aria-labelledby="catalogHeading">
-      <div class="catalog-heading">
-        <div><p class="eyebrow"><span></span> DISPONIBILIDAD ACTUAL</p><h2 id="catalogHeading">Elige tu favorita.</h2></div>
-        <p>Donas surtidas, listas para llevar al campus. La disponibilidad se actualiza desde nuestro catálogo.</p>
+      <div class="donut-order-card">
+        <div class="donut-order-image"><img src="assets/images/donut-stack.webp" srcset="assets/images/donut-stack-small.webp 400w, assets/images/donut-stack.webp 800w" sizes="(min-width:760px) 320px, 180px" width="800" height="800" loading="lazy" decoding="async" alt="Cuatro donas apiladas: chocolate, vainilla, chocolate con chispas y vainilla con chispas"></div>
+        <div class="donut-order-copy">
+          <p class="eyebrow"><span></span> UN ANTOJO A TU MEDIDA</p>
+          <h2 id="catalogHeading">Pide tus donas favoritas.</h2>
+          <p class="donut-order-flavors">Chocolate o vainilla, con o sin chispas.<br>Elige tus sabores desde tu perfil.</p>
+          <div id="publicCatalog" class="donut-order-meta" aria-live="polite" aria-busy="true"><span class="donut-order-status">Consultando precio…</span></div>
+          <button id="catalogOrderBtn" class="btn btn-primary" onclick="beginCustomerOrder()">Hacer pedido <span aria-hidden="true">↗</span></button>
+          <p class="donut-order-payment">Pago al recibir: efectivo o Yappy</p>
+        </div>
       </div>
-      <div id="publicCatalog" class="catalog-grid" aria-live="polite" aria-busy="true">
-        <div class="catalog-skeleton"></div><div class="catalog-skeleton"></div><div class="catalog-skeleton"></div><div class="catalog-skeleton"></div>
-      </div>
-      <div class="catalog-note"><span>🍩 B/.1.00 por dona</span><span>Pago al recibir: efectivo o Yappy</span></div>
     </section>
     <section class="benefits-section" aria-labelledby="benefitsHeading">
       <div class="section-kicker"><span id="benefitsHeading">TU ANTOJO TIENE UN EXTRA</span><span>01 — 04</span></div>
@@ -631,28 +634,34 @@ function formatMoney(cents, currency='USD') {
 
 function renderPublicCatalog(products) {
   const el = document.getElementById('publicCatalog');
-  if (!el) return;
+  const button = document.getElementById('catalogOrderBtn');
+  if (!el || !button) return;
   el.setAttribute('aria-busy', 'false');
+  button.disabled = false;
   if (products === null) {
-    el.innerHTML = '<div class="catalog-message">No pudimos consultar los sabores en este momento. Intenta de nuevo en unos minutos.</div>';
+    el.textContent = 'Consulta el precio y los sabores al entrar a tu perfil.';
     return;
   }
   const variants = flattenCatalog(products);
-  if (!variants.length) {
-    el.innerHTML = '<div class="catalog-message">Hoy no hay sabores publicados todavía.</div>';
+  const available = variants.filter(variant => variant.available);
+  if (!available.length) {
+    el.textContent = variants.length ? 'Por ahora están agotadas. Vuelve pronto.' : 'Pronto tendremos más donas para ti.';
+    button.disabled = true;
     return;
   }
-  el.innerHTML = variants.map(variant => `<article class="flavor-card ${flavorTone(variant.name)} ${variant.available ? '' : 'sold-out'}">
-    <div class="flavor-visual" aria-hidden="true"><span class="mini-donut"></span></div>
-    <div class="flavor-copy"><span class="availability ${variant.available ? 'available' : ''}">${variant.available ? 'Disponible' : 'Agotada'}</span><h3>${safe(variant.name)}</h3><p>${safe(variant.description || 'Dona surtida recién preparada.')}</p><div class="flavor-action"><strong>${formatMoney(variant.unit_price_cents, variant.currency_code)}</strong><button class="add-flavor" ${variant.available ? '' : 'disabled'} onclick="addToOrder('${esc(variant.id)}')">${variant.available ? 'Agregar' : 'Agotada'}</button></div></div>
-  </article>`).join('');
-}
-
-function addToOrder(id) {
-  const variant = flattenCatalog(window.__donasProducts || []).find(item => String(item.id) === String(id) && item.available);
-  if (!variant) { showToast('Este sabor ya no está disponible'); return; }
-  customerSelectedFlavor = id;
-  beginCustomerOrder();
+  const prices = available.filter(variant => Number.isFinite(Number(variant.unit_price_cents)) && variant.unit_price_cents != null);
+  if (!prices.length) {
+    el.textContent = 'Consulta los precios desde tu perfil.';
+    return;
+  }
+  const currency = prices[0].currency_code || 'USD';
+  if (prices.some(variant => (variant.currency_code || 'USD') !== currency)) {
+    el.textContent = 'Consulta los precios de cada sabor en tu perfil.';
+    return;
+  }
+  const minimum = Math.min(...prices.map(variant => Number(variant.unit_price_cents)));
+  const varies = prices.some(variant => Number(variant.unit_price_cents) !== minimum);
+  el.innerHTML = '<strong>' + (varies ? 'Desde ' : '') + safe(formatMoney(minimum, currency)) + '</strong><span>por dona</span>';
 }
 
 function beginCustomerOrder() {
