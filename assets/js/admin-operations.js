@@ -77,7 +77,7 @@ async function loadAdminOrders() {
   root.setAttribute('aria-busy','true'); notice.textContent = 'Consultando pedidos…';
   try {
     const filter = document.getElementById('adminOrderFilter').value;
-    const query = filter === 'COMPLETED' || filter === 'CANCELLED' ? `&status=${filter}` : '';
+    const query = filter !== 'ALL' ? `&status=${filter}` : '';
     adminOrders = (await adminRequest('/api/admin/orders?limit=100'+query)).orders || [];
     const visible = adminOrders.filter(order => filter !== 'ACTIVE' || !['COMPLETED','CANCELLED'].includes(order.status));
     root.innerHTML = visible.length ? visible.map(renderAdminOrder).join('') : '<div class="empty"><span class="brand-mark" aria-hidden="true"></span><h3>Todo al día</h3><p>No hay pedidos en esta vista.</p></div>';

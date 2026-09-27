@@ -6,7 +6,7 @@ const { serviceRequest } = require('../../_lib/supabase');
 module.exports = withApi(['GET'], async req => {
   const user = await requireAdmin(req);
   await enforceRateLimit(req, 'admin_orders', 300, 60, user.id);
-  const allowedStatuses = ['PENDING', 'ACCEPTED', 'OUT_FOR_DELIVERY', 'COMPLETED', 'CANCELLED'];
+  const allowedStatuses = ['ACTIVE', 'PENDING', 'ACCEPTED', 'OUT_FOR_DELIVERY', 'COMPLETED', 'CANCELLED'];
   const status = req.query.status ? String(req.query.status).toUpperCase() : null;
   if (status && !allowedStatuses.includes(status)) throw new ApiError(400, 'VALIDATION_ERROR', 'El estado solicitado no es válido.');
   const limit = Math.min(100, Math.max(1, Number(req.query.limit || 50)));
@@ -15,6 +15,6 @@ module.exports = withApi(['GET'], async req => {
     order: 'created_at.desc',
     limit: String(Number.isFinite(limit) ? Math.trunc(limit) : 50)
   };
-  if (status) params.status = `eq.${status}`;
+  if (status) params.status = status === 'ACTIVE' ? 'in.(PENDING,ACCEPTED,OUT_FOR_DELIVERY)' : `eq.${status}`;
   return { orders: await serviceRequest('orders', { query: new URLSearchParams(params).toString() }) };
 });
