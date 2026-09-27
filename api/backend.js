@@ -69,7 +69,7 @@ async function clientDetails(customer) {
     first('customer_streaks', { select:'*', customer_id:`eq.${id}` }),
     rows('loyalty_levels', { select:'key,name,emoji,minimum_lifetime_points', active:'eq.true', order:'minimum_lifetime_points.asc' }),
     rows('customer_badges', { select:'awarded_at,badges(key,name,emoji)', customer_id:`eq.${id}`, order:'awarded_at.desc' }),
-    rows('loyalty_transactions', { select:'id,entry_type,points_delta,occurred_at,description', customer_id:`eq.${id}`, order:'occurred_at.desc', limit:'8' }),
+    rows('loyalty_transactions', { select:'id,entry_type,points_delta,occurred_at,description,metadata', customer_id:`eq.${id}`, order:'occurred_at.desc', limit:'8' }),
     rows('rewards', { select:'key,name,emoji,points_cost,reward_type,reward_value,description,display_order', active:'eq.true', order:'display_order.asc' }),
     rows('reward_redemptions', { select:'id,reward_name_snapshot,points_cost_snapshot,status,created_at', customer_id:`eq.${id}`, order:'created_at.desc', limit:'8' }),
     rows('streak_seasons', { select:'status,season_number,milestones', customer_id:`eq.${id}`, order:'season_number.desc', limit:'30' }),
@@ -97,7 +97,11 @@ async function clientDetails(customer) {
       { minStreak:14,label:'Racha 14+',points:config.points_streak_14 }
     ],
     badges:badgeRows.map(item => ({ id:item.badges?.key, name:item.badges?.name, emoji:item.badges?.emoji, date:item.awarded_at })),
-    recentHistory:history.map(item => ({ date:item.occurred_at, type:item.entry_type==='REDEMPTION_SPEND'?'redeem':'purchase', entryType:item.entry_type, points:item.points_delta, notes:item.description })),
+    recentHistory:history.map(item => ({ date:item.occurred_at,
+      type:item.entry_type==='REDEMPTION_SPEND'?'redeem':'purchase',
+      entryType:item.metadata?.kind==='HISTORICAL_PURCHASES'?'HISTORICAL_PURCHASES':item.entry_type,
+      purchaseCount:item.metadata?.purchaseCount || 0,
+      points:item.points_delta, notes:item.description })),
     shopItems:rewardRows.map(item => ({ id:item.key,name:item.name,emoji:item.emoji,cost:item.points_cost,type:item.reward_type,
       value:item.reward_value,description:item.description,order:item.display_order,active:true })),
     recentRedemptions:redemptions.map(item => ({ id:item.id,itemName:item.reward_name_snapshot,points:item.points_cost_snapshot,date:item.created_at,status:item.status }))
@@ -145,6 +149,14 @@ async function getAction(req, action) {
   if (action === 'getConfig') return { config:publicSettings(await settings()) };
   if (action === 'getStats') return { stats:await rpc('api_business_stats',{}) };
   if (action === 'getTodosClientes') return { clients:await adminClients() };
+  if (action === 'getAdminLoyaltyHistory') {
+    const customer = await customerByPublicId(normalizedPublicId(req.query.clientId));
+    const changes = await rows('loyalty_admin_adjustments',{
+      select:'id,kind,amount,qualified_on,reason,before_state,after_state,created_at',
+      customer_id:`eq.${customer.id}`,order:'created_at.desc',limit:'15'
+    });
+    return { changes };
+  }
   if (action === 'buscarCliente') {
     const search = String(req.query.q || '').trim().toLocaleLowerCase('es');
     if (!search || search.length > 120) throw new ApiError(400,'INVALID_SEARCH','Escribe un nombre, ID o WhatsApp.');
@@ -191,6 +203,27 @@ async function postAction(req, action, body) {
     const result = await rpc('api_credit_purchase',{p_customer_id:customer.id,p_idempotency_key:key,p_source:'SELLER'});
     if (!result.credited) throw new ApiError(409,'ALREADY_TODAY','Ya tiene una compra con puntos registrada hoy.');
     return { ...result,client:await clientDetails(customer) };
+  }
+  if (action === 'adminAdjustLoyalty') {
+    const customer = await customerByPublicId(normalizedPublicId(body.clientId));
+    const kind = String(body.kind || '');
+    const amount = Number(body.amount);
+    const reason = String(body.reason || '').trim();
+    const qualifiedOn = body.qualifiedOn || null;
+    if (!['HISTORICAL_PURCHASES','POINTS','STREAK'].includes(kind) || !Number.isInteger(amount) ||
+        (kind==='HISTORICAL_PURCHASES' && (amount<1 || amount>100 || qualifiedOn)) ||
+        (kind==='POINTS' && (amount===0 || Math.abs(amount)>10000 || qualifiedOn)) ||
+        (kind==='STREAK' && (amount<0 || amount>29 || (amount>0 && !qualifiedOn))) ||
+        (qualifiedOn && !/^\d{4}-\d{2}-\d{2}$/.test(qualifiedOn)) ||
+        reason.length<5 || reason.length>300) {
+      throw new ApiError(400,'INVALID_ADJUSTMENT','Revisa el tipo, la cantidad, la fecha y el motivo.');
+    }
+    const key = uuid(body.idempotencyKey,'idempotencyKey');
+    const result = await rpc('api_admin_adjust_loyalty',{
+      p_admin_user_id:admin.id,p_customer_id:customer.id,p_kind:kind,p_amount:amount,
+      p_qualified_on:qualifiedOn,p_reason:reason,p_idempotency_key:key
+    });
+    return { adjustment:result, client:await clientDetails(customer) };
   }
   if (action === 'saveConfig') {
     const input = body.config || {};

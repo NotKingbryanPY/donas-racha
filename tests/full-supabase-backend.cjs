@@ -15,7 +15,8 @@ const json = value => ({ok:true,status:200,text:async()=>JSON.stringify(value)})
 global.fetch=async (raw,options={}) => {
   const url=new URL(raw), path=url.pathname, body=options.body?JSON.parse(options.body):null;
   calls.push({path,body});
-  if(path==='/auth/v1/user') return json({id:adminId});
+  if(path==='/auth/v1/user') return String(options.headers?.authorization || '').includes('dr1.')
+    ?{ok:false,status:401,text:async()=>JSON.stringify({message:'Invalid token'})}:json({id:adminId});
   if(path==='/rest/v1/app_user_roles') return json([{auth_user_id:adminId}]);
   if(path==='/rest/v1/rpc/consume_api_rate_limit') return json({allowed:true});
   if(path==='/rest/v1/rpc/api_register_customer') {
@@ -33,12 +34,21 @@ global.fetch=async (raw,options={}) => {
     account.available_points-=5;account.redemption_count++;
     return json({id:'cccccccc-cccc-4ccc-8ccc-cccccccccccc',pointsAvailable:account.available_points,pointsSpent:5});
   }
+  if(path==='/rest/v1/rpc/api_admin_adjust_loyalty') {
+    assert.equal(body.p_admin_user_id,adminId);
+    assert.equal(body.p_customer_id,customerId);
+    assert.equal(body.p_kind,'HISTORICAL_PURCHASES');
+    assert.equal(body.p_amount,2);
+    account.available_points+=20;account.lifetime_points+=20;account.purchase_points+=20;account.purchase_count+=2;
+    return json({replayed:false,adjustmentId:crypto.randomUUID()});
+  }
   if(path==='/rest/v1/customers') {
     const wanted=url.searchParams.get('public_id')?.slice(3) || url.searchParams.get('id')?.slice(3);
     return json(customer.public_id && wanted && [customer.id,customer.public_id].includes(wanted)?[customer]:[]);
   }
   if(path==='/rest/v1/customer_web_access') return json([]);
   if(path==='/rest/v1/loyalty_accounts') return json([account]);
+  if(path==='/rest/v1/loyalty_admin_adjustments') return json([{kind:'HISTORICAL_PURCHASES',amount:2,reason:'Compras anteriores'}]);
   if(path==='/rest/v1/customer_streaks') return json([streak]);
   if(path==='/rest/v1/loyalty_levels') return json([{key:'BRONCE',name:'Bronce',emoji:'🥉',minimum_lifetime_points:0},{key:'PLATA',name:'Plata',emoji:'🥈',minimum_lifetime_points:200}]);
   if(path==='/rest/v1/business_settings') return json([{id:true,active:true,streak_tolerance_days:3,donut_price_cents:100,points_base:10,points_streak_3:12,points_streak_7:15,points_streak_14:17}]);
@@ -75,6 +85,13 @@ async function call(handler,method,url,query={},body={},token=null) {
   const redeem=await call(backend,'POST','/api/backend',{}, {action:'canjearRecompensa',clientId:publicId,itemId:'DONA_GRATIS',idempotencyKey:crypto.randomUUID()},token);
   assert.equal(redeem.statusCode,200,JSON.stringify(redeem.body));
   assert.equal(redeem.body.data.client.pointsAvailable,5);
+  const blocked=await call(backend,'POST','/api/backend',{}, {action:'adminAdjustLoyalty',clientId:publicId,kind:'HISTORICAL_PURCHASES',amount:2,reason:'Compras anteriores',idempotencyKey:crypto.randomUUID()},token);
+  assert.notEqual(blocked.statusCode,200,'customer ID session cannot write admin adjustments');
+  const adjusted=await call(backend,'POST','/api/backend',{}, {action:'adminAdjustLoyalty',clientId:publicId,kind:'HISTORICAL_PURCHASES',amount:2,reason:'Compras anteriores',idempotencyKey:crypto.randomUUID()},'admin-test');
+  assert.equal(adjusted.statusCode,200,JSON.stringify(adjusted.body));
+  assert.equal(adjusted.body.data.client.totalPurchases,3);
+  const history=await call(backend,'GET','/api/backend',{action:'getAdminLoyaltyHistory',clientId:publicId},{},'admin-test');
+  assert.equal(history.body.data.changes[0].amount,2);
   assert.equal(calls.some(item=>item.path.includes('script.google')),false);
   console.log('PASS Supabase backend: admin registration, ID login, private profile, settled purchase, redemption');
 })().catch(error=>{console.error(error);process.exitCode=1;});

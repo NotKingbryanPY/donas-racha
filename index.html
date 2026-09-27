@@ -430,9 +430,36 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
       </div>
       <div class="card admin-wide wide-card">
         <div class="card-title">👥 Lista de clientes</div>
+        <label class="field-label" for="adminClientFilter">Buscar por nombre o ID</label>
+        <input id="adminClientFilter" class="field" placeholder="Nombre o ID de cliente" oninput="filterAdminClients()" style="margin:8px 0 12px;max-width:380px">
         <div id="adminClients"><div class="empty">Cargando...</div></div>
       </div>
     </div>
+    <dialog id="adminLoyaltyDialog" class="profile-dialog admin-loyalty-dialog" aria-labelledby="adminLoyaltyTitle">
+      <button class="dialog-close" onclick="closeAdminLoyalty()" aria-label="Cerrar ajustes">✕</button>
+      <h2 id="adminLoyaltyTitle">Ajustar cliente</h2>
+      <p id="adminLoyaltySummary" class="muted"></p>
+      <form id="adminLoyaltyForm" onsubmit="saveAdminLoyalty(event)">
+        <label class="field-label" for="adminLoyaltyKind">Cambio</label>
+        <select id="adminLoyaltyKind" class="field" onchange="updateAdminLoyaltyForm()">
+          <option value="HISTORICAL_PURCHASES">Registrar compras anteriores</option>
+          <option value="POINTS">Corregir puntos disponibles</option>
+          <option value="STREAK">Corregir racha</option>
+        </select>
+        <label class="field-label" for="adminLoyaltyAmount" id="adminLoyaltyAmountLabel">Número de compras anteriores</label>
+        <input id="adminLoyaltyAmount" class="field" type="number" min="1" max="100" step="1" required value="1">
+        <div id="adminLoyaltyDateWrap" hidden>
+          <label class="field-label" for="adminLoyaltyDate">Fecha de la última compra que contó</label>
+          <input id="adminLoyaltyDate" class="field" type="date">
+        </div>
+        <p id="adminLoyaltyExplanation" class="muted"></p>
+        <label class="field-label" for="adminLoyaltyReason">Motivo obligatorio</label>
+        <textarea id="adminLoyaltyReason" class="field" rows="3" minlength="5" maxlength="300" required placeholder="Ej.: compras realizadas antes del lanzamiento"></textarea>
+        <p id="adminLoyaltyNotice" role="status" class="muted"></p>
+        <div class="inventory-actions"><button type="submit" id="adminLoyaltySave" class="btn btn-primary">Guardar cambio</button><button type="button" class="btn btn-outline" onclick="closeAdminLoyalty()">Cancelar</button></div>
+      </form>
+      <details class="profile-details"><summary>Últimos ajustes de este cliente</summary><div id="adminLoyaltyHistory" class="muted">Cargando...</div></details>
+    </dialog>
   </div>
 </div>
 
@@ -441,6 +468,8 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
 
 <script>
 let currentClient = null;
+let adminLoyaltyClients = new Map();
+let allAdminClients = [];
 let clientRequestVersion = 0;
 let newClientData = null;
 let scanner = null;
@@ -650,6 +679,7 @@ async function apiPost(action, body = {}) {
 
 function hideOverlays() {
   document.querySelectorAll('.profile-dialog[open]').forEach(panel => panel.close());
+  document.querySelectorAll('.admin-loyalty-dialog[open]').forEach(panel => panel.close());
   ['roleOverlay','loginOverlay','userOverlay'].forEach(id => document.getElementById(id).classList.add('hidden'));
   document.body.style.overflow='';
 }
@@ -959,13 +989,13 @@ function renderProfilePreview(c) {
     const cost = Number(reward.cost), remaining = Math.max(0, cost - available), pct = Math.min(100, available / cost * 100);
     el.innerHTML = `<span class="reward-icon" aria-hidden="true">${safe(reward.emoji || '🎁')}</span><div class="reward-copy"><b>${safe(reward.name)}</b><span class="muted"> · ${cost} puntos</span><div class="reward-track" role="progressbar" aria-label="Puntos para ${safe(reward.name)}" aria-valuemin="0" aria-valuemax="${cost}" aria-valuenow="${Math.min(available,cost)}"><span style="width:${pct}%"></span></div><small>${remaining ? `Te faltan ${remaining} puntos` : '¡Ya puedes canjearlo!'}</small></div>${openedAsUser ? '<button class="text-action" onclick="setClientTab(&quot;shop&quot;)" aria-label="Ver tienda de recompensas">›</button>' : ''}`;
   }
-  const purchases = (c.recentHistory || []).filter(h => h.entryType ? h.entryType === 'PURCHASE_EARN' : h.type === 'purchase').slice(0,3);
-  document.getElementById('recentPurchases').innerHTML = purchases.length ? purchases.map(h => `<div class="recent-purchase"><span class="purchase-icon" aria-hidden="true">🍩</span><div><b>Compra registrada</b><small>${safe(fmtDateTime(h.date))}</small></div><strong>${Number(h.points) > 0 ? '+' + Number(h.points) + ' pts' : 'Registrada'}</strong></div>`).join('') : '<p class="empty">Todavía no tienes compras registradas.</p>';
+  const purchases = (c.recentHistory || []).filter(h => h.entryType ? ['PURCHASE_EARN','HISTORICAL_PURCHASES'].includes(h.entryType) : h.type === 'purchase').slice(0,3);
+  document.getElementById('recentPurchases').innerHTML = purchases.length ? purchases.map(h => `<div class="recent-purchase"><span class="purchase-icon" aria-hidden="true">🍩</span><div><b>${h.entryType==='HISTORICAL_PURCHASES' ? safe(h.purchaseCount) + ' compras anteriores' : 'Compra registrada'}</b><small>${safe(fmtDateTime(h.date))}</small></div><strong>${Number(h.points) > 0 ? '+' + Number(h.points) + ' pts' : 'Registrada'}</strong></div>`).join('') : '<p class="empty">Todavía no tienes compras registradas.</p>';
 }
 function renderHistory(hist) {
   const el = document.getElementById('historyWrap');
   if (!hist.length) { el.innerHTML = '<div class="empty">Sin historial</div>'; return; }
-  const labels = {OPENING_BALANCE:'Saldo migrado', ADJUSTMENT:'Ajuste de puntos', EXPIRATION:'Puntos vencidos', REVERSAL:'Reversión', PURCHASE_EARN:'Compra registrada', REDEMPTION_SPEND:'Canje realizado'};
+  const labels = {OPENING_BALANCE:'Saldo migrado', ADJUSTMENT:'Ajuste de puntos', HISTORICAL_PURCHASES:'Compras anteriores registradas', EXPIRATION:'Puntos vencidos', REVERSAL:'Reversión', PURCHASE_EARN:'Compra registrada', REDEMPTION_SPEND:'Canje realizado'};
   el.innerHTML = hist.map(h => { const isRedeem = h.type === 'redeem'; const icon = isRedeem ? '🎁' : '🍩'; const title = labels[h.entryType] || (isRedeem ? 'Canje realizado' : 'Compra registrada'); const pts = h.points ? ` · ${h.points > 0 ? '+' : ''}${h.points} pts` : ''; return `<div class="history-item"><div style="font-size:20px">${icon}</div><div class="grow"><div class="name">${title}</div><div class="sub">${fmtDateTime(h.date)}${pts}</div></div></div>`; }).join('');
 }
 
@@ -1350,9 +1380,14 @@ function renderAdminRanking(list, type) {
 
 function renderAdminClients(clients) {
   const el = document.getElementById('adminClients');
-  if (!clients.length) { el.innerHTML = '<div class="empty">Sin clientes</div>'; return; }
-  el.innerHTML = `<table class="admin-table"><thead><tr><th>Cliente</th><th>Nivel</th><th>Puntos</th><th>Compras</th><th>Racha</th><th>Canjes</th><th></th></tr></thead><tbody>${clients.map(c => `<tr><td><b>${safe(c.name)}</b><br><span class="sub">${safe(c.whatsapp||'')}</span></td><td>${c.levelEmoji||'🥉'} ${safe(c.levelName||'Bronce')}</td><td>${c.pointsTotal||0}</td><td>${c.totalPurchases||0}</td><td>${c.currentStreak||0}</td><td>${c.redemptionsMade||c.rewardsEarned||0}</td><td><button class="btn btn-ghost" onclick="openClient('${esc(c.id)}', false)">Ver</button></td></tr>`).join('')}</tbody></table>`;
+  allAdminClients = clients;
+  adminLoyaltyClients = new Map(clients.map(c => [c.id,c]));
+  const term = document.getElementById('adminClientFilter').value.trim().toLocaleLowerCase('es');
+  const visible = term ? clients.filter(c => `${c.name} ${c.id}`.toLocaleLowerCase('es').includes(term)) : clients;
+  if (!visible.length) { el.innerHTML = `<div class="empty">${term?'No encontramos clientes con esa búsqueda.':'Sin clientes'}</div>`; return; }
+  el.innerHTML = `<table class="admin-table"><thead><tr><th>Cliente</th><th>Nivel</th><th>Puntos</th><th>Compras</th><th>Racha</th><th>Canjes</th><th></th></tr></thead><tbody>${visible.map(c => `<tr><td><b>${safe(c.name)}</b><br><span class="sub">${safe(c.whatsapp||'')}</span></td><td>${c.levelEmoji||'🥉'} ${safe(c.levelName||'Bronce')}</td><td>${c.pointsTotal||0}</td><td>${c.totalPurchases||0}</td><td>${c.currentStreak||0}</td><td>${c.redemptionsMade||c.rewardsEarned||0}</td><td><button class="btn btn-ghost" onclick="openClient('${esc(c.id)}', false)">Ver</button> <button class="btn btn-outline" onclick="openAdminLoyalty('${esc(c.id)}')">Ajustar</button></td></tr>`).join('')}</tbody></table>`;
 }
+function filterAdminClients() { renderAdminClients(allAdminClients); }
 async function loadAdminStats() {
   try {
     const data = await api('getStats'); const s = data.stats || {};
@@ -1392,7 +1427,7 @@ async function loadAdminClients() {
   try {
     const data = await api('getTodosClientes'); const clients = data.clients || [];
     if (!clients.length) { el.innerHTML = '<div class="empty">Sin clientes</div>'; return; }
-    el.innerHTML = `<table class="admin-table"><thead><tr><th>Cliente</th><th>Nivel</th><th>Puntos</th><th>Compras</th><th>Racha</th><th>Canjes</th><th></th></tr></thead><tbody>${clients.map(c => `<tr><td><b>${safe(c.name)}</b><br><span class="sub">${safe(c.whatsapp||'')}</span></td><td>${c.levelEmoji||'🥉'} ${safe(c.levelName||'Bronce')}</td><td>${c.pointsTotal||0}</td><td>${c.totalPurchases||0}</td><td>${c.currentStreak||0}</td><td>${c.redemptionsMade||c.rewardsEarned||0}</td><td><button class="btn btn-ghost" onclick="openClient('${esc(c.id)}', false)">Ver</button></td></tr>`).join('')}</tbody></table>`;
+    renderAdminClients(clients);
   } catch(err) { el.innerHTML = '<div class="empty">Error al cargar clientes</div>'; }
 }
 function showToast(msg, duration=3000) { const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(window.__toastTimer); window.__toastTimer=setTimeout(()=>t.classList.remove('show'), duration); }
@@ -1404,6 +1439,7 @@ function safe(s){ return String(s ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;',
 function esc(s){ return String(s ?? '').replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
 </script>
 <script src="assets/js/admin-operations.js"></script>
+<script src="assets/js/admin-loyalty.js"></script>
 <script src="assets/js/motion.js"></script>
 </body>
 </html>
