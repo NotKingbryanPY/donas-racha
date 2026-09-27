@@ -11,7 +11,8 @@ const sql = fs.readFileSync(path.join(root, 'supabase/migrations/202609250002_cu
 assert.match(landing, /onclick="beginCustomerOrder\(\)">Pedir desde mi perfil/);
 assert.match(landing, /id="userClientIdInput"/);
 assert.match(landing, /id="customerPasswordGroup"[^>]*display:none/);
-assert.match(landing, /id="client-tab-delivery"/);
+assert.match(landing, /id="client-top-delivery"/);
+assert.match(landing, /id="client-top-profile"/);
 assert.match(landing, /id="clientDeliverySection"/);
 assert.match(landing, /function submitClientOrder\(/);
 assert.doesNotMatch(landing, /id="orderName"|id="orderPhone"|href="\/customer\.html"/);

@@ -13,5 +13,14 @@ module.exports = withApi(['GET'], async req => {
       'product_variants.order': 'display_order.asc,name.asc'
     }).toString()
   });
+  let inventory = [];
+  try { inventory = await serviceRequest('inventory_by_flavor', { query:'select=variant_id,available_quantity,counted' }); }
+  catch (_) { /* The catalog still loads while the additive migration is pending. */ }
+  const byId = new Map(inventory.map(row => [row.variant_id, row]));
+  for (const product of products) for (const variant of product.product_variants || []) {
+    const row = byId.get(variant.id);
+    variant.remaining = row ? Number(row.available_quantity) : null;
+    variant.stockCounted = !!row?.counted;
+  }
   return { products };
 });
