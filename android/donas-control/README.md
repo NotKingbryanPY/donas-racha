@@ -1,4 +1,4 @@
-# Donas Control 1.2.0
+# Donas Control 1.2.1
 
 Aplicación Android nativa para administrar un negocio ambulante de donas. La contabilidad funciona sin conexión; los pedidos se sincronizan cuando hay red. Package `com.bryan.donas`, Android 6.0/API 23 o superior.
 
@@ -17,7 +17,7 @@ Aplicación Android nativa para administrar un negocio ambulante de donas. La co
 - Ganancia asignada y pagos a socios separados.
 - Dashboard, estadísticas de hoy/semana/mes e historial paginado con filtros.
 - Widget de cuatro sabores con − / cantidad / + por sabor (máximo 99 donas por venta). Al tocar Efectivo o Yappy guarda la venta local directamente, sin abrir la app; el resumen muestra el stock local total. La app ofrece el mismo selector visual de sabores desde «Nueva venta».
-- Pedidos desde el backend: inicio de sesión administrador, cola local de operaciones, copia local de pedidos, aceptar/cancelar/en camino y confirmación del cobro presencial.
+- Pedidos desde el backend: inicio de sesión administrador, cola local de operaciones, copia local de pedidos, aceptar/cancelar/en camino y cierre «Cobrado y entregado» con elección de efectivo o Yappy. Pago, entrega y fidelidad se confirman juntos.
 - Exportación/importación SQLite, reinicio de movimientos y restablecimiento de fábrica con doble confirmación `RESETEAR`.
 - Material 3 XML, ViewBinding, modo oscuro, Room, WorkManager y DataStore. Permiso de Internet solo para pedidos y sincronización.
 
@@ -29,7 +29,7 @@ El método porcentual usa mayor residuo con desempate estable. El fijo proporcio
 
 Room exporta esquemas en `app/schemas`, migra automáticamente de v1 a v2 y manualmente de v2 a v3 y de v3 a v4 para conservar los datos al agregar sincronización y conciliación de pedidos. No se usa `fallbackToDestructiveMigration`. El token renovable se cifra con Android Keystore; no se guarda la contraseña.
 
-La entrega confirmada registra la venta por sabor y los puntos en una transacción de Supabase. Room incorpora esa venta con una clave estable y sincroniza un recibo sin volver a descontar el stock central. Las ventas presenciales por sabor y compras de cajas se encolan sin conexión; el servidor las registra una sola vez por operación. La cola no reemplaza el libro contable local. El widget usa una clave estable por selección para que un reintento no duplique la venta; la selección se vacía solo cuando Room confirma el registro. El inventario local aún contabiliza unidades totales, no cantidades físicas por sabor. Sincroniza por Wi-Fi y sigue `docs/INVENTORY_ROLLOUT_2026-09-26.md` antes de mostrar cifras por sabor a clientes. Los movimientos antiguos sin detalle necesitan un nuevo conteo físico.
+La entrega confirmada registra la venta por sabor y los puntos en una transacción de Supabase. Room incorpora esa venta con una clave estable y sincroniza un recibo sin duplicar la venta central. Las ventas presenciales por sabor y compras de cajas se encolan sin conexión; el servidor las registra una sola vez por operación. La cola no reemplaza el libro contable local. El widget usa una clave estable por selección para que un reintento no duplique la venta; la selección se vacía solo cuando Room confirma el registro. El inventario local contabiliza unidades totales. Desde la migración del 27 de septiembre, el inventario publicado en la web se registra manualmente en Administración: las operaciones offline no modifican ese conteo. Consultar `docs/INVENTORY_ROLLOUT_2026-09-26.md` en la raíz del repositorio.
 
 ## Compilar
 

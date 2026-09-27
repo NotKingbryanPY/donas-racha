@@ -1,11 +1,13 @@
-# Inventario por sabor: activación gradual
+# Inventario manual y cierre de pedidos — 27 septiembre 2026
 
-La migración `202609260001_box_inventory.sql` agrega compras de cajas, ventas por sabor, conteos físicos, vista de disponibilidad y publicación Realtime. No borra pedidos, puntos ni datos previos. La caja aporta 4 chocolate, 4 vainilla, 2 chocolate con chispas y 2 vainilla con chispas. Los pedidos abiertos reducen las unidades reservables y la entrega confirmada registra la venta en la misma transacción que acredita la fidelidad.
+El inventario publicado se administra manualmente desde Administración → Inventario. Guardar los cuatro sabores reemplaza el conteo físico anterior de forma atómica. Se incluyen las donas apartadas para pedidos existentes; las reservas se descuentan aparte. Las compras y ventas offline de Android conservan su registro y sincronización contable, pero ya no cambian las existencias de la web.
 
-1. Respaldar Supabase y aplicar las migraciones pendientes en orden. Comprobar que `/api/products?view=inventory` muestra cuatro sabores y que el perfil por ID sigue funcionando.
-2. Sincronizar el Android piloto por Wi-Fi. Las operaciones nuevas de compra envían cantidad de cajas y las ventas envían sabor y cantidad. Los movimientos antiguos sin detalle generan una brecha de conciliación y exigen un nuevo conteo.
-3. Contar físicamente los cuatro sabores en el panel Admin. Hacerlo después de sincronizar las operaciones pendientes. Mientras falte algún conteo, los pedidos conservan el flujo previo y el cliente ve «por confirmar» en vez de una cifra inventada. Al completar los cuatro conteos, se activa automáticamente el límite de stock.
-4. Probar un pedido de cliente registrado, aceptación, cobro presencial y entrega. La solicitud sola no otorga puntos; la entrega completada sí. Verificar que la venta se descuenta una sola vez aunque se reintente.
-5. Probar un lote de cajas nuevo y una venta desde el widget sin red, conectar a Wi-Fi y verificar el saldo por sabor en la web. Comparar luego el conteo físico con Supabase. La web consulta el saldo cada 20 segundos mientras «Pedidos» esté abierto.
+Los pedidos web reservan unidades. Cancelar libera la reserva. Completar una entrega confirmada convierte la reserva en venta, sin descontar dos veces. Después de ventas presenciales o compras nuevas, el vendedor vuelve a contar y guarda el inventario actual. La web consulta al abrir Pedidos o pulsar Actualizar; Realtime queda pospuesto.
 
-Las ventas presenciales sin conexión pueden coincidir físicamente con reservas web antes de sincronizar. El total mostrado tiene piso 0 y el vendedor debe conciliar físicamente antes de aceptar más pedidos si hay un desfase. El widget mantiene contabilidad local por unidades totales; el conteo central por sabor se actualiza al sincronizar. La instalación piloto no sustituye el APK 1.1.1 ni sus datos.
+1. Aplicar `202609270001_manual_inventory_and_completion.sql` después de las migraciones anteriores. Es aditiva, preserva los conteos válidos existentes y deja sin inventar los sabores pendientes.
+2. Publicar la web/API y el APK piloto 1.2.1. El panel nuevo guarda los cuatro sabores con `api_set_manual_inventory`.
+3. Registrar el conteo físico real de los cuatro sabores, usando 0 cuando se agote uno. Entonces se activa la comprobación de stock al crear pedidos.
+4. Pedido: Pendiente → Aceptar → En camino → Cobrado y entregado. El último paso confirma el método de pago y, en una sola transacción, registra cobro, entrega, inventario y fidelidad. Aceptar no da puntos. Las reglas de una compra acreditable por día y tolerancia de racha siguen vigentes.
+5. Android mantiene widgets offline por sabor con −/cantidad/+, efectivo y Yappy. La contabilidad local no se mezcla con el conteo manual web. El piloto usa un paquete separado; exportar copia antes de actualizarlo y no desinstalar por conflictos de firma sin preservar datos.
+
+Validación: `tests/manual-inventory-postgres.mjs` prueba migraciones, permisos, reserva, agotamiento, cierre atómico y reintentos en una base desechable. Compilación Android y lint en GitHub Actions. No se crean ventas ni pedidos de prueba en producción.

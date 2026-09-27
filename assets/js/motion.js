@@ -12,6 +12,18 @@
   reduced.addEventListener('change', syncMotion);
   connection?.addEventListener?.('change', syncMotion);
   syncMotion();
+  // One brief brand entrance per tab session; never blocks input or waits for data.
+  try {
+    if (!lite() && !sessionStorage.getItem('donasBrandIntroSeen')) {
+      sessionStorage.setItem('donasBrandIntroSeen','1');
+      const intro = document.createElement('div');
+      intro.className='brand-intro'; intro.setAttribute('aria-hidden','true');
+      intro.innerHTML='<span class="brand-mark"></span><span class="brand-wordmark">DONAS<span>RACHA<span class="brand-dot">.</span></span></span>';
+      document.body.append(intro);
+      intro.addEventListener('animationend',event=>{if(event.target===intro) intro.remove();});
+      setTimeout(()=>intro.remove(),1500);
+    }
+  } catch (_) { /* Storage may be unavailable; the page remains usable. */ }
   const seen = new WeakSet();
   const reveals = ' .feature-card, #screen-client .card, #screen-client .stat-card, #screen-client .rank-item, #screen-client .shop-item, #screen-ranking .rank-item';
   const observer = 'IntersectionObserver' in window ? new IntersectionObserver(entries => {

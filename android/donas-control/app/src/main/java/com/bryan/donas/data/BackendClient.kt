@@ -119,6 +119,12 @@ class BackendClient(context: Context) {
         request("/api/admin/orders/$orderId/payment", "POST", JSONObject()
             .put("status", "CONFIRMED").put("idempotencyKey", idempotencyKey), token())
     }
+
+    suspend fun completeDelivery(orderId: String, paymentMethod: String) = withContext(Dispatchers.IO) {
+        request("/api/admin/orders/$orderId/status", "POST", JSONObject()
+            .put("status", "COMPLETED").put("paymentReceived", true)
+            .put("paymentMethod", paymentMethod), token())
+    }
 }
 
 class BackendException(val status: Int, message: String) : Exception(message)

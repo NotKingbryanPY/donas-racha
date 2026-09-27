@@ -353,7 +353,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
     </div>
     <div id="clientDeliverySection" class="client-section" style="display:none">
       <div class="card"><div class="card-title">🍩 Tu pedido</div><p class="muted">Disponibilidad por sabor. Pagas al recibir; los puntos se acreditan al completar la entrega.</p>
-        <p id="clientInventoryStatus" class="inventory-status" role="status">Consultando existencias...</p>
+        <button class="btn btn-outline" onclick="loadClientDelivery()">Actualizar disponibilidad y pedidos</button><p id="clientInventoryStatus" class="inventory-status" role="status">Consultando existencias...</p>
         <div id="clientFlavorList" class="order-cart"></div>
         <div class="order-summary"><span>Total</span><strong id="clientOrderTotal">B/.0.00</strong></div>
         <label class="field-label" for="clientDeliveryLocation">Ubicación de entrega</label><input id="clientDeliveryLocation" class="field" maxlength="300" placeholder="Ej.: UTP, Edificio 4, entrada principal">
@@ -405,7 +405,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
 </div>
 
 <div id="screen-admin" class="screen">
-  <div class="header"><h1>⚙️ Panel Admin</h1><p>Ventas, rankings, clientes y migración</p></div>
+  <div class="header"><h1>🍩 Tu negocio</h1><p>Pedidos, inventario y clientes</p></div>
   <div class="admin-wrap">
     <div class="row" style="justify-content:space-between;margin-bottom:14px"><button class="back-btn" style="margin:0" onclick="goHome()">← Volver</button><button class="btn btn-red" onclick="logout()">Cerrar sesión</button></div>
     <div class="grid3 stats" style="margin-bottom:16px">
@@ -417,17 +417,24 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
       <div class="stat-card"><div id="sRewards" class="big">—</div><div class="lbl">Canjes</div></div>
     </div>
 
+    <nav class="admin-shortcuts" aria-label="Administración"><a href="#adminOrdersPanel">Pedidos</a><a href="#adminInventoryPanel">Inventario</a><a href="#adminClients">Clientes</a></nav>
     <div class="admin-grid">
+      <section class="card admin-wide" id="adminOrdersPanel" aria-labelledby="adminOrdersTitle">
+        <div class="operations-heading"><div><span class="eyebrow">ENTREGAS</span><h2 id="adminOrdersTitle">Pedidos del día</h2></div><button class="btn btn-outline" onclick="loadAdminOrders()">Actualizar</button></div>
+        <p class="muted">Acepta, entrega y confirma el cobro. Los puntos se acreditan al finalizar.</p>
+        <label class="field-label" for="adminOrderFilter">Mostrar</label><select id="adminOrderFilter" class="field" onchange="loadAdminOrders()"><option value="ACTIVE">Pendientes y en curso</option><option value="ALL">Todos los recientes</option><option value="COMPLETED">Entregados</option><option value="CANCELLED">Cancelados</option></select>
+        <p id="adminOrdersNotice" role="status" class="muted"></p><div id="adminOrdersList" class="admin-orders-grid"></div>
+      </section>
       <div class="card">
         <div class="card-title">🛠️ Datos en Supabase</div>
         <div id="migrationState" class="pill migration-pending">Pendiente</div>
         <p class="muted" style="margin:12px 0">Clientes, compras, puntos, canjes y pedidos se gestionan en Supabase.</p>
       </div>
-      <div class="card">
-        <div class="card-title">🍩 Inventario físico por sabor</div>
-        <p class="muted">Cuenta las donas que tienes ahora. La app sincroniza después las compras de cajas y ventas pendientes.</p>
+      <div class="card admin-wide" id="adminInventoryPanel">
+        <div class="operations-heading"><div><span class="eyebrow">CONTROL MANUAL</span><h2>¿Cuántas donas tienes?</h2></div><span class="pill">Inventario web</span></div>
+        <p class="muted">Escribe el conteo físico completo, incluyendo las donas apartadas para pedidos. Guarda nuevamente después de comprar o vender fuera de la web. Las ventas de la app no modifican este conteo.</p>
         <div id="adminFlavorInventory" class="muted" style="margin-top:12px">Cargando inventario...</div>
-        <button class="btn btn-outline" onclick="loadAdminInventory()" style="margin-top:10px">Actualizar existencias</button>
+        <div class="inventory-actions"><button id="saveInventoryButton" class="btn btn-primary" onclick="saveAdminInventory()">Guardar los 4 sabores</button><button class="btn btn-outline" onclick="loadAdminInventory()">Volver a consultar</button></div><p id="adminInventoryNotice" class="muted" role="status"></p>
       </div>
       <div class="card">
         <div class="card-title">⚙️ Config rápida</div>
@@ -560,7 +567,7 @@ async function vercelApi(path, params = {}, timeoutMs = 5000) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
-    const response = await fetch(`${path}?${query}`, {
+    const response = await fetch(`${path}${query.size ? (path.includes('?') ? '&' : '?') + query : ''}`, {
       headers: { accept:'application/json' },
       signal: controller.signal
     });
@@ -844,7 +851,8 @@ function onUserQRScanned(text) {
 async function loginCustomerById(id) {
   const button = document.getElementById('userEnterBtn');
   const errorEl = document.getElementById('userLoginError');
-  button.disabled = true; errorEl.textContent = '';
+  if (button.disabled) return;
+  button.disabled = true; button.classList.add('is-busy'); button.setAttribute('aria-busy','true'); button.textContent = 'Entrando'; errorEl.textContent = '';
   try {
     const result = await customerRequest('/api/customer/session', { method:'POST', body:JSON.stringify({
       publicId:id, password:document.getElementById('userPasswordInput').value
@@ -852,6 +860,7 @@ async function loginCustomerById(id) {
     sessionStorage.setItem('donasCustomerToken', result.accessToken);
     sessionStorage.setItem('donasCustomerId', result.customer.publicId);
     document.getElementById('userPasswordInput').value = '';
+    button.classList.remove('is-busy'); button.textContent = '✓ Listo';
     openedAsUser = true;
     hideOverlays();
     await openClient(result.customer.publicId, true);
@@ -861,7 +870,7 @@ async function loginCustomerById(id) {
       document.getElementById('userPasswordInput').focus();
     }
     errorEl.textContent = error.message;
-  } finally { button.disabled = false; }
+  } finally { button.disabled = false; button.classList.remove('is-busy'); button.removeAttribute('aria-busy'); button.textContent = 'Entrar con ID →'; }
 }
 function extractIdFromQR(text) {
   try { const url = new URL(text); return url.searchParams.get('id') || url.searchParams.get('client') || text; } catch(e) { return String(text || '').trim(); }
@@ -985,14 +994,14 @@ async function loadClientDelivery() {
   list.innerHTML = '<div class="empty">Cargando sabores...</div>';
   try {
     const [catalog, inventory] = await Promise.all([
-      vercelApi('/api/products'), vercelApi('/api/products?view=inventory')
+      vercelApi('/api/products'), vercelApi('/api/products', {view:'inventory'})
     ]);
     const byId = new Map((inventory.flavors || []).map(row => [String(row.variant_id), row]));
     clientInventoryEnforced = !!inventory.enforced;
     clientOrderVariants = flattenCatalog(catalog.products || []).filter(item => item.available)
       .map(item => ({ ...item, inventory:byId.get(String(item.id)) }));
     document.getElementById('clientInventoryStatus').textContent = clientInventoryEnforced
-      ? 'Existencias sincronizadas · se actualizan automáticamente'
+      ? 'Disponibilidad según el último conteo del vendedor'
       : 'Inventario por sabor en preparación. Puedes pedir; confirmaremos la disponibilidad antes de aceptar.';
     renderClientFlavors();
   } catch (error) { list.textContent = error.message; document.getElementById('clientInventoryStatus').textContent = 'No se pudo comprobar el inventario.'; }
@@ -1031,11 +1040,6 @@ function updateClientOrderTotal() {
   document.getElementById('clientOrderButton').disabled = total <= 0 || (clientInventoryEnforced && clientOrderVariants.some(item =>
     (customerOrderQuantities.get(String(item.id)) || 0) > (item.inventory?.counted ? Number(item.inventory.available_quantity) : 0)));
 }
-
-setInterval(() => {
-  if (openedAsUser && !document.hidden && document.getElementById('screen-client').classList.contains('active') &&
-      document.getElementById('clientDeliverySection').style.display !== 'none') loadClientDelivery();
-}, 20000);
 
 async function submitClientOrder() {
   const message = document.getElementById('clientOrderMessage');
@@ -1279,33 +1283,9 @@ function renderRankingItems(list, type, compact) {
 async function showAdmin() {
   if (!requireAuth()) { goToAdminLogin(); return; }
   showScreen('screen-admin');
+  loadAdminOrders();
   await loadAdminDashboard('compras');
   loadAdminInventory();
-}
-
-async function adminInventoryRequest(method, body) {
-  const token = sessionStorage.getItem('donasAdminAccessToken');
-  const response = await fetch('/api/admin/customers/inventory', { method,
-    headers:{ accept:'application/json', ...(body ? {'content-type':'application/json'} : {}), authorization:`Bearer ${token}` },
-    ...(body ? {body:JSON.stringify(body)} : {}) });
-  const payload = await response.json().catch(() => null);
-  if (!response.ok || !payload?.ok) throw new Error(payload?.error?.message || 'No se pudo consultar el inventario.');
-  return payload.data;
-}
-async function loadAdminInventory() {
-  const root = document.getElementById('adminFlavorInventory');
-  root.textContent = 'Consultando...';
-  try {
-    const { flavors } = await adminInventoryRequest('GET');
-    root.innerHTML = flavors.map(row => `<div class="admin-inventory-row"><div><b>${safe(row.name)}</b><small>${row.counted ? Math.max(0,Number(row.available_quantity))+' disponibles' : 'Conteo pendiente'}</small></div><input class="field" id="count-${esc(row.sku)}" type="number" min="0" max="100000" inputmode="numeric" placeholder="Conteo físico" aria-label="Conteo físico de ${safe(row.name)}"><button class="btn btn-outline" onclick="saveAdminCount('${esc(row.sku)}')">Guardar</button></div>`).join('');
-  } catch (error) { root.textContent = error.message; }
-}
-async function saveAdminCount(sku) {
-  const input = document.getElementById('count-'+sku);
-  const quantity = Number(input.value);
-  if (!input.value || !Number.isSafeInteger(quantity) || quantity < 0) { showToast('Escribe el conteo físico.'); return; }
-  try { await adminInventoryRequest('POST', {sku,quantity}); showToast('Conteo guardado'); await loadAdminInventory(); }
-  catch (error) { showToast(error.message); }
 }
 
 async function loadAdminDashboard(type='compras') {
@@ -1406,6 +1386,7 @@ function initial(name){ return safe(name || 'D').trim().charAt(0).toUpperCase() 
 function safe(s){ return String(s ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
 function esc(s){ return String(s ?? '').replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
 </script>
+<script src="assets/js/admin-operations.js"></script>
 <script src="assets/js/motion.js"></script>
 </body>
 </html>
