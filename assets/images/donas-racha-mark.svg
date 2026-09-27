@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <title>Dona violeta de Donas Racha</title>
+  <defs>
+    <linearGradient id="edge" x1="22" y1="22" x2="101" y2="108" gradientUnits="userSpaceOnUse"><stop stop-color="#b88fe3"/><stop offset="1" stop-color="#5f397e"/></linearGradient>
+    <linearGradient id="icing" x1="25" y1="13" x2="93" y2="104" gradientUnits="userSpaceOnUse"><stop stop-color="#dfbbff"/><stop offset=".52" stop-color="#c593ef"/><stop offset="1" stop-color="#a77ad2"/></linearGradient>
+  </defs>
+  <path fill="url(#edge)" fill-rule="evenodd" d="M65 14a49 49 0 1 0 0 98 49 49 0 0 0 0-98Zm0 29a20 20 0 1 1 0 40 20 20 0 0 1 0-40Z"/>
+  <path fill="url(#icing)" fill-rule="evenodd" d="M57 7a49 49 0 1 0 0 98A49 49 0 0 0 57 7Zm0 28a21 21 0 1 1 0 42 21 21 0 0 1 0-42Z"/>
+  <path d="M18 38A43 43 0 0 1 47 14" stroke="#f1dfff" stroke-opacity=".4" stroke-width="2" stroke-linecap="round"/>
+  <path d="m37 24 11-5 3 6-11 5zM23 87l11-5 3 6-11 5z" fill="#fff0d6"/>
+  <path d="m11 51 13-5 2 6-13 5zM73 62l12-5 3 6-12 5z" fill="#f6c6e1"/>
+</svg>

@@ -40,8 +40,9 @@ async function loadAdminInventory() {
       const row = flavors.find(item => item.sku === sku);
       if (!row) throw new Error('Falta un sabor en el catálogo.');
       const physical = Math.max(0, Number(row.opening_quantity) + Number(row.purchased_quantity) - Number(row.sold_quantity));
-      return `<label class="inventory-count-card"><span class="cart-donut ${flavorTone(row.name)}" aria-hidden="true"><span class="mini-donut"></span></span><b>${safe(row.name)}</b><small>${row.counted ? `${Math.max(0,Number(row.available_quantity))} disponibles · ${Number(row.reserved_quantity)} apartadas` : 'Primer conteo pendiente'}</small><input class="field" id="count-${sku}" type="number" min="0" max="100000" step="1" inputmode="numeric" value="${row.counted ? physical : ''}" placeholder="0" aria-label="Conteo físico de ${safe(row.name)}"></label>`;
+      return `<label class="inventory-count-card"><span class="cart-donut ${flavorTone(row.name)}" aria-hidden="true"><span class="mini-donut"></span></span><b>${safe(row.name)}</b><small>${row.counted ? `<span class="stock-value" data-stock-key="${sku}-available" data-stock-value="${Math.max(0,Number(row.available_quantity))}">${Math.max(0,Number(row.available_quantity))}</span> disponibles · <span class="stock-value" data-stock-key="${sku}-reserved" data-stock-value="${Number(row.reserved_quantity)}">${Number(row.reserved_quantity)}</span> apartadas` : 'Primer conteo pendiente'}</small><input class="field" id="count-${sku}" type="number" min="0" max="100000" step="1" inputmode="numeric" value="${row.counted ? physical : ''}" placeholder="0" aria-label="Conteo físico de ${safe(row.name)}"></label>`;
     }).join('');
+    window.DonasMotion?.stock(root, 'admin');
     notice.textContent = 'Cuenta lo que tienes físicamente. Las reservas se descuentan por separado.';
     save.disabled = false;
   } catch(error) { notice.textContent = error.message; }
