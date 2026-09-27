@@ -12,7 +12,7 @@ const fixture = () => ({id:'C-DEMO',name:'Cliente de prueba con nombre largo',wh
  const browser = await chromium.launch({headless:true,...(process.env.CHROMIUM_PATH?{executablePath:process.env.CHROMIUM_PATH}:{})});
  const results=[];
  try {
- for (const width of [360,390,412,768,1440]) {
+ for (const width of (process.env.TEST_WIDTHS || '360,390,412,768,1440').split(',').map(Number)) {
   const context=await browser.newContext({viewport:{width,height:900}});
   const page=await context.newPage(); let client=fixture(); const requests=[],errors=[];
   const flavors=['DR-CHOCOLATE','DR-VAINILLA','DR-CHOCOLATE-CHISPAS','DR-VAINILLA-CHISPAS'].map((sku,i)=>({variant_id:`00000000-0000-4000-8000-00000000000${i}`,sku,name:['Chocolate','Vainilla','Chocolate con chispas','Vainilla con chispas'][i],counted:true,opening_quantity:4,purchased_quantity:0,sold_quantity:0,reserved_quantity:1,available_quantity:3}));
@@ -108,6 +108,7 @@ const fixture = () => ({id:'C-DEMO',name:'Cliente de prueba con nombre largo',wh
   await page.waitForFunction(()=>document.getElementById('screen-client').classList.contains('active'));assert(await page.evaluate(()=>window.__scanners.at(-1).stopped));
   await page.evaluate(()=>showScreen('screen-new'));await page.locator('#newName').fill('Nuevo de prueba');await page.locator('#createBtn').click();await page.waitForSelector('#newQrCard:visible');await noOverflow('registration');
   await page.evaluate(()=>showAdmin());await page.waitForFunction(()=>document.getElementById('sToday').textContent==='2');await noOverflow('admin');await page.screenshot({path:path.join(out,`admin-${width}.png`),fullPage:true});
+  await page.locator('#adminInventoryPanel').screenshot({path:path.join(out,`inventory-${width}.png`)});
   for(const flavor of flavors) await page.locator('#count-'+flavor.sku).fill('6');
   await page.locator('#saveInventoryButton').click();await page.waitForFunction(()=>document.getElementById('adminInventoryNotice').textContent.includes('Inventario guardado'));
   assert.equal(requests.find(r=>r.counts)?.counts['DR-CHOCOLATE'],6);
