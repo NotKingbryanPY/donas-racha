@@ -15,6 +15,8 @@ const fixture = () => ({id:'C-DEMO',name:'Cliente de prueba con nombre largo',wh
  for (const width of [360,390,412,768,1440]) {
   const context=await browser.newContext({viewport:{width,height:900}});
   const page=await context.newPage(); let client=fixture(); const requests=[],errors=[];
+  const flavors=['DR-CHOCOLATE','DR-VAINILLA','DR-CHOCOLATE-CHISPAS','DR-VAINILLA-CHISPAS'].map((sku,i)=>({variant_id:`00000000-0000-4000-8000-00000000000${i}`,sku,name:['Chocolate','Vainilla','Chocolate con chispas','Vainilla con chispas'][i],counted:true,opening_quantity:4,purchased_quantity:0,sold_quantity:0,reserved_quantity:1,available_quantity:3}));
+  const order={id:'10000000-0000-4000-8000-000000000001',public_code:'DR-TEST',customer_name_snapshot:'Cliente de prueba',customer_phone_snapshot:'60000000',status:'PENDING',payment_method:'YAPPY',payment_status:'PENDING',total_cents:200,created_at:new Date().toISOString(),delivery_location:'Edificio 4 · entrada principal',order_items:[{quantity:2,variant_name_snapshot:'Chocolate'}]};
   page.on('pageerror',e=>errors.push(e.message));
   await page.route('**/*',async route=>{
    const req=route.request(),u=new URL(req.url());
@@ -30,7 +32,10 @@ const fixture = () => ({id:'C-DEMO',name:'Cliente de prueba con nombre largo',wh
      ?{status:404,json:{ok:false,error:{code:'CUSTOMER_NOT_FOUND',message:'ID no encontrado'}}}
      :{json:{ok:true,data:{accessToken:'customer-token',customer:{publicId:data.publicId}}}});
     if(u.pathname==='/api/ranking') return route.fulfill({json:{ok:true,data:{ranking:[client,{...client,id:'C2',name:'Segundo cliente'},{...client,id:'C3',name:'Tercer cliente'}]}}});
-    if(u.pathname==='/api/products') return route.fulfill({json:{ok:true,data:{products:[]}}});
+    if(u.pathname==='/api/products') return route.fulfill({json:{ok:true,data:u.searchParams.get('view')==='inventory'?{flavors,enforced:true}:{products:[{name:'Donas',product_variants:flavors.map(f=>({id:f.variant_id,sku:f.sku,name:f.name,available:true,unit_price_cents:100,currency_code:'USD'}))}]}}});
+    if(u.pathname==='/api/admin/customers/inventory') return route.fulfill({json:{ok:true,data:req.method()==='GET'?{flavors}:{saved:true}}});
+    if(u.pathname==='/api/admin/orders') return route.fulfill({json:{ok:true,data:{orders:[order]}}});
+    if(u.pathname.endsWith('/status')) {order.status=data.status;if(data.paymentReceived)order.payment_status='CONFIRMED';return route.fulfill({json:{ok:true,data:{order}}});}
     if(u.pathname==='/api/customer/orders') return route.fulfill({json:{ok:true,data:{orders:[]}}});
     let response={ok:true};
     switch(data.action){
@@ -71,6 +76,11 @@ const fixture = () => ({id:'C-DEMO',name:'Cliente de prueba con nombre largo',wh
   assert.equal(await page.locator('#buyBtn').isVisible(),false);
   assert.equal(await page.locator('.progress-track').getAttribute('aria-valuenow'),'95');
   await noOverflow('profile');await page.screenshot({path:path.join(out,`profile-${width}.png`),fullPage:true});
+  await page.locator('#client-top-delivery').click();await page.waitForSelector('#clientFlavorList .cart-row');
+  assert.equal(await page.locator('#clientFlavorList .cart-row').count(),4);
+  assert(requests.some(r=>r.view==='inventory'),'inventory query must be passed correctly');
+  await noOverflow('delivery');await page.screenshot({path:path.join(out,`delivery-${width}.png`),fullPage:true});
+  await page.locator('#client-top-profile').click();
   for(const type of ['ranking','shop','history']) {
    await page.locator('#client-tab-'+type).click();await noOverflow(type);
    if(type==='shop'){
@@ -98,6 +108,15 @@ const fixture = () => ({id:'C-DEMO',name:'Cliente de prueba con nombre largo',wh
   await page.waitForFunction(()=>document.getElementById('screen-client').classList.contains('active'));assert(await page.evaluate(()=>window.__scanners.at(-1).stopped));
   await page.evaluate(()=>showScreen('screen-new'));await page.locator('#newName').fill('Nuevo de prueba');await page.locator('#createBtn').click();await page.waitForSelector('#newQrCard:visible');await noOverflow('registration');
   await page.evaluate(()=>showAdmin());await page.waitForFunction(()=>document.getElementById('sToday').textContent==='2');await noOverflow('admin');await page.screenshot({path:path.join(out,`admin-${width}.png`),fullPage:true});
+  for(const flavor of flavors) await page.locator('#count-'+flavor.sku).fill('6');
+  await page.locator('#saveInventoryButton').click();await page.waitForFunction(()=>document.getElementById('adminInventoryNotice').textContent.includes('Inventario guardado'));
+  assert.equal(requests.find(r=>r.counts)?.counts['DR-CHOCOLATE'],6);
+  await page.getByRole('button',{name:'Aceptar pedido',exact:true}).click();
+  await page.getByRole('button',{name:'Voy en camino',exact:true}).click();
+  await page.getByRole('button',{name:'Cobrado y entregado',exact:true}).click();
+  await page.getByRole('button',{name:'Sí, finalizar',exact:true}).click();
+  await page.waitForFunction(()=>document.getElementById('adminOrdersList').textContent.includes('Todo al día'));
+  assert(requests.some(r=>r.status==='COMPLETED'&&r.paymentReceived===true&&r.paymentMethod==='YAPPY'));
   await page.getByRole('button',{name:'Guardar config'}).click();await page.waitForTimeout(100);
   const saved=requests.find(r=>r.action==='saveConfig');assert(saved);assert.equal(saved.config.PRECIO_DONA,'1');
   await page.evaluate(()=>logout());assert.equal(await page.evaluate(()=>sessionStorage.getItem('donasAdminAccessToken')),null);
