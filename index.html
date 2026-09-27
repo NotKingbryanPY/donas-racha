@@ -1331,30 +1331,26 @@ function sendNewWA() {
   const web = "https://donas-racha.vercel.app/";
 
   const msg = encodeURIComponent(
-`🍩 ¡Hola ${newClientData.name}!
+`Hola ${newClientData.name},
 
-¡Bienvenido a Donas Racha! 🎉
-
+*Te damos la bienvenida a Donas Racha.*
 Ya formas parte de nuestro programa de fidelización.
 
-🌐 Ingresa a la plataforma:
+*Entra a tu perfil:*
 ${web}
 
-Desde ahí podrás:
-
-✅ Ver tu racha 🔥
-✅ Consultar tus puntos ⭐
-✅ Revisar tu nivel e insignias 🏅
-✅ Conocer cómo funciona el sistema 📖
-✅ Canjear tus puntos en la tienda 🛍️
-
-🆔 Tu ID de cliente es:
-
+*Tu ID de cliente:*
 ${newClientData.id}
 
-💡 Guarda este mensaje, ya que ese será tu ID permanente para ingresar a tu perfil.
+Guarda este mensaje. Este es tu ID permanente para ingresar a tu perfil.
 
-¡Gracias por ser parte de Donas Racha! 🍩💜`
+Desde tu perfil podrás:
+- Ver tu racha y consultar tus puntos.
+- Revisar tu nivel e insignias.
+- Conocer cómo funciona el programa.
+- Canjear tus puntos en la tienda.
+
+Gracias por elegir Donas Racha.`
   );
 
   window.open(
