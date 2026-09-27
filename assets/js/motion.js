@@ -18,10 +18,10 @@
       sessionStorage.setItem('donasBrandIntroSeen','1');
       const intro = document.createElement('div');
       intro.className='brand-intro'; intro.setAttribute('aria-hidden','true');
-      intro.innerHTML='<span class="brand-mark"></span><span class="brand-wordmark">DONAS<span>RACHA<span class="brand-dot">.</span></span></span>';
+      intro.innerHTML='<div class="intro-lockup"><span class="intro-donut"><span class="brand-mark"></span></span><span class="brand-wordmark">DONAS<span>RACHA<span class="brand-dot">.</span></span></span></div>';
       document.body.append(intro);
       intro.addEventListener('animationend',event=>{if(event.target===intro) intro.remove();});
-      setTimeout(()=>intro.remove(),1500);
+      setTimeout(()=>intro.remove(),1200);
     }
   } catch (_) { /* Storage may be unavailable; the page remains usable. */ }
   const seen = new WeakSet();

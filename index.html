@@ -234,89 +234,55 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
 </div>
 
 <div id="screen-client" class="screen">
-  <div class="header"><h1>🍩 Donas Racha</h1><p id="clientHeaderSub">Perfil del cliente</p></div>
+  <div class="header profile-header"><h1><span class="brand-mark" aria-hidden="true"></span><span class="brand-wordmark">DONAS<span>RACHA<span class="brand-dot">.</span></span></span></h1><p id="clientHeaderSub">Tu antojo, más cerca</p></div>
   <div class="wrap">
     <button class="back-btn" onclick="clientGoBack()">← Volver</button>
-    <div class="client-hero">
-      <div id="clientAvatar" class="client-avatar">🍩</div>
-      <div id="clientName" class="client-name">Cargando...</div>
-      <div id="clientSince" class="muted" style="color:rgba(255,255,255,.72);margin-top:3px"></div>
-      <div id="clientLevel" class="level-badge">🥉 Bronce</div>
-      <div class="hero-stats">
-        <div class="hero-stat"><b id="clientStreak">0</b><span>🔥 Racha actual</span></div>
-        <div class="hero-stat"><b id="clientPoints">0</b><span>⭐ Puntos</span></div>
-        <div class="hero-stat"><b id="clientTotal">0</b><span>🍩 Compras</span></div>
-      </div>
-    </div>
-
     <div id="clientUserTabs" class="client-top-nav" style="display:none" role="navigation" aria-label="Área del cliente">
-      <button id="client-top-profile" class="client-top-link active" onclick="setClientTab('profile')">👤 Perfil</button>
-      <button id="client-top-delivery" class="client-top-link" onclick="setClientTab('delivery')">🍩 Pedidos</button>
+      <button id="client-top-profile" class="client-top-link active" onclick="setClientTab('profile')"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M4 22v-3a8 8 0 0 1 16 0v3"/></svg> Perfil</button>
+      <button id="client-top-delivery" class="client-top-link" onclick="setClientTab('delivery')"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h3l3 13h12l2-9H6M9 21h.01M19 21h.01"/></svg> Pedidos</button>
     </div>
-    <div id="clientProfileTabs" class="tabs client-tabs" style="display:none">
-      <button id="client-tab-profile" class="tab active" onclick="setClientTab('profile')">👤 Perfil</button>
-      <button id="client-tab-ranking" class="tab" onclick="setClientTab('ranking')">🏆 Ranking</button>
-      <button id="client-tab-shop" class="tab" onclick="setClientTab('shop')">🛍️ Tienda</button>
-      <button id="client-tab-history" class="tab" onclick="setClientTab('history')">📋 Historial</button>
+    <p id="clientName" class="client-name">Cargando...</p>
+    <p id="clientLoginSuccess" class="login-success" role="status" hidden>✓ Listo · Entraste a tu perfil</p>
+    <div id="clientSummary" class="client-hero">
+      <div class="summary-heading"><h2>Tu constancia suma.</h2><span id="clientLevel" class="level-badge">🥉 Bronce</span></div>
+      <div class="hero-stats">
+        <div class="hero-stat"><b id="clientPoints">0</b><span>puntos totales</span></div>
+        <div class="hero-stat"><span aria-hidden="true">🔥</span><b id="clientStreak">0</b><span>de racha</span></div>
+      </div>
+      <div class="level-progress-row"><div class="progress-track" role="progressbar" aria-label="Progreso al siguiente nivel" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="levelProgress" class="progress-fill" style="width:0%"></div></div><span id="levelText">0%</span></div>
+      <div id="nextLevelText" class="summary-level-note">Siguiente nivel</div>
     </div>
-
+    <nav id="clientProfileTabs" class="tabs client-tabs" style="display:none" aria-label="Secciones del perfil"><button id="client-tab-profile" class="tab active" onclick="setClientTab('profile')"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M4 22v-3a8 8 0 0 1 16 0v3"/></svg><span>Resumen</span></button><button id="client-tab-ranking" class="tab" onclick="setClientTab('ranking')"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3h8v7a4 4 0 0 1-8 0zM8 5H4v3a4 4 0 0 0 4 4m8-7h4v3a4 4 0 0 1-4 4M12 14v6m-4 1h8"/></svg><span>Ranking</span></button><button id="client-tab-history" class="tab" onclick="setClientTab('history')"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></svg><span>Historial</span></button><button id="client-tab-shop" class="tab" onclick="setClientTab('shop')"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16l1 14H3zM8 8V6a4 4 0 0 1 8 0v2"/></svg><span>Tienda</span></button></nav>
     <div id="clientProfileSection" class="client-section">
-      <div class="card">
-        <div class="card-title">📈 Progreso al siguiente nivel</div>
-        <div class="progress-track" role="progressbar" aria-label="Progreso al siguiente nivel" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="levelProgress" class="progress-fill" style="width:0%"></div></div>
-        <div class="progress-meta"><span id="levelText">0%</span><span id="nextLevelText">Siguiente nivel</span></div>
+      <section class="profile-block" aria-labelledby="achievementsTitle">
+        <div class="profile-section-heading"><h2 id="achievementsTitle">Mis logros</h2><button class="text-action" onclick="openProfilePanel('clientBadgesDialog')">Ver todos <span aria-hidden="true">›</span></button></div>
+        <div id="featuredBadges" class="achievement-grid"></div>
+      </section>
+      <section class="profile-block" aria-labelledby="rewardTitle"><div class="profile-section-heading"><h2 id="rewardTitle">Tu próximo premio</h2></div><div id="nextReward" class="reward-preview"></div></section>
+      <div class="profile-actions">
+        <button class="btn profile-primary" onclick="openProfilePanel('clientQrDialog')"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3h6v6H3zM15 3h6v6h-6zM3 15h6v6H3zM15 15h3v3h3v3h-6z"/></svg> Mi QR</button>
+        <button id="customerPasswordAction" class="btn btn-outline" onclick="openProfilePanel('customerPasswordSettings')"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V6a4 4 0 0 1 8 0v4"/></svg> Contraseña opcional</button>
       </div>
-
-      <div class="grid2" style="margin-bottom:16px">
-        <div class="stat-card"><div id="clientAvailable" class="big">0</div><div class="lbl">Puntos disponibles</div></div>
-        <div class="stat-card"><div id="clientNextPoints" class="big">10</div><div class="lbl">Próxima compra</div></div>
-      </div>
-
-      <div class="card">
-        <div class="inline-ranking-head">
-          <div>
-            <div class="card-title" style="margin-bottom:3px">🏆 Ranking Top 10</div>
-            <p class="muted">El ranking aparece automáticamente dentro de tu perfil.</p>
-          </div>
-          <span class="pill hot">🔥 Racha</span>
-        </div>
-        <div id="clientInlineRanking"><div class="empty">Cargando ranking...</div></div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">🔥 Puntos por racha</div>
-        <p class="muted">Mientras más alta sea tu racha, más puntos ganas por compra.</p>
-        <div id="pointsRulesWrap" class="points-rule-grid"></div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">🔥 Hitos de racha</div>
-        <div id="hitosWrap" class="hitos"></div>
-        <p class="muted" style="margin-top:10px">Al completar 30 compras se registra una temporada y la racha se reinicia para competir de nuevo.</p>
-      </div>
-
-      <div class="card">
-        <div class="card-title">🏅 Insignias</div>
-        <div id="badgesWrap" class="badge-grid"></div>
-      </div>
-
+      <section id="recentPurchasesSection" class="profile-block" aria-labelledby="recentPurchasesTitle"><div class="profile-section-heading"><h2 id="recentPurchasesTitle">Mis compras recientes</h2><button class="text-action" onclick="setClientTab('history')">Ver todas <span aria-hidden="true">›</span></button></div><div id="recentPurchases" class="recent-purchases"></div></section>
       <div id="alreadyMsg" class="already">✅ Ya se registró una compra hoy para este cliente</div>
-      <button id="buyBtn" class="btn btn-green" style="width:100%;font-size:17px;margin-bottom:14px" onclick="registerPurchase()">🍩 Registrar compra</button>
-
-      <div class="card qr-box">
-        <div class="card-title">📱 QR del cliente</div>
-        <img id="clientQr" alt="QR cliente"><br>
-        <div class="muted" style="margin-top:8px">IDCliente: <b id="clientIdLabel"></b></div>
-        <button class="btn btn-outline" style="margin-top:12px" onclick="downloadCurrentQR()">⬇️ Descargar QR</button>
-      </div>
-      <details id="customerPasswordSettings" class="card">
-        <summary class="card-title" style="cursor:pointer;margin:0">🔒 Contraseña opcional</summary>
+      <button id="buyBtn" class="btn btn-green" style="width:100%;margin-bottom:14px" onclick="registerPurchase()">🍩 Registrar compra</button>
+      <details class="profile-details"><summary>Mi racha y mis puntos</summary>
+        <div class="account-facts"><span><b id="clientTotal">0</b> compras</span><span><b id="clientAvailable">0</b> puntos disponibles</span><span>Próxima compra: +<b id="clientNextPoints">10</b> pts</span></div>
+        <h3>Hitos de racha</h3><div id="hitosWrap" class="hitos"></div>
+        <p class="muted">Al completar 30 compras se registra una temporada y la racha se reinicia para competir de nuevo.</p>
+        <h3>Puntos por racha</h3><div id="pointsRulesWrap" class="points-rule-grid"></div>
+        <p id="clientSince" class="muted"></p>
+      </details>
+      <dialog id="clientBadgesDialog" class="profile-dialog" aria-labelledby="allBadgesTitle"><button class="dialog-close" onclick="this.closest('dialog').close()" aria-label="Cerrar logros">✕</button><h2 id="allBadgesTitle">Mis logros</h2><div id="badgesWrap" class="achievement-grid"></div></dialog>
+      <dialog id="clientQrDialog" class="profile-dialog qr-box" aria-labelledby="qrPanelTitle"><button class="dialog-close" onclick="this.closest('dialog').close()" aria-label="Cerrar QR">✕</button><h2 id="qrPanelTitle">Mi QR</h2><p class="muted">Muéstralo al vendedor cuando compres.</p><img id="clientQr" alt="QR del cliente"><p class="muted">ID: <b id="clientIdLabel"></b></p><button class="btn profile-primary" onclick="downloadCurrentQR()">Descargar QR</button></dialog>
+            <dialog id="customerPasswordSettings" class="profile-dialog" aria-labelledby="passwordPanelTitle">
+        <button class="dialog-close" onclick="this.closest('dialog').close()" aria-label="Cerrar contraseña">✕</button><h2 id="passwordPanelTitle">Contraseña opcional</h2>
         <p class="muted" style="margin-top:12px">Por defecto entras solo con tu ID. Si quieres proteger este perfil con contraseña, pide un código temporal al vendedor una sola vez.</p>
         <label class="field-label" for="customerPasswordCode">Código del vendedor</label><input id="customerPasswordCode" class="field" autocomplete="off" maxlength="8">
         <label class="field-label" for="customerNewPassword">Nueva contraseña</label><input id="customerNewPassword" class="field" type="password" autocomplete="new-password" minlength="8" placeholder="Mínimo 8 caracteres">
         <button class="btn btn-outline" onclick="saveCustomerPassword()">Activar o cambiar contraseña</button>
         <p id="customerPasswordMessage" class="muted" role="status"></p>
-      </details>
+      </dialog>
     </div>
 
     <div id="clientRankingSection" class="client-section" style="display:none">
@@ -680,6 +646,7 @@ async function apiPost(action, body = {}) {
 }
 
 function hideOverlays() {
+  document.querySelectorAll('.profile-dialog[open]').forEach(panel => panel.close());
   ['roleOverlay','loginOverlay','userOverlay'].forEach(id => document.getElementById(id).classList.add('hidden'));
   document.body.style.overflow='';
 }
@@ -864,6 +831,11 @@ async function loginCustomerById(id) {
     openedAsUser = true;
     hideOverlays();
     await openClient(result.customer.publicId, true);
+    if (currentClient && openedAsUser) {
+      const status = document.getElementById('clientLoginSuccess');
+      status.hidden = false;
+      setTimeout(() => { status.hidden = true; }, 2600);
+    }
   } catch (error) {
     if (error.code === 'PASSWORD_REQUIRED') {
       document.getElementById('customerPasswordGroup').style.display = '';
@@ -881,6 +853,7 @@ async function openClient(id, asUser) {
   showScreen('screen-client');
   const requestVersion = clientRequestVersion;
   currentClient = null;
+  document.getElementById('clientLoginSuccess').hidden = true;
   document.getElementById('buyBtn').disabled = true;
   document.getElementById('clientName').textContent = 'Cargando...';
   document.getElementById('buyBtn').style.display = asUser ? 'none' : '';
@@ -898,9 +871,8 @@ async function openClient(id, asUser) {
 }
 
 function renderClient(c, asUser) {
-  document.getElementById('clientHeaderSub').textContent = asUser ? 'Mi perfil, ranking y tienda' : 'Modo vendedor/admin';
-  document.getElementById('clientAvatar').textContent = initial(c.name);
-  document.getElementById('clientName').textContent = asUser ? `Hola ${c.name || 'Cliente'} 👋` : (c.name || 'Cliente');
+  document.getElementById('clientHeaderSub').textContent = asUser ? 'Tu antojo, más cerca' : 'Modo vendedor/admin';
+  document.getElementById('clientName').textContent = asUser ? `Hola, ${c.name || 'Cliente'}` : (c.name || 'Cliente');
   document.getElementById('clientSince').textContent = c.registrationDate ? 'Cliente desde ' + fmtDate(c.registrationDate) : '';
   document.getElementById('clientLevel').textContent = `${c.levelEmoji || '🥉'} ${c.levelName || 'Bronce'}`;
   document.getElementById('clientPoints').textContent = c.pointsTotal || 0;
@@ -910,9 +882,9 @@ function renderClient(c, asUser) {
   document.getElementById('shopAvailablePoints').textContent = c.pointsAvailable || 0;
   document.getElementById('clientNextPoints').textContent = c.nextPurchasePoints || 10;
   document.getElementById('clientIdLabel').textContent = c.id || '';
-  document.getElementById('levelProgress').style.width = (c.progressLevelPct || 0) + '%';
+  document.getElementById('levelProgress').style.width = Math.max(0, Math.min(100, Number(c.progressLevelPct) || 0)) + '%';
   window.DonasMotion?.profile(c);
-  document.getElementById('levelText').textContent = (c.progressLevelPct || 0) + '% completado';
+  document.getElementById('levelText').textContent = Math.max(0, Math.min(100, Number(c.progressLevelPct) || 0)) + '%';
   document.getElementById('nextLevelText').textContent = c.nextLevel ? `${c.pointsToNextLevel} pts para ${c.nextLevel.emoji} ${c.nextLevel.name}` : 'Nivel máximo alcanzado';
   document.getElementById('clientQr').src = c.qrUrl || '';
   document.getElementById('alreadyMsg').style.display = (!asUser && c.purchasedToday) ? 'block' : 'none';
@@ -921,9 +893,11 @@ function renderClient(c, asUser) {
   document.getElementById('buyBtn').textContent = `🍩 Registrar compra (+${c.nextPurchasePoints || 10} pts)`;
   document.getElementById('clientUserTabs').style.display = asUser ? '' : 'none';
   document.getElementById('clientProfileTabs').style.display = asUser ? '' : 'none';
-  document.getElementById('customerPasswordSettings').style.display = asUser ? '' : 'none';
+  document.getElementById('customerPasswordAction').style.display = asUser ? '' : 'none';
   renderHitos(c.hitosRacha || []);
   renderBadges(c.badges || []);
+  renderProfilePreview(c);
+  document.getElementById('recentPurchasesSection').hidden = !asUser;
   renderHistory(c.recentHistory || []);
   renderPointRules(c.pointsRules || []);
   renderShop(c.shopItems || [], c.pointsAvailable || 0);
@@ -958,18 +932,40 @@ function renderHitos(active) {
   document.getElementById('hitosWrap').innerHTML = [3,7,14,21,30].map(h => `<div class="hito ${set.has(h)?'active':''}">🔥<br>${h}</div>`).join('');
 }
 function renderBadges(badges) {
-  const el = document.getElementById('badgesWrap');
-  if (!badges.length) { el.innerHTML = '<div class="empty" style="width:100%">Aún no hay insignias.</div>'; return; }
-  el.innerHTML = badges.map(b => `<div class="badge" title="${safe(b.date || '')}">${safe(b.emoji)} ${safe(b.name)}</div>`).join('');
+  const card = b => `<div class="achievement"><span class="achievement-icon" aria-hidden="true">${safe(b.emoji || '🏅')}</span><b>${safe(b.name)}</b>${b.date ? `<small>${safe(fmtDate(b.date))}</small>` : ''}</div>`;
+  document.getElementById('badgesWrap').innerHTML = badges.length ? badges.map(card).join('') : '<p class="muted">Tus logros aparecerán después de tus compras.</p>';
+  document.getElementById('featuredBadges').innerHTML = badges.length ? badges.slice(0,3).map(card).join('') : '<p class="empty">Tu primera compra es el comienzo. Aquí verás tus logros.</p>';
+}
+function openProfilePanel(id) {
+  const panel = document.getElementById(id);
+  if (!panel || (id === 'customerPasswordSettings' && !openedAsUser)) return;
+  panel.showModal();
+}
+function renderProfilePreview(c) {
+  // Only real, active rewards returned by the API; use spendable balance after redemptions.
+  const rewards = (c.shopItems || []).filter(r => Number.isFinite(Number(r.cost)) && Number(r.cost) > 0).sort((a,b) => Number(a.cost) - Number(b.cost));
+  const reward = rewards[0];
+  const available = Math.max(0, Number(c.pointsAvailable) || 0);
+  const el = document.getElementById('nextReward');
+  if (!reward) el.innerHTML = '<p class="empty">Aún no hay premios disponibles. Tus puntos siguen guardados.</p>';
+  else {
+    const cost = Number(reward.cost), remaining = Math.max(0, cost - available), pct = Math.min(100, available / cost * 100);
+    el.innerHTML = `<span class="reward-icon" aria-hidden="true">${safe(reward.emoji || '🎁')}</span><div class="reward-copy"><b>${safe(reward.name)}</b><span class="muted"> · ${cost} puntos</span><div class="reward-track" role="progressbar" aria-label="Puntos para ${safe(reward.name)}" aria-valuemin="0" aria-valuemax="${cost}" aria-valuenow="${Math.min(available,cost)}"><span style="width:${pct}%"></span></div><small>${remaining ? `Te faltan ${remaining} puntos` : '¡Ya puedes canjearlo!'}</small></div>${openedAsUser ? '<button class="text-action" onclick="setClientTab(&quot;shop&quot;)" aria-label="Ver tienda de recompensas">›</button>' : ''}`;
+  }
+  const purchases = (c.recentHistory || []).filter(h => h.entryType ? h.entryType === 'PURCHASE_EARN' : h.type === 'purchase').slice(0,3);
+  document.getElementById('recentPurchases').innerHTML = purchases.length ? purchases.map(h => `<div class="recent-purchase"><span class="purchase-icon" aria-hidden="true">🍩</span><div><b>Compra registrada</b><small>${safe(fmtDateTime(h.date))}</small></div><strong>${Number(h.points) > 0 ? '+' + Number(h.points) + ' pts' : 'Registrada'}</strong></div>`).join('') : '<p class="empty">Todavía no tienes compras registradas.</p>';
 }
 function renderHistory(hist) {
   const el = document.getElementById('historyWrap');
   if (!hist.length) { el.innerHTML = '<div class="empty">Sin historial</div>'; return; }
-  el.innerHTML = hist.map(h => { const isRedeem = h.type === 'redeem'; const icon = isRedeem ? '🎁' : '🍩'; const title = isRedeem ? 'Canje realizado' : 'Compra registrada'; const pts = h.points ? ` · ${h.points > 0 ? '+' : ''}${h.points} pts` : ''; return `<div class="history-item"><div style="font-size:20px">${icon}</div><div class="grow"><div class="name">${title}</div><div class="sub">${fmtDateTime(h.date)}${pts}</div></div></div>`; }).join('');
+  const labels = {OPENING_BALANCE:'Saldo migrado', ADJUSTMENT:'Ajuste de puntos', EXPIRATION:'Puntos vencidos', REVERSAL:'Reversión', PURCHASE_EARN:'Compra registrada', REDEMPTION_SPEND:'Canje realizado'};
+  el.innerHTML = hist.map(h => { const isRedeem = h.type === 'redeem'; const icon = isRedeem ? '🎁' : '🍩'; const title = labels[h.entryType] || (isRedeem ? 'Canje realizado' : 'Compra registrada'); const pts = h.points ? ` · ${h.points > 0 ? '+' : ''}${h.points} pts` : ''; return `<div class="history-item"><div style="font-size:20px">${icon}</div><div class="grow"><div class="name">${title}</div><div class="sub">${fmtDateTime(h.date)}${pts}</div></div></div>`; }).join('');
 }
 
 function setClientTab(tab) {
   if (tab === 'delivery' && !openedAsUser) return;
+  document.getElementById('clientSummary').hidden = tab === 'delivery';
+  ['profile','delivery'].forEach(key => document.getElementById('client-top-' + key).setAttribute('aria-pressed', String(key === 'delivery' ? tab === 'delivery' : tab !== 'delivery')));
   document.getElementById('clientProfileTabs').style.display = openedAsUser && tab !== 'delivery' ? '' : 'none';
   document.getElementById('client-top-profile')?.classList.toggle('active', tab !== 'delivery');
   document.getElementById('client-top-delivery')?.classList.toggle('active', tab === 'delivery');
@@ -1099,6 +1095,11 @@ async function resetCustomerPassword() {
     document.getElementById('resetNewPassword').value = '';
     openedAsUser = true; hideOverlays();
     await openClient(result.customer.publicId, true);
+    if (currentClient && openedAsUser) {
+      const status = document.getElementById('clientLoginSuccess');
+      status.hidden = false;
+      setTimeout(() => { status.hidden = true; }, 2600);
+    }
   } catch (error) { message.textContent = error.message; }
 }
 

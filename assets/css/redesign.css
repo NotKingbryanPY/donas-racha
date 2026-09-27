@@ -355,3 +355,88 @@ html:not(.motion-lite) .client-top-link.active{animation:top-tab-glow .35s ease-
 @keyframes top-tab-glow{from{box-shadow:0 0 0 0 #ba8fe06b}to{box-shadow:0 0 0 8px transparent}}
 }
 
+/* Approved Perfil y movimiento: compact overview, with detail on demand. */
+.ui-icon{width:23px;height:23px;flex:none;vertical-align:middle}
+#screen-client .profile-header{display:flex;align-items:center;justify-content:space-between;gap:16px;text-align:left}
+.profile-header h1{display:flex;align-items:center;gap:14px;margin:0}
+.profile-header p{font-size:12px;max-width:130px;text-align:right;margin:0}
+#screen-client>.wrap{max-width:720px;padding-top:8px}
+#screen-client .back-btn{margin:0 0 4px;font-size:12px}
+#screen-client .client-top-nav{margin-bottom:14px;gap:8px}
+#screen-client .client-top-link{display:flex;align-items:center;justify-content:center;gap:10px;min-height:46px;border-radius:12px;font-size:14px}
+#screen-client .client-top-link.active,.profile-primary{background:linear-gradient(110deg,#d1aff5,#b988eb);border-color:#d4b1f3;color:#1a1024;box-shadow:0 3px 14px #b988eb17}
+#screen-client .client-name{font-size:16px;font-weight:650;margin:0 0 10px;line-height:1.5}
+#screen-client .client-hero{border-radius:16px;padding:16px;margin-bottom:12px;background:linear-gradient(125deg,#25202f,#1b1723);border-color:#c4a2e12b}
+#screen-client .client-hero:after{display:none}
+.summary-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.summary-heading h2{font-size:18px;line-height:1.25;margin:0;letter-spacing:-.3px}
+.summary-heading .level-badge{margin:0;font-size:10px;padding:4px 7px;white-space:nowrap}
+#screen-client .hero-stats{display:grid;grid-template-columns:1fr 1fr;border:0;margin:14px 0 12px;padding:0;gap:12px}
+#screen-client .hero-stat{display:flex;align-items:baseline;justify-content:flex-start;flex-wrap:wrap;column-gap:5px;padding:0;text-align:left}
+#screen-client .hero-stat b{font-size:25px;line-height:1.2;color:var(--text);text-shadow:none}
+#screen-client .hero-stat span{font-size:12px;color:#ede5f4}
+.level-progress-row{display:flex;align-items:center;gap:10px}
+.level-progress-row .progress-track{flex:1;height:9px;background:#443b52}
+#screen-client .progress-fill,.reward-track>span{background:linear-gradient(90deg,#c69ced,#ba8ce7)}
+.level-progress-row>span{font-size:12px;font-variant-numeric:tabular-nums}
+.summary-level-note{margin-top:5px;font-size:11px;color:var(--muted)}
+#screen-client .client-tabs{position:static;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:2px;padding:3px;margin:0 0 16px;border:1px solid #c9a9e126;overflow:visible;border-radius:13px}
+#screen-client .client-tabs .tab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:9px 2px;min-width:0;font-size:11px;border-radius:10px;white-space:normal}
+#screen-client .client-tabs .tab.active{box-shadow:inset 0 -3px #c798ef;background:#c8a1f014;color:#ead3fc}
+.profile-block{margin-bottom:15px}
+.profile-section-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:35px;margin-bottom:5px}
+.profile-section-heading h2{font-size:15px;margin:0;font-weight:750;letter-spacing:-.15px}
+.text-action{border:0;background:none;color:#d9b7f8;font:inherit;font-size:12px;min-height:44px;cursor:pointer;padding:6px 3px;flex:none}
+.text-action span{font-size:21px;margin-left:5px;vertical-align:-1px}
+.achievement-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.achievement{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:10px 7px;border:1px solid #bda0dc33;border-radius:13px;background:linear-gradient(130deg,#25202e,#19151f);text-align:center;min-height:100px;overflow-wrap:anywhere}
+.achievement-icon{font-size:31px;line-height:1.3}
+.achievement b{font-size:12px;line-height:1.35;font-weight:650}
+.achievement small{font-size:10px;color:var(--muted)}
+.achievement-grid>.empty,.achievement-grid>p{grid-column:1/-1}
+.reward-preview{display:flex;align-items:center;gap:12px;border:1px solid #c6a7e130;border-radius:14px;padding:13px;background:linear-gradient(110deg,#292130,#19151f)}
+.reward-icon{display:flex;align-items:center;justify-content:center;font-size:42px;flex:none;width:52px;height:58px}
+.reward-copy{min-width:0;flex:1;font-size:13px;overflow-wrap:anywhere}
+.reward-copy small{display:block;font-size:11px;color:#ded0ee}
+.reward-track{height:8px;border-radius:20px;overflow:hidden;background:#443b52;margin:8px 0}
+.reward-track>span{display:block;height:100%;border-radius:inherit}
+.profile-actions{display:grid;grid-template-columns:.8fr 1.2fr;gap:8px;margin:0 0 14px}
+.profile-actions .btn{display:flex;align-items:center;justify-content:center;gap:8px;font-size:12px;padding:10px 8px;border-radius:11px;min-width:0}
+.profile-actions .ui-icon{width:20px;height:20px}
+.recent-purchases{border:1px solid #c6a7e12b;border-radius:13px;padding:0 10px;background:#1a1622}
+.recent-purchase{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #c6a7e11c}
+.recent-purchase:last-child{border:0}
+.purchase-icon{font-size:27px;flex:none}
+.recent-purchase>div{flex:1;min-width:0}
+.recent-purchase b{font-size:12px;display:block}
+.recent-purchase small{display:block;font-size:10px;color:var(--muted)}
+.recent-purchase strong{font-size:12px;color:#dbbdf5;font-variant-numeric:tabular-nums;white-space:nowrap}
+.profile-details{border-top:1px solid var(--line);padding:0 0 12px}
+.profile-details summary{cursor:pointer;min-height:44px;display:list-item;align-content:center;color:#cdb8df;font-size:12px;margin-left:16px}
+.profile-details h3{font-size:14px;margin:18px 0 10px}
+.profile-details p{font-size:12px;margin:12px 0}
+.account-facts{display:flex;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:12px}
+.profile-dialog{margin:auto;padding:28px 20px 20px;max-width:440px;width:calc(100% - 32px);max-height:85dvh;overflow:auto;background:#211a2c;color:var(--text);border:1px solid #c6a7e155;border-radius:22px;box-shadow:0 24px 90px #0008}
+.profile-dialog::backdrop{background:#100d17cf}
+.profile-dialog h2{font-size:21px;margin:0 32px 16px 0}
+.profile-dialog .muted{font-size:13px;margin-bottom:16px}
+.profile-dialog .btn{margin-top:12px}
+.dialog-close{position:absolute;right:9px;top:7px;width:44px;height:44px;border:0;border-radius:12px;background:none;color:#e5d5f3;font-size:19px;cursor:pointer}
+.login-success{font-size:12px;color:#b4f0da;margin:0 0 10px}
+.login-success[hidden],#clientSummary[hidden],#recentPurchasesSection[hidden]{display:none}
+@media(min-width:700px){#screen-client>.wrap{padding:16px 28px}.profile-block{margin-bottom:20px}.achievement{min-height:118px}.profile-section-heading h2{font-size:17px}.profile-actions .btn{font-size:14px}.recent-purchase{padding:13px 0}}
+@media(max-width:360px){.profile-actions{grid-template-columns:1fr}.summary-heading{flex-wrap:wrap}.reward-icon{width:38px;font-size:34px}.profile-header p{max-width:100px}}
+@media(prefers-reduced-motion:no-preference){html:not(.motion-lite) #screen-client .client-section:not([style*="display: none"]){animation:client-panel-enter .2s ease-out both}html:not(.motion-lite) .login-success{animation:client-panel-enter .2s ease-out both}}
+
+/* 0–250 bounce, 250–500 roll, 500–800 wordmark, 800–1100 curtain. */
+.brand-intro{animation:intro-curtain 1.1s cubic-bezier(.65,0,.25,1) both}
+.intro-lockup{position:relative;width:300px;height:90px;display:flex;align-items:center;justify-content:flex-end;padding-right:6px;gap:20px}
+.intro-donut{position:absolute;left:0;top:8px;width:74px;height:74px;animation:intro-roll .5s both}
+.brand-intro .brand-mark{width:74px;height:74px;border-width:19px;animation:intro-bounce .25s both}
+.brand-intro .brand-mark:after{width:10px;height:4px;left:-10px;top:6px;box-shadow:22px -17px 0 #fff0d6,35px 10px 0 #f2c2d7,0 34px 0 #fff0d6}
+.brand-intro .brand-wordmark{width:190px;font-size:29px;animation:brand-reveal .3s .5s both}
+.brand-intro .brand-wordmark>span{font-size:39px}
+@keyframes intro-roll{0%,50%{transform:translateX(113px) rotate(140deg)}100%{transform:translateX(0) rotate(0)}}
+@keyframes intro-bounce{0%{opacity:0;transform:translateY(16px) scale(.8)}65%{opacity:1;transform:translateY(-5px) scale(1.04)}100%{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes intro-curtain{0%,72.72%{transform:translateY(0);opacity:1}100%{transform:translateY(-100%);opacity:0;visibility:hidden}}
+
