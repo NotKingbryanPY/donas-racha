@@ -199,6 +199,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
         <button class="btn btn-outline" style="width:100%" onclick="resetCustomerPassword()">Restablecer contraseña</button>
       </details>
     </div>
+    <div class="motion-settings"><label class="motion-picker" for="loginMotionPreference">Animaciones <select id="loginMotionPreference" data-motion-preference><option value="system">Automáticas</option><option value="full">Activadas</option><option value="reduced">Reducidas</option></select></label><p class="motion-hint" data-motion-hint role="status"></p></div>
     <button class="btn btn-ghost" style="width:100%;margin-top:10px" onclick="goToRoleScreen()">← Volver al inicio</button>
   </div>
 </div>
@@ -239,7 +240,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
 <div id="screen-client" class="screen">
   <div class="header profile-header"><h1><span class="brand-mark" aria-hidden="true"></span><span class="brand-wordmark">DONAS<span>RACHA<span class="brand-dot">.</span></span></span></h1><p id="clientHeaderSub">Tu antojo, más cerca</p></div>
   <div class="wrap">
-    <button class="back-btn" onclick="clientGoBack()">← Volver</button>
+    <div class="profile-tools"><button class="back-btn" onclick="clientGoBack()">← Volver</button><label class="motion-picker" for="profileMotionPreference">Animaciones <select id="profileMotionPreference" data-motion-preference><option value="system">Automáticas</option><option value="full">Activadas</option><option value="reduced">Reducidas</option></select></label></div>
     <div id="clientUserTabs" class="client-top-nav" style="display:none" role="navigation" aria-label="Área del cliente">
       <button id="client-top-profile" class="client-top-link active" onclick="setClientTab('profile')"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M4 22v-3a8 8 0 0 1 16 0v3"/></svg> Perfil</button>
       <button id="client-top-delivery" class="client-top-link" onclick="setClientTab('delivery')"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h3l3 13h12l2-9H6M9 21h.01M19 21h.01"/></svg> Pedidos</button>
@@ -1475,7 +1476,7 @@ async function loadAdminClients() {
   } catch(err) { el.innerHTML = '<div class="empty">Error al cargar clientes</div>'; }
 }
 function showToast(msg, duration=3000) { const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(window.__toastTimer); window.__toastTimer=setTimeout(()=>t.classList.remove('show'), duration); }
-function confettiBurst(){ if(window.confetti && !window.matchMedia('(prefers-reduced-motion: reduce)').matches && !navigator.connection?.saveData) confetti({particleCount:32,spread:55,ticks:48,disableForReducedMotion:true,origin:{y:.72},colors:['#b89bfa','#efafd2','#e4c581']}); }
+function confettiBurst(){ if(window.confetti && window.DonasMotion?.enabled()) confetti({particleCount:32,spread:55,ticks:48,disableForReducedMotion:false,origin:{y:.72},colors:['#b89bfa','#efafd2','#e4c581']}); }
 function fmtDate(v){ if(!v) return ''; const d=new Date(v); return isNaN(d)?'':d.toLocaleDateString('es-PA',{day:'2-digit',month:'short',year:'numeric'}); }
 function fmtDateTime(v){ if(!v) return ''; const d=new Date(v); return isNaN(d)?'':d.toLocaleString('es-PA',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}); }
 function initial(name){ return safe(name || 'D').trim().charAt(0).toUpperCase() || 'D'; }

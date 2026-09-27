@@ -4,14 +4,39 @@
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const fine = matchMedia('(hover: hover) and (pointer: fine)');
   const connection = navigator.connection;
-  const lite = () => reduced.matches || !!connection?.saveData;
+  const preferenceKey = 'donasMotionPreference';
+  const validPreference = value => ['system','full','reduced'].includes(value) ? value : 'system';
+  let preference = 'system', preferenceSaved = true;
+  try { preference = validPreference(localStorage.getItem(preferenceKey)); } catch (_) { preferenceSaved = false; }
+  const lite = () => preference === 'reduced' || (preference === 'system' && (reduced.matches || !!connection?.saveData));
   const syncMotion = () => {
     document.documentElement.classList.toggle('motion-lite', !!lite());
+    document.documentElement.classList.toggle('motion-full', preference === 'full');
+    document.querySelectorAll('[data-motion-preference]').forEach(select => { select.value = preference; });
+    const explanation = preference === 'full' ? 'Animaciones activadas solo en esta web.'
+      : preference === 'reduced' ? 'Animaciones reducidas en esta web.'
+      : reduced.matches ? 'Tu navegador solicita menos movimiento. Puedes activarlo solo aquí.'
+      : connection?.saveData ? 'El ahorro de datos reduce el movimiento. Puedes activarlo solo aquí.'
+      : 'Se usa la preferencia de movimiento del dispositivo.';
+    document.querySelectorAll('[data-motion-hint]').forEach(el => { el.textContent = explanation + (preferenceSaved ? '' : ' La elección dura mientras esta página esté abierta.'); });
     if (lite()) document.getAnimations().forEach(a => { if (a.effect?.getTiming().iterations === Infinity) a.cancel(); else { try { a.finish(); } catch (_) { a.cancel(); } } });
   };
   reduced.addEventListener('change', syncMotion);
   connection?.addEventListener?.('change', syncMotion);
   syncMotion();
+  document.querySelectorAll('[data-motion-preference]').forEach(select => {
+    select.addEventListener('change', () => {
+      preference = validPreference(select.value);
+      try { localStorage.setItem(preferenceKey,preference); preferenceSaved = true; } catch (_) { preferenceSaved = false; }
+      syncMotion();
+      document.dispatchEvent(new Event('donas:motionchange'));
+    });
+  });
+  window.addEventListener('storage', event => {
+    if (event.key !== preferenceKey && event.key !== null) return;
+    preference = validPreference(event.newValue); syncMotion();
+    document.dispatchEvent(new Event('donas:motionchange'));
+  });
   // The brand entrance belongs to a completed customer login, never page load.
   function customerWelcome({signal, reveal}) {
     if (signal.aborted) return Promise.resolve();
@@ -31,6 +56,7 @@
         signal.removeEventListener('abort',abort);
         document.removeEventListener('visibilitychange',finish);
         document.removeEventListener('keydown',skip,true);
+        document.removeEventListener('donas:motionchange',finish);
         reduced.removeEventListener('change',finish);
         connection?.removeEventListener?.('change',finish);
       };
@@ -48,6 +74,7 @@
       signal.addEventListener('abort',abort,{once:true});
       document.addEventListener('visibilitychange',finish);
       document.addEventListener('keydown',skip,true);
+      document.addEventListener('donas:motionchange',finish);
       reduced.addEventListener('change',finish);
       connection?.addEventListener?.('change',finish);
       intro.addEventListener('animationend',event=>{if(event.target===intro)finish();});
@@ -110,10 +137,12 @@
   document.documentElement.addEventListener('pointerleave', resetTilt);
   fine.addEventListener('change', resetTilt);
   reduced.addEventListener('change', resetTilt);
+  document.addEventListener('donas:motionchange', resetTilt);
   let progressObserver, progressAnimation;
   const stockSnapshots = new Map();
   const stockAnimations = new WeakMap();
   window.DonasMotion = {
+    enabled: () => !lite(),
     customerWelcome,
     stock(root, scope) {
       const previous = stockSnapshots.get(scope) || new Map();
