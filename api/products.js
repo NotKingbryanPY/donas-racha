@@ -4,6 +4,11 @@ const { serviceRequest } = require('./_lib/supabase');
 
 module.exports = withApi(['GET'], async req => {
   await enforceRateLimit(req, 'products', 120, 60);
+  if (req.query?.view === 'inventory') {
+    const rows = await serviceRequest('inventory_by_flavor', { query: 'select=variant_id,sku,name,offered,opening_quantity,purchased_quantity,sold_quantity,reserved_quantity,available_quantity,counted&order=sku.asc' });
+    const controls = await serviceRequest('inventory_control', { query: 'select=enforce_orders&limit=1' });
+    return { flavors: rows, enforced: !!controls[0]?.enforce_orders, updatedAt: new Date().toISOString() };
+  }
   const products = await serviceRequest('products', {
     query: new URLSearchParams({
       select: 'id,slug,name,description,image_url,display_order,product_variants(id,sku,name,unit_price_cents,currency_code,available,display_order)',

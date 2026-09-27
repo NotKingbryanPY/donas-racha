@@ -985,7 +985,7 @@ async function loadClientDelivery() {
   list.innerHTML = '<div class="empty">Cargando sabores...</div>';
   try {
     const [catalog, inventory] = await Promise.all([
-      vercelApi('/api/products'), vercelApi('/api/inventory')
+      vercelApi('/api/products'), vercelApi('/api/products?view=inventory')
     ]);
     const byId = new Map((inventory.flavors || []).map(row => [String(row.variant_id), row]));
     clientInventoryEnforced = !!inventory.enforced;
@@ -1285,7 +1285,7 @@ async function showAdmin() {
 
 async function adminInventoryRequest(method, body) {
   const token = sessionStorage.getItem('donasAdminAccessToken');
-  const response = await fetch('/api/admin/inventory', { method,
+  const response = await fetch('/api/admin/customers/inventory', { method,
     headers:{ accept:'application/json', ...(body ? {'content-type':'application/json'} : {}), authorization:`Bearer ${token}` },
     ...(body ? {body:JSON.stringify(body)} : {}) });
   const payload = await response.json().catch(() => null);
