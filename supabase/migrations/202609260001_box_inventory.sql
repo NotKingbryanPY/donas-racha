@@ -90,7 +90,9 @@ begin
   perform pg_advisory_xact_lock(26092601);
   select * into v_row from public.inventory_by_flavor where variant_id=p_variant_id;
   if not found then raise exception 'INVALID_PRODUCT_VARIANT' using errcode='22023'; end if;
-  v_opening := p_physical_quantity-v_row.purchased_quantity+v_row.sold_quantity+v_row.reserved_quantity;
+  -- The count includes donuts physically held for existing orders. The view
+  -- subtracts those reservations when calculating units customers may order.
+  v_opening := p_physical_quantity-v_row.purchased_quantity+v_row.sold_quantity;
   if v_opening<0 then raise exception 'COUNT_CONFLICT' using errcode='P0001'; end if;
   insert into public.inventory_opening_counts(variant_id,quantity,counted_at)
     values(p_variant_id,v_opening,now())
