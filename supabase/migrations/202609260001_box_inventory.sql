@@ -196,6 +196,47 @@ end; $$;
 revoke execute on function public.api_push_sync_operations(uuid,uuid,text,text,jsonb) from public,anon,authenticated;
 grant execute on function public.api_push_sync_operations(uuid,uuid,text,text,jsonb) to service_role;
 
+-- Reconcile operations accepted by the old receiver before this ledger existed.
+-- An old purchase without boxes cannot be reconstructed: flag a fresh count.
+do $$
+declare v_row public.sync_operations%rowtype; v_item jsonb; v_variant uuid; v_qty integer; v_total integer;
+begin
+  for v_row in select * from public.sync_operations where operation_type in ('SALE','PURCHASE','REVERSAL')
+    and status='RECEIVED' order by server_sequence loop
+    if v_row.operation_type='SALE' and jsonb_typeof(v_row.payload->'details'->'items')='array'
+       and not (v_row.payload->'details' ? 'remoteOrderId') then
+      v_total := 0;
+      for v_item in select value from jsonb_array_elements(v_row.payload->'details'->'items') loop
+        v_qty := (v_item->>'quantity')::integer;
+        select id into v_variant from public.product_variants where sku=v_item->>'sku';
+        if v_variant is null or v_qty not between 1 and 99 then
+          raise exception 'INVALID_HISTORICAL_SALE' using errcode='22023'; end if;
+        v_total := v_total+v_qty;
+        insert into public.flavor_sales(variant_id,quantity,source_operation_id)
+          values(v_variant,v_qty,v_row.id) on conflict(source_operation_id,variant_id) do nothing;
+      end loop;
+      if v_total<>(v_row.payload->'details'->>'quantity')::integer then
+        raise exception 'INVALID_HISTORICAL_SALE' using errcode='22023'; end if;
+    elsif v_row.operation_type='PURCHASE' and v_row.payload->'details' ? 'boxes' then
+      v_qty := (v_row.payload->'details'->>'boxes')::integer;
+      if v_qty not between 1 and 10000 then raise exception 'INVALID_HISTORICAL_PURCHASE' using errcode='22023'; end if;
+      insert into public.box_purchases(boxes,purchased_at,source_operation_id)
+        values(v_qty,v_row.occurred_at,v_row.id) on conflict(source_operation_id) do nothing;
+    elsif v_row.operation_type='REVERSAL' then
+      update public.flavor_sales fs set reversed_at=coalesce(fs.reversed_at,v_row.occurred_at)
+        where fs.source_operation_id in (select s.id from public.sync_operations s
+          where s.device_id=v_row.device_id and s.operation_type='SALE'
+            and (s.payload->>'localEventId')::bigint=(v_row.payload->>'reversedEventId')::bigint);
+    elsif v_row.operation_type='PURCHASE' or
+      (v_row.operation_type='SALE' and not (v_row.payload->'details' ? 'remoteOrderId')) then
+      insert into public.inventory_sync_gaps(operation_id) values(v_row.id) on conflict do nothing;
+    end if;
+    if v_row.operation_type in ('SALE','PURCHASE','REVERSAL') then
+      update public.sync_operations set status='APPLIED',applied_at=now(),attempts=attempts+1 where id=v_row.id;
+    end if;
+  end loop;
+end $$;
+
 do $$ begin
   if exists(select 1 from pg_publication where pubname='supabase_realtime') and
      not exists(select 1 from pg_publication_tables where pubname='supabase_realtime' and schemaname='public' and tablename='box_purchases') then
