@@ -2,6 +2,7 @@ const { ApiError, withApi } = require('../_lib/http');
 
 const handlers = Object.freeze({
   loyalty: require('../_lib/customer_handlers/loyalty'),
+  onboarding: require('../_lib/customer_handlers/onboarding'),
   orders: require('../_lib/customer_handlers/orders'),
   password: require('../_lib/customer_handlers/password'),
   profile: require('../_lib/customer_handlers/profile'),

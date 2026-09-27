@@ -243,14 +243,14 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
 <div id="screen-client" class="screen">
   <div class="header profile-header"><h1><span class="brand-mark" aria-hidden="true"></span><span class="brand-wordmark">DONAS<span>RACHA<span class="brand-dot">.</span></span></span></h1><p id="clientHeaderSub">Tu antojo, más cerca</p></div>
   <div class="wrap">
-    <div class="profile-tools"><button class="back-btn" onclick="clientGoBack()">← Volver</button><label class="motion-picker" for="profileMotionPreference">Animaciones <select id="profileMotionPreference" data-motion-preference><option value="system">Automáticas</option><option value="full">Activadas</option><option value="reduced">Reducidas</option></select></label></div>
-    <div id="clientUserTabs" class="client-top-nav" style="display:none" role="navigation" aria-label="Área del cliente">
+    <div class="profile-tools"><button class="back-btn" onclick="clientGoBack()">← Volver</button><button id="clientTourReplay" class="text-action" hidden onclick="window.DonasTour?.start()">Ver tutorial</button><label class="motion-picker" for="profileMotionPreference">Animaciones <select id="profileMotionPreference" data-motion-preference><option value="system">Automáticas</option><option value="full">Activadas</option><option value="reduced">Reducidas</option></select></label></div>
+    <div id="clientUserTabs" class="client-top-nav" data-tour="profile-nav" style="display:none" role="navigation" aria-label="Área del cliente">
       <button id="client-top-profile" class="client-top-link active" onclick="setClientTab('profile')"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M4 22v-3a8 8 0 0 1 16 0v3"/></svg> Perfil</button>
-      <button id="client-top-delivery" class="client-top-link" onclick="setClientTab('delivery')"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h3l3 13h12l2-9H6M9 21h.01M19 21h.01"/></svg> Pedidos</button>
+      <button id="client-top-delivery" data-tour="orders-tab" class="client-top-link" onclick="setClientTab('delivery')"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h3l3 13h12l2-9H6M9 21h.01M19 21h.01"/></svg> Pedidos</button>
     </div>
     <p id="clientName" class="client-name">Cargando...</p>
     <p id="clientLoginSuccess" class="login-success" role="status" hidden>✓ Listo · Entraste a tu perfil</p>
-    <div id="clientSummary" class="client-hero">
+    <div id="clientSummary" data-tour="points" class="client-hero">
       <div class="summary-heading"><h2>Tu constancia suma.</h2><span id="clientLevel" class="level-badge">🥉 Bronce</span></div>
       <div class="hero-stats">
         <div class="hero-stat"><b id="clientPoints">0</b><span>puntos totales</span></div>
@@ -261,13 +261,13 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
     </div>
     <nav id="clientProfileTabs" class="tabs client-tabs" style="display:none" aria-label="Secciones del perfil"><button id="client-tab-profile" class="tab active" onclick="setClientTab('profile')"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M4 22v-3a8 8 0 0 1 16 0v3"/></svg><span>Resumen</span></button><button id="client-tab-ranking" class="tab" onclick="setClientTab('ranking')"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3h8v7a4 4 0 0 1-8 0zM8 5H4v3a4 4 0 0 0 4 4m8-7h4v3a4 4 0 0 1-4 4M12 14v6m-4 1h8"/></svg><span>Ranking</span></button><button id="client-tab-history" class="tab" onclick="setClientTab('history')"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></svg><span>Historial</span></button><button id="client-tab-shop" class="tab" onclick="setClientTab('shop')"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16l1 14H3zM8 8V6a4 4 0 0 1 8 0v2"/></svg><span>Tienda</span></button></nav>
     <div id="clientProfileSection" class="client-section">
-      <section class="profile-block" aria-labelledby="achievementsTitle">
+      <section class="profile-block" data-tour="achievements" aria-labelledby="achievementsTitle">
         <div class="profile-section-heading"><h2 id="achievementsTitle">Mis logros</h2><button class="text-action" onclick="openProfilePanel('clientBadgesDialog')">Ver todos <span aria-hidden="true">›</span></button></div>
         <div id="featuredBadges" class="achievement-grid"></div>
       </section>
       <section class="profile-block" aria-labelledby="rewardTitle"><div class="profile-section-heading"><h2 id="rewardTitle">Tu próximo premio</h2></div><div id="nextReward" class="reward-preview"></div></section>
       <div class="profile-actions">
-        <button class="btn profile-primary" onclick="openProfilePanel('clientQrDialog')"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3h6v6H3zM15 3h6v6h-6zM3 15h6v6H3zM15 15h3v3h3v3h-6z"/></svg> Mi QR</button>
+        <button class="btn profile-primary" data-tour="qr" onclick="openProfilePanel('clientQrDialog')"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3h6v6H3zM15 3h6v6h-6zM3 15h6v6H3zM15 15h3v3h3v3h-6z"/></svg> Mi QR</button>
         <button id="customerPasswordAction" class="btn btn-outline" onclick="openProfilePanel('customerPasswordSettings')"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V6a4 4 0 0 1 8 0v4"/></svg> Contraseña opcional</button>
       </div>
       <section id="recentPurchasesSection" class="profile-block" aria-labelledby="recentPurchasesTitle"><div class="profile-section-heading"><h2 id="recentPurchasesTitle">Mis compras recientes</h2><button class="text-action" onclick="setClientTab('history')">Ver todas <span aria-hidden="true">›</span></button></div><div id="recentPurchases" class="recent-purchases"></div></section>
@@ -292,7 +292,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
       </dialog>
     </div>
 
-    <div id="clientRankingSection" class="client-section" style="display:none">
+    <div id="clientRankingSection" class="client-section" data-tour="ranking" style="display:none">
       <div class="tabs">
         <button id="client-rank-tab-compras" class="tab" onclick="setClientRanking('compras')">🍩 Compras</button>
         <button id="client-rank-tab-puntos" class="tab" onclick="setClientRanking('puntos')">⭐ Puntos</button>
@@ -305,7 +305,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
       </div>
     </div>
 
-    <div id="clientShopSection" class="client-section" style="display:none">
+    <div id="clientShopSection" class="client-section" data-tour="shop" style="display:none">
       <div class="card">
         <div class="card-title">🛍️ Tienda de recompensas</div>
         <p class="muted">Usa tus puntos disponibles como moneda para canjear descuentos, donas gratis y recompensas.</p>
@@ -318,13 +318,13 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
       </div>
     </div>
 
-    <div id="clientHistorySection" class="client-section" style="display:none">
+    <div id="clientHistorySection" class="client-section" data-tour="history" style="display:none">
       <div class="card">
         <div class="card-title">📋 Historial reciente</div>
         <div id="historyWrap"><div class="empty">Sin historial</div></div>
       </div>
     </div>
-    <div id="clientDeliverySection" class="client-section" style="display:none">
+    <div id="clientDeliverySection" class="client-section" data-tour="orders" style="display:none">
       <div class="card"><div class="delivery-heading"><div class="card-title">🍩 Tu pedido</div><button class="delivery-refresh" onclick="loadClientDelivery()" aria-label="Actualizar disponibilidad y pedidos"><span aria-hidden="true">↻</span> Actualizar</button></div><p class="muted">Disponibilidad por sabor. Pagas al recibir; los puntos se acreditan al completar la entrega.</p>
         <p id="deliveryAreaNotice" class="delivery-area-notice"><span aria-hidden="true">📍</span><span><strong>Entregas solo en el Edificio 4.</strong> Actualmente no realizamos entregas en otros edificios.</span></p><p id="clientInventoryStatus" class="inventory-status" role="status">Consultando existencias...</p>
         <div id="clientFlavorList" class="order-cart"></div>
@@ -714,6 +714,7 @@ function goToAdminLogin() {
 }
 
 function goToUserLogin() {
+  window.DonasTour?.stop();
   cancelCustomerLogin();
   document.getElementById('clientLoginSuccess').hidden = true;
   document.getElementById('roleOverlay').classList.add('hidden');
@@ -759,6 +760,7 @@ function requireAuth() { return !!sessionStorage.getItem('donasAdminAccessToken'
 function tryShowAdmin() { requireAuth() ? showAdmin() : goToAdminLogin(); }
 
 function showScreen(id) {
+  if (id !== 'screen-client') window.DonasTour?.stop();
   clientRequestVersion++;
   hideOverlays(); stopScanner(); stopUserScanner();
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -768,6 +770,7 @@ function showScreen(id) {
 function goHome() { openedAsUser = false; showScreen('screen-home'); loadHomeRanking(); }
 function rankingBack() { requireAuth() ? goHome() : goToRoleScreen(); }
 function clientGoBack() {
+  window.DonasTour?.stop();
   if (openedAsUser) {
     sessionStorage.removeItem('donasCustomerToken');
     sessionStorage.removeItem('donasCustomerId');
@@ -920,6 +923,7 @@ async function loginCustomerById(id) {
     };
     if (window.DonasMotion) await window.DonasMotion.customerWelcome({signal,reveal:enterProfile});
     else enterProfile();
+    if (isCurrent() && openedAsUser && currentClient) window.DonasTour?.onLogin(result.customer.publicId);
   } catch (error) {
     if (!isCurrent() || error.name === 'AbortError') return;
     if (error.code === 'PASSWORD_REQUIRED') {
@@ -953,6 +957,7 @@ async function openClient(id, asUser) {
     if (!data.ok) throw new Error(data.error || 'Cliente no encontrado');
     currentClient = data.client;
     renderClient(data.client, asUser);
+    if (asUser) window.DonasTour?.onLogin(data.client.id);
     return true;
   } catch (err) {
     if (requestVersion !== clientRequestVersion) return;
@@ -985,6 +990,7 @@ function renderClient(c, asUser) {
   document.getElementById('clientUserTabs').style.display = asUser ? '' : 'none';
   document.getElementById('clientProfileTabs').style.display = asUser ? '' : 'none';
   document.getElementById('customerPasswordAction').style.display = asUser ? '' : 'none';
+  document.getElementById('clientTourReplay').hidden = !asUser;
   renderHitos(c.hitosRacha || []);
   renderBadges(c.badges || []);
   renderProfilePreview(c);
@@ -1491,5 +1497,6 @@ function esc(s){ return String(s ?? '').replace(/\\/g,'\\\\').replace(/'/g,"\\'"
 <script src="assets/js/admin-operations.js"></script>
 <script src="assets/js/admin-loyalty.js"></script>
 <script src="assets/js/motion.js"></script>
+<script src="assets/js/client-tour.js" defer></script>
 </body>
 </html>

@@ -474,6 +474,24 @@ html.motion-lite :is(.btn,.shop-buy,.tab,.client-top-link,.quantity button):acti
 .motion-picker select{min-height:40px;max-width:160px;padding:7px 10px;border:1px solid #c69ced44;border-radius:10px;background:#211a2c;color:var(--text);font:inherit;cursor:pointer}
 .motion-hint{font-size:11px;line-height:1.5;color:var(--muted);margin:7px 0 0}
 .profile-tools{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.client-tour-layer{position:fixed;inset:0;z-index:9000;pointer-events:none;font-family:inherit}
+.client-tour-shade{position:fixed;background:rgba(10,7,18,.68);pointer-events:auto}
+.client-tour-ring{position:fixed;border:2px solid #f5c5e4;border-radius:16px;box-shadow:0 0 0 4px rgba(245,197,228,.2),0 0 24px rgba(245,197,228,.38);pointer-events:none}
+.client-tour-card{position:fixed;box-sizing:border-box;max-height:calc(100dvh - 24px);overflow:auto;padding:20px;background:#241b34;border:1px solid rgba(245,197,228,.48);border-radius:22px;color:#fff;box-shadow:0 20px 60px #0009;pointer-events:auto}
+.client-tour-card h2{font-size:21px;line-height:1.2;margin:8px 0 10px}
+.client-tour-card p{font-size:14px;line-height:1.5;color:#e9dff0;margin:0 0 18px}
+.client-tour-count{font-size:12px;font-weight:800;color:#f6bddc;letter-spacing:.02em}
+.client-tour-actions{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:8px}
+.client-tour-button{min-height:44px;border:1px solid rgba(255,255,255,.28);border-radius:12px;padding:10px 14px;background:transparent;color:#fff;font:inherit;font-size:13px;font-weight:850;cursor:pointer}
+.client-tour-button.primary{background:linear-gradient(120deg,#8b5cf6,#f05779);border-color:transparent}
+.client-tour-button:focus-visible,#clientTourReplay:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.client-tour-card h2:focus-visible{outline:none}
+.client-tour-layer.is-welcome{background:rgba(10,7,18,.72);pointer-events:auto}
+.client-tour-layer.is-welcome .client-tour-shade,.client-tour-layer.is-welcome .client-tour-ring{display:none}
+.client-tour-layer.is-welcome .client-tour-card{width:min(420px,calc(100vw - 24px));left:50%;top:50%;transform:translate(-50%,-50%)}
+#clientTourReplay[hidden]{display:none!important}
+#screen-client [data-tour],#client-tab-shop,#client-tab-history,#client-tab-ranking{scroll-margin-top:95px}
+@media(max-width:360px){.client-tour-card{padding:16px}.client-tour-button{padding:9px 11px}}
 .profile-tools .motion-picker{font-size:11px;gap:7px}
 .profile-tools .motion-picker select{max-width:136px}
 
