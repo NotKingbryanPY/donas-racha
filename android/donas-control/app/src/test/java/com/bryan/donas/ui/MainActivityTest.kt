@@ -60,8 +60,8 @@ class MainActivityTest {
     @Config(sdk = [28], qualifiers = "w360dp-h800dp-night")
     fun nightPaletteIsAvailableOnAndroidNine() {
         val context = ApplicationProvider.getApplicationContext<DonasApp>()
-        assertEquals(0xFF191714.toInt(), context.getColor(R.color.background))
-        assertEquals(0xFFEEE1D7.toInt(), context.getColor(R.color.on_surface))
+        assertEquals(0xFF100D17.toInt(), context.getColor(R.color.background))
+        assertEquals(0xFFF4EAFB.toInt(), context.getColor(R.color.on_surface))
     }
 
     @Test

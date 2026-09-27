@@ -95,6 +95,27 @@ class OperationsRepositoryTest {
         assertEquals(4, org.json.JSONObject(queued.last().payloadJson).getJSONObject("details").getInt("quantity"))
     }
 
+    @Test fun flavoredOfflineSaleAndReversalPreserveOneOutboxIdentity() = runBlocking {
+        operations.startSession(initialCash = 600)
+        operations.purchase(1, listOf(PaymentSource("CASH", 600)))
+        val saleId = operations.quickSale("YAPPY", quantity = 3, requestKey = "flavored-sale",
+            flavors = mapOf("DR-CHOCOLATE" to 2, "DR-VAINILLA" to 1))
+        assertEquals(saleId, operations.quickSale("YAPPY", quantity = 3, requestKey = "flavored-sale",
+            flavors = mapOf("DR-CHOCOLATE" to 2, "DR-VAINILLA" to 1)))
+        val sale = db.syncDao().pending().single { it.type == "SALE" }
+        val items = org.json.JSONObject(sale.payloadJson).getJSONObject("details").getJSONArray("items")
+        assertEquals(2, items.length())
+        assertEquals("DR-CHOCOLATE", items.getJSONObject(0).getString("sku"))
+        assertEquals(2, items.getJSONObject(0).getInt("quantity"))
+        assertEquals(9, operations.dashboard().stock)
+        operations.undoLastSale("reverse-flavored-sale")
+        val reversal = db.syncDao().pending().single { it.type == "REVERSAL" }
+        assertEquals(saleId, org.json.JSONObject(reversal.payloadJson).getLong("reversedEventId"))
+        assertEquals(12, operations.dashboard().stock)
+        assertEquals(0, operations.dashboard().yappy)
+        assertEquals(0, db.operationDao().journalTotal())
+    }
+
     @Test fun failedPurchaseLeavesNoPartialState() = runBlocking {
         operations.startSession(initialCash = 500)
         try { operations.purchase(1, listOf(PaymentSource("CASH", 500))); fail() } catch (_: IllegalArgumentException) { }

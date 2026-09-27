@@ -249,12 +249,15 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
       </div>
     </div>
 
-    <div id="clientUserTabs" class="tabs client-tabs" style="display:none">
+    <div id="clientUserTabs" class="client-top-nav" style="display:none" role="navigation" aria-label="Área del cliente">
+      <button id="client-top-profile" class="client-top-link active" onclick="setClientTab('profile')">👤 Perfil</button>
+      <button id="client-top-delivery" class="client-top-link" onclick="setClientTab('delivery')">🍩 Pedidos</button>
+    </div>
+    <div id="clientProfileTabs" class="tabs client-tabs" style="display:none">
       <button id="client-tab-profile" class="tab active" onclick="setClientTab('profile')">👤 Perfil</button>
       <button id="client-tab-ranking" class="tab" onclick="setClientTab('ranking')">🏆 Ranking</button>
       <button id="client-tab-shop" class="tab" onclick="setClientTab('shop')">🛍️ Tienda</button>
       <button id="client-tab-history" class="tab" onclick="setClientTab('history')">📋 Historial</button>
-      <button id="client-tab-delivery" class="tab" onclick="setClientTab('delivery')">🍩 Pedir</button>
     </div>
 
     <div id="clientProfileSection" class="client-section">
@@ -349,7 +352,8 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
       </div>
     </div>
     <div id="clientDeliverySection" class="client-section" style="display:none">
-      <div class="card"><div class="card-title">🍩 Tu pedido</div><p class="muted">Elige las donas; pagarás al recibir. El pedido no suma puntos hasta que se confirme la venta.</p>
+      <div class="card"><div class="card-title">🍩 Tu pedido</div><p class="muted">Disponibilidad por sabor. Pagas al recibir; los puntos se acreditan al completar la entrega.</p>
+        <p id="clientInventoryStatus" class="inventory-status" role="status">Consultando existencias...</p>
         <div id="clientFlavorList" class="order-cart"></div>
         <div class="order-summary"><span>Total</span><strong id="clientOrderTotal">B/.0.00</strong></div>
         <label class="field-label" for="clientDeliveryLocation">Ubicación de entrega</label><input id="clientDeliveryLocation" class="field" maxlength="300" placeholder="Ej.: UTP, Edificio 4, entrada principal">
@@ -420,6 +424,12 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
         <p class="muted" style="margin:12px 0">Clientes, compras, puntos, canjes y pedidos se gestionan en Supabase.</p>
       </div>
       <div class="card">
+        <div class="card-title">🍩 Inventario físico por sabor</div>
+        <p class="muted">Cuenta las donas que tienes ahora. La app sincroniza después las compras de cajas y ventas pendientes.</p>
+        <div id="adminFlavorInventory" class="muted" style="margin-top:12px">Cargando inventario...</div>
+        <button class="btn btn-outline" onclick="loadAdminInventory()" style="margin-top:10px">Actualizar existencias</button>
+      </div>
+      <div class="card">
         <div class="card-title">⚙️ Config rápida</div>
         <div class="grid2">
           <div class="field-group"><label class="field-label" for="cfgTolerance">Tolerancia (días)</label><input id="cfgTolerance" class="field" placeholder="Tolerancia días"></div>
@@ -468,6 +478,7 @@ let customerSelectedFlavor = null;
 let customerOrderQuantities = new Map();
 let customerOrderPendingKey = null;
 let customerOrderVariants = [];
+let clientInventoryEnforced = false;
 const pendingPurchaseKeys = new Map();
 const pendingRedeemKeys = new Map();
 let pendingRegistration = null;
@@ -900,6 +911,7 @@ function renderClient(c, asUser) {
   document.getElementById('buyBtn').disabled = !!c.purchasedToday;
   document.getElementById('buyBtn').textContent = `🍩 Registrar compra (+${c.nextPurchasePoints || 10} pts)`;
   document.getElementById('clientUserTabs').style.display = asUser ? '' : 'none';
+  document.getElementById('clientProfileTabs').style.display = asUser ? '' : 'none';
   document.getElementById('customerPasswordSettings').style.display = asUser ? '' : 'none';
   renderHitos(c.hitosRacha || []);
   renderBadges(c.badges || []);
@@ -925,6 +937,7 @@ function renderClient(c, asUser) {
     const history = document.getElementById('clientHistorySection');
     const delivery = document.getElementById('clientDeliverySection');
     if (tabs) tabs.style.display = 'none';
+    document.getElementById('clientProfileTabs').style.display = 'none';
     if (ranking) ranking.style.display = 'none';
     if (shop) shop.style.display = 'none';
     if (history) history.style.display = '';
@@ -947,6 +960,10 @@ function renderHistory(hist) {
 }
 
 function setClientTab(tab) {
+  if (tab === 'delivery' && !openedAsUser) return;
+  document.getElementById('clientProfileTabs').style.display = openedAsUser && tab !== 'delivery' ? '' : 'none';
+  document.getElementById('client-top-profile')?.classList.toggle('active', tab !== 'delivery');
+  document.getElementById('client-top-delivery')?.classList.toggle('active', tab === 'delivery');
   const sections = {
     profile: document.getElementById('clientProfileSection'),
     ranking: document.getElementById('clientRankingSection'),
@@ -967,11 +984,18 @@ async function loadClientDelivery() {
   const list = document.getElementById('clientFlavorList');
   list.innerHTML = '<div class="empty">Cargando sabores...</div>';
   try {
-    const products = Array.isArray(window.__donasProducts)
-      ? window.__donasProducts : (await vercelApi('/api/products')).products || [];
-    clientOrderVariants = flattenCatalog(products).filter(item => item.available);
+    const [catalog, inventory] = await Promise.all([
+      vercelApi('/api/products'), vercelApi('/api/inventory')
+    ]);
+    const byId = new Map((inventory.flavors || []).map(row => [String(row.variant_id), row]));
+    clientInventoryEnforced = !!inventory.enforced;
+    clientOrderVariants = flattenCatalog(catalog.products || []).filter(item => item.available)
+      .map(item => ({ ...item, inventory:byId.get(String(item.id)) }));
+    document.getElementById('clientInventoryStatus').textContent = clientInventoryEnforced
+      ? 'Existencias sincronizadas · se actualizan automáticamente'
+      : 'Inventario por sabor en preparación. Puedes pedir; confirmaremos la disponibilidad antes de aceptar.';
     renderClientFlavors();
-  } catch (error) { list.textContent = error.message; }
+  } catch (error) { list.textContent = error.message; document.getElementById('clientInventoryStatus').textContent = 'No se pudo comprobar el inventario.'; }
   try {
     const result = await customerRequest('/api/customer/orders');
     const orders = result.orders || [];
@@ -988,12 +1012,14 @@ function clientOrderStatus(status) {
 function renderClientFlavors() {
   const list = document.getElementById('clientFlavorList');
   if (!clientOrderVariants.length) { list.innerHTML = '<div class="empty">No hay sabores disponibles ahora.</div>'; updateClientOrderTotal(); return; }
-  list.innerHTML = clientOrderVariants.map(item => `<div class="cart-row"><div class="cart-donut ${flavorTone(item.name)}"><span class="mini-donut"></span></div><div class="grow"><b>${safe(item.name)}</b><small>${formatMoney(item.unit_price_cents,item.currency_code)} c/u</small></div><div class="quantity"><button aria-label="Quitar ${safe(item.name)}" onclick="changeClientOrderQty('${item.id}',-1)">−</button><span>${customerOrderQuantities.get(String(item.id)) || 0}</span><button aria-label="Añadir ${safe(item.name)}" onclick="changeClientOrderQty('${item.id}',1)">+</button></div></div>`).join('');
+  list.innerHTML = clientOrderVariants.map(item => { const left = item.inventory?.counted ? Math.max(0,Number(item.inventory.available_quantity) || 0) : 0; return `<div class="cart-row"><div class="cart-donut ${flavorTone(item.name)}"><span class="mini-donut"></span></div><div class="grow"><b>${safe(item.name)}</b><small>${formatMoney(item.unit_price_cents,item.currency_code)} c/u · <span class="flavor-remaining">${clientInventoryEnforced ? left+' disponibles' : 'por confirmar'}</span></small></div><div class="quantity"><button aria-label="Quitar ${safe(item.name)}" onclick="changeClientOrderQty('${item.id}',-1)">−</button><span>${customerOrderQuantities.get(String(item.id)) || 0}</span><button aria-label="Añadir ${safe(item.name)}" ${clientInventoryEnforced && left <= (customerOrderQuantities.get(String(item.id)) || 0) ? 'disabled' : ''} onclick="changeClientOrderQty('${item.id}',1)">+</button></div></div>`; }).join('');
   updateClientOrderTotal();
 }
 
 function changeClientOrderQty(id, delta) {
-  const quantity = Math.max(0, Math.min(100, (customerOrderQuantities.get(id) || 0) + delta));
+  const flavor = clientOrderVariants.find(item => String(item.id) === id);
+  const available = clientInventoryEnforced ? (flavor?.inventory?.counted ? Math.max(0,Number(flavor.inventory.available_quantity) || 0) : 0) : 100;
+  const quantity = Math.max(0, Math.min(available, 100, (customerOrderQuantities.get(id) || 0) + delta));
   if (quantity) customerOrderQuantities.set(id, quantity); else customerOrderQuantities.delete(id);
   customerOrderPendingKey = null;
   renderClientFlavors();
@@ -1002,8 +1028,14 @@ function changeClientOrderQty(id, delta) {
 function updateClientOrderTotal() {
   const total = clientOrderVariants.reduce((sum,item) => sum + item.unit_price_cents * (customerOrderQuantities.get(String(item.id)) || 0), 0);
   document.getElementById('clientOrderTotal').textContent = formatMoney(total);
-  document.getElementById('clientOrderButton').disabled = total <= 0;
+  document.getElementById('clientOrderButton').disabled = total <= 0 || (clientInventoryEnforced && clientOrderVariants.some(item =>
+    (customerOrderQuantities.get(String(item.id)) || 0) > (item.inventory?.counted ? Number(item.inventory.available_quantity) : 0)));
 }
+
+setInterval(() => {
+  if (openedAsUser && !document.hidden && document.getElementById('screen-client').classList.contains('active') &&
+      document.getElementById('clientDeliverySection').style.display !== 'none') loadClientDelivery();
+}, 20000);
 
 async function submitClientOrder() {
   const message = document.getElementById('clientOrderMessage');
@@ -1248,6 +1280,32 @@ async function showAdmin() {
   if (!requireAuth()) { goToAdminLogin(); return; }
   showScreen('screen-admin');
   await loadAdminDashboard('compras');
+  loadAdminInventory();
+}
+
+async function adminInventoryRequest(method, body) {
+  const token = sessionStorage.getItem('donasAdminAccessToken');
+  const response = await fetch('/api/admin/inventory', { method,
+    headers:{ accept:'application/json', ...(body ? {'content-type':'application/json'} : {}), authorization:`Bearer ${token}` },
+    ...(body ? {body:JSON.stringify(body)} : {}) });
+  const payload = await response.json().catch(() => null);
+  if (!response.ok || !payload?.ok) throw new Error(payload?.error?.message || 'No se pudo consultar el inventario.');
+  return payload.data;
+}
+async function loadAdminInventory() {
+  const root = document.getElementById('adminFlavorInventory');
+  root.textContent = 'Consultando...';
+  try {
+    const { flavors } = await adminInventoryRequest('GET');
+    root.innerHTML = flavors.map(row => `<div class="admin-inventory-row"><div><b>${safe(row.name)}</b><small>${row.counted ? Math.max(0,Number(row.available_quantity))+' disponibles' : 'Conteo pendiente'}</small></div><input class="field" id="count-${esc(row.sku)}" type="number" min="0" max="100000" inputmode="numeric" placeholder="Conteo físico" aria-label="Conteo físico de ${safe(row.name)}"><button class="btn btn-outline" onclick="saveAdminCount('${esc(row.sku)}')">Guardar</button></div>`).join('');
+  } catch (error) { root.textContent = error.message; }
+}
+async function saveAdminCount(sku) {
+  const input = document.getElementById('count-'+sku);
+  const quantity = Number(input.value);
+  if (!input.value || !Number.isSafeInteger(quantity) || quantity < 0) { showToast('Escribe el conteo físico.'); return; }
+  try { await adminInventoryRequest('POST', {sku,quantity}); showToast('Conteo guardado'); await loadAdminInventory(); }
+  catch (error) { showToast(error.message); }
 }
 
 async function loadAdminDashboard(type='compras') {

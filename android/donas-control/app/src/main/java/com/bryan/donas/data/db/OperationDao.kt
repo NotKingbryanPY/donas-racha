@@ -28,6 +28,7 @@ interface OperationDao {
     @Update suspend fun updateSale(value: SaleEntity)
     @Query("SELECT * FROM sales WHERE reversedAt IS NULL ORDER BY timestamp DESC,id DESC LIMIT 1") suspend fun lastSale(): SaleEntity?
     @Query("SELECT * FROM sales WHERE eventId=:eventId LIMIT 1") suspend fun saleForEvent(eventId: Long): SaleEntity?
+    @Query("SELECT * FROM purchases WHERE eventId=:eventId LIMIT 1") suspend fun purchaseForEvent(eventId: Long): PurchaseEntity?
     @Insert suspend fun insertAllocations(values: List<SaleLotAllocationEntity>)
     @Query("SELECT * FROM sale_lot_allocations WHERE saleId=:saleId") suspend fun saleAllocations(saleId: Long): List<SaleLotAllocationEntity>
     @Insert suspend fun insertExpense(value: ExpenseEntity): Long

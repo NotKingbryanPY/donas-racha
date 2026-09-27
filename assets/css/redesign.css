@@ -298,3 +298,24 @@ h1[tabindex="-1"]:focus,h2[tabindex="-1"]:focus{outline:none}
 /* White button labels keep AA contrast across the gradient. */
 .btn-primary{background:linear-gradient(115deg,#8951c8,#7540b3)}
 
+.client-top-nav{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 14px}
+.client-top-link{min-height:56px;border:1px solid #b997e655;border-radius:17px;background:#211b2b;color:#e9daf9;font:inherit;font-weight:700;cursor:pointer;transition:background .2s,transform .2s,border-color .2s}
+.client-top-link.active{background:linear-gradient(125deg,#7745ad,#a170d0);color:#fff;border-color:#c9a5ec}
+.client-top-link:hover{transform:translateY(-2px);border-color:#cfaaee}
+.client-top-link:focus-visible{outline:3px solid #d6b6f3;outline-offset:2px}
+.client-tabs{margin-bottom:20px}
+.inventory-status{border-radius:10px;background:#2e253d;color:#e9d5fc;padding:9px 12px;font-size:12px;margin:12px 0}
+.flavor-remaining{color:#9a67d2;font-weight:700}
+.admin-inventory-row{display:grid;grid-template-columns:minmax(0,1fr) 90px auto;gap:8px;align-items:center;padding:9px 0;border-bottom:1px solid #ffffff18}
+.admin-inventory-row small{display:block;color:#d1bee2;margin-top:3px}
+.admin-inventory-row .field{min-width:0;margin:0;padding:10px 8px}
+.admin-inventory-row .btn{padding:10px 12px}
+@media(max-width:390px){.admin-inventory-row{grid-template-columns:minmax(0,1fr) 75px auto;gap:5px}.admin-inventory-row .btn{font-size:11px;padding:9px 7px}}
+.quantity button:disabled{opacity:.45;cursor:not-allowed}
+@media(max-width:600px){.client-top-nav{gap:8px}.client-top-link{min-height:50px;font-size:14px}.client-tabs{overflow-x:auto;flex-wrap:nowrap;scrollbar-width:thin}.client-tabs .tab{flex:0 0 auto}}
+@media(prefers-reduced-motion:no-preference){html:not(.motion-lite) #screen-client .client-section:not([style*="display: none"]){animation:client-panel-enter .3s ease-out both}
+@keyframes client-panel-enter{from{opacity:.25;transform:translateX(12px)}to{opacity:1;transform:translateX(0)}}
+html:not(.motion-lite) .client-top-link.active{animation:top-tab-glow .35s ease-out}
+@keyframes top-tab-glow{from{box-shadow:0 0 0 0 #ba8fe06b}to{box-shadow:0 0 0 8px transparent}}
+}
+

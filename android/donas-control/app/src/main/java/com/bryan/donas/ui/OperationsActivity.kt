@@ -6,16 +6,25 @@ import android.os.Build
 import android.os.Bundle
 import android.text.InputType
 import android.view.View
+import android.view.Gravity
+import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ScrollView
+import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.bryan.donas.DonasApp
+import com.bryan.donas.R
+import com.bryan.donas.data.FlavorBasket
 import com.bryan.donas.data.PaymentSource
+import com.bryan.donas.data.OrderSync
 import com.bryan.donas.databinding.ActivityOperationsBinding
 import com.bryan.donas.util.Money
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -33,6 +42,7 @@ class OperationsActivity : AppCompatActivity() {
     private var historyType: String? = null
     private var historyAccount: String? = null
     private var busy = false
+    private var saleDialogOpen = false
     private val notificationPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { refresh() }
 
     private val exportBackup = registerForActivityResult(ActivityResultContracts.CreateDocument("application/octet-stream")) { uri ->
@@ -54,8 +64,7 @@ class OperationsActivity : AppCompatActivity() {
         binding.toolbar.setNavigationOnClickListener { finish() }
         binding.startSession.setOnClickListener { startSession() }
         binding.closeSession.setOnClickListener { closeSession() }
-        binding.saleCash.setOnClickListener { sale("CASH") }
-        binding.saleYappy.setOnClickListener { sale("YAPPY") }
+        binding.saleQuick.setOnClickListener { sale() }
         binding.undo.setOnClickListener { runAction("Venta revertida.") { app.operations.undoLastSale() } }
         binding.purchase.setOnClickListener { purchase() }
         binding.transfer.setOnClickListener { transfer() }
@@ -76,6 +85,12 @@ class OperationsActivity : AppCompatActivity() {
             intent.removeExtra(QuickSaleUi.EXTRA_OPEN_PURCHASE)
             binding.root.post { purchase() }
         }
+        if (savedInstanceState == null) {
+            val account = intent.getStringExtra(QuickSaleUi.EXTRA_SALE_ACCOUNT)
+            if (account == "CASH" || account == "YAPPY") {
+                binding.root.post { sale() }
+            }
+        }
         if (Build.VERSION.SDK_INT >= 33 && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != android.content.pm.PackageManager.PERMISSION_GRANTED) notificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
     }
 
@@ -91,8 +106,7 @@ class OperationsActivity : AppCompatActivity() {
                 binding.dashboard.text = "CAPITAL DISPONIBLE\nEfectivo ${Money.format(data.cash)} · Yappy ${Money.format(data.yappy)}\nTotal líquido ${Money.format(data.cash + data.yappy)}\n\nVENTAS DE HOY\n${data.today.quantity} donas · ${Money.format(data.today.revenue)}\nGanancia bruta ${Money.format(data.today.revenue - data.today.cost)}\n\nINVENTARIO\n${data.stock} donas · ${Money.format(data.inventoryValue)} invertidos\n\nDEUDAS Y SOCIOS\nDeuda ${Money.format(data.debt)} · Pendiente socios ${Money.format(data.partnerPending)}"
                 binding.startSession.isVisible = data.activeSession == null
                 binding.closeSession.isVisible = data.activeSession != null
-                binding.saleCash.isEnabled = data.activeSession != null && data.stock > 0
-                binding.saleYappy.isEnabled = binding.saleCash.isEnabled
+                binding.saleQuick.isEnabled = data.stock > 0
                 binding.statistics.text = "Hoy: ${stats.today.quantity} donas · ${Money.format(stats.today.revenue)}\nSemana: ${stats.week.quantity} · ${Money.format(stats.week.revenue)}\nMes: ${stats.month.quantity} · ${Money.format(stats.month.revenue)}\nGastos de negocio hoy: ${Money.format(stats.todayExpenses)}\nGanancia neta hoy: ${Money.format(stats.today.revenue - stats.today.cost - stats.todayExpenses)}"
                 binding.history.text = history.joinToString("\n") { "${DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(it.timestamp))}   ${if (it.amountCents == 0L) "" else Money.format(it.amountCents)}   ${it.title}" }.ifEmpty { "Todavía no hay movimientos." }
                 binding.moreHistory.isVisible = history.size == 50
@@ -101,7 +115,115 @@ class OperationsActivity : AppCompatActivity() {
         }
     }
 
-    private fun sale(code: String) = runAction("Venta registrada.") { app.operations.quickSale(code) }
+    private fun sale() {
+        if (saleDialogOpen) return
+        saleDialogOpen = true
+        lifecycleScope.launch {
+            try {
+                val (price, stock) = withContext(Dispatchers.IO) {
+                    app.repository.initialize()
+                    app.repository.snapshot().config.donutPriceCents to app.operations.dashboard().stock
+                }
+                showSalePicker(price, stock)
+            } catch (e: Exception) {
+                saleDialogOpen = false
+                message(e.localizedMessage ?: "No se pudo abrir la venta.")
+            }
+        }
+    }
+
+    private fun dp(value: Int) = (value * resources.displayMetrics.density).toInt()
+
+    private fun showSalePicker(unitPrice: Long, stock: Long) {
+        var basket = FlavorBasket.empty()
+        val requestKey = UUID.randomUUID().toString()
+        val iconIds = intArrayOf(
+            R.drawable.widget_donut_chocolate, R.drawable.widget_donut_vanilla,
+            R.drawable.widget_donut_chocolate_sprinkles, R.drawable.widget_donut_vanilla_sprinkles,
+        )
+        val container = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(dp(12), 0, dp(12), 0) }
+        val countLabels = mutableListOf<TextView>()
+        val summary = TextView(this).apply { textSize = 16f; setPadding(0, dp(12), 0, dp(12)) }
+        val paymentButtons = mutableListOf<MaterialButton>()
+
+        fun render() {
+            countLabels.forEachIndexed { index, label -> label.text = basket.count(index).toString() }
+            val total = Math.multiplyExact(unitPrice, basket.total.toLong())
+            summary.text = "${basket.total} donas · ${Money.format(total)} · Stock local $stock"
+            paymentButtons.forEach { it.isEnabled = basket.total > 0 && !busy }
+        }
+
+        for (index in FlavorBasket.skus.indices) {
+            val row = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL }
+            row.addView(ImageView(this).apply {
+                setImageResource(iconIds[index]); contentDescription = FlavorBasket.names[index]
+            }, LinearLayout.LayoutParams(dp(48), dp(48)))
+            row.addView(TextView(this).apply { text = FlavorBasket.names[index]; textSize = 14f; setPadding(dp(6), 0, dp(2), 0) },
+                LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
+            val minus = TextView(this).apply {
+                text = "−"; textSize = 22f; gravity = Gravity.CENTER
+                contentDescription = "Quitar ${FlavorBasket.names[index]}"
+                setBackgroundResource(R.drawable.widget_stepper); setTextColor(android.graphics.Color.WHITE)
+            }
+            row.addView(minus, LinearLayout.LayoutParams(dp(48), dp(48)))
+            val count = TextView(this).apply { textSize = 17f; gravity = Gravity.CENTER; text = "0" }
+            countLabels += count
+            row.addView(count, LinearLayout.LayoutParams(dp(30), dp(48)))
+            val plus = TextView(this).apply {
+                text = "+"; textSize = 22f; gravity = Gravity.CENTER
+                contentDescription = "Agregar ${FlavorBasket.names[index]}"
+                setBackgroundResource(R.drawable.widget_stepper); setTextColor(android.graphics.Color.WHITE)
+            }
+            row.addView(plus, LinearLayout.LayoutParams(dp(48), dp(48)))
+            minus.setOnClickListener { basket = basket.change(index, -1); render() }
+            plus.setOnClickListener {
+                if (basket.total.toLong() >= stock) { message("No quedan más donas en el stock local."); return@setOnClickListener }
+                basket = basket.change(index, 1); render()
+            }
+            container.addView(row)
+        }
+        container.addView(summary)
+        val payments = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+        val cash = MaterialButton(this).apply { text = "Efectivo" }
+        val yappy = MaterialButton(this).apply { text = "Yappy" }
+        paymentButtons += cash; paymentButtons += yappy
+        payments.addView(cash, LinearLayout.LayoutParams(0, dp(52), 1f))
+        payments.addView(yappy, LinearLayout.LayoutParams(0, dp(52), 1f).apply { marginStart = dp(8) })
+        container.addView(payments)
+        val scroll = ScrollView(this).apply { addView(container) }
+        val dialog: AlertDialog = MaterialAlertDialogBuilder(this)
+            .setTitle("Elige sabores")
+            .setView(scroll)
+            .setNegativeButton("Cancelar", null)
+            .create()
+        dialog.setOnDismissListener { saleDialogOpen = false }
+
+        fun commit(account: String) {
+            if (busy || basket.total == 0) return
+            busy = true
+            render()
+            lifecycleScope.launch {
+                try {
+                    val selected = basket
+                    withContext(Dispatchers.IO) {
+                        if (app.operations.dashboard().activeSession == null)
+                            app.operations.startSession(requestKey = "sale-session-$requestKey")
+                        app.operations.quickSale(account, selected.total.toLong(), requestKey = requestKey, flavors = selected.items())
+                    }
+                    if (app.backendClient.signedIn) runCatching { OrderSync.request(this@OperationsActivity) }
+                    dialog.dismiss()
+                    message("Venta guardada · ${selected.total} donas")
+                    refresh()
+                } catch (e: Exception) {
+                    message(e.localizedMessage ?: "No se pudo guardar la venta.")
+                } finally { busy = false; render() }
+            }
+        }
+        cash.setOnClickListener { commit("CASH") }
+        yappy.setOnClickListener { commit("YAPPY") }
+        render()
+        dialog.show()
+    }
 
     private fun startSession() {
         val fields = form("Efectivo inicial ($)" to "0.00", "Yappy inicial ($)" to "0.00")
@@ -175,7 +297,7 @@ class OperationsActivity : AppCompatActivity() {
     private fun form(vararg fields: Pair<String, String>): List<TextInputEditText> {
         val container = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(36, 8, 36, 0) }
         val editors = fields.map { (hint, value) ->
-            TextInputEditText(this).apply { setText(value); inputType = if (hint.contains("Descripción") || hint.contains("Persona") || hint.contains("Motivo")) InputType.TYPE_CLASS_TEXT else InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL }
+            TextInputEditText(this).apply { setText(value); inputType = if (hint.contains("Descripción") || hint.contains("Persona") || hint.contains("Motivo") || hint.contains("RESETEAR")) InputType.TYPE_CLASS_TEXT else InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL }
                 .also { editor -> container.addView(TextInputLayout(this).apply { this.hint = hint; addView(editor) }, LinearLayout.LayoutParams(-1, -2).apply { topMargin = 10 }) }
         }
         editors.first().setTag(com.bryan.donas.R.id.root, container)
@@ -184,14 +306,27 @@ class OperationsActivity : AppCompatActivity() {
     private fun dialog(title: String, fields: List<TextInputEditText>, operation: suspend () -> Any) {
         val view = fields.first().getTag(com.bryan.donas.R.id.root) as View
         val dialog = MaterialAlertDialogBuilder(this).setTitle(title).setView(view).setNegativeButton("Cancelar", null).setPositiveButton("Guardar", null).create()
-        dialog.setOnShowListener { dialog.getButton(-1).setOnClickListener { dialog.dismiss(); runAction("Operación guardada.", operation) } }
+        dialog.setOnShowListener { dialog.getButton(-1).setOnClickListener {
+            if (busy) return@setOnClickListener
+            busy = true
+            lifecycleScope.launch {
+                try {
+                    withContext(Dispatchers.IO) { operation() }
+                    if (app.backendClient.signedIn) OrderSync.request(this@OperationsActivity)
+                    dialog.dismiss()
+                    if (!isFinishing) { message("Operación guardada."); refresh() }
+                } catch (e: Exception) {
+                    fields.first().error = e.localizedMessage ?: "La operación no se pudo completar."
+                } finally { busy = false }
+            }
+        } }
         dialog.show()
     }
     private fun runAction(success: String, operation: suspend () -> Any) {
         if (busy) return
         busy = true
         lifecycleScope.launch {
-            try { withContext(Dispatchers.IO) { operation() }; if (!isFinishing) { message(success); refresh() } }
+            try { withContext(Dispatchers.IO) { operation() }; if (app.backendClient.signedIn) OrderSync.request(this@OperationsActivity); if (!isFinishing) { message(success); refresh() } }
             catch (e: Exception) { message(e.localizedMessage ?: "La operación no se pudo completar.") }
             finally { busy = false }
         }

@@ -20,6 +20,12 @@ interface SyncDao {
     @Query("UPDATE sync_outbox SET state='ACKED', serverSequence=:sequence, lastError=NULL WHERE clientOperationId=:id")
     suspend fun acknowledge(id: String, sequence: Long)
 
+    @Query("UPDATE sync_outbox SET state='REJECTED', serverSequence=:sequence, lastError=:error WHERE clientOperationId=:id")
+    suspend fun reject(id: String, sequence: Long, error: String)
+
+    @Query("SELECT COUNT(*) FROM sync_outbox WHERE state='REJECTED'")
+    suspend fun rejectedCount(): Int
+
     @Query("UPDATE sync_outbox SET attempts=attempts+1, lastError=:error WHERE clientOperationId IN (:ids)")
     suspend fun markAttempt(ids: List<String>, error: String)
 
@@ -31,6 +37,9 @@ interface SyncDao {
 
     @Query("SELECT * FROM remote_orders ORDER BY createdAt DESC LIMIT 100")
     suspend fun recentOrders(): List<RemoteOrderEntity>
+
+    @Query("SELECT * FROM remote_orders WHERE status='COMPLETED' AND settled=1 ORDER BY createdAt")
+    suspend fun settledOrders(): List<RemoteOrderEntity>
 
     @Query("SELECT * FROM remote_orders WHERE id=:id LIMIT 1")
     suspend fun order(id: String): RemoteOrderEntity?

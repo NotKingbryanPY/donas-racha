@@ -22,6 +22,7 @@ android {
     }
     kotlinOptions { jvmTarget = "17" }
     testOptions { unitTests.isIncludeAndroidResources = true }
+    sourceSets.getByName("androidTest").assets.srcDir("schemas")
     buildTypes {
         create("pilot") {
             initWith(getByName("debug"))
@@ -40,7 +41,7 @@ android {
         abortOnError = true
         warningsAsErrors = true
         // Deliberately pin this tested SDK 35 / API 23 compatible dependency set.
-        disable += listOf("GradleDependency", "HardcodedText", "SetTextI18n") // Spanish-only local app; dynamic monetary summaries are assembled at runtime.
+        disable += listOf("GradleDependency", "HardcodedText", "SetTextI18n", "OldTargetApi") // SDK 35 is pinned until Android 36 behavior is tested on a device.
     }
 }
 ksp { arg("room.schemaLocation", "$projectDir/schemas") }
