@@ -179,10 +179,11 @@ const fixture = () => ({id:'C-DEMO',name:'Cliente de prueba con nombre largo',wh
   await page.waitForSelector('#userPasswordInput:visible');assert.equal(await page.locator('#userEnterBtn').getAttribute('aria-busy'),null);
   await page.locator('#userPasswordInput').fill('client-password');await page.locator('#userEnterBtn').click();
   await page.waitForFunction(()=>customerLoginController===null && document.getElementById('screen-client').classList.contains('active'));
-  await page.evaluate(()=>goToUserLogin());await page.locator('#userScanBtn').click();await page.waitForFunction(()=>userScannerOpen);
-  await page.evaluate(()=>window.__scanners.at(-1).success('C-DEMO'));
+  await page.goto(`${base}/?profile=1&id=C-DEMO`);
+  assert.equal(await page.locator('#userScanBtn').count(),0,'customer camera control must stay hidden');
+  assert.equal(await page.locator('#userClientIdInput').inputValue(),'C-DEMO');
+  await page.locator('#userEnterBtn').click();
   await page.waitForFunction(()=>openedAsUser && document.getElementById('userOverlay').classList.contains('hidden') && document.getElementById('screen-client').classList.contains('active'));
-  await page.evaluate(()=>{goToRoleScreen();goToUserLogin();window.__cameraFail=true});await page.locator('#userScanBtn').click();await page.waitForFunction(()=>document.getElementById('userScanStatus').textContent==='No se pudo abrir la cámara');
   await page.emulateMedia({reducedMotion:'reduce'});await page.waitForTimeout(100);assert(await page.locator('html').evaluate(el=>el.classList.contains('motion-lite')));
   const count=await page.evaluate(()=>window.__confetti);await page.evaluate(()=>confettiBurst());assert.equal(await page.evaluate(()=>window.__confetti),count);
   assert.equal(await page.evaluate(()=>document.getAnimations().filter(a=>a.playState==='running').length),0);

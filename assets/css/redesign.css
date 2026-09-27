@@ -101,9 +101,9 @@ input{min-width:0;font-size:16px!important}
 .toast{border-radius:16px;background:#f2eaf9;color:#201528;bottom:max(20px,env(safe-area-inset-bottom));font-weight:650}
 .screen{animation:screen-in 200ms ease both}
 .screen .client-section{animation:screen-in 200ms ease both}
-#qr-reader,#user-qr-reader{position:relative;border:1px solid #b188d655;border-radius:18px}
-#qr-reader:has(video)::after,#user-qr-reader:has(video)::after{content:'';position:absolute;top:18%;left:12%;right:12%;height:2px;background:#d3b3ff;box-shadow:0 0 12px #cbb0ff;pointer-events:none;animation:none;z-index:2}
-#qr-reader:empty,#user-qr-reader:empty{border:0}
+#qr-reader{position:relative;border:1px solid #b188d655;border-radius:18px}
+#qr-reader:has(video)::after{content:'';position:absolute;top:18%;left:12%;right:12%;height:2px;background:#d3b3ff;box-shadow:0 0 12px #cbb0ff;pointer-events:none;animation:none;z-index:2}
+#qr-reader:empty{border:0}
 .result-item[onclick]{cursor:pointer}
 
 /* Editorial landing */
@@ -477,12 +477,12 @@ html.motion-lite :is(.btn,.shop-buy,.tab,.client-top-link,.quantity button):acti
 .client-tour-layer{position:fixed;inset:0;z-index:9000;pointer-events:none;font-family:inherit}
 .client-tour-shade{position:fixed;background:rgba(10,7,18,.68);pointer-events:auto}
 .client-tour-ring{position:fixed;border:2px solid #f5c5e4;border-radius:16px;box-shadow:0 0 0 4px rgba(245,197,228,.2),0 0 24px rgba(245,197,228,.38);pointer-events:none}
-.client-tour-card{position:fixed;box-sizing:border-box;max-height:calc(100dvh - 24px);overflow:auto;padding:20px;background:#241b34;border:1px solid rgba(245,197,228,.48);border-radius:22px;color:#fff;box-shadow:0 20px 60px #0009;pointer-events:auto}
-.client-tour-card h2{font-size:21px;line-height:1.2;margin:8px 0 10px}
-.client-tour-card p{font-size:14px;line-height:1.5;color:#e9dff0;margin:0 0 18px}
-.client-tour-count{font-size:12px;font-weight:800;color:#f6bddc;letter-spacing:.02em}
+.client-tour-card{position:fixed;box-sizing:border-box;max-height:calc(100dvh - 24px);overflow:auto;padding:18px;background:#241b34;border:1px solid rgba(245,197,228,.48);border-radius:22px;color:#fff;box-shadow:0 20px 60px #0009;pointer-events:auto}
+.client-tour-card h2{font-size:18px;line-height:1.2;margin:7px 0 9px}
+.client-tour-card p{font-size:12.5px;line-height:1.45;color:#e9dff0;margin:0 0 16px}
+.client-tour-count{font-size:11px;font-weight:800;color:#f6bddc;letter-spacing:.02em}
 .client-tour-actions{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:8px}
-.client-tour-button{min-height:44px;border:1px solid rgba(255,255,255,.28);border-radius:12px;padding:10px 14px;background:transparent;color:#fff;font:inherit;font-size:13px;font-weight:850;cursor:pointer}
+.client-tour-button{min-height:44px;border:1px solid rgba(255,255,255,.28);border-radius:12px;padding:10px 14px;background:transparent;color:#fff;font:inherit;font-size:12px;font-weight:850;cursor:pointer}
 .client-tour-button.primary{background:linear-gradient(120deg,#8b5cf6,#f05779);border-color:transparent}
 .client-tour-button:focus-visible,#clientTourReplay:focus-visible{outline:3px solid #fff;outline-offset:3px}
 .client-tour-card h2:focus-visible{outline:none}
