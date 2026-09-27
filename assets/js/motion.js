@@ -4,7 +4,7 @@
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const fine = matchMedia('(hover: hover) and (pointer: fine)');
   const connection = navigator.connection;
-  const lite = () => reduced.matches || !!connection?.saveData || /(^|-)2g$/.test(connection?.effectiveType || '') || (navigator.deviceMemory && navigator.deviceMemory <= 2);
+  const lite = () => reduced.matches || !!connection?.saveData;
   const syncMotion = () => {
     document.documentElement.classList.toggle('motion-lite', !!lite());
     if (lite()) document.getAnimations().forEach(a => { if (a.effect?.getTiming().iterations === Infinity) a.cancel(); else { try { a.finish(); } catch (_) { a.cancel(); } } });
@@ -12,33 +12,48 @@
   reduced.addEventListener('change', syncMotion);
   connection?.addEventListener?.('change', syncMotion);
   syncMotion();
-  // Consume the entrance even when skipped, so preference changes cannot replay it.
-  try {
-    const seenIntro = sessionStorage.getItem('donasBrandIntroSeen');
-    sessionStorage.setItem('donasBrandIntroSeen','1');
-    const operationalEntry = sessionStorage.getItem('donasAdminAccessToken') || new URLSearchParams(location.search).get('source') === 'widget';
-    if (!seenIntro && !lite() && !operationalEntry && !document.hidden) {
-      const intro = document.createElement('div');
-      intro.className='brand-intro'; intro.setAttribute('aria-hidden','true');
-      intro.innerHTML='<div class="intro-lockup"><span class="intro-donut"><span class="brand-mark"></span></span><span class="brand-wordmark">DONAS<span>RACHA<span class="brand-dot">.</span></span></span></div>';
-      const dismiss = () => {
-        intro.remove(); clearTimeout(timeout);
-        document.removeEventListener('pointerdown', dismiss, true);
-        document.removeEventListener('keydown', dismiss, true);
-        document.removeEventListener('visibilitychange', dismiss);
-        reduced.removeEventListener('change', dismiss);
-        connection?.removeEventListener?.('change', dismiss);
-      };
-      const timeout = setTimeout(dismiss,1100);
-      intro.addEventListener('animationend',event=>{if(event.target===intro) dismiss();});
-      document.addEventListener('pointerdown', dismiss, true);
-      document.addEventListener('keydown', dismiss, true);
-      document.addEventListener('visibilitychange', dismiss);
-      reduced.addEventListener('change', dismiss);
-      connection?.addEventListener?.('change', dismiss);
-      document.body.append(intro);
+  // The brand entrance belongs to a completed customer login, never page load.
+  function customerWelcome({signal, reveal}) {
+    if (signal.aborted) return Promise.resolve();
+    if (lite() || document.hidden || new URLSearchParams(location.search).get('source') === 'widget') {
+      reveal(); return Promise.resolve();
     }
-  } catch (_) { /* Without session storage, skip rather than replay on every visit. */ }
+    return new Promise((resolve,reject) => {
+      const intro = document.createElement('div');
+      intro.className='brand-intro brand-intro--login'; intro.setAttribute('aria-hidden','true');
+      intro.innerHTML='<div class="intro-lockup"><span class="intro-donut"><span class="brand-mark"></span></span><span class="brand-wordmark">DONAS<span>RACHA<span class="brand-dot">.</span></span></span></div>';
+      const login = document.getElementById('userOverlay');
+      login.inert = true;
+      let revealed = false;
+      const cleanup = () => {
+        clearTimeout(revealTimer); clearTimeout(endTimer); intro.remove();
+        login.inert = login.classList.contains('hidden');
+        signal.removeEventListener('abort',abort);
+        document.removeEventListener('visibilitychange',finish);
+        document.removeEventListener('keydown',skip,true);
+        reduced.removeEventListener('change',finish);
+        connection?.removeEventListener?.('change',finish);
+      };
+      const showProfile = () => {
+        if (revealed || signal.aborted) return;
+        revealed = true;
+        try { reveal(); } catch (error) { cleanup(); reject(error); }
+      };
+      const finish = () => { showProfile(); cleanup(); resolve(); };
+      const abort = () => { cleanup(); resolve(); };
+      const skip = event => { if (event.key === 'Escape') { event.preventDefault(); finish(); } };
+      // Prepare the profile behind the curtain before its final 300 ms lift.
+      const revealTimer = setTimeout(showProfile,800);
+      const endTimer = setTimeout(finish,1100);
+      signal.addEventListener('abort',abort,{once:true});
+      document.addEventListener('visibilitychange',finish);
+      document.addEventListener('keydown',skip,true);
+      reduced.addEventListener('change',finish);
+      connection?.addEventListener?.('change',finish);
+      intro.addEventListener('animationend',event=>{if(event.target===intro)finish();});
+      document.body.append(intro);
+    });
+  }
   const seen = new WeakSet();
   const reveals = ' .feature-card, #screen-client .card, #screen-client .stat-card, #screen-client .rank-item, #screen-client .shop-item, #screen-ranking .rank-item';
   const observer = 'IntersectionObserver' in window ? new IntersectionObserver(entries => {
@@ -99,6 +114,7 @@
   const stockSnapshots = new Map();
   const stockAnimations = new WeakMap();
   window.DonasMotion = {
+    customerWelcome,
     stock(root, scope) {
       const previous = stockSnapshots.get(scope) || new Map();
       const next = new Map();

@@ -361,7 +361,7 @@ html:not(.motion-lite) .client-top-link.active{animation:top-tab-glow .35s ease-
 #screen-client .client-top-nav{margin-bottom:14px;gap:8px}
 #screen-client .client-top-link{display:flex;align-items:center;justify-content:center;gap:10px;min-height:46px;border-radius:12px;font-size:14px}
 #screen-client .client-top-link.active,.profile-primary{background:linear-gradient(110deg,#d1aff5,#b988eb);border-color:#d4b1f3;color:#1a1024;box-shadow:0 3px 14px #b988eb17}
-#screen-client .client-name{font-size:16px;font-weight:650;margin:0 0 10px;line-height:1.5}
+#screen-client .client-name{font-size:clamp(26px,6.5vw,34px);font-weight:800;margin:8px 0 18px;line-height:1.18;letter-spacing:-.035em;text-wrap:balance}
 #screen-client .client-hero{border-radius:16px;padding:16px;margin-bottom:12px;background:linear-gradient(125deg,#25202f,#1b1723);border-color:#c4a2e12b}
 #screen-client .client-hero:after{display:none}
 .summary-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
@@ -456,3 +456,12 @@ html:not(.motion-lite) .client-top-link.active{animation:top-tab-glow .35s ease-
 html:not(.motion-lite) :is(.btn,.shop-buy,.tab,.client-top-link,.quantity button):not(:disabled):active{transform:scale(.97)}
 html.motion-lite :is(.btn,.shop-buy,.tab,.client-top-link,.quantity button):active{transform:none}
 @media(prefers-reduced-motion:reduce){:is(.btn,.shop-buy,.tab,.client-top-link,.quantity button):active{transform:none!important}}
+
+/* Customer login: visible pending → confirmed → brand curtain → profile. */
+#userEnterBtn{min-height:56px;font-size:18px;background:linear-gradient(110deg,#d1aff5,#b988eb);color:#1a1024}
+#userEnterBtn:disabled{opacity:1;cursor:wait}
+#userEnterBtn.is-busy:before{width:20px;height:20px;border-width:3px;vertical-align:-4px;animation:button-spin .75s linear infinite}
+#userEnterBtn.is-success{background:#91f5e8;color:#082a27;cursor:default}
+#userEnterBtn.is-success:before{content:'✓';display:inline-grid;place-items:center;width:25px;height:25px;margin-right:10px;border:0;border-radius:50%;background:#082a27;color:#91f5e8;font-size:18px;vertical-align:-2px;animation:login-check 200ms ease-out both}
+@keyframes login-check{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
+.brand-intro--login{pointer-events:auto}

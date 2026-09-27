@@ -471,6 +471,7 @@ let currentClient = null;
 let adminLoyaltyClients = new Map();
 let allAdminClients = [];
 let clientRequestVersion = 0;
+let customerLoginController = null;
 let newClientData = null;
 let scanner = null;
 let scannerOpen = false;
@@ -685,6 +686,7 @@ function hideOverlays() {
 }
 
 function goToRoleScreen() {
+  cancelCustomerLogin();
   stopScanner(); stopUserScanner();
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById('screen-home').classList.add('active');
@@ -694,6 +696,7 @@ function goToRoleScreen() {
 }
 
 function goToAdminLogin() {
+  cancelCustomerLogin();
   document.getElementById('roleOverlay').classList.add('hidden');
   document.getElementById('loginOverlay').classList.remove('hidden');
   document.getElementById('loginInput').value = '';
@@ -701,6 +704,7 @@ function goToAdminLogin() {
 }
 
 function goToUserLogin() {
+  cancelCustomerLogin();
   document.getElementById('clientLoginSuccess').hidden = true;
   document.getElementById('roleOverlay').classList.add('hidden');
   document.getElementById('userOverlay').classList.remove('hidden');
@@ -850,35 +854,75 @@ function onUserQRScanned(text) {
   document.getElementById('userClientIdInput').value = id;
   loginCustomerById(id);
 }
+function resetCustomerLoginState() {
+  const button = document.getElementById('userEnterBtn');
+  button.disabled = false;
+  button.classList.remove('is-busy','is-success');
+  button.removeAttribute('aria-busy');
+  button.textContent = 'Entrar con ID →';
+  document.getElementById('userLoginStatus').textContent = '';
+}
+function cancelCustomerLogin() {
+  customerLoginController?.abort();
+  customerLoginController = null;
+  resetCustomerLoginState();
+}
 async function loginCustomerById(id) {
   const button = document.getElementById('userEnterBtn');
   const errorEl = document.getElementById('userLoginError');
   const statusEl = document.getElementById('userLoginStatus');
   if (button.disabled) return;
+  const controller = new AbortController();
+  customerLoginController = controller;
+  const {signal} = controller;
+  const isCurrent = () => customerLoginController === controller && !signal.aborted;
   button.disabled = true; button.classList.add('is-busy'); button.setAttribute('aria-busy','true'); button.textContent = 'Entrando…'; errorEl.textContent = ''; statusEl.textContent = 'Comprobando tu ID…';
+  document.getElementById('clientLoginSuccess').hidden = true;
   try {
-    const result = await customerRequest('/api/customer/session', { method:'POST', body:JSON.stringify({
+    const result = await customerRequest('/api/customer/session', { method:'POST', signal, body:JSON.stringify({
       publicId:id, password:document.getElementById('userPasswordInput').value
     }) });
+    if (!isCurrent()) return;
     sessionStorage.setItem('donasCustomerToken', result.accessToken);
     sessionStorage.setItem('donasCustomerId', result.customer.publicId);
     document.getElementById('userPasswordInput').value = '';
     statusEl.textContent = 'Cargando tu perfil…';
-    openedAsUser = true;
-    hideOverlays();
-    const loaded = await openClient(result.customer.publicId, true);
-    if (loaded && currentClient && openedAsUser) {
-      const status = document.getElementById('clientLoginSuccess');
-      status.hidden = false;
-      setTimeout(() => { status.hidden = true; }, 2600);
-    }
+    // Prepare real profile data without navigating away from the loading button.
+    const data = await customerRequest('/api/backend?' + new URLSearchParams({action:'getCliente',id:result.customer.publicId}), {signal});
+    if (!isCurrent()) return;
+    if (!data.ok || !data.client) throw new Error(data.error || 'No pudimos cargar tu perfil.');
+    button.classList.remove('is-busy'); button.removeAttribute('aria-busy');
+    button.classList.add('is-success'); button.textContent = 'Listo';
+    statusEl.textContent = 'Acceso confirmado';
+    // A short, readable confirmation, only AFTER both API requests succeeded.
+    await new Promise((resolve,reject) => {
+      const cancel = () => { clearTimeout(timer); reject(new DOMException('Acceso cancelado','AbortError')); };
+      const timer = setTimeout(() => { signal.removeEventListener('abort',cancel); resolve(); },450);
+      signal.addEventListener('abort',cancel,{once:true});
+    });
+    if (!isCurrent()) return;
+    const enterProfile = () => {
+      if (!isCurrent()) return;
+      openedAsUser = true;
+      showScreen('screen-client');
+      currentClient = data.client;
+      renderClient(data.client,true);
+    };
+    if (window.DonasMotion) await window.DonasMotion.customerWelcome({signal,reveal:enterProfile});
+    else enterProfile();
   } catch (error) {
+    if (!isCurrent() || error.name === 'AbortError') return;
     if (error.code === 'PASSWORD_REQUIRED') {
       document.getElementById('customerPasswordGroup').style.display = '';
       document.getElementById('userPasswordInput').focus();
     }
     errorEl.textContent = error.message;
-  } finally { button.disabled = false; button.classList.remove('is-busy'); button.removeAttribute('aria-busy'); button.textContent = 'Entrar con ID →'; statusEl.textContent = ''; }
+  } finally {
+    if (customerLoginController === controller) {
+      customerLoginController = null;
+      resetCustomerLoginState();
+    }
+  }
 }
 function extractIdFromQR(text) {
   try { const url = new URL(text); return url.searchParams.get('id') || url.searchParams.get('client') || text; } catch(e) { return String(text || '').trim(); }
