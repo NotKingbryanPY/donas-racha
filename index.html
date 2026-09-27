@@ -146,7 +146,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
           <p class="donut-order-flavors">Chocolate o vainilla, con o sin chispas.<br>Elige tus sabores desde tu perfil.</p>
           <div id="publicCatalog" class="donut-order-meta" aria-live="polite" aria-busy="true"><span class="donut-order-status">Consultando precio…</span></div>
           <button id="catalogOrderBtn" class="btn btn-primary" onclick="beginCustomerOrder()">Hacer pedido <span aria-hidden="true">↗</span></button>
-          <p class="donut-order-payment">Pago al recibir: efectivo o Yappy</p>
+          <p class="donut-order-payment">Entregas solo en el Edificio 4.<br>Pago al recibir: efectivo o Yappy</p>
         </div>
       </div>
     </section>
@@ -325,11 +325,11 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
       </div>
     </div>
     <div id="clientDeliverySection" class="client-section" style="display:none">
-      <div class="card"><div class="card-title">🍩 Tu pedido</div><p class="muted">Disponibilidad por sabor. Pagas al recibir; los puntos se acreditan al completar la entrega.</p>
-        <button class="btn btn-outline" onclick="loadClientDelivery()">Actualizar disponibilidad y pedidos</button><p id="clientInventoryStatus" class="inventory-status" role="status">Consultando existencias...</p>
+      <div class="card"><div class="delivery-heading"><div class="card-title">🍩 Tu pedido</div><button class="delivery-refresh" onclick="loadClientDelivery()" aria-label="Actualizar disponibilidad y pedidos"><span aria-hidden="true">↻</span> Actualizar</button></div><p class="muted">Disponibilidad por sabor. Pagas al recibir; los puntos se acreditan al completar la entrega.</p>
+        <p id="deliveryAreaNotice" class="delivery-area-notice"><span aria-hidden="true">📍</span><span><strong>Entregas solo en el Edificio 4.</strong> Actualmente no realizamos entregas en otros edificios.</span></p><p id="clientInventoryStatus" class="inventory-status" role="status">Consultando existencias...</p>
         <div id="clientFlavorList" class="order-cart"></div>
         <div class="order-summary"><span>Total</span><strong id="clientOrderTotal">B/.0.00</strong></div>
-        <label class="field-label" for="clientDeliveryLocation">Ubicación de entrega</label><input id="clientDeliveryLocation" class="field" maxlength="300" placeholder="Ej.: UTP, Edificio 4, entrada principal">
+        <label class="field-label" for="clientDeliveryLocation">Punto de entrega en el Edificio 4</label><input id="clientDeliveryLocation" class="field" maxlength="300" aria-describedby="deliveryAreaNotice" placeholder="Ej.: entrada principal o salón del Edificio 4">
         <label class="field-label" for="clientDeliveryNotes">Indicaciones (opcional)</label><input id="clientDeliveryNotes" class="field" maxlength="500" placeholder="Salón o referencia">
         <div class="payment-options"><label class="payment-option"><input type="radio" name="clientPayment" value="CASH" checked><span>💵 Efectivo al recibir</span></label><label class="payment-option"><input type="radio" name="clientPayment" value="YAPPY"><span>📱 Yappy al recibir</span></label></div>
         <button id="clientOrderButton" class="btn btn-primary" style="width:100%;margin-top:16px" onclick="submitClientOrder()">Confirmar pedido</button>
