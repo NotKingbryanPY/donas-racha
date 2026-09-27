@@ -20,6 +20,7 @@ const launch=process.env.CHROMIUM_PATH?{executablePath:process.env.CHROMIUM_PATH
     if(!url.pathname.startsWith('/api/'))return r.continue();
     if(url.pathname==='/api/customer/session'){await pending;return r.fulfill({json:{ok:true,data:{accessToken:'test',customer:{publicId:'C-MOTION'}}}});}
     if(url.pathname==='/api/backend')return r.fulfill({json:{ok:true,data:{ok:true,client:{id:'C-MOTION',name:'Ana',shopItems:[],recentHistory:[],progressLevelPct:60}}}});
+    if(url.pathname==='/api/customer/onboarding')return r.fulfill({json:{ok:true,data:{progress:{status:'COMPLETED',last_step:7}}}});
     return r.fulfill({json:{ok:true,data:{products:[],ranking:[]}}});
    });
    await page.goto(base+'?profile=1');

@@ -892,6 +892,7 @@ async function loginCustomerById(id) {
     };
     if (window.DonasMotion) await window.DonasMotion.customerWelcome({signal,reveal:enterProfile});
     else enterProfile();
+    if (isCurrent()) await window.DonasMotion?.profileReady({signal});
     if (isCurrent() && openedAsUser && currentClient) window.DonasTour?.onLogin(result.customer.publicId);
   } catch (error) {
     if (!isCurrent() || error.name === 'AbortError') return;

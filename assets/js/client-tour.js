@@ -1,4 +1,5 @@
-/* Customer-only introduction. Step content is deliberately separate from the overlay engine. */
+/* Customer-only introduction. Keep these targets and words aligned with the live profile.
+   Change VERSION only when the tour itself changes meaningfully, never for styling or each deploy. */
 (() => {
   'use strict';
   const VERSION = 1;
@@ -177,7 +178,7 @@
     });
     const ring = layer.querySelector('.client-tour-ring');
     Object.assign(ring.style, { left:`${left}px`, top:`${top}px`, width:`${right-left}px`, height:`${bottom-top}px` });
-    const cardWidth = Math.min(360, width - 24);
+    const cardWidth = Math.min(340, width - 24);
     let cardTop = bottom + 12;
     if (cardTop + cardHeight > height - 12) cardTop = top - cardHeight - 12;
     if (cardTop < 12) cardTop = Math.max(12, height - cardHeight - 12);

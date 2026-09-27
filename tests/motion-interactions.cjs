@@ -23,6 +23,7 @@ const deferred=()=>{let resolve;const promise=new Promise(r=>resolve=r);return {
         if(profileGate)await profileGate.promise;
         return profileFailure?r.fulfill({status:503,json:{ok:false,error:{message:'Perfil no disponible'}}}):r.fulfill({json:{ok:true,data:{ok:true,client}}});
       }
+      if(u.pathname==='/api/customer/onboarding')return r.fulfill({json:{ok:true,data:{progress:{status:'COMPLETED',last_step:7}}}});
       return r.fulfill({json:{ok:true,data:{products:[],flavors:[],orders:[],ranking:[]}}});
     });
     await page.addInitScript(()=>{

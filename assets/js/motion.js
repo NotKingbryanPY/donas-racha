@@ -40,45 +40,78 @@
   // The brand entrance belongs to a completed customer login, never page load.
   function customerWelcome({signal, reveal}) {
     if (signal.aborted) return Promise.resolve();
-    if (lite() || document.hidden || new URLSearchParams(location.search).get('source') === 'widget') {
+    if (lite() || new URLSearchParams(location.search).get('source') === 'widget') {
       reveal(); return Promise.resolve();
     }
+    // A background tab cannot show the entrance. Play it when the customer returns.
+    if (document.hidden) return new Promise(resolve => {
+      const cleanup = () => {
+        document.removeEventListener('visibilitychange', visible);
+        signal.removeEventListener('abort', abort);
+      };
+      const visible = () => {
+        if (document.hidden) return;
+        cleanup(); resolve(customerWelcome({signal, reveal}));
+      };
+      const abort = () => { cleanup(); resolve(); };
+      document.addEventListener('visibilitychange', visible);
+      signal.addEventListener('abort', abort, {once:true});
+    });
     return new Promise((resolve,reject) => {
       const intro = document.createElement('div');
       intro.className='brand-intro brand-intro--login'; intro.setAttribute('aria-hidden','true');
       intro.innerHTML='<div class="intro-lockup"><span class="intro-donut"><span class="brand-mark"></span></span><span class="brand-wordmark">DONAS<span>RACHA<span class="brand-dot">.</span></span></span></div>';
       const login = document.getElementById('userOverlay');
       login.inert = true;
-      let revealed = false;
+      let revealed = false, done = false, revealTimer, endTimer;
+      let revealRemaining = 800, endRemaining = 1100, runningSince = 0;
       const cleanup = () => {
         clearTimeout(revealTimer); clearTimeout(endTimer); intro.remove();
         login.inert = login.classList.contains('hidden');
         signal.removeEventListener('abort',abort);
-        document.removeEventListener('visibilitychange',finish);
+        document.removeEventListener('visibilitychange',onVisibility);
         document.removeEventListener('keydown',skip,true);
-        document.removeEventListener('donas:motionchange',finish);
-        reduced.removeEventListener('change',finish);
-        connection?.removeEventListener?.('change',finish);
+        document.removeEventListener('donas:motionchange',onPreferenceChange);
+        reduced.removeEventListener('change',onPreferenceChange);
+        connection?.removeEventListener?.('change',onPreferenceChange);
       };
       const showProfile = () => {
         if (revealed || signal.aborted) return;
         revealed = true;
-        try { reveal(); } catch (error) { cleanup(); reject(error); }
+        try { reveal(); } catch (error) { done = true; cleanup(); reject(error); }
       };
-      const finish = () => { showProfile(); cleanup(); resolve(); };
-      const abort = () => { cleanup(); resolve(); };
+      const finish = () => { if (done) return; showProfile(); if (done) return; done = true; cleanup(); resolve(); };
+      const abort = () => { if (done) return; done = true; cleanup(); resolve(); };
       const skip = event => { if (event.key === 'Escape') { event.preventDefault(); finish(); } };
       // Prepare the profile behind the curtain before its final 300 ms lift.
-      const revealTimer = setTimeout(showProfile,800);
-      const endTimer = setTimeout(finish,1100);
+      const schedule = () => {
+        runningSince = performance.now();
+        if (!revealed) revealTimer = setTimeout(showProfile,revealRemaining);
+        endTimer = setTimeout(finish,endRemaining);
+      };
+      const onVisibility = () => {
+        if (done) return;
+        if (document.hidden) {
+          const elapsed = performance.now() - runningSince;
+          revealRemaining = Math.max(0,revealRemaining-elapsed);
+          endRemaining = Math.max(0,endRemaining-elapsed);
+          clearTimeout(revealTimer); clearTimeout(endTimer);
+          intro.getAnimations({subtree:true}).forEach(animation => animation.pause());
+        } else {
+          intro.getAnimations({subtree:true}).forEach(animation => animation.play());
+          schedule();
+        }
+      };
+      const onPreferenceChange = () => { if (lite()) finish(); };
       signal.addEventListener('abort',abort,{once:true});
-      document.addEventListener('visibilitychange',finish);
+      document.addEventListener('visibilitychange',onVisibility);
       document.addEventListener('keydown',skip,true);
-      document.addEventListener('donas:motionchange',finish);
-      reduced.addEventListener('change',finish);
-      connection?.addEventListener?.('change',finish);
+      document.addEventListener('donas:motionchange',onPreferenceChange);
+      reduced.addEventListener('change',onPreferenceChange);
+      connection?.addEventListener?.('change',onPreferenceChange);
       intro.addEventListener('animationend',event=>{if(event.target===intro)finish();});
       document.body.append(intro);
+      schedule();
     });
   }
   const seen = new WeakSet();
@@ -144,6 +177,30 @@
   window.DonasMotion = {
     enabled: () => !lite(),
     customerWelcome,
+    async profileReady({signal} = {}) {
+      if (lite() || document.hidden || signal?.aborted) return;
+      // Let the profile's intersection observer start its real progress animation.
+      await new Promise(resolve => {
+        let first, second, finished = false;
+        const done = () => {
+          if (finished) return;
+          finished = true;
+          cancelAnimationFrame(first); cancelAnimationFrame(second);
+          signal?.removeEventListener('abort', done);
+          resolve();
+        };
+        signal?.addEventListener('abort', done, {once:true});
+        first = requestAnimationFrame(() => { second = requestAnimationFrame(done); });
+      });
+      if (signal?.aborted || document.hidden) return;
+      const animation = progressAnimation;
+      if (!animation || animation.playState !== 'running') return;
+      await new Promise(resolve => {
+        const done = () => { signal?.removeEventListener('abort', done); resolve(); };
+        signal?.addEventListener('abort', done, {once:true});
+        animation.finished.then(done, done);
+      });
+    },
     stock(root, scope) {
       const previous = stockSnapshots.get(scope) || new Map();
       const next = new Map();

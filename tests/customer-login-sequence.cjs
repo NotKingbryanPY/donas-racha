@@ -31,6 +31,7 @@ const deferred=()=>{let resolve;return {promise:new Promise(r=>resolve=r),resolv
      return r.fulfill({json:{ok:true,data:{accessToken:'fixture',customer:{publicId:fixture.id}}}});
     }
     if(u.pathname==='/api/backend')return r.fulfill({json:{ok:true,data:{ok:true,client:fixture}}});
+    if(u.pathname==='/api/customer/onboarding')return r.fulfill({json:{ok:true,data:{progress:{status:'COMPLETED',last_step:7}}}});
     return r.fulfill({json:{ok:true,data:{products:[],orders:[],flavors:[],ranking:[]}}});
    });
    await page.goto(base+'?profile=1');
@@ -56,10 +57,13 @@ const deferred=()=>{let resolve;return {promise:new Promise(r=>resolve=r),resolv
    await page.evaluate(()=>document.dispatchEvent(new Event('visibilitychange')));
    assert.equal(await page.evaluate(()=>window.introCount),n,'tabs never replay intro');
    // A subsequent deliberate QR login follows the same sequence, despite session history.
-   gate=null;await page.evaluate(()=>{goToUserLogin();onUserQRScanned('C-SEQUENCE');});
+   gate=null;
+   await page.goto(base+'?profile=1&id='+fixture.id);
+   assert.equal(await page.locator('#userClientIdInput').inputValue(),fixture.id,'QR link prefills the customer ID');
+   await page.locator('#userEnterBtn').click();
    await page.waitForFunction(()=>document.getElementById('userEnterBtn').classList.contains('is-success'));
    await page.waitForFunction(()=>customerLoginController===null);
-   assert.equal(await page.evaluate(()=>window.introCount),mode==='normal'?2:0,'QR and repeated login share the flow');
+   assert.equal(await page.evaluate(()=>window.introCount),mode==='normal'?1:0,'QR link and ID share the entrance');
    // Leaving a slow login must not redirect when its old response finally arrives.
    await page.evaluate(()=>goToUserLogin());gate=deferred();await page.locator('#userEnterBtn').click();
    await page.getByRole('button',{name:'Volver al inicio'}).click();gate.resolve();
