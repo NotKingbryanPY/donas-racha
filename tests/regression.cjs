@@ -178,7 +178,7 @@ const fixture = () => ({id:'C-DEMO',name:'Cliente de prueba con nombre largo',wh
   await page.evaluate(()=>goToUserLogin());await page.locator('#userClientIdInput').fill('LOCKED');await page.locator('#userEnterBtn').click();
   await page.waitForSelector('#userPasswordInput:visible');assert.equal(await page.locator('#userEnterBtn').getAttribute('aria-busy'),null);
   await page.locator('#userPasswordInput').fill('client-password');await page.locator('#userEnterBtn').click();
-  await page.waitForFunction(()=>document.getElementById('clientLoginSuccess').hidden===false);
+  await page.waitForFunction(()=>customerLoginController===null && document.getElementById('screen-client').classList.contains('active'));
   await page.evaluate(()=>goToUserLogin());await page.locator('#userScanBtn').click();await page.waitForFunction(()=>userScannerOpen);
   await page.evaluate(()=>window.__scanners.at(-1).success('C-DEMO'));
   await page.waitForFunction(()=>openedAsUser && document.getElementById('userOverlay').classList.contains('hidden') && document.getElementById('screen-client').classList.contains('active'));

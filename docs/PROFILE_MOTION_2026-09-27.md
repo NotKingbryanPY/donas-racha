@@ -15,7 +15,9 @@ Los datos del boceto son ilustrativos: no se inventan insignias, sabores ni prec
 
 ## Movimiento
 
-Intro de 1,1 segundos: aparece 0–250 ms, rueda 250–500 ms, revela marca 500–800 ms y sube 800–1100 ms. Solo una vez por sesión. Transiciones de panel de 200 ms. El acceso muestra carga mientras responde y confirma el éxito en el perfil sin una espera artificial. Movimiento reducido y ahorro de datos omiten las animaciones.
+Actualización posterior a la revisión del acceso: la bienvenida se reproduce después de “Listo”, al completar el acceso por ID o QR. El saludo ahora usa 26–34 px. El contrato vigente y sus pruebas están en [MOVIMIENTO_PROPUESTO.md](MOVIMIENTO_PROPUESTO.md).
+
+Intro de 1,1 segundos: aparece 0–250 ms, rueda 250–500 ms, revela marca 500–800 ms y sube 800–1100 ms. Una vez por acceso explícito correcto; nunca al navegar o volver a una pestaña. Transiciones de panel de 200 ms. El acceso mantiene el círculo girando mientras responde la API, confirma el éxito en el botón durante 450 ms y luego reproduce la cortina antes de mostrar el perfil. Movimiento reducido y ahorro de datos omiten las animaciones.
 
 ## Archivos
 

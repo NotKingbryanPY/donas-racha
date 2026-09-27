@@ -24,6 +24,8 @@ try {
     }).observe(document,{childList:true,subtree:true});
   });
   await page.goto(process.env.TEST_URL || 'http://127.0.0.1:8765');
+  assert.equal(await page.locator('.brand-intro').count(),0,'no intro on page load');
+  await page.evaluate(()=>{window.DonasMotion.customerWelcome({signal:new AbortController().signal,reveal:()=>{window.profileRevealed=true;}});});
   assert.equal(await page.locator('.brand-intro').count(),1);
   const snapshots=[];
   for(const ms of [200,375,650,950]){
@@ -40,7 +42,7 @@ try {
   assert(snapshots[2].wordOpacity>0,'wordmark reveals after 500ms');
   assert(snapshots[3].curtainY<0,'curtain lifts after 800ms');
   await page.reload();
-  assert.equal(await page.locator('.brand-intro').count(),0,'entrance only once per session');
+  assert.equal(await page.locator('.brand-intro').count(),0,'reload never triggers the customer login entrance');
   await context.close();
   for(const lite of ['reduce','saveData']){
     const c=await browser.newContext({reducedMotion:lite==='reduce'?'reduce':'no-preference'});
@@ -48,8 +50,10 @@ try {
     if(lite==='saveData')await p.addInitScript(()=>Object.defineProperty(navigator,'connection',{value:{saveData:true,effectiveType:'4g'}}));
     await p.route('https://**/*',r=>r.fulfill({body:'',contentType:'text/javascript'}));
     await p.goto(process.env.TEST_URL || 'http://127.0.0.1:8765');
+    await p.evaluate(()=>{window.DonasMotion.customerWelcome({signal:new AbortController().signal,reveal:()=>{window.profileRevealed=true;}});});
+    assert.equal(await p.evaluate(()=>window.profileRevealed),true);
     assert.equal(await p.locator('.brand-intro').count(),0,`${lite} skips entrance`);
     await c.close();
   }
-  console.log('PASS: four entrance stages, once per session, reduced motion and data saver');
+  console.log('PASS: four entrance stages, no page-load replay, reduced motion and data saver');
 } finally { await browser.close(); }
