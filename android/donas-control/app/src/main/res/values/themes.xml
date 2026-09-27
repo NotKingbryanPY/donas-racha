@@ -21,7 +21,7 @@
     </style>
     <style name="Widget.Donas.Button" parent="Widget.Material3.Button">
         <item name="cornerRadius">14dp</item>
-        <item name="android:minHeight">56dp</item>
+        <item name="android:minHeight">48dp</item>
     </style>
     <style name="SectionTitle" parent="TextAppearance.Material3.TitleLarge">
         <item name="android:textStyle">bold</item>

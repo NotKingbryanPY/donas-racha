@@ -9,6 +9,13 @@ module.exports = withApi(['PATCH', 'POST'], async (req, context) => {
   const user = await requireAdmin(req);
   await enforceRateLimit(req, 'admin_order_status', 120, 60, user.id);
   const body = context.parseJsonBody(req);
+  if (String(body.status).toUpperCase() === 'COMPLETED' && body.paymentReceived === true) {
+    const order = await rpc('api_complete_paid_order', {
+      p_order_id: uuid(req.query.id, 'id'), p_actor_user_id: user.id,
+      p_payment_method: enumValue(body.paymentMethod, ['CASH', 'YAPPY'], 'paymentMethod')
+    });
+    return { order };
+  }
   const result = await rpc('api_transition_order', {
     p_order_id: uuid(req.query.id, 'id'),
     p_to_status: assertAccountingReady(enumValue(String(body.status || '').toUpperCase(), ['ACCEPTED', 'OUT_FOR_DELIVERY', 'COMPLETED', 'CANCELLED'], 'status')),

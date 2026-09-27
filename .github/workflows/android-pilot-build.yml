@@ -26,6 +26,11 @@ jobs:
         with:
           packages: platform-tools platforms;android-35 build-tools;35.0.0
       - uses: gradle/actions/setup-gradle@v4
+      - name: Reuse pilot debug signature
+        uses: actions/cache@v4
+        with:
+          path: ~/.android/debug.keystore
+          key: donas-pilot-debug-signing-v1
       - name: Build, test and lint
         working-directory: android/donas-control
         run: bash ./gradlew testDebugUnitTest assemblePilot lintDebug
@@ -35,3 +40,26 @@ jobs:
           name: donas-control-pilot
           path: android/donas-control/app/build/outputs/apk/pilot/app-pilot.apk
           if-no-files-found: error
+
+  publish:
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: donas-control-pilot
+          path: apk
+      - name: Publish installable pilot
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION=$(sed -n 's/.*versionName = "\([^"]*\)"/\1/p' android/donas-control/app/build.gradle.kts | head -1)
+          FILE="Donas-Control-${VERSION}-piloto.apk"
+          mv apk/app-pilot.apk "$FILE"
+          sha256sum "$FILE" > "$FILE.sha256"
+          TAG="android-pilot-${VERSION}-${GITHUB_RUN_NUMBER}"
+          gh release create "$TAG" "$FILE" "$FILE.sha256" --target "$GITHUB_SHA" --prerelease --title "Donas Control ${VERSION} · piloto" --notes-file docs/ANDROID_PILOT_RELEASE.md

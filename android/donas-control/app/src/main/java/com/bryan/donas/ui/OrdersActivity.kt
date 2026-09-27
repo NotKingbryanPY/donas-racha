@@ -20,11 +20,12 @@ import com.bryan.donas.data.OrderSync
 import com.bryan.donas.data.db.RemoteOrderEntity
 import com.bryan.donas.util.Money
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.card.MaterialCardView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.launch
 import org.json.JSONArray
-import java.util.UUID
 
 class OrdersActivity : AppCompatActivity() {
     private lateinit var client: BackendClient
@@ -37,6 +38,9 @@ class OrdersActivity : AppCompatActivity() {
     private lateinit var notice: TextView
     private lateinit var list: LinearLayout
     private lateinit var loginFields: LinearLayout
+    private val pendingOrders = mutableSetOf<String>()
+    private var confirmationOpen = false
+    private var refreshing = false
     private val app get() = application as DonasApp
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,7 +61,7 @@ class OrdersActivity : AppCompatActivity() {
         WindowCompat.getInsetsController(window, scroll).isAppearanceLightNavigationBars = !dark
         root.addView(button("← Volver") { finish() }, fullWidth())
         root.addView(TextView(this).apply { text = "Pedidos"; textSize = 24f }, fullWidth())
-        notice = TextView(this).apply { text = "Los pedidos requieren una cuenta administradora. Las ventas sin conexión se concilian al volver la red." }
+        notice = TextView(this).apply { text = "Acepta, entrega y cobra. Los puntos se aplican al finalizar."; textSize = 14f; setPadding(0, 8.dp, 0, 12.dp) }
         root.addView(notice, fullWidth())
         loginFields = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         val emailInput = input("Correo", false)
@@ -114,7 +118,7 @@ class OrdersActivity : AppCompatActivity() {
         list.isVisible = true
         if (!client.signedIn) {
             list.removeAllViews()
-            showEmptyState("Inicia sesión para consultar pedidos. No hay pedidos visibles sin una cuenta administradora.")
+            showEmptyState("Entra con tu cuenta de vendedor para ver los pedidos.")
         }
     }
 
@@ -150,11 +154,13 @@ class OrdersActivity : AppCompatActivity() {
         val rejected = app.database.syncDao().rejectedCount()
         val unbooked = orders.count { it.status == "COMPLETED" && it.settled && app.database.operationDao().eventByKey("order-${it.id}") == null }
         if (rejected > 0 || unbooked > 0) notice.text = "Requieren conciliación: $rejected ventas rechazadas por el servidor y $unbooked pedidos sin asiento local. No repitas la venta."
-        if (orders.isEmpty()) showEmptyState("No hay pedidos todavía. Pulsa Actualizar pedidos para comprobar de nuevo.")
-        orders.forEach(::renderOrder)
+        if (orders.isEmpty()) showEmptyState("Todo al día. Todavía no hay pedidos.")
+        orders.sortedBy { if (it.status in listOf("COMPLETED", "CANCELLED")) 1 else 0 }.forEach(::renderOrder)
     }
 
     private fun refreshOrders() = lifecycleScope.launch {
+        if (refreshing) return@launch
+        refreshing = true
         sync.isEnabled = false
         notice.text = "Consultando pedidos…"
         try {
@@ -198,48 +204,85 @@ class OrdersActivity : AppCompatActivity() {
         } catch (e: Exception) {
             notice.text = "No se pudieron consultar los pedidos: ${e.message ?: "error de conexión"}"
         } finally {
+            refreshing = false
             sync.isEnabled = true
         }
     }
 
     private fun renderOrder(order: RemoteOrderEntity) {
-        val card = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(0, 12.dp, 0, 12.dp) }
+        val shell = MaterialCardView(this).apply { radius = 20.dp.toFloat(); cardElevation = 0f }
+        val card = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(18.dp, 18.dp, 18.dp, 18.dp) }
+        shell.addView(card)
+        fun line(label: String, size: Float, bold: Boolean = false) {
+            card.addView(TextView(this).apply {
+                text = label; textSize = size; setPadding(0, 4.dp, 0, 4.dp)
+                if (bold) setTypeface(typeface, android.graphics.Typeface.BOLD)
+            }, fullWidth())
+        }
+        val statusName = when (order.status) {
+            "PENDING" -> "Pendiente"; "ACCEPTED" -> "Aceptado"; "OUT_FOR_DELIVERY" -> "En camino"
+            "COMPLETED" -> "Entregado"; "CANCELLED" -> "Cancelado"; else -> "Recibido"
+        }
+        line("$statusName · ${order.publicCode}", 12f, true)
+        line(order.customerName, 21f, true)
+        line(order.customerPhone, 13f)
         val flavors = JSONArray(order.itemsJson)
         val details = (0 until flavors.length()).joinToString(" · ") { index ->
             val item = flavors.getJSONObject(index)
             "${item.optInt("quantity")}× ${item.optString("variantName")}"
         }
-        card.addView(TextView(this).apply {
-            text = "${order.publicCode} · ${order.status}\n${order.customerName} · ${order.customerPhone}\n$details\n${Money.format(order.totalCents)} · ${order.paymentMethod} · ${order.paymentStatus}\n${order.deliveryLocation}"
-            textSize = 15f
-        }, fullWidth())
+        line(details, 15f)
+        line("📍 ${order.deliveryLocation}", 14f)
+        line(Money.format(order.totalCents), 24f, true)
+        line(if (order.paymentStatus == "CONFIRMED") "Cobrado" else if (order.paymentMethod == "YAPPY") "Yappy al recibir" else "Efectivo al recibir", 13f)
         fun action(label: String, target: String) {
-            val control = button(label) { transition(order, target) }
+            val control = button(label) {
+                if (target == "CANCELLED") MaterialAlertDialogBuilder(this)
+                    .setTitle("¿Cancelar pedido?").setMessage("Las donas apartadas volverán a estar disponibles.")
+                    .setNegativeButton("Volver", null).setPositiveButton("Cancelar pedido") { _, _ -> transition(order, target) }.show()
+                else transition(order, target)
+            }.apply { isEnabled = order.id !in pendingOrders }
             card.addView(control, fullWidth())
         }
         when (order.status) {
             "PENDING" -> { action("Aceptar", "ACCEPTED"); action("Cancelar", "CANCELLED") }
             "ACCEPTED" -> { action("En camino", "OUT_FOR_DELIVERY"); action("Cancelar", "CANCELLED") }
             "OUT_FOR_DELIVERY" -> {
-                if (order.paymentStatus != "CONFIRMED") card.addView(button("Confirmar cobro presencial") { confirmPayment(order) }, fullWidth())
-                else card.addView(button("Completar entrega y registrar venta") { transition(order, "COMPLETED") }, fullWidth())
+                card.addView(button("Cobrado y entregado") { confirmCompletion(order) }.apply { isEnabled = order.id !in pendingOrders }, fullWidth())
             }
         }
-        list.addView(card, fullWidth())
+        list.addView(shell, fullWidth().apply { topMargin = 12.dp })
     }
 
     private fun transition(order: RemoteOrderEntity, status: String) = lifecycleScope.launch {
+        if (!pendingOrders.add(order.id)) return@launch
         try {
+            loadOrders()
             client.transition(order.id, status)
-            refreshOrders()
+            refreshOrders().join()
         } catch (e: Exception) { notice.text = e.message ?: "No se pudo actualizar el pedido." }
+        finally { pendingOrders.remove(order.id); loadOrders() }
     }
 
-    private fun confirmPayment(order: RemoteOrderEntity) = lifecycleScope.launch {
-        try {
-            val key = UUID.nameUUIDFromBytes("${order.id}:CONFIRMED".toByteArray()).toString()
-            client.confirmPayment(order.id, key)
-            refreshOrders()
-        } catch (e: Exception) { notice.text = e.message ?: "No se pudo confirmar el cobro." }
+    private fun confirmCompletion(order: RemoteOrderEntity) {
+        if (confirmationOpen || order.id in pendingOrders) return
+        confirmationOpen = true
+        val methods = if (order.paymentStatus == "CONFIRMED") arrayOf(order.paymentMethod) else arrayOf("CASH", "YAPPY")
+        var selected = methods.indexOf(order.paymentMethod).coerceAtLeast(0)
+        MaterialAlertDialogBuilder(this).setTitle("${Money.format(order.totalCents)} · ¿Ya cobraste y entregaste?")
+            .setSingleChoiceItems(methods.map { if (it == "YAPPY") "Yappy" else "Efectivo" }.toTypedArray(), selected) { _, which -> selected = which }
+            .setNegativeButton("Volver", null)
+            .setPositiveButton("Sí, finalizar") { _, _ ->
+                lifecycleScope.launch {
+                    if (!pendingOrders.add(order.id)) return@launch
+                    try {
+                        loadOrders()
+                        client.completeDelivery(order.id, methods[selected])
+                        refreshOrders().join()
+                        notice.text = "Entrega finalizada. Puntos y racha actualizados según las reglas del cliente."
+                    } catch (e: Exception) { notice.text = e.message ?: "No se pudo finalizar. Actualiza para comprobar el estado." }
+                    finally { pendingOrders.remove(order.id); loadOrders() }
+                }
+            }.setOnDismissListener { confirmationOpen = false }.show()
     }
 }

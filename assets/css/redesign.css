@@ -312,6 +312,42 @@ h1[tabindex="-1"]:focus,h2[tabindex="-1"]:focus{outline:none}
 .admin-inventory-row .btn{padding:10px 12px}
 @media(max-width:390px){.admin-inventory-row{grid-template-columns:minmax(0,1fr) 75px auto;gap:5px}.admin-inventory-row .btn{font-size:11px;padding:9px 7px}}
 .quantity button:disabled{opacity:.45;cursor:not-allowed}
+.admin-shortcuts{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.admin-shortcuts a{padding:11px 18px;background:#2b203b;border:1px solid #bb90ef35;border-radius:14px;text-decoration:none;font-weight:700}
+.operations-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.operations-heading h2{font-size:clamp(19px,4vw,25px);margin:4px 0}
+.eyebrow{font-size:10px;font-weight:800;letter-spacing:1.8px;color:#c8a9ee}
+#adminFlavorInventory{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.inventory-count-card{padding:16px;background:#241b30;border:1px solid #c49be32b;border-radius:18px;display:flex;flex-direction:column;gap:9px}
+.inventory-count-card .cart-donut{width:54px;height:54px;flex:none}
+.inventory-count-card b{font-size:14px;line-height:1.4;min-height:40px}
+.inventory-count-card small{font-size:11px;color:var(--muted)}
+.inventory-count-card .field{margin:0;text-align:center;font-size:24px!important;font-weight:800;font-variant-numeric:tabular-nums}
+.inventory-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.admin-orders-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:16px}
+.delivery-card{border:1px solid #bc8fea30;border-radius:20px;padding:20px;background:linear-gradient(140deg,#2b2038,#1c1625)}
+.delivery-card h3{font-size:21px;margin:17px 0 3px;overflow-wrap:anywhere}
+.delivery-card .muted{font-size:12px}.delivery-card small{font-size:11px;color:var(--muted)}
+.delivery-items{list-style:none;padding:0;margin:18px 0}.delivery-items li{margin:7px 0;font-size:14px}.delivery-items strong{color:#d9b9ff;margin-right:6px}
+.delivery-location{border-top:1px solid var(--line);padding-top:12px;overflow-wrap:anywhere}
+.order-status{border-radius:20px;padding:5px 10px;font-size:11px;font-weight:750;background:#bb8de22a;color:#e2c5fa}
+.status-PENDING{background:#e4ba7625;color:#f4d396}.status-COMPLETED{background:#8ad2ad25;color:#b1eccb}.status-CANCELLED{background:#c994a625;color:#edb8cc}
+.order-total{display:flex;justify-content:space-between;align-items:center;margin:18px 0;gap:10px}.order-total strong{font-size:24px}.order-total span{font-size:12px;color:var(--muted)}
+.order-actions{display:flex;flex-wrap:wrap;gap:8px}.order-actions .field-label{width:100%;margin:0}.order-actions .btn-primary{flex:1}
+.delivery-confirm{margin:auto;max-width:420px;width:calc(100% - 32px);padding:28px;border:1px solid #bc8fea55;border-radius:24px;background:#20172d;color:var(--text);box-shadow:0 30px 100px #0008}
+.delivery-confirm::backdrop{background:#100a1bbd;backdrop-filter:blur(4px)}.delivery-confirm .brand-mark{display:block;width:45px;height:45px;margin-bottom:20px}.delivery-confirm h2{font-size:23px}.delivery-confirm p{color:var(--muted);margin:14px 0 24px}.delivery-confirm form{display:flex;gap:10px;justify-content:flex-end}
+.btn.is-busy:before{content:'';display:inline-block;width:13px;height:13px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;margin-right:8px;vertical-align:-2px;animation:button-spin .65s linear infinite}
+@keyframes button-spin{to{transform:rotate(360deg)}}
+.brand-intro{position:fixed;inset:0;z-index:10000;pointer-events:none;background:#100d17;display:flex;align-items:center;justify-content:center;gap:20px;animation:intro-curtain 1.2s cubic-bezier(.65,0,.25,1) both}
+.brand-intro .brand-mark{display:block;width:66px;height:66px;animation:donut-arrive .7s cubic-bezier(.2,.8,.3,1.2) both}
+.brand-intro .brand-wordmark{font-size:27px;animation:brand-reveal .45s .35s both}
+@keyframes intro-curtain{0%,65%{transform:translateY(0);opacity:1}100%{transform:translateY(-100%);opacity:0;visibility:hidden}}
+@keyframes donut-arrive{from{transform:translateX(100px) rotate(160deg) scale(.7);opacity:0}55%{transform:translateX(-8px) rotate(-12deg) scale(1.08);opacity:1}to{transform:none;opacity:1}}
+@keyframes brand-reveal{from{opacity:0;clip-path:inset(0 100% 0 0);transform:translateX(-8px)}to{opacity:1;clip-path:inset(0);transform:none}}
+@media(hover:hover) and (prefers-reduced-motion:no-preference){.btn-primary{position:relative;overflow:hidden}.btn-primary:after{content:'';position:absolute;inset:-60% auto -60% -50%;width:25%;background:linear-gradient(90deg,transparent,#fff3,transparent);transform:rotate(25deg);transition:left .45s;pointer-events:none}.btn-primary:hover:after{left:130%}}
+@media(max-width:700px){#adminFlavorInventory{grid-template-columns:repeat(2,minmax(0,1fr))}.admin-orders-grid{grid-template-columns:1fr}.inventory-count-card{padding:13px}.operations-heading>.btn{padding:10px 12px}.inventory-actions>.btn{flex:1}}
+@media(prefers-reduced-motion:reduce){.brand-intro{display:none}.btn.is-busy:before{animation:none}}
+html.motion-lite .brand-intro{display:none}
 @media(max-width:600px){.client-top-nav{gap:8px}.client-top-link{min-height:50px;font-size:14px}.client-tabs{overflow-x:auto;flex-wrap:nowrap;scrollbar-width:thin}.client-tabs .tab{flex:0 0 auto}}
 @media(prefers-reduced-motion:no-preference){html:not(.motion-lite) #screen-client .client-section:not([style*="display: none"]){animation:client-panel-enter .3s ease-out both}
 @keyframes client-panel-enter{from{opacity:.25;transform:translateX(12px)}to{opacity:1;transform:translateX(0)}}
