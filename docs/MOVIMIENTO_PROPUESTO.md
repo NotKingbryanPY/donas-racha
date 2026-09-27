@@ -17,6 +17,8 @@ La referencia visual se traduce a recursos SVG y animación nativa CSS/JavaScrip
 
 ## Identidad y recursos
 
+El acceso y el perfil incorporan **Animaciones → Automáticas / Activadas / Reducidas**. Automáticas conserva la accesibilidad del dispositivo. Activadas es una elección explícita solo para esta web y permite ver la bienvenida incluso cuando el navegador comunica movimiento reducido. La elección se guarda en este navegador, sin cambiar Windows ni otros sitios. Diagnóstico y pruebas: [BROWSER_MOTION_DIAGNOSIS.md](BROWSER_MOTION_DIAGNOSIS.md).
+
 - `assets/images/donas-racha-mark.svg`: dona violeta con fondo transparente, utilizada por la web y como favicon.
 - `assets/images/donas-racha-logo-light.svg`: logo completo para fondos oscuros.
 - `assets/images/donas-racha-logo-dark.svg`: logo completo para fondos claros.
