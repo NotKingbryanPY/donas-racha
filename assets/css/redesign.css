@@ -476,3 +476,13 @@ html.motion-lite :is(.btn,.shop-buy,.tab,.client-top-link,.quantity button):acti
 .profile-tools{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;flex-wrap:wrap}
 .profile-tools .motion-picker{font-size:11px;gap:7px}
 .profile-tools .motion-picker select{max-width:136px}
+
+/* Compact order controls and current delivery area. */
+.delivery-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.delivery-heading .card-title{margin:0}
+.delivery-refresh{display:inline-flex;align-items:center;justify-content:center;gap:6px;flex-shrink:0;min-height:40px;padding:8px 12px;border:1px solid #b889e766;border-radius:11px;background:#553276;color:#f0ddff;font-size:12px;font-weight:800;line-height:1.2}
+.delivery-refresh>span{font-size:21px;line-height:1}
+.delivery-refresh:focus-visible{outline:2px solid #d8b4fe;outline-offset:3px}
+@media(hover:hover) and (pointer:fine){.delivery-refresh:hover{background:#68408b}}
+.delivery-area-notice{display:flex;align-items:flex-start;gap:8px;margin:14px 0 12px;padding:11px 12px;border:1px solid #b889e72b;border-radius:11px;background:#b889e70b;color:#c9bad8;font-size:12px;line-height:1.55}
+.delivery-area-notice strong{color:#ead8fb}
