@@ -478,6 +478,7 @@ let customerSelectedFlavor = null;
 let customerOrderQuantities = new Map();
 let customerOrderPendingKey = null;
 let customerOrderVariants = [];
+let clientInventoryEnforced = false;
 const pendingPurchaseKeys = new Map();
 const pendingRedeemKeys = new Map();
 let pendingRegistration = null;
@@ -987,12 +988,12 @@ async function loadClientDelivery() {
       vercelApi('/api/products'), vercelApi('/api/inventory')
     ]);
     const byId = new Map((inventory.flavors || []).map(row => [String(row.variant_id), row]));
+    clientInventoryEnforced = !!inventory.enforced;
     clientOrderVariants = flattenCatalog(catalog.products || []).filter(item => item.available)
       .map(item => ({ ...item, inventory:byId.get(String(item.id)) }));
-    document.getElementById('clientInventoryStatus').textContent =
-      clientOrderVariants.every(item => item.inventory?.counted)
-        ? 'Existencias sincronizadas · se actualizan automáticamente'
-        : 'Esperando conteo físico de los sabores. Los pedidos se habilitan después del conteo.';
+    document.getElementById('clientInventoryStatus').textContent = clientInventoryEnforced
+      ? 'Existencias sincronizadas · se actualizan automáticamente'
+      : 'Inventario por sabor en preparación. Puedes pedir; confirmaremos la disponibilidad antes de aceptar.';
     renderClientFlavors();
   } catch (error) { list.textContent = error.message; document.getElementById('clientInventoryStatus').textContent = 'No se pudo comprobar el inventario.'; }
   try {
@@ -1011,13 +1012,13 @@ function clientOrderStatus(status) {
 function renderClientFlavors() {
   const list = document.getElementById('clientFlavorList');
   if (!clientOrderVariants.length) { list.innerHTML = '<div class="empty">No hay sabores disponibles ahora.</div>'; updateClientOrderTotal(); return; }
-  list.innerHTML = clientOrderVariants.map(item => { const left = item.inventory?.counted ? Math.max(0,Number(item.inventory.available_quantity) || 0) : 0; return `<div class="cart-row"><div class="cart-donut ${flavorTone(item.name)}"><span class="mini-donut"></span></div><div class="grow"><b>${safe(item.name)}</b><small>${formatMoney(item.unit_price_cents,item.currency_code)} c/u · <span class="flavor-remaining">${left} disponibles</span></small></div><div class="quantity"><button aria-label="Quitar ${safe(item.name)}" onclick="changeClientOrderQty('${item.id}',-1)">−</button><span>${customerOrderQuantities.get(String(item.id)) || 0}</span><button aria-label="Añadir ${safe(item.name)}" ${left <= (customerOrderQuantities.get(String(item.id)) || 0) ? 'disabled' : ''} onclick="changeClientOrderQty('${item.id}',1)">+</button></div></div>`; }).join('');
+  list.innerHTML = clientOrderVariants.map(item => { const left = item.inventory?.counted ? Math.max(0,Number(item.inventory.available_quantity) || 0) : 0; return `<div class="cart-row"><div class="cart-donut ${flavorTone(item.name)}"><span class="mini-donut"></span></div><div class="grow"><b>${safe(item.name)}</b><small>${formatMoney(item.unit_price_cents,item.currency_code)} c/u · <span class="flavor-remaining">${clientInventoryEnforced ? left+' disponibles' : 'por confirmar'}</span></small></div><div class="quantity"><button aria-label="Quitar ${safe(item.name)}" onclick="changeClientOrderQty('${item.id}',-1)">−</button><span>${customerOrderQuantities.get(String(item.id)) || 0}</span><button aria-label="Añadir ${safe(item.name)}" ${clientInventoryEnforced && left <= (customerOrderQuantities.get(String(item.id)) || 0) ? 'disabled' : ''} onclick="changeClientOrderQty('${item.id}',1)">+</button></div></div>`; }).join('');
   updateClientOrderTotal();
 }
 
 function changeClientOrderQty(id, delta) {
   const flavor = clientOrderVariants.find(item => String(item.id) === id);
-  const available = flavor?.inventory?.counted ? Math.max(0,Number(flavor.inventory.available_quantity) || 0) : 0;
+  const available = clientInventoryEnforced ? (flavor?.inventory?.counted ? Math.max(0,Number(flavor.inventory.available_quantity) || 0) : 0) : 100;
   const quantity = Math.max(0, Math.min(available, 100, (customerOrderQuantities.get(id) || 0) + delta));
   if (quantity) customerOrderQuantities.set(id, quantity); else customerOrderQuantities.delete(id);
   customerOrderPendingKey = null;
@@ -1027,8 +1028,8 @@ function changeClientOrderQty(id, delta) {
 function updateClientOrderTotal() {
   const total = clientOrderVariants.reduce((sum,item) => sum + item.unit_price_cents * (customerOrderQuantities.get(String(item.id)) || 0), 0);
   document.getElementById('clientOrderTotal').textContent = formatMoney(total);
-  document.getElementById('clientOrderButton').disabled = total <= 0 || clientOrderVariants.some(item =>
-    (customerOrderQuantities.get(String(item.id)) || 0) > (item.inventory?.counted ? Number(item.inventory.available_quantity) : 0));
+  document.getElementById('clientOrderButton').disabled = total <= 0 || (clientInventoryEnforced && clientOrderVariants.some(item =>
+    (customerOrderQuantities.get(String(item.id)) || 0) > (item.inventory?.counted ? Number(item.inventory.available_quantity) : 0)));
 }
 
 setInterval(() => {

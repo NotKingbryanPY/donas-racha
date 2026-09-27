@@ -31,14 +31,22 @@ create table public.inventory_sync_gaps (
   operation_id uuid primary key references public.sync_operations(id),
   created_at timestamptz not null default now()
 );
+create table public.inventory_control (
+  id boolean primary key default true check (id),
+  enforce_orders boolean not null default false,
+  updated_at timestamptz not null default now()
+);
+insert into public.inventory_control(id) values(true);
 alter table public.box_purchases enable row level security;
 alter table public.flavor_sales enable row level security;
 alter table public.inventory_opening_counts enable row level security;
 alter table public.inventory_sync_gaps enable row level security;
-revoke all on public.box_purchases,public.flavor_sales,public.inventory_opening_counts,public.inventory_sync_gaps from public,anon,authenticated;
+alter table public.inventory_control enable row level security;
+revoke all on public.box_purchases,public.flavor_sales,public.inventory_opening_counts,public.inventory_sync_gaps,public.inventory_control from public,anon,authenticated;
 grant select,insert on public.box_purchases,public.flavor_sales to service_role;
 grant select,insert,update on public.inventory_opening_counts to service_role;
 grant select,insert on public.inventory_sync_gaps to service_role;
+grant select on public.inventory_control to service_role;
 
 create view public.inventory_by_flavor with (security_invoker = true) as
 select pv.id as variant_id,pv.sku,pv.name,pv.available as offered,
@@ -98,6 +106,9 @@ begin
     values(p_variant_id,v_opening,now())
     on conflict(variant_id) do update set quantity=excluded.quantity,counted_at=excluded.counted_at
     returning * into v_result;
+  if (select count(*) from public.inventory_by_flavor where counted)=4 then
+    update public.inventory_control set enforce_orders=true,updated_at=now() where id;
+  end if;
   return v_result;
 end; $$;
 revoke execute on function public.api_set_physical_inventory_count(uuid,uuid,integer) from public,anon,authenticated;
@@ -121,7 +132,7 @@ begin
   select * into v_result from public.api_create_order_by_customer_id_unstocked(
     p_customer_id,p_idempotency_key,p_request_hash,p_delivery_location,
     p_payment_method,p_customer_notes,p_items);
-  if not v_result.replayed then
+  if not v_result.replayed and (select enforce_orders from public.inventory_control where id) then
     for v_item in select oi.product_variant_id,oi.quantity from public.order_items oi
       where oi.order_id=v_result.id loop
       if not exists(select 1 from public.inventory_by_flavor i
