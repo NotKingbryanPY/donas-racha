@@ -97,7 +97,7 @@ async function clientDetails(customer) {
       { minStreak:14,label:'Racha 14+',points:config.points_streak_14 }
     ],
     badges:badgeRows.map(item => ({ id:item.badges?.key, name:item.badges?.name, emoji:item.badges?.emoji, date:item.awarded_at })),
-    recentHistory:history.map(item => ({ date:item.occurred_at, type:item.entry_type==='REDEMPTION_SPEND'?'redeem':'purchase', points:item.points_delta, notes:item.description })),
+    recentHistory:history.map(item => ({ date:item.occurred_at, type:item.entry_type==='REDEMPTION_SPEND'?'redeem':'purchase', entryType:item.entry_type, points:item.points_delta, notes:item.description })),
     shopItems:rewardRows.map(item => ({ id:item.key,name:item.name,emoji:item.emoji,cost:item.points_cost,type:item.reward_type,
       value:item.reward_value,description:item.description,order:item.display_order,active:true })),
     recentRedemptions:redemptions.map(item => ({ id:item.id,itemName:item.reward_name_snapshot,points:item.points_cost_snapshot,date:item.created_at,status:item.status }))

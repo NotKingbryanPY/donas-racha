@@ -28,6 +28,7 @@ const fixture = () => ({id:'C-DEMO',name:'Cliente de prueba con nombre largo',wh
       ?{json:{ok:true,data:{accessToken:'admin-token',refreshToken:'refresh-token',expiresAt:new Date(Date.now()+3600000).toISOString()}}}
       :{status:401,json:{ok:false,error:{code:'INVALID_CREDENTIALS',message:'Credenciales incorrectas'}}});
     }
+    if(u.pathname==='/api/customer/session' && data.publicId==='LOCKED' && !data.password) return route.fulfill({status:401,json:{ok:false,error:{code:'PASSWORD_REQUIRED',message:'Escribe tu contraseña'}}});
     if(u.pathname==='/api/customer/session') return route.fulfill(data.publicId==='INVALID'
      ?{status:404,json:{ok:false,error:{code:'CUSTOMER_NOT_FOUND',message:'ID no encontrado'}}}
      :{json:{ok:true,data:{accessToken:'customer-token',customer:{publicId:data.publicId}}}});
@@ -76,6 +77,30 @@ const fixture = () => ({id:'C-DEMO',name:'Cliente de prueba con nombre largo',wh
   assert.equal(await page.locator('#buyBtn').isVisible(),false);
   assert.equal(await page.locator('.progress-track').getAttribute('aria-valuenow'),'95');
   await noOverflow('profile');await page.screenshot({path:path.join(out,`profile-${width}.png`),fullPage:true});
+  assert((await page.locator('#nextReward').textContent()).includes('Ya puedes canjearlo'));
+  assert.equal(await page.locator('.reward-track').getAttribute('aria-valuenow'),'100','progress capped at actual reward cost');
+  assert.equal(await page.locator('#featuredBadges .achievement').count(),1,'do not invent badges to fill the mockup');
+  await page.getByRole('button',{name:'Mi QR',exact:true}).click();
+  assert(await page.locator('#clientQrDialog').evaluate(el=>el.open));
+  assert.equal(await page.locator('#clientQr').getAttribute('src'),'https://fixture.test/qr.svg');
+  await noOverflow('QR dialog');await page.keyboard.press('Escape');
+  await page.getByRole('button',{name:'Contraseña opcional',exact:true}).click();
+  assert(await page.locator('#customerNewPassword').isVisible());
+  await noOverflow('password dialog');await page.keyboard.press('Escape');
+  await page.getByRole('button',{name:'Ver todos',exact:false}).click();
+  assert(await page.locator('#clientBadgesDialog').evaluate(el=>el.open));await page.keyboard.press('Escape');
+  await page.locator('.profile-details summary').click();assert(await page.locator('#hitosWrap').isVisible());await page.locator('.profile-details summary').click();
+  await page.evaluate(()=>renderClient({...currentClient,pointsAvailable:25,badges:[],recentHistory:[],shopItems:[]},true));
+  assert((await page.locator('#nextReward').textContent()).includes('Aún no hay premios'));
+  assert.equal(await page.locator('#featuredBadges .achievement').count(),0);
+  assert((await page.locator('#recentPurchases').textContent()).includes('Todavía no'));
+  await noOverflow('empty profile');
+  await page.evaluate(()=>renderClient({...currentClient,pointsAvailable:25},true));
+  assert((await page.locator('#nextReward').textContent()).includes('Te faltan 75 puntos'));
+  await page.evaluate(()=>renderClient({...currentClient,recentHistory:[{type:'purchase',entryType:'OPENING_BALANCE',points:100,date:'2026-09-01'}]},true));
+  assert.equal(await page.locator('#recentPurchases .recent-purchase').count(),0,'a migrated balance is not a purchase');
+  assert((await page.locator('#historyWrap').textContent()).includes('Saldo migrado'));
+  await page.evaluate(()=>renderClient(currentClient,true));
   await page.locator('#client-top-delivery').click();await page.waitForSelector('#clientFlavorList .cart-row');
   assert.equal(await page.locator('#clientFlavorList .cart-row').count(),4);
   assert(requests.some(r=>r.view==='inventory'),'inventory query must be passed correctly');
@@ -87,6 +112,7 @@ const fixture = () => ({id:'C-DEMO',name:'Cliente de prueba con nombre largo',wh
     assert(await page.locator('.shop-buy').nth(1).isDisabled());
     page.once('dialog',dialog=>dialog.accept());await page.locator('.shop-buy').first().click();
     await page.waitForFunction(()=>document.getElementById('shopAvailablePoints').textContent==='90');
+    assert((await page.locator('#nextReward').textContent()).includes('Te faltan 10 puntos'),'preview updates after spending points');
     await page.screenshot({path:path.join(out,`shop-${width}.png`),fullPage:true});
    }
   }
@@ -121,6 +147,10 @@ const fixture = () => ({id:'C-DEMO',name:'Cliente de prueba con nombre largo',wh
   await page.getByRole('button',{name:'Guardar config'}).click();await page.waitForTimeout(100);
   const saved=requests.find(r=>r.action==='saveConfig');assert(saved);assert.equal(saved.config.PRECIO_DONA,'1');
   await page.evaluate(()=>logout());assert.equal(await page.evaluate(()=>sessionStorage.getItem('donasAdminAccessToken')),null);
+  await page.evaluate(()=>goToUserLogin());await page.locator('#userClientIdInput').fill('LOCKED');await page.locator('#userEnterBtn').click();
+  await page.waitForSelector('#userPasswordInput:visible');assert.equal(await page.locator('#userEnterBtn').getAttribute('aria-busy'),null);
+  await page.locator('#userPasswordInput').fill('client-password');await page.locator('#userEnterBtn').click();
+  await page.waitForFunction(()=>document.getElementById('clientLoginSuccess').hidden===false);
   await page.evaluate(()=>goToUserLogin());await page.locator('#userScanBtn').click();await page.waitForFunction(()=>userScannerOpen);
   await page.evaluate(()=>window.__scanners.at(-1).success('C-DEMO'));
   await page.waitForFunction(()=>openedAsUser && document.getElementById('userOverlay').classList.contains('hidden') && document.getElementById('screen-client').classList.contains('active'));
