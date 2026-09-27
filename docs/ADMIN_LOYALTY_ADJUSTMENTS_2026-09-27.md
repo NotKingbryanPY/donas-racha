@@ -1,0 +1,13 @@
+# Ajustes de fidelidad desde Administración
+
+En Administración → Clientes, busca por nombre o ID y pulsa **Ajustar**. Elige una operación y escribe un motivo. Los últimos quince ajustes de ese cliente se consultan en el mismo cuadro.
+
+- **Registrar compras anteriores:** indica cuántas compras comprobadas faltan (1 a 100 por operación). Cada una suma los puntos base vigentes y aumenta el contador de compras. Se actualizan el nivel y las insignias por número de compras. Se guarda un único movimiento visible como «compras anteriores» con la cantidad y el motivo. Como no se conocen fechas por compra, no se fingen días de racha ni se suman a las ventas de hoy. Puedes repetir la operación para otros clientes.
+- **Corregir puntos disponibles:** introduce un número positivo o negativo. La corrección queda en el historial. Un abono sube el total acumulado; un débito reduce el saldo disponible sin borrar los puntos que el cliente ganó comprando. Nunca se permite saldo negativo.
+- **Corregir racha:** introduce el valor actual (0 a 29) y, cuando sea positivo, la fecha real de la última compra que contó. Esa fecha mantiene el cálculo de la siguiente compra y el límite de una acreditación por día. No se permite fecha futura, anterior al registro ni anterior a la última compra ya registrada. Una racha que llegó a 30 sigue el flujo automático de temporada, no se inventa desde este formulario.
+
+Cada envío tiene una clave estable para que un reintento no duplique compras ni puntos. La operación se hace en una transacción PostgreSQL y se guarda en `loyalty_admin_adjustments` con el administrador, el motivo y los saldos antes/después. La tabla usa RLS y la función solo se concede a `service_role`; la API exige un usuario con rol `ADMIN`. El acceso por ID del cliente no permite esta acción.
+
+La migración `supabase/migrations/202609270002_admin_loyalty_adjustments.sql` se aplicó manualmente en el proyecto de producción el 27 de septiembre. Verificación de solo lectura: tabla y función presentes, RLS activo, ejecución por `anon` denegada y cero ajustes iniciales. Si se usa un flujo de migraciones automático en el futuro, registra este cambio ya aplicado como base antes de reejecutar migraciones.
+
+Pruebas aisladas: `tests/admin-loyalty-postgres.mjs` cubre permisos, compras históricas, puntos, racha, insignias, reintentos y aislamiento entre clientes. `tests/full-supabase-backend.cjs` prueba autenticación de la API. `tests/regression.cjs` comprueba el formulario y que los flujos existentes siguen funcionando en móvil y escritorio con API simulada. No se modificaron puntos de clientes reales durante la verificación.

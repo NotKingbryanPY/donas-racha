@@ -34,6 +34,10 @@ async function readResponse(response) {
     if (message.includes('ORDER_NOT_FOUND')) throw new ApiError(404, 'ORDER_NOT_FOUND', 'No se encontró el pedido.');
     if (message.includes('PHONE_EXISTS')) throw new ApiError(409, 'PHONE_EXISTS', 'Ya existe un cliente activo con ese WhatsApp.');
     if (message.includes('INSUFFICIENT_POINTS')) throw new ApiError(409, 'INSUFFICIENT_POINTS', 'No tienes puntos suficientes.');
+    if (message.includes('INVALID_ADJUSTMENT')) throw new ApiError(400, 'INVALID_ADJUSTMENT', 'El ajuste no es válido. Revisa cantidad, fecha y motivo.');
+    if (message.includes('FUTURE_PURCHASE_DATE')) throw new ApiError(400, 'FUTURE_PURCHASE_DATE', 'La fecha de la compra no puede ser futura.');
+    if (message.includes('PURCHASE_BEFORE_REGISTRATION')) throw new ApiError(400, 'PURCHASE_BEFORE_REGISTRATION', 'La fecha no puede ser anterior al registro del cliente.');
+    if (message.includes('STREAK_DATE_BEFORE_LAST_PURCHASE')) throw new ApiError(409, 'STREAK_DATE_BEFORE_LAST_PURCHASE', 'La fecha debe ser igual o posterior a la última compra registrada.');
     if (message.includes('REWARD_NOT_FOUND')) throw new ApiError(404, 'REWARD_NOT_FOUND', 'La recompensa ya no está disponible.');
     if (message.includes('SYSTEM_INACTIVE')) throw new ApiError(409, 'SYSTEM_INACTIVE', 'El registro de compras está pausado.');
     if (message.includes('LOYALTY_ACCOUNT_MISSING')) throw new ApiError(409, 'LOYALTY_ACCOUNT_MISSING', 'La cuenta de puntos necesita revisión.');

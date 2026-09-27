@@ -417,6 +417,15 @@ html:not(.motion-lite) .client-top-link.active{animation:top-tab-glow .35s ease-
 .profile-dialog h2{font-size:21px;margin:0 32px 16px 0}
 .profile-dialog .muted{font-size:13px;margin-bottom:16px}
 .profile-dialog .btn{margin-top:12px}
+.admin-loyalty-dialog{max-width:500px}
+.admin-loyalty-dialog .field{width:100%;margin:0 0 13px}
+.admin-loyalty-dialog textarea.field{resize:vertical;min-height:76px;font:inherit;font-size:16px}
+.admin-loyalty-dialog #adminLoyaltyExplanation{background:#31253f;border:1px solid #c7a6e72b;border-radius:11px;padding:10px 12px;line-height:1.4}
+.admin-loyalty-dialog #adminLoyaltyNotice{min-height:20px;margin:10px 0;color:#dac0ed}
+.admin-loyalty-dialog .inventory-actions{margin:0 0 12px}
+.loyalty-audit-row{display:grid;grid-template-columns:1fr auto;gap:2px 8px;padding:10px 0;border-bottom:1px solid var(--line);font-size:12px}
+.loyalty-audit-row small{color:var(--muted)}
+.loyalty-audit-row span{grid-column:1/-1;overflow-wrap:anywhere}
 .dialog-close{position:absolute;right:9px;top:7px;width:44px;height:44px;border:0;border-radius:12px;background:none;color:#e5d5f3;font-size:19px;cursor:pointer}
 .login-success{font-size:12px;color:#b4f0da;margin:0 0 10px}
 .login-success[hidden],#clientSummary[hidden],#recentPurchasesSection[hidden]{display:none}

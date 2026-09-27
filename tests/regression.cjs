@@ -14,7 +14,7 @@ const fixture = () => ({id:'C-DEMO',name:'Cliente de prueba con nombre largo',wh
  try {
  for (const width of (process.env.TEST_WIDTHS || '360,390,412,768,1440').split(',').map(Number)) {
   const context=await browser.newContext({viewport:{width,height:900}});
-  const page=await context.newPage(); let client=fixture(); const requests=[],errors=[];
+  const page=await context.newPage(); let client=fixture(); const requests=[],errors=[]; let adminResponseLost=true; const adminKeys=new Set();
   const flavors=['DR-CHOCOLATE','DR-VAINILLA','DR-CHOCOLATE-CHISPAS','DR-VAINILLA-CHISPAS'].map((sku,i)=>({variant_id:`00000000-0000-4000-8000-00000000000${i}`,sku,name:['Chocolate','Vainilla','Chocolate con chispas','Vainilla con chispas'][i],counted:true,opening_quantity:4,purchased_quantity:0,sold_quantity:0,reserved_quantity:1,available_quantity:3}));
   const order={id:'10000000-0000-4000-8000-000000000001',public_code:'DR-TEST',customer_name_snapshot:'Cliente de prueba',customer_phone_snapshot:'60000000',status:'PENDING',payment_method:'YAPPY',payment_status:'PENDING',total_cents:200,created_at:new Date().toISOString(),delivery_location:'Edificio 4 · entrada principal',order_items:[{quantity:2,variant_name_snapshot:'Chocolate'}]};
   page.on('pageerror',e=>errors.push(e.message));
@@ -46,6 +46,14 @@ const fixture = () => ({id:'C-DEMO',name:'Cliente de prueba con nombre largo',wh
      case 'canjearRecompensa':client={...client,pointsAvailable:client.pointsAvailable-100,recentRedemptions:[{itemName:'Dona de recompensa',points:100,date:'2026-09-16',status:'pendiente'}]};response={ok:true,client};break;
      case 'nuevoCliente':response={ok:true,client:{...client,name:data.name}};break;
      case 'getAdminDashboard':response={ok:true,clients:[client],ranking:[client],stats:{today:2,week:10,month:30,totalClients:4,pointsDelivered:300,rewardsDelivered:2,migrationComplete:true},config:{DIAS_TOLERANCIA:3,PRECIO_DONA:1,PUNTOS_RACHA_BASE:10,PUNTOS_RACHA_3:12,PUNTOS_RACHA_7:15,PUNTOS_RACHA_14:17}};break;
+     case 'getAdminLoyaltyHistory':response={ok:true,changes:[]};break;
+     case 'adminAdjustLoyalty':
+      if(!adminKeys.has(data.idempotencyKey)){
+       adminKeys.add(data.idempotencyKey);
+       if(data.kind==='HISTORICAL_PURCHASES') client={...client,totalPurchases:client.totalPurchases+data.amount,pointsTotal:client.pointsTotal+10*data.amount,pointsAvailable:client.pointsAvailable+10*data.amount};
+      }
+      if(adminResponseLost){adminResponseLost=false;return route.abort('failed');}
+      response={ok:true,adjustment:{replayed:true},client};break;
      case 'saveConfig':response={ok:true,config:data.config};break;
     }
     return route.fulfill({json:{ok:true,data:response}});
@@ -89,7 +97,7 @@ const fixture = () => ({id:'C-DEMO',name:'Cliente de prueba con nombre largo',wh
   await noOverflow('password dialog');await page.keyboard.press('Escape');
   await page.getByRole('button',{name:'Ver todos',exact:false}).click();
   assert(await page.locator('#clientBadgesDialog').evaluate(el=>el.open));await page.keyboard.press('Escape');
-  await page.locator('.profile-details summary').click();assert(await page.locator('#hitosWrap').isVisible());await page.locator('.profile-details summary').click();
+  await page.locator('#clientProfileSection .profile-details summary').click();assert(await page.locator('#hitosWrap').isVisible());await page.locator('#clientProfileSection .profile-details summary').click();
   await page.evaluate(()=>renderClient({...currentClient,pointsAvailable:25,badges:[],recentHistory:[],shopItems:[]},true));
   assert((await page.locator('#nextReward').textContent()).includes('Aún no hay premios'));
   assert.equal(await page.locator('#featuredBadges .achievement').count(),0);
@@ -134,6 +142,26 @@ const fixture = () => ({id:'C-DEMO',name:'Cliente de prueba con nombre largo',wh
   await page.waitForFunction(()=>document.getElementById('screen-client').classList.contains('active'));assert(await page.evaluate(()=>window.__scanners.at(-1).stopped));
   await page.evaluate(()=>showScreen('screen-new'));await page.locator('#newName').fill('Nuevo de prueba');await page.locator('#createBtn').click();await page.waitForSelector('#newQrCard:visible');await noOverflow('registration');
   await page.evaluate(()=>showAdmin());await page.waitForFunction(()=>document.getElementById('sToday').textContent==='2');await noOverflow('admin');await page.screenshot({path:path.join(out,`admin-${width}.png`),fullPage:true});
+  await page.locator('#adminClientFilter').fill('C-DEMO');assert.equal(await page.locator('#adminClients tbody tr').count(),1);
+  await page.getByRole('button',{name:'Ajustar',exact:true}).click();
+  assert((await page.locator('#adminLoyaltySummary').textContent()).includes('C-DEMO'));
+  await page.locator('#adminLoyaltyAmount').fill('2');
+  await page.locator('#adminLoyaltyReason').fill('Compras previas prometidas');
+  await page.locator('#adminLoyaltyDialog').screenshot({path:path.join(out,`loyalty-adjustment-${width}.png`)});
+  await page.locator('#adminLoyaltySave').click();
+  await page.waitForFunction(()=>document.getElementById('adminLoyaltyNotice').textContent.includes('No se confirmó'));
+  await page.locator('#adminLoyaltySave').click();
+  await page.waitForFunction(()=>document.getElementById('adminLoyaltyNotice').textContent.includes('no se duplicó'));
+  const adjustments=requests.filter(r=>r.action==='adminAdjustLoyalty');
+  assert.equal(adjustments.length,2);assert.equal(adjustments[0].idempotencyKey,adjustments[1].idempotencyKey,'retry must use the same operation');
+  assert.equal(client.totalPurchases,22,'lost response must not double-count purchases');
+  await noOverflow('admin loyalty dialog');
+  await page.locator('#adminLoyaltyKind').selectOption('STREAK');
+  await page.locator('#adminLoyaltyAmount').fill('3');
+  assert(await page.locator('#adminLoyaltyDate').isVisible());
+  await page.locator('#adminLoyaltyKind').selectOption('POINTS');
+  assert.equal(await page.locator('#adminLoyaltyDate').isVisible(),false);
+  await page.locator('#adminLoyaltyDialog').getByRole('button',{name:'Cancelar',exact:true}).click();
   await page.locator('#adminInventoryPanel').screenshot({path:path.join(out,`inventory-${width}.png`)});
   for(const flavor of flavors) await page.locator('#count-'+flavor.sku).fill('6');
   await page.locator('#saveInventoryButton').click();await page.waitForFunction(()=>document.getElementById('adminInventoryNotice').textContent.includes('Inventario guardado'));
