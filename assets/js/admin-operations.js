@@ -124,7 +124,7 @@ document.getElementById('adminOrdersList').addEventListener('click',async event 
     if (status === 'COMPLETED') {
       body.paymentReceived = true;
       body.paymentMethod = document.getElementById('payment-'+order.id).value;
-      if (!await confirmDeliveryAction('¿Ya cobraste y entregaste?',`${order.customer_name_snapshot} · ${formatMoney(order.total_cents)} en ${body.paymentMethod==='YAPPY'?'Yappy':'efectivo'}. Se cerrará el pedido y se aplicarán los puntos y la racha que correspondan.`, 'Sí, finalizar')) return;
+      if (!await confirmDeliveryAction('¿Ya cobraste y entregaste?',`${order.customer_name_snapshot} · ${formatMoney(order.total_cents)} en ${body.paymentMethod==='YAPPY'?'Yappy':'efectivo'}. Se cerrará el pedido; los puntos se aplican si el cliente aún no llegó a 3 compras con puntos hoy.`, 'Sí, finalizar')) return;
     } else if(status === 'CANCELLED' && !await confirmDeliveryAction('Cancelar pedido','Las donas reservadas volverán a estar disponibles.','Cancelar pedido')) return;
     button.classList.add('is-busy');
     await adminRequest(`/api/admin/orders/${order.id}/status`,'POST',body);

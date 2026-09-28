@@ -41,6 +41,13 @@ function panamaDay(value) {
   return value ? new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Panama', year:'numeric', month:'2-digit', day:'2-digit' }).format(new Date(value)) : null;
 }
 
+const DAILY_PURCHASE_LIMIT = 3;
+function purchaseWindow() {
+  const day = panamaDay(new Date());
+  const start = new Date(`${day}T05:00:00.000Z`);
+  return { start:start.toISOString(), end:new Date(start.getTime()+86400000).toISOString(), day };
+}
+
 function nextPoints(streak, s) {
   return streak >= 14 ? s.points_streak_14 : streak >= 7 ? s.points_streak_7 : streak >= 3 ? s.points_streak_3 : s.points_base;
 }
@@ -64,7 +71,8 @@ function brief(c, a, st, level) {
 
 async function clientDetails(customer) {
   const id = customer.id;
-  const [account, streak, levels, badgeRows, history, rewardRows, redemptions, seasons, config] = await Promise.all([
+  const window = purchaseWindow();
+  const [account, streak, levels, badgeRows, history, rewardRows, redemptions, seasons, config, purchasesTodayRows] = await Promise.all([
     first('loyalty_accounts', { select:'*', customer_id:`eq.${id}` }),
     first('customer_streaks', { select:'*', customer_id:`eq.${id}` }),
     rows('loyalty_levels', { select:'key,name,emoji,minimum_lifetime_points', active:'eq.true', order:'minimum_lifetime_points.asc' }),
@@ -73,7 +81,9 @@ async function clientDetails(customer) {
     rows('rewards', { select:'key,name,emoji,points_cost,reward_type,reward_value,description,display_order', active:'eq.true', order:'display_order.asc' }),
     rows('reward_redemptions', { select:'id,reward_name_snapshot,points_cost_snapshot,status,created_at', customer_id:`eq.${id}`, order:'created_at.desc', limit:'8' }),
     rows('streak_seasons', { select:'status,season_number,milestones', customer_id:`eq.${id}`, order:'season_number.desc', limit:'30' }),
-    settings()
+    settings(),
+    rows('loyalty_transactions', { select:'occurred_at,metadata', customer_id:`eq.${id}`,
+      entry_type:'eq.PURCHASE_EARN', occurred_at:`gte.${window.start}`, order:'occurred_at.asc', limit:'4' })
   ]);
   if (!account || !streak) throw new ApiError(409, 'LOYALTY_ACCOUNT_MISSING', 'El cliente no tiene una cuenta de puntos completa.');
   const level = levels.find(item => item.key === account.level_key) || levels[0];
@@ -81,15 +91,24 @@ async function clientDetails(customer) {
   const progressStart = level?.minimum_lifetime_points || 0;
   const progressEnd = next?.minimum_lifetime_points || progressStart;
   const progress = next ? Math.max(0, Math.min(100, Math.floor(100*(account.lifetime_points-progressStart)/(progressEnd-progressStart)))) : 100;
+  const todayPurchases = purchasesTodayRows.filter(item => new Date(item.occurred_at).getTime() < Date.parse(window.end));
+  const lastQualifiedDay = panamaDay(streak.last_qualified_at);
+  const dayStreak = Number(todayPurchases[0]?.metadata?.streak);
+  const daysSinceQualified = lastQualifiedDay ?
+    Math.round((Date.parse(`${window.day}T00:00:00Z`)-Date.parse(`${lastQualifiedDay}T00:00:00Z`))/86400000) : Infinity;
+  const nextStreak = todayPurchases.length || lastQualifiedDay === window.day
+    ? (Number.isInteger(dayStreak) && dayStreak > 0 ? dayStreak : streak.current_count || 0)
+    : daysSinceQualified <= config.streak_tolerance_days+1 ? (streak.current_count || 0)+1 : 1;
   const result = {
     ...brief(customer,account,streak,level), qrUrl:qrUrl(customer.public_id),
-    purchasedToday:panamaDay(customer.last_purchase_at) === panamaDay(new Date()),
+    purchasedToday:todayPurchases.length > 0,
+    purchasesToday:todayPurchases.length, dailyPurchaseLimit:DAILY_PURCHASE_LIMIT,
     progressLevelPct:progress, pointsToNextLevel:next ? next.minimum_lifetime_points-account.lifetime_points : 0,
     nextLevel:next ? { key:next.key,name:next.name,emoji:next.emoji } : null,
     hitosRacha:seasons.find(s => s.status==='ACTIVE')?.milestones || [3,7,14,21,30].filter(n => n <= streak.current_count),
     temporadaActual:streak.current_season_number,
     temporadasCompletadas:seasons.filter(s => s.status==='COMPLETED').length,
-    nextPurchasePoints:nextPoints((streak.current_count || 0)+1,config),
+    nextPurchasePoints:nextPoints(nextStreak,config),
     pointsRules:[
       { minStreak:1,label:'Racha 1-2',points:config.points_base },
       { minStreak:3,label:'Racha 3+',points:config.points_streak_3 },
@@ -201,7 +220,7 @@ async function postAction(req, action, body) {
     const customer = await customerByPublicId(publicId);
     const key = uuid(body.idempotencyKey,'idempotencyKey');
     const result = await rpc('api_credit_purchase',{p_customer_id:customer.id,p_idempotency_key:key,p_source:'SELLER'});
-    if (!result.credited) throw new ApiError(409,'ALREADY_TODAY','Ya tiene una compra con puntos registrada hoy.');
+    if (!result.credited) throw new ApiError(409,'DAILY_PURCHASE_LIMIT','Este cliente ya tiene 3 compras registradas hoy.');
     return { ...result,client:await clientDetails(customer) };
   }
   if (action === 'adminAdjustLoyalty') {

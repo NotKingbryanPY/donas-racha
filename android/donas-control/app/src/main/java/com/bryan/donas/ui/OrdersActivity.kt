@@ -61,7 +61,7 @@ class OrdersActivity : AppCompatActivity() {
         WindowCompat.getInsetsController(window, scroll).isAppearanceLightNavigationBars = !dark
         root.addView(button("← Volver") { finish() }, fullWidth())
         root.addView(TextView(this).apply { text = "Pedidos"; textSize = 24f }, fullWidth())
-        notice = TextView(this).apply { text = "Acepta, entrega y cobra. Los puntos se aplican al finalizar."; textSize = 14f; setPadding(0, 8.dp, 0, 12.dp) }
+        notice = TextView(this).apply { text = "Acepta, entrega y cobra. Los puntos se aplican al finalizar, hasta 3 compras con puntos por cliente al día."; textSize = 14f; setPadding(0, 8.dp, 0, 12.dp) }
         root.addView(notice, fullWidth())
         loginFields = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         val emailInput = input("Correo", false)

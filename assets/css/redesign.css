@@ -496,6 +496,8 @@ html.motion-lite :is(.btn,.shop-buy,.tab,.client-top-link,.quantity button):acti
 @media(max-width:360px){.client-tour-card{padding:16px}.client-tour-button{padding:9px 11px}}
 .profile-tools .motion-picker{font-size:11px;gap:7px}
 .profile-tools .motion-picker select{max-width:136px}
+.daily-purchases{margin:0 0 12px;padding:10px 12px;border:1px solid rgba(184,137,231,.2);border-radius:12px;background:rgba(184,137,231,.07);color:var(--muted);font-size:12px;line-height:1.4;text-align:center}
+.daily-purchases.is-full{border-color:rgba(245,158,11,.3);background:rgba(245,158,11,.1);color:#ffd18a}
 
 /* Compact order controls and current delivery area. */
 .delivery-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}

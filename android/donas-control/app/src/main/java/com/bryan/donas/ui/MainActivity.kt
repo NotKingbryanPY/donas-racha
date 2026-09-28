@@ -61,6 +61,7 @@ class MainActivity : AppCompatActivity() {
         binding.home.editPlan.setOnClickListener { binding.navigation.selectedItemId = R.id.nav_sharing }
         binding.home.openOperations.setOnClickListener { startActivity(Intent(this, OperationsActivity::class.java)) }
         binding.home.openOrders.setOnClickListener { startActivity(Intent(this, OrdersActivity::class.java)) }
+        binding.home.openCustomerScan.setOnClickListener { startActivity(Intent(this, CustomerPurchaseActivity::class.java)) }
         binding.retry.setOnClickListener { model.initialize() }
         binding.business.cost.doAfterTextChanged { if (!rendering) { model.cost = it.toString(); previewConfig() } }
         binding.business.units.doAfterTextChanged { if (!rendering) { model.units = it.toString(); previewConfig() } }

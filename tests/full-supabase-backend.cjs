@@ -10,6 +10,8 @@ const customerId='bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
 const customer = { id:customerId,public_id:null,display_name:'Ana',whatsapp_e164:'+50760001111',status:'ACTIVE',registered_at:new Date().toISOString(),last_purchase_at:null };
 const account = { customer_id:customerId,available_points:0,lifetime_points:0,purchase_points:0,purchase_count:0,redemption_count:0,level_key:'BRONCE' };
 const streak = { customer_id:customerId,current_count:0,best_count:0,current_season_number:1,last_qualified_at:null };
+const todayCredits=[];
+const creditedKeys=new Set();
 const calls=[];
 const json = value => ({ok:true,status:200,text:async()=>JSON.stringify(value)});
 global.fetch=async (raw,options={}) => {
@@ -25,8 +27,13 @@ global.fetch=async (raw,options={}) => {
   }
   if(path==='/rest/v1/rpc/api_credit_purchase') {
     assert.equal(body.p_customer_id,customerId);
+    if (creditedKeys.has(body.p_idempotency_key)) return json({credited:true,replayed:true,pointsEarned:10});
+    if (todayCredits.length >= 3) return json({credited:false,limitReached:true,purchasesToday:3});
+    creditedKeys.add(body.p_idempotency_key);
     account.available_points+=10;account.lifetime_points+=10;account.purchase_points+=10;account.purchase_count++;
-    streak.current_count++; customer.last_purchase_at=new Date().toISOString();
+    if (!todayCredits.length) streak.current_count++;
+    customer.last_purchase_at=new Date().toISOString();
+    todayCredits.push({occurred_at:customer.last_purchase_at,metadata:{streak:streak.current_count},entry_type:'PURCHASE_EARN',points_delta:10});
     return json({credited:true,pointsEarned:10,newStreak:1,completedSeason:false,badgesAssigned:[]});
   }
   if(path==='/rest/v1/rpc/api_redeem_customer_reward') {
@@ -53,7 +60,8 @@ global.fetch=async (raw,options={}) => {
   if(path==='/rest/v1/loyalty_levels') return json([{key:'BRONCE',name:'Bronce',emoji:'🥉',minimum_lifetime_points:0},{key:'PLATA',name:'Plata',emoji:'🥈',minimum_lifetime_points:200}]);
   if(path==='/rest/v1/business_settings') return json([{id:true,active:true,streak_tolerance_days:3,donut_price_cents:100,points_base:10,points_streak_3:12,points_streak_7:15,points_streak_14:17}]);
   if(path==='/rest/v1/rewards') return json([{key:'DONA_GRATIS',name:'Dona',emoji:'🍩',points_cost:5,reward_type:'PRODUCT',reward_value:'1 dona',description:'',display_order:1}]);
-  if(['/rest/v1/customer_badges','/rest/v1/loyalty_transactions','/rest/v1/reward_redemptions','/rest/v1/streak_seasons'].includes(path)) return json([]);
+  if(path==='/rest/v1/loyalty_transactions') return json(todayCredits);
+  if(['/rest/v1/customer_badges','/rest/v1/reward_redemptions','/rest/v1/streak_seasons'].includes(path)) return json([]);
   throw new Error(`Unexpected URL ${raw}`);
 };
 
@@ -82,6 +90,7 @@ async function call(handler,method,url,query={},body={},token=null) {
   const purchase=await call(backend,'POST','/api/backend',{}, {action:'registrarCompra',clientId:publicId,idempotencyKey:crypto.randomUUID()},'admin-test');
   assert.equal(purchase.statusCode,200,JSON.stringify(purchase.body));
   assert.equal(purchase.body.data.client.pointsAvailable,10);
+  assert.equal(purchase.body.data.client.purchasesToday,1);
   const redeem=await call(backend,'POST','/api/backend',{}, {action:'canjearRecompensa',clientId:publicId,itemId:'DONA_GRATIS',idempotencyKey:crypto.randomUUID()},token);
   assert.equal(redeem.statusCode,200,JSON.stringify(redeem.body));
   assert.equal(redeem.body.data.client.pointsAvailable,5);
@@ -90,8 +99,17 @@ async function call(handler,method,url,query={},body={},token=null) {
   const adjusted=await call(backend,'POST','/api/backend',{}, {action:'adminAdjustLoyalty',clientId:publicId,kind:'HISTORICAL_PURCHASES',amount:2,reason:'Compras anteriores',idempotencyKey:crypto.randomUUID()},'admin-test');
   assert.equal(adjusted.statusCode,200,JSON.stringify(adjusted.body));
   assert.equal(adjusted.body.data.client.totalPurchases,3);
+  for (const count of [2,3]) {
+    const next=await call(backend,'POST','/api/backend',{}, {action:'registrarCompra',clientId:publicId,idempotencyKey:crypto.randomUUID()},'admin-test');
+    assert.equal(next.statusCode,200,JSON.stringify(next.body));
+    assert.equal(next.body.data.client.purchasesToday,count);
+  }
+  const overLimit=await call(backend,'POST','/api/backend',{}, {action:'registrarCompra',clientId:publicId,idempotencyKey:crypto.randomUUID()},'admin-test');
+  assert.equal(overLimit.statusCode,409);
+  assert.equal(overLimit.body.error.code,'DAILY_PURCHASE_LIMIT');
+  assert.equal(streak.current_count,1,'three purchases count as one streak day');
   const history=await call(backend,'GET','/api/backend',{action:'getAdminLoyaltyHistory',clientId:publicId},{},'admin-test');
   assert.equal(history.body.data.changes[0].amount,2);
   assert.equal(calls.some(item=>item.path.includes('script.google')),false);
-  console.log('PASS Supabase backend: admin registration, ID login, private profile, settled purchase, redemption');
+  console.log('PASS Supabase backend: admin registration, ID login, three daily purchases, streak day, redemption');
 })().catch(error=>{console.error(error);process.exitCode=1;});

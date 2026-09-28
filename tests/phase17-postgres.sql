@@ -23,11 +23,14 @@ begin
   v_result := public.api_credit_purchase(v_customer.id,v_key,'SELLER');
   if not (v_result->>'replayed')::boolean then raise exception 'purchase replay was not idempotent'; end if;
   v_result := public.api_credit_purchase(v_customer.id,gen_random_uuid(),'SELLER');
-  if (v_result->>'credited')::boolean then raise exception 'same-day purchase earned twice'; end if;
+  if not (v_result->>'credited')::boolean or (v_result->>'purchasesToday')::integer <> 2 then
+    raise exception 'second same-day purchase should earn points';
+  end if;
+  if (select current_count from public.customer_streaks where customer_id=v_customer.id) <> 1 then
+    raise exception 'second purchase advanced the day streak';
+  end if;
 
-  -- A paid delivery on a later business day awards points only at completion.
-  update public.customers set registered_at=now()-interval '2 days',
-    last_purchase_at=now()-interval '1 day' where id=v_customer.id;
+  -- A paid delivery can be the third credited purchase of the day.
   insert into auth.users(id) values(v_actor);
   insert into public.products(slug,name) values('cutover-test','Dona test') returning id into v_product;
   insert into public.product_variants(product_id,sku,name,unit_price_cents)
@@ -35,18 +38,18 @@ begin
   select id into v_order from public.api_create_order_by_customer_id(
     v_customer.id,gen_random_uuid(),repeat('a',64),'Edificio de pruebas','CASH',null,
     jsonb_build_array(jsonb_build_object('product_variant_id',v_variant,'quantity',1)));
-  if (select purchase_count from public.loyalty_accounts where customer_id=v_customer.id) <> 1 then
+  if (select purchase_count from public.loyalty_accounts where customer_id=v_customer.id) <> 2 then
     raise exception 'order placement awarded points before payment';
   end if;
   perform public.api_record_order_payment(v_order,gen_random_uuid(),'CONFIRMED',v_actor,null);
   perform public.api_transition_order(v_order,'ACCEPTED',v_actor,null);
   perform public.api_transition_order(v_order,'OUT_FOR_DELIVERY',v_actor,null);
   perform public.api_transition_order(v_order,'COMPLETED',v_actor,null);
-  if (select purchase_count from public.loyalty_accounts where customer_id=v_customer.id) <> 2 then
+  if (select purchase_count from public.loyalty_accounts where customer_id=v_customer.id) <> 3 then
     raise exception 'paid completion did not award points';
   end if;
   perform public.api_transition_order(v_order,'COMPLETED',v_actor,null);
-  if (select purchase_count from public.loyalty_accounts where customer_id=v_customer.id) <> 2 then
+  if (select purchase_count from public.loyalty_accounts where customer_id=v_customer.id) <> 3 then
     raise exception 'completion replay awarded twice';
   end if;
 

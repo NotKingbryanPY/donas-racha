@@ -46,7 +46,8 @@ class BackendClient(context: Context) {
             val response = try { JSONObject(content) } catch (_: Exception) { JSONObject() }
             if (status !in 200..299 || !response.optBoolean("ok")) {
                 val detail = response.optJSONObject("error")?.optString("message")?.takeIf { it.isNotBlank() }
-                throw BackendException(status, detail ?: "Error de conexión con el servidor ($status).")
+                throw BackendException(status, detail ?: "Error de conexión con el servidor ($status).",
+                    response.optJSONObject("error")?.optString("code"))
             }
             return response.getJSONObject("data")
         } finally { connection.disconnect() }
@@ -109,6 +110,24 @@ class BackendClient(context: Context) {
         request("/api/admin/orders?limit=100", bearer = token()).getJSONArray("orders")
     }
 
+    suspend fun customerProfile(publicId: String): CustomerPurchaseProfile = withContext(Dispatchers.IO) {
+        val id = java.net.URLEncoder.encode(publicId, "UTF-8")
+        val data = request("/api/backend?action=getCliente&id=$id", bearer = token())
+        CustomerPurchaseProfile.from(data.getJSONObject("client"))
+    }
+
+    suspend fun registerCustomerPurchase(publicId: String, idempotencyKey: String): CustomerPurchaseResult = withContext(Dispatchers.IO) {
+        val data = request("/api/backend", "POST", JSONObject()
+            .put("action", "registrarCompra")
+            .put("clientId", publicId)
+            .put("idempotencyKey", idempotencyKey), token())
+        CustomerPurchaseResult(
+            profile = CustomerPurchaseProfile.from(data.getJSONObject("client")),
+            pointsEarned = data.optInt("pointsEarned"),
+            replayed = data.optBoolean("replayed")
+        )
+    }
+
     suspend fun transition(orderId: String, status: String) = withContext(Dispatchers.IO) {
         val body = JSONObject().put("status", status)
         if (status == "COMPLETED") body.put("idempotencyKey", UUID.nameUUIDFromBytes("$orderId:COMPLETED".toByteArray()).toString())
@@ -127,4 +146,26 @@ class BackendClient(context: Context) {
     }
 }
 
-class BackendException(val status: Int, message: String) : Exception(message)
+data class CustomerPurchaseProfile(
+    val id: String,
+    val name: String,
+    val phone: String,
+    val purchasesToday: Int,
+    val dailyPurchaseLimit: Int,
+    val nextPurchasePoints: Int
+) {
+    companion object {
+        fun from(json: JSONObject) = CustomerPurchaseProfile(
+            id = json.getString("id"),
+            name = json.optString("name", "Cliente"),
+            phone = json.optString("whatsapp"),
+            purchasesToday = json.optInt("purchasesToday"),
+            dailyPurchaseLimit = json.optInt("dailyPurchaseLimit", 3),
+            nextPurchasePoints = json.optInt("nextPurchasePoints")
+        )
+    }
+}
+
+data class CustomerPurchaseResult(val profile: CustomerPurchaseProfile, val pointsEarned: Int, val replayed: Boolean)
+
+class BackendException(val status: Int, message: String, val code: String? = null) : Exception(message)

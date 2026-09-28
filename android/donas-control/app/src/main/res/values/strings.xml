@@ -42,7 +42,7 @@
     <string name="simulate">Calcular ejemplo</string>
     <string name="loading">Preparando tu negocio…</string>
     <string name="retry">Reintentar</string>
-    <string name="version">Donas Control · 1.2.0</string>
+    <string name="version">Donas Control · 1.2.2</string>
     <string name="config_version">Configuración #%1$d</string>
     <string name="plan_version">Plan #%1$d · %2$s</string>
     <string name="split_line">%1$s · %2$s</string>

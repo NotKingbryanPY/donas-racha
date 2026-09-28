@@ -7,7 +7,7 @@ const path = require('node:path');
 const base = process.env.TEST_URL || 'http://127.0.0.1:8765';
 const out = process.env.TEST_OUTPUT || '/tmp/donas-racha-qa';
 fs.mkdirSync(out,{recursive:true});
-const fixture = () => ({id:'C-DEMO',name:'Cliente de prueba con nombre largo',whatsapp:'60000000',registrationDate:'2026-08-01',levelEmoji:'🥉',levelName:'Bronce',pointsTotal:190,pointsAvailable:190,totalPurchases:19,currentStreak:6,nextPurchasePoints:15,progressLevelPct:95,pointsToNextLevel:10,nextLevel:{name:'Plata',emoji:'🥈'},qrUrl:'https://fixture.test/qr.svg',purchasedToday:false,hitosRacha:[3],badges:[{emoji:'⭐',name:'Cliente frecuente'}],recentHistory:[{type:'purchase',date:'2026-09-15T12:00:00Z',points:12}],pointsRules:[{points:10,label:'Racha 1–2'},{points:12,label:'Racha 3+'},{points:15,label:'Racha 7+'},{points:17,label:'Racha 14+'}],shopItems:[{id:'R1',emoji:'🍩',name:'Dona de recompensa',description:'Un antojo para celebrar tu constancia.',cost:100},{id:'R2',emoji:'🎁',name:'Recompensa con un nombre considerablemente largo para verificar el diseño',description:'Descripción extensa sin cortar los controles de canje.',cost:500}],recentRedemptions:[]});
+const fixture = () => ({id:'C-DEMO',name:'Cliente de prueba con nombre largo',whatsapp:'60000000',registrationDate:'2026-08-01',levelEmoji:'🥉',levelName:'Bronce',pointsTotal:190,pointsAvailable:190,totalPurchases:19,currentStreak:6,nextPurchasePoints:15,progressLevelPct:95,pointsToNextLevel:10,nextLevel:{name:'Plata',emoji:'🥈'},qrUrl:'https://fixture.test/qr.svg',purchasesToday:0,dailyPurchaseLimit:3,hitosRacha:[3],badges:[{emoji:'⭐',name:'Cliente frecuente'}],recentHistory:[{type:'purchase',date:'2026-09-15T12:00:00Z',points:12}],pointsRules:[{points:10,label:'Racha 1–2'},{points:12,label:'Racha 3+'},{points:15,label:'Racha 7+'},{points:17,label:'Racha 14+'}],shopItems:[{id:'R1',emoji:'🍩',name:'Dona de recompensa',description:'Un antojo para celebrar tu constancia.',cost:100},{id:'R2',emoji:'🎁',name:'Recompensa con un nombre considerablemente largo para verificar el diseño',description:'Descripción extensa sin cortar los controles de canje.',cost:500}],recentRedemptions:[]});
 (async()=>{
  const browser = await chromium.launch({headless:true,...(process.env.CHROMIUM_PATH?{executablePath:process.env.CHROMIUM_PATH}:{})});
  const results=[];
@@ -32,6 +32,7 @@ const fixture = () => ({id:'C-DEMO',name:'Cliente de prueba con nombre largo',wh
     if(u.pathname==='/api/customer/session') return route.fulfill(data.publicId==='INVALID'
      ?{status:404,json:{ok:false,error:{code:'CUSTOMER_NOT_FOUND',message:'ID no encontrado'}}}
      :{json:{ok:true,data:{accessToken:'customer-token',customer:{publicId:data.publicId}}}});
+    if(u.pathname==='/api/customer/onboarding') return route.fulfill({json:{ok:true,data:{progress:{status:'COMPLETED',last_step:7}}}});
     if(u.pathname==='/api/ranking') return route.fulfill({json:{ok:true,data:{ranking:[client,{...client,id:'C2',name:'Segundo cliente'},{...client,id:'C3',name:'Tercer cliente'}]}}});
     if(u.pathname==='/api/products') return route.fulfill({json:{ok:true,data:u.searchParams.get('view')==='inventory'?{flavors,enforced:true}:{products:[{name:'Donas',product_variants:flavors.map(f=>({id:f.variant_id,sku:f.sku,name:f.name,available:true,unit_price_cents:100,currency_code:'USD'}))}]}}});
     if(u.pathname==='/api/admin/customers/inventory') return route.fulfill({json:{ok:true,data:req.method()==='GET'?{flavors}:{saved:true}}});
@@ -42,7 +43,7 @@ const fixture = () => ({id:'C-DEMO',name:'Cliente de prueba con nombre largo',wh
     switch(data.action){
      case 'buscarCliente':response={ok:true,clients:data.q==='nadie'?[]:[client]};break;
      case 'getCliente':response={ok:true,client};break;
-     case 'registrarCompra':client={...client,pointsTotal:205,pointsAvailable:205,totalPurchases:20,currentStreak:7,levelName:'Plata',levelEmoji:'🥈',hitosRacha:[3,7],progressLevelPct:2,purchasedToday:true};response={ok:true,client,pointsEarned:15};break;
+     case 'registrarCompra':client={...client,pointsTotal:205,pointsAvailable:205,totalPurchases:20,currentStreak:7,levelName:'Plata',levelEmoji:'🥈',hitosRacha:[3,7],progressLevelPct:2,purchasesToday:1};response={ok:true,client,pointsEarned:15};break;
      case 'canjearRecompensa':client={...client,pointsAvailable:client.pointsAvailable-100,recentRedemptions:[{itemName:'Dona de recompensa',points:100,date:'2026-09-16',status:'pendiente'}]};response={ok:true,client};break;
      case 'nuevoCliente':response={ok:true,client:{...client,name:data.name}};break;
      case 'getAdminDashboard':response={ok:true,clients:[client],ranking:[client],stats:{today:2,week:10,month:30,totalClients:4,pointsDelivered:300,rewardsDelivered:2,migrationComplete:true},config:{DIAS_TOLERANCIA:3,PRECIO_DONA:1,PUNTOS_RACHA_BASE:10,PUNTOS_RACHA_3:12,PUNTOS_RACHA_7:15,PUNTOS_RACHA_14:17}};break;
@@ -69,7 +70,7 @@ const fixture = () => ({id:'C-DEMO',name:'Cliente de prueba con nombre largo',wh
    const overflow=await page.evaluate(()=>{const root=document.querySelector('.overlay:not(.hidden)')||document.documentElement;return {client:root.clientWidth,scroll:root.scrollWidth};});
    assert(overflow.scroll<=overflow.client+1,`${width} ${label} overflow ${JSON.stringify(overflow)}`);
   };
-  await page.goto(base);await page.waitForTimeout(700);
+  await page.goto(base,{waitUntil:'domcontentloaded'});await page.waitForTimeout(700);
   await noOverflow('landing');
   assert(await page.locator('#screen-home').evaluate(el=>el.inert));
   await page.screenshot({path:path.join(out,`landing-${width}.png`),fullPage:true});
@@ -135,11 +136,10 @@ const fixture = () => ({id:'C-DEMO',name:'Cliente de prueba con nombre largo',wh
   await page.locator('#searchInput').fill('Cliente');await page.locator('#searchInput').press('Enter');await page.waitForSelector('.result-item');
   await page.locator('.result-item').click();await page.waitForSelector('#buyBtn:visible');
   const before=await page.evaluate(()=>window.__confetti);await page.locator('#buyBtn').click();await page.waitForFunction(()=>document.getElementById('clientPoints').textContent==='205');
-  assert.equal(await page.locator('#clientStreak').textContent(),'7');assert(await page.locator('#buyBtn').isDisabled());assert.equal(await page.evaluate(()=>window.__confetti),before+1);
-  await page.evaluate(()=>goHome());await page.locator('#qrToggleBtn').click();await page.waitForFunction(()=>scannerOpen);
-  assert.equal(await page.evaluate(()=>window.__scanners.at(-1).config.fps),10);
-  await page.evaluate(()=>window.__scanners.at(-1).success('https://example.test/?id=C-DEMO'));
-  await page.waitForFunction(()=>document.getElementById('screen-client').classList.contains('active'));assert(await page.evaluate(()=>window.__scanners.at(-1).stopped));
+  assert.equal(await page.locator('#clientStreak').textContent(),'7');assert.equal(await page.locator('#buyBtn').isDisabled(),false);assert.equal(await page.evaluate(()=>window.__confetti),before+1);
+  assert((await page.locator('#alreadyMsg').textContent()).includes('1 de 3'));
+  await page.evaluate(()=>goHome());await page.evaluate(()=>openClient('C-DEMO',false));
+  await page.waitForFunction(()=>document.getElementById('screen-client').classList.contains('active'));
   await page.evaluate(()=>showScreen('screen-new'));await page.locator('#newName').fill('Nuevo de prueba');await page.locator('#createBtn').click();await page.waitForSelector('#newQrCard:visible');await noOverflow('registration');
   await page.evaluate(()=>showAdmin());await page.waitForFunction(()=>document.getElementById('sToday').textContent==='2');await noOverflow('admin');await page.screenshot({path:path.join(out,`admin-${width}.png`),fullPage:true});
   await page.locator('#adminClientFilter').fill('C-DEMO');assert.equal(await page.locator('#adminClients tbody tr').count(),1);

@@ -43,6 +43,14 @@
         android:layout_marginTop="4dp"
         android:text="Pedidos" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/openCustomerScan"
+        style="@style/Widget.Material3.Button.OutlinedButton"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="4dp"
+        android:text="Escanear QR de cliente" />
+
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
