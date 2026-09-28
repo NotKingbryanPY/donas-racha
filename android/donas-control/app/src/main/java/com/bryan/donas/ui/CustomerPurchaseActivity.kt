@@ -53,7 +53,7 @@ class CustomerPurchaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val root = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(18.dp, 18.dp, 18.dp, 18.dp) }
-        val scroll = ScrollView(this).apply { fillViewport = true; addView(root) }
+        val scroll = ScrollView(this).apply { isFillViewport = true; addView(root) }
         setContentView(scroll)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         ViewCompat.setOnApplyWindowInsetsListener(scroll) { view, insets ->
