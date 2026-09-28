@@ -25,7 +25,7 @@ const fixture = () => ({id:'C-DEMO',name:'Cliente de prueba con nombre largo',wh
     requests.push({...data,path:u.pathname});
     if(u.pathname==='/api/auth/session') {
      return route.fulfill(data.password==='demo1234'||data.grantType==='refresh_token'
-      ?{json:{ok:true,data:{accessToken:'admin-token',refreshToken:'refresh-token',expiresAt:new Date(Date.now()+3600000).toISOString()}}}
+      ?{json:{ok:true,data:{accessToken:'admin-token',refreshToken:'refresh-token',role:'ADMIN',expiresAt:new Date(Date.now()+3600000).toISOString()}}}
       :{status:401,json:{ok:false,error:{code:'INVALID_CREDENTIALS',message:'Credenciales incorrectas'}}});
     }
     if(u.pathname==='/api/customer/session' && data.publicId==='LOCKED' && !data.password) return route.fulfill({status:401,json:{ok:false,error:{code:'PASSWORD_REQUIRED',message:'Escribe tu contraseña'}}});

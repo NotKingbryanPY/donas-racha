@@ -6,6 +6,7 @@ process.env.SUPABASE_ANON_KEY='anon-test';
 process.env.SUPABASE_SERVICE_ROLE_KEY='service-test';
 
 const adminId='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+const sellerId='dddddddd-dddd-4ddd-8ddd-dddddddddddd';
 const customerId='bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
 const customer = { id:customerId,public_id:null,display_name:'Ana',whatsapp_e164:'+50760001111',status:'ACTIVE',registered_at:new Date().toISOString(),last_purchase_at:null };
 const account = { customer_id:customerId,available_points:0,lifetime_points:0,purchase_points:0,purchase_count:0,redemption_count:0,level_key:'BRONCE' };
@@ -18,8 +19,9 @@ global.fetch=async (raw,options={}) => {
   const url=new URL(raw), path=url.pathname, body=options.body?JSON.parse(options.body):null;
   calls.push({path,body});
   if(path==='/auth/v1/user') return String(options.headers?.authorization || '').includes('dr1.')
-    ?{ok:false,status:401,text:async()=>JSON.stringify({message:'Invalid token'})}:json({id:adminId});
-  if(path==='/rest/v1/app_user_roles') return json([{auth_user_id:adminId}]);
+    ?{ok:false,status:401,text:async()=>JSON.stringify({message:'Invalid token'})}
+    :json({id:String(options.headers?.authorization || '').includes('seller-test')?sellerId:adminId});
+  if(path==='/rest/v1/app_user_roles') return json([{role:url.searchParams.get('auth_user_id')===`eq.${sellerId}`?'SELLER':'ADMIN'}]);
   if(path==='/rest/v1/rpc/consume_api_rate_limit') return json({allowed:true});
   if(path==='/rest/v1/rpc/api_register_customer') {
     customer.public_id=body.p_public_id;
@@ -79,6 +81,14 @@ async function call(handler,method,url,query={},body={},token=null) {
   const registered=await call(backend,'POST','/api/backend',{}, {action:'nuevoCliente',name:'Ana',whatsapp:'60001111',idempotencyKey:crypto.randomUUID()},'admin-test');
   assert.equal(registered.statusCode,200,JSON.stringify(registered.body));
   const publicId=registered.body.data.client.id;
+  const sellerLookup=await call(backend,'GET','/api/backend',{action:'buscarCliente',q:'Ana'},{},'seller-test');
+  assert.equal(sellerLookup.statusCode,200,JSON.stringify(sellerLookup.body));
+  const sellerConfig=await call(backend,'GET','/api/backend',{action:'getConfig'},{},'seller-test');
+  assert.equal(sellerConfig.statusCode,403,'seller cannot read admin configuration');
+  const sellerPurchase=await call(backend,'POST','/api/backend',{}, {action:'registrarCompra',clientId:publicId,idempotencyKey:crypto.randomUUID()},'seller-test');
+  assert.equal(sellerPurchase.statusCode,200,JSON.stringify(sellerPurchase.body));
+  const sellerBlocked=await call(backend,'POST','/api/backend',{}, {action:'adminAdjustLoyalty',clientId:publicId,kind:'HISTORICAL_PURCHASES',amount:2,reason:'Compras anteriores',idempotencyKey:crypto.randomUUID()},'seller-test');
+  assert.equal(sellerBlocked.statusCode,403,'seller cannot alter loyalty balances');
   assert.match(publicId,/^C[0-9A-F]{18}$/);
   const session=await call(customerRoute,'POST','/api/customer/session',{route:'session'},{publicId});
   assert.equal(session.statusCode,200,JSON.stringify(session.body));
@@ -89,17 +99,17 @@ async function call(handler,method,url,query={},body={},token=null) {
   assert.notEqual(stranger.statusCode,200);
   const purchase=await call(backend,'POST','/api/backend',{}, {action:'registrarCompra',clientId:publicId,idempotencyKey:crypto.randomUUID()},'admin-test');
   assert.equal(purchase.statusCode,200,JSON.stringify(purchase.body));
-  assert.equal(purchase.body.data.client.pointsAvailable,10);
-  assert.equal(purchase.body.data.client.purchasesToday,1);
+  assert.equal(purchase.body.data.client.pointsAvailable,20);
+  assert.equal(purchase.body.data.client.purchasesToday,2);
   const redeem=await call(backend,'POST','/api/backend',{}, {action:'canjearRecompensa',clientId:publicId,itemId:'DONA_GRATIS',idempotencyKey:crypto.randomUUID()},token);
   assert.equal(redeem.statusCode,200,JSON.stringify(redeem.body));
-  assert.equal(redeem.body.data.client.pointsAvailable,5);
+  assert.equal(redeem.body.data.client.pointsAvailable,15);
   const blocked=await call(backend,'POST','/api/backend',{}, {action:'adminAdjustLoyalty',clientId:publicId,kind:'HISTORICAL_PURCHASES',amount:2,reason:'Compras anteriores',idempotencyKey:crypto.randomUUID()},token);
   assert.notEqual(blocked.statusCode,200,'customer ID session cannot write admin adjustments');
   const adjusted=await call(backend,'POST','/api/backend',{}, {action:'adminAdjustLoyalty',clientId:publicId,kind:'HISTORICAL_PURCHASES',amount:2,reason:'Compras anteriores',idempotencyKey:crypto.randomUUID()},'admin-test');
   assert.equal(adjusted.statusCode,200,JSON.stringify(adjusted.body));
-  assert.equal(adjusted.body.data.client.totalPurchases,3);
-  for (const count of [2,3]) {
+  assert.equal(adjusted.body.data.client.totalPurchases,4);
+  for (const count of [3]) {
     const next=await call(backend,'POST','/api/backend',{}, {action:'registrarCompra',clientId:publicId,idempotencyKey:crypto.randomUUID()},'admin-test');
     assert.equal(next.statusCode,200,JSON.stringify(next.body));
     assert.equal(next.body.data.client.purchasesToday,count);

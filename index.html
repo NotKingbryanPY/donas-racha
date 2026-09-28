@@ -213,8 +213,8 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
       <div class="quick-actions">
         <button class="btn btn-primary" onclick="showScreen('screen-new')">➕ Nuevo cliente</button>
         <button id="qrToggleBtn" class="btn btn-outline" onclick="toggleScanner()">📷 Escanear QR</button>
-        <a class="btn btn-outline" href="/admin-claims.html">🔐 Códigos de contraseña</a>
-        <button class="btn btn-ghost" onclick="showAdmin()">📊 Dashboard</button>
+        <a id="claimCodesLink" class="btn btn-outline" href="/admin-claims.html">🔐 Códigos de contraseña</a>
+        <button id="staffDashboardButton" class="btn btn-ghost" onclick="showAdmin()">📊 Dashboard</button>
         <button class="btn btn-red" onclick="logout()">Cerrar sesión</button>
       </div>
     </div>
@@ -375,10 +375,10 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
 </div>
 
 <div id="screen-admin" class="screen">
-  <div class="header"><h1>🍩 Tu negocio</h1><p>Pedidos, inventario y clientes</p></div>
+  <div class="header"><h1>🍩 Tu negocio</h1><p id="staffDashboardSubtitle">Pedidos, inventario y clientes</p></div>
   <div class="admin-wrap">
     <div class="row" style="justify-content:space-between;margin-bottom:14px"><button class="back-btn" style="margin:0" onclick="goHome()">← Volver</button><button class="btn btn-red" onclick="logout()">Cerrar sesión</button></div>
-    <div class="grid3 stats" style="margin-bottom:16px">
+    <div class="grid3 stats" data-admin-only style="margin-bottom:16px">
       <div class="stat-card"><div id="sToday" class="big">—</div><div class="lbl">Hoy</div></div>
       <div class="stat-card"><div id="sWeek" class="big">—</div><div class="lbl">Semana</div></div>
       <div class="stat-card"><div id="sMonth" class="big">—</div><div class="lbl">Mes</div></div>
@@ -387,7 +387,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
       <div class="stat-card"><div id="sRewards" class="big">—</div><div class="lbl">Canjes</div></div>
     </div>
 
-    <nav class="admin-shortcuts" aria-label="Administración"><a href="#adminOrdersPanel">Pedidos</a><a href="#adminInventoryPanel">Inventario</a><a href="#adminClients">Clientes</a></nav>
+    <nav class="admin-shortcuts" data-admin-only aria-label="Administración"><a href="#adminOrdersPanel">Pedidos</a><a href="#adminInventoryPanel">Inventario</a><a href="#adminClients">Clientes</a></nav>
     <div class="admin-grid">
       <section class="card admin-wide" id="adminOrdersPanel" aria-labelledby="adminOrdersTitle">
         <div class="operations-heading"><div><span class="eyebrow">ENTREGAS</span><h2 id="adminOrdersTitle">Pedidos del día</h2></div><button class="btn btn-outline" onclick="loadAdminOrders()">Actualizar</button></div>
@@ -395,18 +395,18 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
         <label class="field-label" for="adminOrderFilter">Mostrar</label><select id="adminOrderFilter" class="field" onchange="loadAdminOrders()"><option value="ACTIVE">Pendientes y en curso</option><option value="ALL">Todos los recientes</option><option value="COMPLETED">Entregados</option><option value="CANCELLED">Cancelados</option></select>
         <p id="adminOrdersNotice" role="status" class="muted"></p><div id="adminOrdersList" class="admin-orders-grid"></div>
       </section>
-      <div class="card">
+      <div class="card" data-admin-only>
         <div class="card-title">🛠️ Datos en Supabase</div>
         <div id="migrationState" class="pill migration-pending">Pendiente</div>
         <p class="muted" style="margin:12px 0">Clientes, compras, puntos, canjes y pedidos se gestionan en Supabase.</p>
       </div>
-      <div class="card admin-wide" id="adminInventoryPanel">
+      <div class="card admin-wide" id="adminInventoryPanel" data-admin-only>
         <div class="operations-heading"><div><span class="eyebrow">CONTROL MANUAL</span><h2>¿Cuántas donas tienes?</h2></div><span class="pill">Inventario web</span></div>
         <p class="muted">Escribe el conteo físico completo, incluyendo las donas apartadas para pedidos. Guarda nuevamente después de comprar o vender fuera de la web. Las ventas de la app no modifican este conteo.</p>
         <div id="adminFlavorInventory" class="muted" style="margin-top:12px">Cargando inventario...</div>
         <div class="inventory-actions"><button id="saveInventoryButton" class="btn btn-primary" onclick="saveAdminInventory()">Guardar los 4 sabores</button><button class="btn btn-outline" onclick="loadAdminInventory()">Volver a consultar</button></div><p id="adminInventoryNotice" class="muted" role="status"></p>
       </div>
-      <div class="card">
+      <div class="card" data-admin-only>
         <div class="card-title">⚙️ Config rápida</div>
         <div class="grid2">
           <div class="field-group"><label class="field-label" for="cfgTolerance">Tolerancia (días)</label><input id="cfgTolerance" class="field" placeholder="Tolerancia días"></div>
@@ -418,7 +418,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
         </div>
         <button class="btn btn-primary" style="width:100%;margin-top:12px" onclick="saveQuickConfig()">Guardar config</button>
       </div>
-      <div class="card admin-wide wide-card">
+      <div class="card admin-wide wide-card" data-admin-only>
         <div class="card-title">🏆 Ranking admin</div>
         <div class="tabs">
           <button class="tab active" id="admin-tab-compras" onclick="loadAdminRanking('compras')">Compras</button>
@@ -429,14 +429,14 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
         </div>
         <div id="adminRanking"><div class="empty">Cargando...</div></div>
       </div>
-      <div class="card admin-wide wide-card">
+      <div class="card admin-wide wide-card" data-admin-only>
         <div class="card-title">👥 Lista de clientes</div>
         <label class="field-label" for="adminClientFilter">Buscar por nombre o ID</label>
         <input id="adminClientFilter" class="field" placeholder="Nombre o ID de cliente" oninput="filterAdminClients()" style="margin:8px 0 12px;max-width:380px">
         <div id="adminClients"><div class="empty">Cargando...</div></div>
       </div>
     </div>
-    <dialog id="adminLoyaltyDialog" class="profile-dialog admin-loyalty-dialog" aria-labelledby="adminLoyaltyTitle">
+    <dialog id="adminLoyaltyDialog" class="profile-dialog admin-loyalty-dialog" data-admin-only aria-labelledby="adminLoyaltyTitle">
       <button class="dialog-close" onclick="closeAdminLoyalty()" aria-label="Cerrar ajustes">✕</button>
       <h2 id="adminLoyaltyTitle">Ajustar cliente</h2>
       <p id="adminLoyaltySummary" class="muted"></p>
@@ -469,6 +469,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
 
 <script>
 let currentClient = null;
+let staffRole = sessionStorage.getItem('donasStaffRole') || 'SELLER';
 let adminLoyaltyClients = new Map();
 let allAdminClients = [];
 let clientRequestVersion = 0;
@@ -488,7 +489,7 @@ const pendingPurchaseKeys = new Map();
 const pendingRedeemKeys = new Map();
 let pendingRegistration = null;
 
-window.addEventListener('load', () => {
+window.addEventListener('load', async () => {
   preloadSupabaseProducts();
   document.getElementById('userClientIdInput').addEventListener('input', () => {
     document.getElementById('customerPasswordGroup').style.display = 'none';
@@ -503,6 +504,15 @@ window.addEventListener('load', () => {
     if (customerLink.has('id')) document.getElementById('userClientIdInput').value = customerLink.get('id');
     goToUserLogin();
   } else if (sessionStorage.getItem('donasAdminAccessToken')) {
+    if (!sessionStorage.getItem('donasStaffRole') && sessionStorage.getItem('donasAdminRefreshToken')) {
+      try {
+        const session = await vercelPost('/api/auth/session', {grantType:'refresh_token',refreshToken:sessionStorage.getItem('donasAdminRefreshToken')});
+        sessionStorage.setItem('donasAdminAccessToken',session.accessToken);
+        sessionStorage.setItem('donasAdminRefreshToken',session.refreshToken);
+        staffRole=session.role;
+        sessionStorage.setItem('donasStaffRole',staffRole);
+      } catch (_) { logout(); return; }
+    }
     hideOverlays();
     goHome();
   } else {
@@ -548,6 +558,8 @@ async function backendRequest(method, params, asCustomer = false, retried = fals
       const session = await vercelPost('/api/auth/session', { grantType:'refresh_token', refreshToken:sessionStorage.getItem('donasAdminRefreshToken') });
       sessionStorage.setItem('donasAdminAccessToken', session.accessToken);
       sessionStorage.setItem('donasAdminRefreshToken', session.refreshToken);
+      staffRole = session.role;
+      sessionStorage.setItem('donasStaffRole', staffRole);
       return backendRequest(method,params,asCustomer,true);
     } catch (_) { sessionStorage.removeItem('donasAdminAccessToken'); sessionStorage.removeItem('donasAdminRefreshToken'); }
   }
@@ -729,6 +741,8 @@ async function checkLogin() {
     const session = await vercelPost('/api/auth/session', { grantType:'password', email, password:pass });
     sessionStorage.setItem('donasAdminAccessToken', session.accessToken);
     sessionStorage.setItem('donasAdminRefreshToken', session.refreshToken);
+    staffRole = session.role;
+    sessionStorage.setItem('donasStaffRole', staffRole);
     document.getElementById('loginInput').value = '';
     hideOverlays();
     goHome();
@@ -747,6 +761,8 @@ function logout() {
   currentClient = null;
   sessionStorage.removeItem('donasAdminAccessToken');
   sessionStorage.removeItem('donasAdminRefreshToken');
+  sessionStorage.removeItem('donasStaffRole');
+  staffRole = 'SELLER';
   goToRoleScreen();
 }
 
@@ -761,7 +777,13 @@ function showScreen(id) {
   document.getElementById(id).classList.add('active');
 }
 
-function goHome() { openedAsUser = false; showScreen('screen-home'); loadHomeRanking(); }
+function goHome() {
+  openedAsUser = false;
+  const isAdmin = staffRole === 'ADMIN';
+  document.getElementById('claimCodesLink').hidden = !isAdmin;
+  document.getElementById('staffDashboardButton').textContent = isAdmin ? '📊 Dashboard' : '📦 Pedidos';
+  showScreen('screen-home'); loadHomeRanking();
+}
 function rankingBack() { requireAuth() ? goHome() : goToRoleScreen(); }
 function clientGoBack() {
   window.DonasTour?.stop();
@@ -1368,8 +1390,12 @@ function renderRankingItems(list, type, compact) {
 
 async function showAdmin() {
   if (!requireAuth()) { goToAdminLogin(); return; }
+  const isAdmin = staffRole === 'ADMIN';
+  document.getElementById('screen-admin').classList.toggle('seller-mode', !isAdmin);
+  document.getElementById('staffDashboardSubtitle').textContent = isAdmin ? 'Pedidos, inventario y clientes' : 'Pedidos y entregas';
   showScreen('screen-admin');
   loadAdminOrders();
+  if (!isAdmin) return;
   await loadAdminDashboard('compras');
   loadAdminInventory();
 }

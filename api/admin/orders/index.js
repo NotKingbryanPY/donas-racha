@@ -1,10 +1,10 @@
-const { requireAdmin } = require('../../_lib/auth');
+const { requireStaff } = require('../../_lib/auth');
 const { ApiError, withApi } = require('../../_lib/http');
 const { enforceRateLimit } = require('../../_lib/rate-limit');
 const { serviceRequest } = require('../../_lib/supabase');
 
 module.exports = withApi(['GET'], async req => {
-  const user = await requireAdmin(req);
+  const user = await requireStaff(req);
   await enforceRateLimit(req, 'admin_orders', 300, 60, user.id);
   const allowedStatuses = ['ACTIVE', 'PENDING', 'ACCEPTED', 'OUT_FOR_DELIVERY', 'COMPLETED', 'CANCELLED'];
   const status = req.query.status ? String(req.query.status).toUpperCase() : null;

@@ -1,6 +1,6 @@
 const { randomBytes } = require('node:crypto');
 const { ApiError, withApi } = require('./_lib/http');
-const { requireAdmin, requireCustomer } = require('./_lib/auth');
+const { requireCustomer, requireStaff } = require('./_lib/auth');
 const { enforceRateLimit } = require('./_lib/rate-limit');
 const { customerByPublicId, normalizedPublicId } = require('./_lib/customer-id-session');
 const { rpc, serviceRequest } = require('./_lib/supabase');
@@ -153,7 +153,7 @@ async function customerForRequest(req, publicId) {
     if (customer.public_id !== publicId) throw new ApiError(403,'CUSTOMER_FORBIDDEN','No puedes abrir otro perfil.');
     return customer;
   }
-  await requireAdmin(req);
+  await requireStaff(req);
   return customerByPublicId(publicId);
 }
 
@@ -163,8 +163,12 @@ async function getAction(req, action) {
     await enforceRateLimit(req,'backend_profile',90,60,id);
     return { client:await clientDetails(await customerForRequest(req,id)) };
   }
-  const admin = await requireAdmin(req);
-  await enforceRateLimit(req,'backend_admin_read',120,60,admin.id);
+  const staff = await requireStaff(req);
+  await enforceRateLimit(req,'backend_admin_read',120,60,staff.id);
+  if (!['buscarCliente','getConfig','getAdminLoyaltyHistory','getStats','getTodosClientes'].includes(action))
+    throw new ApiError(404,'UNKNOWN_ACTION','La acción no existe.');
+  if (staff.role !== 'ADMIN' && !['buscarCliente'].includes(action))
+    throw new ApiError(403,'ADMIN_REQUIRED','Esta operación requiere rol de administrador.');
   if (action === 'getConfig') return { config:publicSettings(await settings()) };
   if (action === 'getStats') return { stats:await rpc('api_business_stats',{}) };
   if (action === 'getTodosClientes') return { clients:await adminClients() };
@@ -204,8 +208,11 @@ async function postAction(req, action, body) {
     const result = await rpc('api_redeem_customer_reward',{p_customer_id:customer.id,p_reward_key:rewardKey,p_idempotency_key:key});
     return { ...result, message:'Canje realizado. El vendedor entregará tu recompensa.', client:await clientDetails(customer) };
   }
-  const admin = await requireAdmin(req);
-  await enforceRateLimit(req,'backend_admin_write',60,60,admin.id);
+  const staff = await requireStaff(req);
+  await enforceRateLimit(req,'backend_admin_write',60,60,staff.id);
+  if (staff.role !== 'ADMIN' && !['nuevoCliente','registrarCompra'].includes(action))
+    throw new ApiError(403,'ADMIN_REQUIRED','Esta operación requiere rol de administrador.');
+  const admin = staff;
   if (action === 'nuevoCliente') {
     const name = String(body.name || '').trim();
     if (!name || name.length>120) throw new ApiError(400,'INVALID_NAME','Escribe un nombre de hasta 120 caracteres.');
