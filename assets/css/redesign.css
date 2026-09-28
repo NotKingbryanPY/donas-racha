@@ -508,3 +508,5 @@ html.motion-lite :is(.btn,.shop-buy,.tab,.client-top-link,.quantity button):acti
 @media(hover:hover) and (pointer:fine){.delivery-refresh:hover{background:#68408b}}
 .delivery-area-notice{display:flex;align-items:flex-start;gap:8px;margin:14px 0 12px;padding:11px 12px;border:1px solid #b889e72b;border-radius:11px;background:#b889e70b;color:#c9bad8;font-size:12px;line-height:1.55}
 .delivery-area-notice strong{color:#ead8fb}
+.seller-mode [data-admin-only]{display:none!important}
+#claimCodesLink[hidden]{display:none!important}

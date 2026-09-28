@@ -1,5 +1,5 @@
 const { ApiError, withApi } = require('../_lib/http');
-const { requireAdmin } = require('../_lib/auth');
+const { requireStaff } = require('../_lib/auth');
 const { enforceRateLimit } = require('../_lib/rate-limit');
 const { getConfig } = require('../_lib/supabase');
 
@@ -32,10 +32,11 @@ module.exports = withApi(['POST'], async (req, context) => {
   if (!session.access_token || !session.refresh_token || !Number.isFinite(session.expires_in)) {
     throw new ApiError(502, 'AUTH_INVALID_RESPONSE', 'La autenticación devolvió una respuesta incompleta.');
   }
-  await requireAdmin({ headers: { authorization: `Bearer ${session.access_token}` } });
+  const staff = await requireStaff({ headers: { authorization: `Bearer ${session.access_token}` } });
   return {
     accessToken: session.access_token,
     refreshToken: session.refresh_token,
+    role: staff.role,
     expiresAt: new Date(Date.now() + session.expires_in * 1000).toISOString()
   };
 });
