@@ -1,6 +1,6 @@
 # Acceso de vendedores
 
-El rol `SELLER` permite iniciar sesión con Supabase Auth en la web, registrar clientes y compras, consultar perfiles por ID/nombre y atender pedidos hasta cobro y entrega. El panel de vendedor muestra pedidos; inventario, configuración, ajustes de puntos/rachas y códigos de contraseña siguen reservados a `ADMIN`. La sincronización Android continúa requiriendo `ADMIN`.
+El rol `SELLER` permite iniciar sesión con Supabase Auth en la web, registrar clientes y compras, consultar perfiles por ID/nombre y atender pedidos hasta cobro y entrega. El vendedor entra al centro de ventas y a un dashboard con estadísticas, ranking y clientes. Inventario, configuración, ajustes de puntos/rachas y códigos de contraseña siguen reservados a `ADMIN`. La sincronización Android continúa requiriendo `ADMIN`.
 
 ## Publicación
 

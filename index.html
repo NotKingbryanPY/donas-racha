@@ -378,7 +378,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
   <div class="header"><h1>🍩 Tu negocio</h1><p id="staffDashboardSubtitle">Pedidos, inventario y clientes</p></div>
   <div class="admin-wrap">
     <div class="row" style="justify-content:space-between;margin-bottom:14px"><button class="back-btn" style="margin:0" onclick="goHome()">← Volver</button><button class="btn btn-red" onclick="logout()">Cerrar sesión</button></div>
-    <div class="grid3 stats" data-admin-only style="margin-bottom:16px">
+    <div class="grid3 stats" style="margin-bottom:16px">
       <div class="stat-card"><div id="sToday" class="big">—</div><div class="lbl">Hoy</div></div>
       <div class="stat-card"><div id="sWeek" class="big">—</div><div class="lbl">Semana</div></div>
       <div class="stat-card"><div id="sMonth" class="big">—</div><div class="lbl">Mes</div></div>
@@ -387,7 +387,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
       <div class="stat-card"><div id="sRewards" class="big">—</div><div class="lbl">Canjes</div></div>
     </div>
 
-    <nav class="admin-shortcuts" data-admin-only aria-label="Administración"><a href="#adminOrdersPanel">Pedidos</a><a href="#adminInventoryPanel">Inventario</a><a href="#adminClients">Clientes</a></nav>
+    <nav class="admin-shortcuts" aria-label="Dashboard de ventas"><a href="#adminOrdersPanel">Pedidos</a><a href="#adminInventoryPanel" data-admin-only>Inventario</a><a href="#adminClients">Clientes</a></nav>
     <div class="admin-grid">
       <section class="card admin-wide" id="adminOrdersPanel" aria-labelledby="adminOrdersTitle">
         <div class="operations-heading"><div><span class="eyebrow">ENTREGAS</span><h2 id="adminOrdersTitle">Pedidos del día</h2></div><button class="btn btn-outline" onclick="loadAdminOrders()">Actualizar</button></div>
@@ -418,8 +418,8 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
         </div>
         <button class="btn btn-primary" style="width:100%;margin-top:12px" onclick="saveQuickConfig()">Guardar config</button>
       </div>
-      <div class="card admin-wide wide-card" data-admin-only>
-        <div class="card-title">🏆 Ranking admin</div>
+      <div class="card admin-wide wide-card">
+        <div class="card-title">🏆 Ranking</div>
         <div class="tabs">
           <button class="tab active" id="admin-tab-compras" onclick="loadAdminRanking('compras')">Compras</button>
           <button class="tab" id="admin-tab-puntos" onclick="loadAdminRanking('puntos')">Puntos</button>
@@ -429,7 +429,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
         </div>
         <div id="adminRanking"><div class="empty">Cargando...</div></div>
       </div>
-      <div class="card admin-wide wide-card" data-admin-only>
+      <div class="card admin-wide wide-card">
         <div class="card-title">👥 Lista de clientes</div>
         <label class="field-label" for="adminClientFilter">Buscar por nombre o ID</label>
         <input id="adminClientFilter" class="field" placeholder="Nombre o ID de cliente" oninput="filterAdminClients()" style="margin:8px 0 12px;max-width:380px">
@@ -781,7 +781,7 @@ function goHome() {
   openedAsUser = false;
   const isAdmin = staffRole === 'ADMIN';
   document.getElementById('claimCodesLink').hidden = !isAdmin;
-  document.getElementById('staffDashboardButton').textContent = isAdmin ? '📊 Dashboard' : '📦 Pedidos';
+  document.getElementById('staffDashboardButton').textContent = '📊 Dashboard';
   showScreen('screen-home'); loadHomeRanking();
 }
 function rankingBack() { requireAuth() ? goHome() : goToRoleScreen(); }
@@ -1392,12 +1392,11 @@ async function showAdmin() {
   if (!requireAuth()) { goToAdminLogin(); return; }
   const isAdmin = staffRole === 'ADMIN';
   document.getElementById('screen-admin').classList.toggle('seller-mode', !isAdmin);
-  document.getElementById('staffDashboardSubtitle').textContent = isAdmin ? 'Pedidos, inventario y clientes' : 'Pedidos y entregas';
+  document.getElementById('staffDashboardSubtitle').textContent = isAdmin ? 'Pedidos, inventario y clientes' : 'Pedidos, ventas y clientes';
   showScreen('screen-admin');
   loadAdminOrders();
-  if (!isAdmin) return;
   await loadAdminDashboard('compras');
-  loadAdminInventory();
+  if (isAdmin) loadAdminInventory();
 }
 
 async function loadAdminDashboard(type='compras') {
@@ -1450,7 +1449,7 @@ function renderAdminClients(clients) {
   const term = document.getElementById('adminClientFilter').value.trim().toLocaleLowerCase('es');
   const visible = term ? clients.filter(c => `${c.name} ${c.id}`.toLocaleLowerCase('es').includes(term)) : clients;
   if (!visible.length) { el.innerHTML = `<div class="empty">${term?'No encontramos clientes con esa búsqueda.':'Sin clientes'}</div>`; return; }
-  el.innerHTML = `<table class="admin-table"><thead><tr><th>Cliente</th><th>Nivel</th><th>Puntos</th><th>Compras</th><th>Racha</th><th>Canjes</th><th></th></tr></thead><tbody>${visible.map(c => `<tr><td><b>${safe(c.name)}</b><br><span class="sub">${safe(c.whatsapp||'')}</span></td><td>${c.levelEmoji||'🥉'} ${safe(c.levelName||'Bronce')}</td><td>${c.pointsTotal||0}</td><td>${c.totalPurchases||0}</td><td>${c.currentStreak||0}</td><td>${c.redemptionsMade||c.rewardsEarned||0}</td><td><button class="btn btn-ghost" onclick="openClient('${esc(c.id)}', false)">Ver</button> <button class="btn btn-outline" onclick="openAdminLoyalty('${esc(c.id)}')">Ajustar</button></td></tr>`).join('')}</tbody></table>`;
+  el.innerHTML = `<table class="admin-table"><thead><tr><th>Cliente</th><th>Nivel</th><th>Puntos</th><th>Compras</th><th>Racha</th><th>Canjes</th><th></th></tr></thead><tbody>${visible.map(c => `<tr><td><b>${safe(c.name)}</b><br><span class="sub">${safe(c.whatsapp||'')}</span></td><td>${c.levelEmoji||'🥉'} ${safe(c.levelName||'Bronce')}</td><td>${c.pointsTotal||0}</td><td>${c.totalPurchases||0}</td><td>${c.currentStreak||0}</td><td>${c.redemptionsMade||c.rewardsEarned||0}</td><td><button class="btn btn-ghost" onclick="openClient('${esc(c.id)}', false)">Ver</button>${staffRole==='ADMIN' ? ` <button class="btn btn-outline" onclick="openAdminLoyalty('${esc(c.id)}')">Ajustar</button>` : ''}</td></tr>`).join('')}</tbody></table>`;
 }
 function filterAdminClients() { renderAdminClients(allAdminClients); }
 async function loadAdminStats() {

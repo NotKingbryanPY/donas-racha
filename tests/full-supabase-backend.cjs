@@ -23,6 +23,7 @@ global.fetch=async (raw,options={}) => {
     :json({id:String(options.headers?.authorization || '').includes('seller-test')?sellerId:adminId});
   if(path==='/rest/v1/app_user_roles') return json([{role:url.searchParams.get('auth_user_id')===`eq.${sellerId}`?'SELLER':'ADMIN'}]);
   if(path==='/rest/v1/rpc/consume_api_rate_limit') return json({allowed:true});
+  if(path==='/rest/v1/rpc/api_business_stats') return json({today:1,week:1,month:1,totalClients:1});
   if(path==='/rest/v1/rpc/api_register_customer') {
     customer.public_id=body.p_public_id;
     return json(customer);
@@ -53,7 +54,7 @@ global.fetch=async (raw,options={}) => {
   }
   if(path==='/rest/v1/customers') {
     const wanted=url.searchParams.get('public_id')?.slice(3) || url.searchParams.get('id')?.slice(3);
-    return json(customer.public_id && wanted && [customer.id,customer.public_id].includes(wanted)?[customer]:[]);
+    return json(customer.public_id && (!wanted || [customer.id,customer.public_id].includes(wanted))?[customer]:[]);
   }
   if(path==='/rest/v1/customer_web_access') return json([]);
   if(path==='/rest/v1/loyalty_accounts') return json([account]);
@@ -85,6 +86,9 @@ async function call(handler,method,url,query={},body={},token=null) {
   assert.equal(sellerLookup.statusCode,200,JSON.stringify(sellerLookup.body));
   const sellerConfig=await call(backend,'GET','/api/backend',{action:'getConfig'},{},'seller-test');
   assert.equal(sellerConfig.statusCode,403,'seller cannot read admin configuration');
+  const sellerDashboard=await call(backend,'POST','/api/backend',{}, {action:'getAdminDashboard',rankingType:'compras'},'seller-test');
+  assert.equal(sellerDashboard.statusCode,200,JSON.stringify(sellerDashboard.body));
+  assert.equal(sellerDashboard.body.data.clients[0].id,publicId);
   const sellerPurchase=await call(backend,'POST','/api/backend',{}, {action:'registrarCompra',clientId:publicId,idempotencyKey:crypto.randomUUID()},'seller-test');
   assert.equal(sellerPurchase.statusCode,200,JSON.stringify(sellerPurchase.body));
   const sellerBlocked=await call(backend,'POST','/api/backend',{}, {action:'adminAdjustLoyalty',clientId:publicId,kind:'HISTORICAL_PURCHASES',amount:2,reason:'Compras anteriores',idempotencyKey:crypto.randomUUID()},'seller-test');

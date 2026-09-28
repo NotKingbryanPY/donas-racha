@@ -210,7 +210,7 @@ async function postAction(req, action, body) {
   }
   const staff = await requireStaff(req);
   await enforceRateLimit(req,'backend_admin_write',60,60,staff.id);
-  if (staff.role !== 'ADMIN' && !['nuevoCliente','registrarCompra'].includes(action))
+  if (staff.role !== 'ADMIN' && !['nuevoCliente','registrarCompra','getAdminDashboard'].includes(action))
     throw new ApiError(403,'ADMIN_REQUIRED','Esta operación requiere rol de administrador.');
   const admin = staff;
   if (action === 'nuevoCliente') {
