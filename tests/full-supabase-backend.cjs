@@ -8,7 +8,9 @@ process.env.SUPABASE_SERVICE_ROLE_KEY='service-test';
 const adminId='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
 const sellerId='dddddddd-dddd-4ddd-8ddd-dddddddddddd';
 const customerId='bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
-const customer = { id:customerId,public_id:null,display_name:'Ana',whatsapp_e164:'+50760001111',status:'ACTIVE',registered_at:new Date().toISOString(),last_purchase_at:null };
+const customer = { id:customerId,public_id:null,username:'ana',display_name:'Ana',whatsapp_e164:'+50760001111',status:'ACTIVE',registered_at:new Date().toISOString(),last_purchase_at:null };
+const customerSalt=crypto.randomBytes(16);
+const customerPassword='long-passphrase-123';
 const account = { customer_id:customerId,available_points:0,lifetime_points:0,purchase_points:0,purchase_count:0,redemption_count:0,level_key:'BRONCE' };
 const streak = { customer_id:customerId,current_count:0,best_count:0,current_season_number:1,last_qualified_at:null };
 const todayCredits=[];
@@ -56,7 +58,7 @@ global.fetch=async (raw,options={}) => {
     const wanted=url.searchParams.get('public_id')?.slice(3) || url.searchParams.get('id')?.slice(3);
     return json(customer.public_id && (!wanted || [customer.id,customer.public_id].includes(wanted))?[customer]:[]);
   }
-  if(path==='/rest/v1/customer_web_access') return json([]);
+  if(path==='/rest/v1/customer_web_access') return json([{customer_id:customerId,password_salt:customerSalt.toString('hex'),password_hash:crypto.scryptSync(customerPassword,customerSalt,64).toString('hex'),credential_version:2}]);
   if(path==='/rest/v1/loyalty_accounts') return json([account]);
   if(path==='/rest/v1/loyalty_admin_adjustments') return json([{kind:'HISTORICAL_PURCHASES',amount:2,reason:'Compras anteriores'}]);
   if(path==='/rest/v1/customer_streaks') return json([streak]);
@@ -94,7 +96,7 @@ async function call(handler,method,url,query={},body={},token=null) {
   const sellerBlocked=await call(backend,'POST','/api/backend',{}, {action:'adminAdjustLoyalty',clientId:publicId,kind:'HISTORICAL_PURCHASES',amount:2,reason:'Compras anteriores',idempotencyKey:crypto.randomUUID()},'seller-test');
   assert.equal(sellerBlocked.statusCode,403,'seller cannot alter loyalty balances');
   assert.match(publicId,/^C[0-9A-F]{18}$/);
-  const session=await call(customerRoute,'POST','/api/customer/session',{route:'session'},{publicId});
+  const session=await call(customerRoute,'POST','/api/customer/session',{route:'session'},{username:'ana',password:customerPassword});
   assert.equal(session.statusCode,200,JSON.stringify(session.body));
   const token=session.body.data.accessToken;
   const profile=await call(backend,'GET','/api/backend',{action:'getCliente',id:publicId},{},token);

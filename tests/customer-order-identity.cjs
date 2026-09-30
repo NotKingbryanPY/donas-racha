@@ -1,20 +1,23 @@
 'use strict';
 
 const assert = require('node:assert/strict');
+const {randomBytes,scryptSync}=require('node:crypto');
 process.env.SUPABASE_URL = 'https://example.supabase.co';
 process.env.SUPABASE_ANON_KEY = 'test-anon';
 process.env.SUPABASE_SERVICE_ROLE_KEY = 'test-service-role-key';
 
 const customerId = '22222222-2222-4222-8222-222222222222';
+const password='customer-password-123';
+const salt=randomBytes(16);
 let orderRpc = null;
 global.fetch = async (url, options = {}) => {
   const path = new URL(url);
   const json = value => ({ ok: true, status: 200, text: async () => JSON.stringify(value), json: async () => value });
   if (path.pathname === '/rest/v1/customers') return json([{
-    id: customerId, public_id: 'CABC123', display_name: 'Cliente Registrada',
+    id: customerId, public_id: 'CABC123', username:'cliente.registrada', display_name: 'Cliente Registrada',
     whatsapp_e164: '+50760001111', status: 'ACTIVE'
   }]);
-  if (path.pathname === '/rest/v1/customer_web_access') return json([]);
+  if (path.pathname === '/rest/v1/customer_web_access') return json([{customer_id:customerId,password_salt:salt.toString('hex'),password_hash:scryptSync(password,salt,64).toString('hex'),credential_version:2}]);
   if (path.pathname === '/rest/v1/rpc/consume_api_rate_limit') return json({ allowed: true });
   if (path.pathname === '/rest/v1/rpc/api_create_order_by_customer_id') {
     orderRpc = JSON.parse(options.body);
@@ -30,7 +33,7 @@ const res = () => ({ statusCode: 200, setHeader() {}, end(body) { this.body = JS
 (async () => {
   const login = res();
   await customerRoute({ method:'POST', url:'/api/customer/session', query:{route:'session'}, headers:{},
-    body:{publicId:'CABC123'} }, login);
+    body:{username:'cliente.registrada',password} }, login);
   assert.equal(login.statusCode, 200);
   assert.ok(login.body.data.accessToken.startsWith('dr1.'));
 
@@ -47,5 +50,5 @@ const res = () => ({ statusCode: 200, setHeader() {}, end(body) { this.body = JS
   assert.equal(orderRpc.p_auth_user_id, undefined);
   assert.equal(orderRpc.p_customer_name, undefined);
   assert.equal(orderRpc.p_customer_phone, undefined);
-  console.log('PASS ID-only session creates a registered-customer order without trusting submitted identity');
+  console.log('PASS username/password session creates a registered-customer order without trusting submitted identity');
 })().catch(error => { console.error(error); process.exitCode = 1; });

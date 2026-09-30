@@ -7,7 +7,7 @@ const path = require('node:path');
 const base = process.env.TEST_URL || 'http://127.0.0.1:8765';
 const out = process.env.TEST_OUTPUT || '/tmp/donas-racha-qa';
 fs.mkdirSync(out,{recursive:true});
-const fixture = () => ({id:'C-DEMO',name:'Cliente de prueba con nombre largo',whatsapp:'60000000',registrationDate:'2026-08-01',levelEmoji:'🥉',levelName:'Bronce',pointsTotal:190,pointsAvailable:190,totalPurchases:19,currentStreak:6,nextPurchasePoints:15,progressLevelPct:95,pointsToNextLevel:10,nextLevel:{name:'Plata',emoji:'🥈'},qrUrl:'https://fixture.test/qr.svg',purchasesToday:0,dailyPurchaseLimit:3,hitosRacha:[3],badges:[{emoji:'⭐',name:'Cliente frecuente'}],recentHistory:[{type:'purchase',date:'2026-09-15T12:00:00Z',points:12}],pointsRules:[{points:10,label:'Racha 1–2'},{points:12,label:'Racha 3+'},{points:15,label:'Racha 7+'},{points:17,label:'Racha 14+'}],shopItems:[{id:'R1',emoji:'🍩',name:'Dona de recompensa',description:'Un antojo para celebrar tu constancia.',cost:100},{id:'R2',emoji:'🎁',name:'Recompensa con un nombre considerablemente largo para verificar el diseño',description:'Descripción extensa sin cortar los controles de canje.',cost:500}],recentRedemptions:[]});
+const fixture = () => ({id:'C-DEMO',username:'cliente.demo',name:'Cliente de prueba con nombre largo',whatsapp:'60000000',registrationDate:'2026-08-01',levelEmoji:'🥉',levelName:'Bronce',pointsTotal:190,pointsAvailable:190,totalPurchases:19,currentStreak:6,nextPurchasePoints:15,progressLevelPct:95,pointsToNextLevel:10,nextLevel:{name:'Plata',emoji:'🥈'},purchasesToday:0,dailyPurchaseLimit:3,hitosRacha:[3],badges:[{emoji:'⭐',name:'Cliente frecuente'}],recentHistory:[{type:'purchase',date:'2026-09-15T12:00:00Z',points:12}],pointsRules:[{points:10,label:'Racha 1–2'},{points:12,label:'Racha 3+'},{points:15,label:'Racha 7+'},{points:17,label:'Racha 14+'}],shopItems:[{id:'R1',emoji:'🍩',name:'Dona de recompensa',description:'Un antojo para celebrar tu constancia.',cost:100},{id:'R2',emoji:'🎁',name:'Recompensa con un nombre considerablemente largo para verificar el diseño',description:'Descripción extensa sin cortar los controles de canje.',cost:500}],recentRedemptions:[]});
 (async()=>{
  const browser = await chromium.launch({headless:true,...(process.env.CHROMIUM_PATH?{executablePath:process.env.CHROMIUM_PATH}:{})});
  const results=[];
@@ -28,10 +28,13 @@ const fixture = () => ({id:'C-DEMO',name:'Cliente de prueba con nombre largo',wh
       ?{json:{ok:true,data:{accessToken:'admin-token',refreshToken:'refresh-token',role:'ADMIN',expiresAt:new Date(Date.now()+3600000).toISOString()}}}
       :{status:401,json:{ok:false,error:{code:'INVALID_CREDENTIALS',message:'Credenciales incorrectas'}}});
     }
-    if(u.pathname==='/api/customer/session' && data.publicId==='LOCKED' && !data.password) return route.fulfill({status:401,json:{ok:false,error:{code:'PASSWORD_REQUIRED',message:'Escribe tu contraseña'}}});
-    if(u.pathname==='/api/customer/session') return route.fulfill(data.publicId==='INVALID'
+    if(u.pathname==='/api/customer/session' && data.username==='LOCKED' && !data.password) return route.fulfill({status:401,json:{ok:false,error:{code:'PASSWORD_REQUIRED',message:'Escribe tu contraseña'}}});
+    if(u.pathname==='/api/customer/session' && data.username==='UNSET') return route.fulfill({status:401,json:{ok:false,error:{code:'PASSWORD_SETUP_REQUIRED',message:'Primero crea una contraseña para activar tu perfil.'}}});
+    if(u.pathname==='/api/customer/session') return route.fulfill(data.username==='INVALID'
      ?{status:404,json:{ok:false,error:{code:'CUSTOMER_NOT_FOUND',message:'ID no encontrado'}}}
-     :{json:{ok:true,data:{accessToken:'customer-token',customer:{publicId:data.publicId}}}});
+     :{json:{ok:true,data:{accessToken:'customer-token',customer:{publicId:client.id,username:client.username}}}});
+    if(u.pathname==='/api/customer/activation') return route.fulfill({json:{ok:true,data:{accessToken:'new-customer-token',customer:{publicId:client.id,username:client.username}}}});
+    if(u.pathname==='/api/customer/password') return route.fulfill({json:{ok:true,data:{accessToken:'recovered-customer-token',customer:{publicId:client.id,username:client.username}}}});
     if(u.pathname==='/api/customer/onboarding') return route.fulfill({json:{ok:true,data:{progress:{status:'COMPLETED',last_step:7}}}});
     if(u.pathname==='/api/ranking') return route.fulfill({json:{ok:true,data:{ranking:[client,{...client,id:'C2',name:'Segundo cliente'},{...client,id:'C3',name:'Tercer cliente'}]}}});
     if(u.pathname==='/api/products') return route.fulfill({json:{ok:true,data:u.searchParams.get('view')==='inventory'?{flavors,enforced:true}:{products:[{name:'Donas',product_variants:flavors.map(f=>({id:f.variant_id,sku:f.sku,name:f.name,available:true,unit_price_cents:100,currency_code:'USD'}))}]}}});
@@ -60,8 +63,6 @@ const fixture = () => ({id:'C-DEMO',name:'Cliente de prueba con nombre largo',wh
     return route.fulfill({json:{ok:true,data:response}});
    }
    if(u.hostname==='127.0.0.1'||u.hostname==='localhost') return route.continue();
-   if(u.hostname==='fixture.test') return route.fulfill({contentType:'image/svg+xml',body:'<svg xmlns="http://www.w3.org/2000/svg" width="210" height="210"><rect width="210" height="210" fill="white"/><path fill="black" d="M20 20h50v50H20zM140 20h50v50h-50zM20 140h50v50H20z"/></svg>'});
-   if(req.url().includes('html5-qrcode')) return route.fulfill({contentType:'text/javascript',body:`window.__scanners=[];window.Html5Qrcode=class{constructor(id){this.id=id;window.__scanners.push(this)} async start(camera,config,success){this.success=success;this.config=config;if(window.__cameraFail)throw Error('Denied');document.getElementById(this.id).innerHTML='<video></video>';} async stop(){this.stopped=true}};`});
    if(req.url().includes('confetti')) return route.fulfill({contentType:'text/javascript',body:'window.__confetti=0;window.confetti=()=>window.__confetti++;'});
    return route.abort();
   });
@@ -79,9 +80,9 @@ const fixture = () => ({id:'C-DEMO',name:'Cliente de prueba con nombre largo',wh
   await page.evaluate(()=>rankingBack());
   await page.getByRole('button',{name:'Entrar a mi perfil'}).click();
   await noOverflow('client login');
-  await page.locator('#userClientIdInput').fill('INVALID');await page.getByRole('button',{name:'Entrar con ID'}).click();
+  await page.locator('#userClientIdInput').fill('INVALID');await page.locator('#userEnterBtn').click();
   await page.waitForFunction(()=>!document.getElementById('userOverlay').classList.contains('hidden'));
-  await page.locator('#userClientIdInput').fill('C-DEMO');await page.getByRole('button',{name:'Entrar con ID'}).click();
+  await page.locator('#userClientIdInput').fill('C-DEMO');await page.locator('#userEnterBtn').click();
   await page.waitForFunction(()=>document.getElementById('clientPoints').textContent==='190');
   assert.equal(await page.locator('#buyBtn').isVisible(),false);
   assert.equal(await page.locator('.progress-track').getAttribute('aria-valuenow'),'95');
@@ -89,11 +90,14 @@ const fixture = () => ({id:'C-DEMO',name:'Cliente de prueba con nombre largo',wh
   assert((await page.locator('#nextReward').textContent()).includes('Ya puedes canjearlo'));
   assert.equal(await page.locator('.reward-track').getAttribute('aria-valuenow'),'100','progress capped at actual reward cost');
   assert.equal(await page.locator('#featuredBadges .achievement').count(),1,'do not invent badges to fill the mockup');
-  await page.getByRole('button',{name:'Mi QR',exact:true}).click();
-  assert(await page.locator('#clientQrDialog').evaluate(el=>el.open));
-  assert.equal(await page.locator('#clientQr').getAttribute('src'),'https://fixture.test/qr.svg');
-  await noOverflow('QR dialog');await page.keyboard.press('Escape');
-  await page.getByRole('button',{name:'Contraseña opcional',exact:true}).click();
+  await page.getByRole('button',{name:'Mis datos',exact:true}).click();
+  assert(await page.locator('#clientDetailsDialog').evaluate(el=>el.open));
+  assert.equal(await page.locator('#profileName').textContent(),fixture().name);
+  assert.equal(await page.locator('#profilePhone').textContent(),fixture().whatsapp);
+  assert.equal(await page.locator('#profileId').textContent(),fixture().username);
+  assert((await page.locator('#profileRegistered').textContent()).includes('2026'));
+  await noOverflow('profile details dialog');await page.keyboard.press('Escape');
+  await page.getByRole('button',{name:'Cambiar contraseña',exact:true}).click();
   assert(await page.locator('#customerNewPassword').isVisible());
   await noOverflow('password dialog');await page.keyboard.press('Escape');
   await page.getByRole('button',{name:'Ver todos',exact:false}).click();
@@ -140,7 +144,7 @@ const fixture = () => ({id:'C-DEMO',name:'Cliente de prueba con nombre largo',wh
   assert((await page.locator('#alreadyMsg').textContent()).includes('1 de 3'));
   await page.evaluate(()=>goHome());await page.evaluate(()=>openClient('C-DEMO',false));
   await page.waitForFunction(()=>document.getElementById('screen-client').classList.contains('active'));
-  await page.evaluate(()=>showScreen('screen-new'));await page.locator('#newName').fill('Nuevo de prueba');await page.locator('#createBtn').click();await page.waitForSelector('#newQrCard:visible');await noOverflow('registration');
+  await page.evaluate(()=>showScreen('screen-new'));await page.locator('#newName').fill('Nuevo de prueba');await page.locator('#newWhatsapp').fill('+50760001111');await page.locator('#createBtn').click();await page.waitForSelector('#newClientCard:visible');assert((await page.locator('#newClientId').textContent()).length>0);await noOverflow('registration');
   await page.evaluate(()=>showAdmin());await page.waitForFunction(()=>document.getElementById('sToday').textContent==='2');await noOverflow('admin');await page.screenshot({path:path.join(out,`admin-${width}.png`),fullPage:true});
   await page.locator('#adminClientFilter').fill('C-DEMO');assert.equal(await page.locator('#adminClients tbody tr').count(),1);
   await page.getByRole('button',{name:'Ajustar',exact:true}).click();
@@ -179,11 +183,23 @@ const fixture = () => ({id:'C-DEMO',name:'Cliente de prueba con nombre largo',wh
   await page.waitForSelector('#userPasswordInput:visible');assert.equal(await page.locator('#userEnterBtn').getAttribute('aria-busy'),null);
   await page.locator('#userPasswordInput').fill('client-password');await page.locator('#userEnterBtn').click();
   await page.waitForFunction(()=>customerLoginController===null && document.getElementById('screen-client').classList.contains('active'));
+  await page.evaluate(()=>goToUserLogin());await page.locator('#userClientIdInput').fill('UNSET');await page.locator('#userEnterBtn').click();
+  await page.locator('#customerActivation').waitFor({state:'visible'});
+  await page.locator('#activationPassword').fill('new-password-123');
+  await page.locator('#completeActivationButton').click();
+  await page.waitForFunction(()=>openedAsUser && document.getElementById('userOverlay').classList.contains('hidden'));
+  assert(requests.some(r=>r.path==='/api/customer/activation'&&r.username==='UNSET'&&r.newPassword==='new-password-123'));
+  await page.evaluate(()=>goToUserLogin());await page.locator('#userClientIdInput').fill('UNSET');
+  await page.getByRole('button',{name:'Olvidé mi contraseña'}).click();
+  await page.locator('#customerRecoveryCode').fill('deadbeef');await page.locator('#customerRecoveryPassword').fill('recovered-password-123');
+  await page.locator('#completeRecoveryButton').click();
+  await page.waitForFunction(()=>openedAsUser && document.getElementById('userOverlay').classList.contains('hidden'));
+  assert(requests.some(r=>r.path==='/api/customer/password'&&r.username==='UNSET'&&r.code==='deadbeef'));
   await page.goto(`${base}/?profile=1&id=C-DEMO`);
   assert.equal(await page.locator('#userScanBtn').count(),0,'customer camera control must stay hidden');
-  assert.equal(await page.locator('#userClientIdInput').inputValue(),'C-DEMO');
-  await page.locator('#userEnterBtn').click();
   await page.waitForFunction(()=>openedAsUser && document.getElementById('userOverlay').classList.contains('hidden') && document.getElementById('screen-client').classList.contains('active'));
+  assert.equal(new URL(page.url()).searchParams.get('view'),'profile');
+  assert.equal(new URL(page.url()).searchParams.has('id'),false,'private profile URL does not expose technical ID');
   await page.emulateMedia({reducedMotion:'reduce'});await page.waitForTimeout(100);assert(await page.locator('html').evaluate(el=>el.classList.contains('motion-lite')));
   const count=await page.evaluate(()=>window.__confetti);await page.evaluate(()=>confettiBurst());assert.equal(await page.evaluate(()=>window.__confetti),count);
   assert.equal(await page.evaluate(()=>document.getAnimations().filter(a=>a.playState==='running').length),0);

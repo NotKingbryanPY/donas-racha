@@ -1,0 +1,8 @@
+/* Nunito is self-hosted under the SIL Open Font License in assets/fonts/OFL-Nunito.txt. */
+@font-face{
+  font-family:Nunito;
+  font-style:normal;
+  font-weight:400 900;
+  font-display:swap;
+  src:url('../fonts/nunito-latin-variable.woff2') format('woff2');
+}
