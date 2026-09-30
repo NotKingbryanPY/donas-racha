@@ -192,17 +192,20 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
       <p id="userLoginStatus" class="login-status" role="status" aria-live="polite"></p>
       <div id="userLoginError" role="alert" class="muted" style="color:#ffb1ba;min-height:20px"></div>
       <div id="customerActivation" class="field-group" hidden style="text-align:left">
-        <p class="muted">Para crear o recuperar tu contraseña, confirma el WhatsApp registrado.</p>
-        <button id="sendActivationCode" class="btn btn-outline" style="width:100%" onclick="startCustomerActivation()">Enviar código por WhatsApp</button>
-        <div id="customerActivationFields" hidden>
-          <label class="field-label" for="activationCode">Código de 6 dígitos</label><input id="activationCode" class="dark-field" inputmode="numeric" autocomplete="one-time-code" maxlength="6">
-          <label class="field-label" for="activationPassword">Nueva contraseña</label><input id="activationPassword" class="dark-field" type="password" autocomplete="new-password" minlength="8" placeholder="Mínimo 8 caracteres">
-          <button id="completeActivationButton" class="btn btn-dark" style="width:100%" onclick="completeCustomerActivation()">Guardar contraseña y entrar</button>
-        </div>
+        <p class="muted">Este perfil aún no tiene contraseña. Crea una para entrar.</p>
+        <label class="field-label" for="activationPassword">Crear contraseña</label><input id="activationPassword" class="dark-field" type="password" autocomplete="new-password" minlength="8" maxlength="128" placeholder="Mínimo 8 caracteres">
+        <button id="completeActivationButton" class="btn btn-dark" style="width:100%" onclick="completeCustomerActivation()">Crear contraseña y entrar</button>
         <p id="customerActivationStatus" class="muted" role="status" aria-live="polite"></p>
       </div>
+      <div id="customerRecovery" class="field-group" hidden style="text-align:left">
+        <p class="muted">Si olvidaste tu contraseña, pide al administrador un código de recuperación tras verificar tu identidad.</p>
+        <label class="field-label" for="customerRecoveryCode">Código de recuperación</label><input id="customerRecoveryCode" class="dark-field" autocomplete="one-time-code" maxlength="8">
+        <label class="field-label" for="customerRecoveryPassword">Nueva contraseña</label><input id="customerRecoveryPassword" class="dark-field" type="password" autocomplete="new-password" minlength="8" maxlength="128" placeholder="Mínimo 8 caracteres">
+        <button id="completeRecoveryButton" class="btn btn-dark" style="width:100%" onclick="completeCustomerRecovery()">Restablecer y entrar</button>
+        <p id="customerRecoveryStatus" class="muted" role="status" aria-live="polite"></p>
+      </div>
       <div class="mini-note">Tu usuario te lo comparte el vendedor al registrarte. También puedes consultarlo en Mi perfil.</div>
-      <button class="btn btn-ghost" style="width:100%;margin-top:8px" onclick="showCustomerActivation()">Olvidé mi contraseña</button>
+      <button class="btn btn-ghost" style="width:100%;margin-top:8px" onclick="showCustomerRecovery()">Olvidé mi contraseña</button>
     </div>
     <button class="btn btn-ghost" style="width:100%;margin-top:10px" onclick="goToRoleScreen()">← Volver al inicio</button>
   </div>
@@ -280,9 +283,8 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
       <dialog id="clientDetailsDialog" class="profile-dialog" aria-labelledby="clientDetailsTitle"><button class="dialog-close" onclick="this.closest('dialog').close()" aria-label="Cerrar datos del cliente">✕</button><h2 id="clientDetailsTitle">Mi perfil</h2><dl class="profile-data-list"><div><dt>Nombre</dt><dd id="profileName"></dd></div><div><dt>Celular</dt><dd id="profilePhone"></dd></div><div><dt>Fecha de registro</dt><dd id="profileRegistered"></dd></div><div><dt>Usuario</dt><dd id="profileId"></dd></div></dl></dialog>
             <dialog id="customerPasswordSettings" class="profile-dialog" aria-labelledby="passwordPanelTitle">
         <button class="dialog-close" onclick="this.closest('dialog').close()" aria-label="Cerrar contraseña">✕</button><h2 id="passwordPanelTitle">Cambiar contraseña</h2>
-        <p class="muted" style="margin-top:12px">Te enviaremos un código al WhatsApp registrado para confirmar el cambio.</p>
-        <button id="sendProfilePasswordCode" class="btn btn-outline" onclick="startProfilePasswordChange()">Enviar código por WhatsApp</button>
-        <label class="field-label" for="customerPasswordCode">Código de 6 dígitos</label><input id="customerPasswordCode" class="field" inputmode="numeric" autocomplete="one-time-code" maxlength="6">
+        <p class="muted" style="margin-top:12px">Escribe tu contraseña actual para cambiarla.</p>
+        <label class="field-label" for="customerCurrentPassword">Contraseña actual</label><input id="customerCurrentPassword" class="field" type="password" autocomplete="current-password">
         <label class="field-label" for="customerNewPassword">Nueva contraseña</label><input id="customerNewPassword" class="field" type="password" autocomplete="new-password" minlength="8" placeholder="Mínimo 8 caracteres">
         <button id="saveProfilePasswordButton" class="btn btn-outline" onclick="saveCustomerPassword()">Guardar nueva contraseña</button>
         <p id="customerPasswordMessage" class="muted" role="status"></p>
@@ -547,8 +549,9 @@ window.addEventListener('load', async () => {
     document.getElementById('customerPasswordGroup').style.display = 'none';
     document.getElementById('userPasswordInput').value = '';
     document.getElementById('customerActivation').hidden = true;
-    document.getElementById('customerActivationFields').hidden = true;
     document.getElementById('customerActivationStatus').textContent = '';
+    document.getElementById('customerRecovery').hidden = true;
+    document.getElementById('customerRecoveryStatus').textContent = '';
   });
   ['clientDeliveryLocation','clientDeliveryNotes'].forEach(id => document.getElementById(id).addEventListener('input', () => { customerOrderPendingKey = null; }));
   document.querySelectorAll('input[name="clientPayment"]').forEach(input => input.addEventListener('change', () => { customerOrderPendingKey = null; }));
@@ -1227,18 +1230,16 @@ async function submitClientOrder() {
 
 async function saveCustomerPassword() {
   const message = document.getElementById('customerPasswordMessage');
-  const code = document.getElementById('customerPasswordCode').value.trim();
+  const currentPassword = document.getElementById('customerCurrentPassword').value;
   const newPassword = document.getElementById('customerNewPassword').value;
-  if (!/^\d{6}$/.test(code) || newPassword.length < 8) { message.textContent = 'Escribe el código de WhatsApp y una contraseña de al menos 8 caracteres.'; return; }
+  if (!currentPassword || newPassword.length < 8 || newPassword.length > 128) { message.textContent = 'Escribe tu contraseña actual y una nueva de 8 a 128 caracteres.'; return; }
   message.textContent = 'Guardando...';
   try {
     const button = document.getElementById('saveProfilePasswordButton');
     button.disabled = true;
-    const result = await customerRequest('/api/customer/activation', { method:'POST', body:JSON.stringify({
-      action:'complete', username:currentClient.username, code, newPassword
-    }) });
+    const result = await customerRequest('/api/customer/change-password', { method:'POST', body:JSON.stringify({ currentPassword, newPassword }) });
     sessionStorage.setItem('donasCustomerToken', result.accessToken);
-    document.getElementById('customerPasswordCode').value = '';
+    document.getElementById('customerCurrentPassword').value = '';
     document.getElementById('customerNewPassword').value = '';
     message.textContent = 'Contraseña actualizada. Tus otras sesiones se cerraron.';
   } catch (error) { message.textContent = error.message; }
@@ -1246,60 +1247,70 @@ async function saveCustomerPassword() {
 }
 
 function showCustomerActivation() {
+  document.getElementById('customerRecovery').hidden = true;
   document.getElementById('customerActivation').hidden = false;
-  document.getElementById('customerActivationStatus').textContent = 'Escribe tu usuario y pide un código para el WhatsApp registrado.';
+  document.getElementById('customerActivationStatus').textContent = '';
+  document.getElementById('activationPassword').focus();
 }
 
-async function startCustomerActivation() {
-  const username = document.getElementById('userClientIdInput').value.trim();
-  const message = document.getElementById('customerActivationStatus');
-  if (!username) { message.textContent = 'Primero escribe tu usuario.'; return; }
-  const button = document.getElementById('sendActivationCode');
-  button.disabled = true; message.textContent = 'Enviando código…';
-  try {
-    const result = await customerRequest('/api/customer/activation', { method:'POST', body:JSON.stringify({ action:'start', username }) });
-    document.getElementById('customerActivationFields').hidden = false;
-    message.textContent = `Código enviado al WhatsApp ${result.maskedPhone}.`;
-    document.getElementById('activationCode').focus();
-  } catch (error) { message.textContent = error.message; }
-  finally { button.disabled = false; }
+function showCustomerRecovery() {
+  document.getElementById('customerActivation').hidden = true;
+  document.getElementById('customerRecovery').hidden = false;
+  document.getElementById('customerRecoveryStatus').textContent = '';
+  document.getElementById('customerRecoveryCode').focus();
+}
+
+async function enterAfterPasswordSetup(result) {
+  sessionStorage.setItem('donasCustomerToken', result.accessToken);
+  sessionStorage.setItem('donasCustomerId', result.customer.publicId);
+  openedAsUser = true; hideOverlays();
+  await openClient(result.customer.publicId, true);
+  if (currentClient && openedAsUser) {
+    const status = document.getElementById('clientLoginSuccess');
+    status.hidden = false;
+    setTimeout(() => { status.hidden = true; }, 2600);
+  }
 }
 
 async function completeCustomerActivation() {
   const username = document.getElementById('userClientIdInput').value.trim();
-  const code = document.getElementById('activationCode').value.trim();
   const newPassword = document.getElementById('activationPassword').value;
   const message = document.getElementById('customerActivationStatus');
-  if (!username || !/^\d{6}$/.test(code) || newPassword.length < 8) {
-    message.textContent = 'Escribe tu usuario, el código de 6 dígitos y una contraseña de al menos 8 caracteres.'; return;
+  if (!username || newPassword.length < 8 || newPassword.length > 128) {
+    message.textContent = 'Escribe tu usuario y una contraseña de 8 a 128 caracteres.'; return;
   }
   const button = document.getElementById('completeActivationButton');
-  button.disabled = true; message.textContent = 'Verificando código…';
+  button.disabled = true; message.textContent = 'Creando contraseña…';
   try {
-    const result = await customerRequest('/api/customer/activation', { method:'POST', body:JSON.stringify({ action:'complete', username, code, newPassword }) });
-    sessionStorage.setItem('donasCustomerToken', result.accessToken);
-    sessionStorage.setItem('donasCustomerId', result.customer.publicId);
-    document.getElementById('activationCode').value = '';
+    const result = await customerRequest('/api/customer/activation', { method:'POST', body:JSON.stringify({ username, newPassword }) });
     document.getElementById('activationPassword').value = '';
-    openedAsUser = true; hideOverlays();
-    await openClient(result.customer.publicId, true);
-    if (currentClient && openedAsUser) {
-      const status = document.getElementById('clientLoginSuccess');
-      status.hidden = false;
-      setTimeout(() => { status.hidden = true; }, 2600);
+    await enterAfterPasswordSetup(result);
+  } catch (error) {
+    if (error.code === 'PASSWORD_ALREADY_SET') {
+      document.getElementById('customerActivation').hidden = true;
+      document.getElementById('customerPasswordGroup').style.display = '';
+      document.getElementById('userPasswordInput').focus();
     }
-  } catch (error) { message.textContent = error.message; }
+    message.textContent = error.message;
+  }
   finally { button.disabled = false; }
 }
 
-async function startProfilePasswordChange() {
-  const message = document.getElementById('customerPasswordMessage');
-  const button = document.getElementById('sendProfilePasswordCode');
-  button.disabled = true; message.textContent = 'Enviando código…';
+async function completeCustomerRecovery() {
+  const username = document.getElementById('userClientIdInput').value.trim();
+  const code = document.getElementById('customerRecoveryCode').value.trim().toLowerCase();
+  const newPassword = document.getElementById('customerRecoveryPassword').value;
+  const message = document.getElementById('customerRecoveryStatus');
+  if (!username || !/^[0-9a-f]{8}$/.test(code) || newPassword.length < 8 || newPassword.length > 128) {
+    message.textContent = 'Escribe tu usuario, el código de recuperación y una contraseña de 8 a 128 caracteres.'; return;
+  }
+  const button = document.getElementById('completeRecoveryButton');
+  button.disabled = true; message.textContent = 'Restableciendo contraseña…';
   try {
-    const result = await customerRequest('/api/customer/activation', { method:'POST', body:JSON.stringify({ action:'start', username:currentClient.username }) });
-    message.textContent = `Código enviado al WhatsApp ${result.maskedPhone}.`;
-    document.getElementById('customerPasswordCode').focus();
+    const result = await customerRequest('/api/customer/password', { method:'POST', body:JSON.stringify({ username, code, newPassword }) });
+    document.getElementById('customerRecoveryCode').value = '';
+    document.getElementById('customerRecoveryPassword').value = '';
+    await enterAfterPasswordSetup(result);
   } catch (error) { message.textContent = error.message; }
   finally { button.disabled = false; }
 }
@@ -1431,7 +1442,7 @@ async function createClient() {
 }
 async function shareNewUsername() {
   if (!newClientData) return;
-  const message = `🍩 Donas Racha — Tu usuario: ${newClientData.username}\nEntra a tu perfil: https://donas-racha.vercel.app/\nLa primera vez, crea tu contraseña con el código que llegará a tu WhatsApp.`;
+  const message = `🍩 Donas Racha — Tu usuario: ${newClientData.username}\nEntra a tu perfil: https://donas-racha.vercel.app/\nLa primera vez, escribe tu usuario y crea tu contraseña.`;
   try {
     if (navigator.share) await navigator.share({ title:'Donas Racha', text:message });
     else { await navigator.clipboard.writeText(message); showToast('Usuario y enlace copiados'); }
@@ -1459,7 +1470,7 @@ ${web}
 ${newClientData.username}
 
 Guarda este mensaje. Este es tu usuario para ingresar a tu perfil.
-La primera vez, crea tu contraseña con el código que llegará a este WhatsApp.
+La primera vez, escribe tu usuario y crea tu contraseña.
 
 Desde tu perfil podrás:
 - Ver tu racha y consultar tus puntos.

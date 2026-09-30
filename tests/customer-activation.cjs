@@ -6,38 +6,35 @@ process.env.SUPABASE_ANON_KEY = 'test-anon';
 process.env.SUPABASE_SERVICE_ROLE_KEY = 'test-service';
 
 const customerId = '22222222-2222-4222-8222-222222222222';
-const authId = '33333333-3333-4333-8333-333333333333';
 let access = null;
-let verifiedPhone = '+50760001111';
-let otpStarts = 0;
 const json = (value, status=200) => ({ok:status<400,status,text:async()=>JSON.stringify(value),json:async()=>value});
 global.fetch = async (raw, options={}) => {
   const path = new URL(raw);
   const body = options.body ? JSON.parse(options.body) : null;
   if (path.pathname === '/rest/v1/customers') {
     if (path.searchParams.get('username') === 'eq.unknown') return json([]);
-    return json([{id:customerId,public_id:'CABC123',username:'bryan.hurtado',display_name:'Bryan Hurtado',whatsapp_e164:'+50760001111',status:'ACTIVE'}]);
+    return json([{id:customerId,public_id:'CABC123',username:'bryan.hurtado',display_name:'Bryan Hurtado',whatsapp_e164:null,status:'ACTIVE'}]);
   }
   if (path.pathname === '/rest/v1/customer_web_access') return json(access ? [access] : []);
   if (path.pathname === '/rest/v1/rpc/consume_api_rate_limit') return json({allowed:true});
-  if (path.pathname === '/auth/v1/otp') {
-    assert.equal(options.headers.apikey,'test-anon');
-    assert.deepEqual(body,{phone:'+50760001111',channel:'whatsapp',create_user:true});
-    otpStarts++;
-    return json({});
-  }
-  if (path.pathname === '/auth/v1/verify') {
-    assert.equal(body.phone,'+50760001111');
-    assert.equal(body.type,'sms');
-    if (body.token !== '123456') return json({message:'Invalid token'},403);
-    return json({user:{id:authId,phone:verifiedPhone,phone_confirmed_at:new Date().toISOString()}});
-  }
-  if (path.pathname === '/rest/v1/rpc/api_set_customer_password_by_verified_phone') {
+  if (path.pathname === '/rest/v1/rpc/api_claim_customer_password') {
     assert.equal(body.p_customer_id,customerId);
-    assert.equal(body.p_phone_auth_user_id,authId);
-    const version=(access?.credential_version || 1)+1;
-    access={customer_id:customerId,password_salt:body.p_salt,password_hash:body.p_hash,credential_version:version};
-    return json(version);
+    if (access?.password_hash) return json({message:'PASSWORD_ALREADY_SET',code:'P0001'},400);
+    access={customer_id:customerId,password_salt:body.p_salt,password_hash:body.p_hash,credential_version:2};
+    return json(2);
+  }
+  if (path.pathname === '/rest/v1/rpc/api_change_customer_password') {
+    assert.equal(body.p_customer_id,customerId);
+    assert.equal(body.p_old_hash,access.password_hash);
+    assert.equal(body.p_old_version,access.credential_version);
+    access={...access,password_salt:body.p_salt,password_hash:body.p_hash,credential_version:access.credential_version+1};
+    return json(access.credential_version);
+  }
+  if (path.pathname === '/rest/v1/rpc/api_set_customer_password') {
+    assert.equal(body.p_customer_id,customerId);
+    if (body.p_token !== 'deadbeef') return json({message:'INVALID_PASSWORD_TOKEN',code:'42501'},400);
+    access={...access,password_salt:body.p_salt,password_hash:body.p_hash,credential_version:access.credential_version+1};
+    return json(access.credential_version);
   }
   throw new Error(`Unexpected URL: ${raw}`);
 };
@@ -56,27 +53,31 @@ async function call(name,body,headers={}) {
   const stale=response();
   await route({method:'GET',url:'/api/customer/profile',query:{route:'profile'},headers:{authorization:`Bearer ${issueSession(customerId,1)}`}},stale);
   assert.equal(stale.body.error.code,'PASSWORD_SETUP_REQUIRED');
-  const start=await call('activation',{action:'start',username:'Bryan.Hurtado'});
-  assert.equal(start.statusCode,200);
-  assert.equal(otpStarts,1);
-  assert(!JSON.stringify(start.body).includes('+50760001111'));
-  const wrong=await call('activation',{action:'complete',username:'bryan.hurtado',code:'999999',newPassword:'first-password-123'});
-  assert.equal(wrong.body.error.code,'INVALID_OTP');
-  verifiedPhone='+50769999999';
-  const mismatch=await call('activation',{action:'complete',username:'bryan.hurtado',code:'123456',newPassword:'first-password-123'});
-  assert.equal(mismatch.body.error.code,'INVALID_VERIFICATION');
-  assert.equal(access,null);
-  verifiedPhone='+50760001111';
-  const activated=await call('activation',{action:'complete',username:'bryan.hurtado',code:'123456',newPassword:'first-password-123'});
+  const activated=await call('activation',{username:'bryan.hurtado',newPassword:'first-password-123'});
   assert.equal(activated.statusCode,200,JSON.stringify(activated.body));
   assert.match(activated.body.data.accessToken,/^dr1\./);
   assert.equal(activated.body.data.customer.username,'bryan.hurtado');
   assert.equal(crypto.scryptSync('first-password-123',Buffer.from(access.password_salt,'hex'),64).toString('hex'),access.password_hash);
+  const repeated=await call('activation',{username:'BRYAN.HURTADO',newPassword:'other-password-123'});
+  assert.equal(repeated.body.error.code,'PASSWORD_ALREADY_SET');
   const missing=await call('session',{username:'bryan.hurtado'});
   assert.equal(missing.body.error.code,'PASSWORD_REQUIRED');
   const login=await call('session',{username:'BRYAN.HURTADO',password:'first-password-123'});
   assert.equal(login.statusCode,200);
   const legacy=await call('session',{publicId:'CABC123',password:'first-password-123'});
   assert.equal(legacy.statusCode,200);
-  console.log('PASS customer activation: phone OTP, mismatch rejection, password creation, username and legacy ID login');
+  const token=login.body.data.accessToken;
+  const wrong=await call('change-password',{currentPassword:'wrong-password',newPassword:'new-password-123'},{authorization:`Bearer ${token}`});
+  assert.equal(wrong.body.error.code,'INVALID_CREDENTIALS');
+  const changed=await call('change-password',{currentPassword:'first-password-123',newPassword:'new-password-123'},{authorization:`Bearer ${token}`});
+  assert.equal(changed.statusCode,200,JSON.stringify(changed.body));
+  assert.equal(access.credential_version,3);
+  const old=await call('session',{username:'bryan.hurtado',password:'first-password-123'});
+  assert.equal(old.body.error.code,'INVALID_CREDENTIALS');
+  const updated=await call('session',{username:'bryan.hurtado',password:'new-password-123'});
+  assert.equal(updated.statusCode,200);
+  const recovered=await call('password',{username:'BRYAN.HURTADO',code:'deadbeef',newPassword:'recovered-password-123'});
+  assert.equal(recovered.statusCode,200);
+  assert.equal(access.credential_version,4);
+  console.log('PASS direct activation: no phone required, one-time claim, password change, admin recovery and legacy ID login');
 })().catch(error=>{console.error(error);process.exitCode=1;});

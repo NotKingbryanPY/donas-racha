@@ -238,7 +238,7 @@ async function postAction(req, action, body) {
     const name = String(body.name || '').trim();
     if (!name || name.length>120) throw new ApiError(400,'INVALID_NAME','Escribe un nombre de hasta 120 caracteres.');
     const whatsapp = normalizedPhone(body.whatsapp);
-    if (!whatsapp) throw new ApiError(400,'CUSTOMER_PHONE_REQUIRED','El WhatsApp es necesario para que el cliente active su contraseña.');
+    if (!whatsapp) throw new ApiError(400,'CUSTOMER_PHONE_REQUIRED','El WhatsApp es necesario para compartir el acceso y coordinar pedidos.');
     const key = uuid(body.idempotencyKey,'idempotencyKey');
     const publicId = `C${randomBytes(9).toString('hex').toUpperCase()}`;
     const result = await rpc('api_register_customer',{p_public_id:publicId,p_name:name,p_whatsapp:whatsapp,p_idempotency_key:key});

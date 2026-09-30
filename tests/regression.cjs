@@ -33,9 +33,8 @@ const fixture = () => ({id:'C-DEMO',username:'cliente.demo',name:'Cliente de pru
     if(u.pathname==='/api/customer/session') return route.fulfill(data.username==='INVALID'
      ?{status:404,json:{ok:false,error:{code:'CUSTOMER_NOT_FOUND',message:'ID no encontrado'}}}
      :{json:{ok:true,data:{accessToken:'customer-token',customer:{publicId:client.id,username:client.username}}}});
-    if(u.pathname==='/api/customer/activation') return route.fulfill({json:{ok:true,data:data.action==='start'
-      ?{sent:true,maskedPhone:'••••1111'}
-      :{accessToken:'new-customer-token',customer:{publicId:client.id,username:client.username}}}});
+    if(u.pathname==='/api/customer/activation') return route.fulfill({json:{ok:true,data:{accessToken:'new-customer-token',customer:{publicId:client.id,username:client.username}}}});
+    if(u.pathname==='/api/customer/password') return route.fulfill({json:{ok:true,data:{accessToken:'recovered-customer-token',customer:{publicId:client.id,username:client.username}}}});
     if(u.pathname==='/api/customer/onboarding') return route.fulfill({json:{ok:true,data:{progress:{status:'COMPLETED',last_step:7}}}});
     if(u.pathname==='/api/ranking') return route.fulfill({json:{ok:true,data:{ranking:[client,{...client,id:'C2',name:'Segundo cliente'},{...client,id:'C3',name:'Tercer cliente'}]}}});
     if(u.pathname==='/api/products') return route.fulfill({json:{ok:true,data:u.searchParams.get('view')==='inventory'?{flavors,enforced:true}:{products:[{name:'Donas',product_variants:flavors.map(f=>({id:f.variant_id,sku:f.sku,name:f.name,available:true,unit_price_cents:100,currency_code:'USD'}))}]}}});
@@ -186,11 +185,16 @@ const fixture = () => ({id:'C-DEMO',username:'cliente.demo',name:'Cliente de pru
   await page.waitForFunction(()=>customerLoginController===null && document.getElementById('screen-client').classList.contains('active'));
   await page.evaluate(()=>goToUserLogin());await page.locator('#userClientIdInput').fill('UNSET');await page.locator('#userEnterBtn').click();
   await page.locator('#customerActivation').waitFor({state:'visible'});
-  await page.locator('#sendActivationCode').click();await page.locator('#customerActivationFields').waitFor({state:'visible'});
-  await page.locator('#activationCode').fill('123456');await page.locator('#activationPassword').fill('new-password-123');
+  await page.locator('#activationPassword').fill('new-password-123');
   await page.locator('#completeActivationButton').click();
   await page.waitForFunction(()=>openedAsUser && document.getElementById('userOverlay').classList.contains('hidden'));
-  assert(requests.some(r=>r.path==='/api/customer/activation'&&r.action==='complete'&&r.username==='UNSET'));
+  assert(requests.some(r=>r.path==='/api/customer/activation'&&r.username==='UNSET'&&r.newPassword==='new-password-123'));
+  await page.evaluate(()=>goToUserLogin());await page.locator('#userClientIdInput').fill('UNSET');
+  await page.getByRole('button',{name:'Olvidé mi contraseña'}).click();
+  await page.locator('#customerRecoveryCode').fill('deadbeef');await page.locator('#customerRecoveryPassword').fill('recovered-password-123');
+  await page.locator('#completeRecoveryButton').click();
+  await page.waitForFunction(()=>openedAsUser && document.getElementById('userOverlay').classList.contains('hidden'));
+  assert(requests.some(r=>r.path==='/api/customer/password'&&r.username==='UNSET'&&r.code==='deadbeef'));
   await page.goto(`${base}/?profile=1&id=C-DEMO`);
   assert.equal(await page.locator('#userScanBtn').count(),0,'customer camera control must stay hidden');
   await page.waitForFunction(()=>openedAsUser && document.getElementById('userOverlay').classList.contains('hidden') && document.getElementById('screen-client').classList.contains('active'));
