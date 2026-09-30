@@ -6,7 +6,7 @@
   const STEPS = [
     { title: 'Tu perfil', text: 'Aquí encuentras tu resumen y cambias entre Perfil y Pedidos. Dentro del perfil puedes abrir las demás secciones.', tab: 'profile', target: '[data-tour="profile-nav"]' },
     { title: 'Puntos, racha y nivel', text: 'Los puntos totales muestran lo acumulado; los disponibles son los que puedes usar en la tienda. Tu racha y tu nivel reflejan tu progreso según las reglas vigentes que aparecen en el perfil.', tab: 'profile', target: '[data-tour="points"]' },
-    { title: 'Mi QR', text: 'Muéstrale este QR al vendedor cuando compres para que encuentre tu perfil. Puedes abrirlo ahora o seguir con el tutorial.', tab: 'profile', target: '[data-tour="qr"]', action: 'qr' },
+    { title: 'Mis datos', text: 'Aquí puedes consultar tu nombre, celular, fecha de registro y usuario. Puedes abrirlos ahora o seguir con el tutorial.', tab: 'profile', target: '[data-tour="details"]', action: 'details' },
     { title: 'Logros y próximo premio', text: 'Consulta aquí los logros que has conseguido y cuánto te falta para el próximo premio disponible.', tab: 'profile', target: '[data-tour="achievements"] h2' },
     { title: 'Tienda', text: 'En la tienda puedes ver las recompensas, sus costos y tus puntos disponibles para canjear.', tab: 'shop', target: '#client-tab-shop' },
     { title: 'Historial', text: 'Aquí puedes revisar tus compras, puntos y canjes recientes.', tab: 'history', target: '#client-tab-history' },
@@ -125,7 +125,7 @@
     if (!active || suspended) return;
     while (stepIndex >= 0 && stepIndex < STEPS.length) {
       const step = STEPS[stepIndex];
-      window.setClientTab(step.tab);
+      window.setClientTab(step.tab,'replace');
       target = document.querySelector(step.target);
       if (target && target.getClientRects().length && getComputedStyle(target).visibility !== 'hidden') break;
       stepIndex += direction;
@@ -205,9 +205,9 @@
     event.preventDefault(); next.focus();
   }
   function onClick(event) {
-    if (!active || suspended || STEPS[stepIndex]?.action !== 'qr' || !target?.contains(event.target)) return;
+    if (!active || suspended || STEPS[stepIndex]?.action !== 'details' || !target?.contains(event.target)) return;
     requestAnimationFrame(() => {
-      const dialog = document.getElementById('clientQrDialog');
+      const dialog = document.getElementById('clientDetailsDialog');
       if (!active || !dialog?.open) return;
       suspended = true; layer.hidden = true;
       dialog.addEventListener('close', () => {
@@ -243,7 +243,7 @@
     if (status === 'COMPLETED') save('COMPLETED', 7);
     else save('POSTPONED', Math.max(0, Math.min(7, stepIndex)));
     document.getElementById('clientTourReplay').textContent = status === 'COMPLETED' || replay ? 'Ver tutorial' : 'Retomar tutorial';
-    window.setClientTab(returnTab);
+    window.setClientTab(returnTab,'replace');
     stop(false);
   }
   window.DonasTour = { onLogin, start, stop };

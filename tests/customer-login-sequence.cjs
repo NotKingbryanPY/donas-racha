@@ -56,14 +56,12 @@ const deferred=()=>{let resolve;return {promise:new Promise(r=>resolve=r),resolv
    await page.locator('#client-tab-history').click();await page.locator('#client-tab-profile').click();
    await page.evaluate(()=>document.dispatchEvent(new Event('visibilitychange')));
    assert.equal(await page.evaluate(()=>window.introCount),n,'tabs never replay intro');
-   // A subsequent deliberate QR login follows the same sequence, despite session history.
+   // An old customer link reopens the authenticated profile without another login.
    gate=null;
    await page.goto(base+'?profile=1&id='+fixture.id);
-   assert.equal(await page.locator('#userClientIdInput').inputValue(),fixture.id,'QR link prefills the customer ID');
-   await page.locator('#userEnterBtn').click();
-   await page.waitForFunction(()=>document.getElementById('userEnterBtn').classList.contains('is-success'));
-   await page.waitForFunction(()=>customerLoginController===null);
-   assert.equal(await page.evaluate(()=>window.introCount),mode==='normal'?1:0,'QR link and ID share the entrance');
+   await page.waitForFunction(()=>openedAsUser && document.getElementById('screen-client').classList.contains('active'));
+   assert.equal(new URL(page.url()).searchParams.has('id'),false,'old link no longer exposes the technical ID after entry');
+   assert.equal(await page.evaluate(()=>window.introCount),0,'restored session skips the entrance');
    // Leaving a slow login must not redirect when its old response finally arrives.
    await page.evaluate(()=>goToUserLogin());gate=deferred();await page.locator('#userEnterBtn').click();
    await page.getByRole('button',{name:'Volver al inicio'}).click();gate.resolve();

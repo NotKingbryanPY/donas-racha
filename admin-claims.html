@@ -1,10 +1,10 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Códigos de contraseña · Donas Racha</title><style>
-body{font:16px system-ui,sans-serif;background:#171021;color:white;margin:0}main{max-width:560px;margin:auto;padding:24px 16px}a{color:#ffcf58}
+<title>Códigos de contraseña · Donas Racha</title><link rel="stylesheet" href="assets/css/fonts.css"><style>
+body{font:16px Nunito,system-ui,sans-serif;background:#171021;color:white;margin:0}main{max-width:560px;margin:auto;padding:24px 16px}a{color:#ffcf58}
 .card{background:#271a38;border:1px solid #4a365f;border-radius:18px;padding:20px;margin:18px 0}input,button{font:inherit;border-radius:10px;padding:12px}input{display:block;width:100%;box-sizing:border-box;margin:6px 0 14px;background:white;color:#171021;border:0}button{border:0;background:#ffcf58;color:#25142c;font-weight:750;cursor:pointer}button:disabled{opacity:.5}label{display:block;margin-top:12px}p{line-height:1.45}#message{min-height:24px;color:#ffcf58}#token{overflow-wrap:anywhere;background:#120d1b;padding:12px;border-radius:8px}strong{overflow-wrap:anywhere}[hidden]{display:none!important}
 </style></head><body><main>
-<p><a href="/">← Inicio</a></p><h1>Contraseña opcional</h1><p>Uso del vendedor. Verifica la identidad del cliente antes de darle un código para activar o restablecer su contraseña.</p>
+<p><a href="/">← Inicio</a></p><h1>Recuperación excepcional</h1><p>El cliente normalmente crea o recupera su contraseña mediante su WhatsApp. Usa un código de vendedor solo cuando ese método no esté disponible y hayas verificado su identidad.</p>
 <section id="login" class="card"><h2>Acceso administrador</h2><form id="loginForm"><label>Correo<input id="email" type="email" autocomplete="username" required></label><label>Contraseña<input id="password" type="password" autocomplete="current-password" required></label><button>Entrar</button></form></section>
 <section id="panel" class="card" hidden><h2>Buscar cliente existente</h2><form id="lookupForm"><label>ID de cliente<input id="publicId" maxlength="64" required placeholder="C..."></label><button>Buscar</button></form>
 <div id="customer" hidden><p>Nombre: <strong id="name"></strong><br>WhatsApp: <strong id="phone"></strong><br>Estado: <strong id="status"></strong></p><button id="issue" type="button">Generar código temporal</button></div>

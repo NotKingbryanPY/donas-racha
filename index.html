@@ -7,6 +7,8 @@
 <meta name="theme-color" content="#100d17">
 <link rel="icon" type="image/svg+xml" href="assets/images/donas-racha-mark.svg">
 <link rel="preload" as="image" href="assets/images/donas-racha-mark.svg">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/nunito-latin-variable.woff2">
+<link rel="stylesheet" href="assets/css/fonts.css">
 <meta name="description" content="Tu próxima dona también suma. Consulta tus puntos, mantén tu racha y descubre las recompensas de Donas Racha.">
 <script>
 // GitHub Pages sirve HTML estático; los endpoints /api viven junto a la página de Vercel.
@@ -14,7 +16,6 @@ if (location.hostname === 'notkingbryanpy.github.io' && location.pathname.starts
   location.replace('https://donas-racha.vercel.app/' + location.pathname.slice('/donas-racha/'.length) + location.search + location.hash);
 }
 </script>
-<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <style>
 :root{
@@ -44,7 +45,7 @@ if (location.hostname === 'notkingbryanpy.github.io' && location.pathname.starts
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html{scroll-behavior:smooth}
 body{
-  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Roboto,Arial,sans-serif;
+  font-family:Nunito,system-ui,sans-serif;
   background:
     radial-gradient(circle at 20% 5%,rgba(139,92,246,.38),transparent 34%),
     radial-gradient(circle at 85% 10%,rgba(245,87,108,.26),transparent 32%),
@@ -101,8 +102,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
 .stat-card{background:linear-gradient(180deg,rgba(255,255,255,.11),rgba(255,255,255,.065));border:1px solid var(--line);border-radius:20px;padding:17px 12px;text-align:center;box-shadow:var(--shadow-soft)}.stat-card .big{font-size:28px;color:#fff;font-weight:950;letter-spacing:-.04em}.stat-card .lbl{font-size:11px;color:var(--muted);font-weight:850;margin-top:4px}
 .overlay{position:fixed;inset:0;background:radial-gradient(circle at 20% 10%,rgba(139,92,246,.42),transparent 38%),radial-gradient(circle at 88% 6%,rgba(245,87,108,.28),transparent 32%),linear-gradient(180deg,#0b0912,#151126);display:flex;align-items:center;justify-content:center;padding:18px;z-index:9999;overflow:auto}.overlay.hidden{display:none}
 .login-box,.welcome-card{width:100%;max-width:390px;text-align:center;background:rgba(255,255,255,.075);border:1px solid rgba(255,255,255,.12);border-radius:30px;padding:28px 20px;color:white;backdrop-filter:blur(20px);box-shadow:var(--shadow);animation:fadeUp .35s ease both}.welcome-card{max-width:480px;text-align:left;padding:24px}.logo,.brand-logo{font-size:56px;line-height:1}.brand-row{display:flex;align-items:center;gap:12px;margin-bottom:14px}.brand-copy h1,.login-box h2{font-size:28px;font-weight:980;letter-spacing:-.04em}.brand-copy p,.login-box p{font-size:13px;color:var(--muted);line-height:1.45}.welcome-title{font-size:34px;font-weight:980;letter-spacing:-.05em;line-height:1.02;margin:12px 0 10px}.welcome-desc{font-size:15px;color:rgba(255,255,255,.72);line-height:1.5;margin-bottom:18px}.role-client-cta{width:100%;min-height:62px;border-radius:22px;font-size:17px;margin:8px 0 10px}.admin-text-link{display:block;margin:8px auto 0;background:transparent;color:rgba(255,255,255,.36);font-size:12px;font-weight:800;text-align:center}.admin-text-link:hover{color:rgba(255,255,255,.72)}.feature-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0}.feature-card{background:rgba(255,255,255,.07);border:1px solid var(--line);border-radius:18px;padding:13px}.feature-card b{display:block;font-size:13px;margin-bottom:4px}.feature-card span{display:block;font-size:11px;color:var(--muted);line-height:1.35}.landing-note{font-size:12px;color:var(--muted2);line-height:1.4;text-align:center;margin-top:12px}.role-btn{width:100%;border-radius:18px;padding:17px;margin-bottom:12px;display:flex;gap:13px;align-items:center;justify-content:center;text-align:left;font-weight:950}.role-btn span:first-child{font-size:26px}.role-btn small{display:block;font-size:11px;opacity:.66;font-weight:750;margin-top:2px}
-#qr-reader{border-radius:18px;overflow:hidden;background:#0a0a0f;border:1px solid var(--line)}.scanner-wrap{display:none}.scanner-wrap.open{display:block}
-.client-hero{position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(102,126,234,.95),rgba(139,92,246,.9) 52%,rgba(245,87,108,.85));border:1px solid rgba(255,255,255,.18);border-radius:32px;color:white;padding:24px 18px;text-align:left;box-shadow:0 24px 70px rgba(139,92,246,.28);margin-bottom:16px}.client-hero:after{content:"";position:absolute;right:-70px;top:-80px;width:190px;height:190px;border-radius:50%;background:rgba(255,255,255,.13)}.client-avatar{width:64px;height:64px;border-radius:22px;margin:0 0 14px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.24);font-size:28px;font-weight:950;display:flex;align-items:center;justify-content:center}.client-name{font-size:25px;font-weight:980;letter-spacing:-.035em;position:relative;z-index:1}.level-badge{display:inline-flex;align-items:center;gap:6px;margin-top:9px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:7px 12px;font-size:13px;font-weight:950}.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:18px}.hero-stat{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:12px 8px;text-align:center}.hero-stat b{display:block;font-size:22px}.hero-stat span{font-size:10px;opacity:.82}.progress-track{height:12px;background:rgba(255,255,255,.09);border-radius:999px;overflow:hidden;border:1px solid rgba(255,255,255,.08)}.progress-fill{height:100%;background:linear-gradient(90deg,var(--rose),var(--pink));border-radius:999px;transition:width .45s cubic-bezier(.2,.8,.2,1)}.progress-meta{display:flex;justify-content:space-between;gap:8px;font-size:11px;color:var(--muted);margin-top:8px}.badge-grid{display:flex;gap:8px;flex-wrap:wrap}.badge{background:rgba(139,92,246,.13);border:1px solid rgba(139,92,246,.25);color:#e6dcff;border-radius:14px;padding:9px 10px;font-size:12px;font-weight:950}.hitos{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.hito{background:rgba(255,255,255,.075);border:1px solid var(--line);border-radius:15px;text-align:center;padding:11px 4px;color:rgba(255,255,255,.45);font-weight:950;font-size:12px}.hito.active{background:linear-gradient(135deg,var(--rose),var(--pink));color:white;border-color:rgba(255,255,255,.14)}.already{display:none;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);color:#ffd18a;border-radius:16px;padding:12px;text-align:center;font-weight:850;font-size:13px;margin-bottom:12px}.qr-box{text-align:center}.qr-box img{width:210px;height:210px;border-radius:18px;border:1px solid rgba(255,255,255,.16);background:white;padding:6px}.client-tabs{position:sticky;top:74px;z-index:70;margin-top:8px}.client-section{animation:fadeUp .22s ease both}.inline-ranking-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}.inline-ranking-head .pill{font-size:11px}
+.client-hero{position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(102,126,234,.95),rgba(139,92,246,.9) 52%,rgba(245,87,108,.85));border:1px solid rgba(255,255,255,.18);border-radius:32px;color:white;padding:24px 18px;text-align:left;box-shadow:0 24px 70px rgba(139,92,246,.28);margin-bottom:16px}.client-hero:after{content:"";position:absolute;right:-70px;top:-80px;width:190px;height:190px;border-radius:50%;background:rgba(255,255,255,.13)}.client-avatar{width:64px;height:64px;border-radius:22px;margin:0 0 14px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.24);font-size:28px;font-weight:950;display:flex;align-items:center;justify-content:center}.client-name{font-size:25px;font-weight:980;letter-spacing:-.035em;position:relative;z-index:1}.level-badge{display:inline-flex;align-items:center;gap:6px;margin-top:9px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:7px 12px;font-size:13px;font-weight:950}.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:18px}.hero-stat{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:12px 8px;text-align:center}.hero-stat b{display:block;font-size:22px}.hero-stat span{font-size:10px;opacity:.82}.progress-track{height:12px;background:rgba(255,255,255,.09);border-radius:999px;overflow:hidden;border:1px solid rgba(255,255,255,.08)}.progress-fill{height:100%;background:linear-gradient(90deg,var(--rose),var(--pink));border-radius:999px;transition:width .45s cubic-bezier(.2,.8,.2,1)}.progress-meta{display:flex;justify-content:space-between;gap:8px;font-size:11px;color:var(--muted);margin-top:8px}.badge-grid{display:flex;gap:8px;flex-wrap:wrap}.badge{background:rgba(139,92,246,.13);border:1px solid rgba(139,92,246,.25);color:#e6dcff;border-radius:14px;padding:9px 10px;font-size:12px;font-weight:950}.hitos{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.hito{background:rgba(255,255,255,.075);border:1px solid var(--line);border-radius:15px;text-align:center;padding:11px 4px;color:rgba(255,255,255,.45);font-weight:950;font-size:12px}.hito.active{background:linear-gradient(135deg,var(--rose),var(--pink));color:white;border-color:rgba(255,255,255,.14)}.already{display:none;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);color:#ffd18a;border-radius:16px;padding:12px;text-align:center;font-weight:850;font-size:13px;margin-bottom:12px}.client-tabs{position:sticky;top:74px;z-index:70;margin-top:8px}.client-section{animation:fadeUp .22s ease both}.inline-ranking-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}.inline-ranking-head .pill{font-size:11px}
 .shop-grid{display:grid;gap:12px}.shop-item{border:1px solid var(--line);background:rgba(255,255,255,.06);border-radius:20px;padding:14px;display:grid;grid-template-columns:auto 1fr;gap:11px;align-items:start}.shop-emoji{width:46px;height:46px;border-radius:16px;background:linear-gradient(135deg,var(--purple2),var(--purple));color:white;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 8px 20px rgba(139,92,246,.24)}.shop-name{font-weight:950;color:#fff}.shop-desc{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.35}.shop-meta{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;flex-wrap:wrap}.shop-cost{background:rgba(139,92,246,.14);color:#e6dcff;border:1px solid rgba(139,92,246,.22);border-radius:999px;padding:7px 10px;font-size:12px;font-weight:950}.shop-buy{border-radius:12px;padding:10px 12px;font-size:12px;font-weight:950}.points-rule-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}.points-rule{background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:14px;padding:10px;text-align:center}.points-rule b{display:block;color:#fff;font-size:18px}.points-rule span{font-size:11px;color:var(--muted);font-weight:850}.client-id-box{background:rgba(255,255,255,.065);border:1px solid var(--line);border-radius:20px;padding:12px;margin-top:12px}.client-id-box label{display:block;font-size:12px;font-weight:950;color:var(--muted);margin-bottom:8px;text-align:left}.mini-note{font-size:11px;color:var(--muted2);line-height:1.35;margin-top:8px}.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:rgba(255,255,255,.94);color:#151126;border-radius:999px;padding:12px 18px;font-size:13px;font-weight:850;z-index:99999;opacity:0;pointer-events:none;transition:opacity .25s;max-width:92vw;text-align:center;box-shadow:0 18px 50px rgba(0,0,0,.34)}.toast.show{opacity:1}.empty{text-align:center;color:var(--muted2);font-size:13px;padding:18px 8px}
 .admin-fab{display:none}.admin-table{width:100%;border-collapse:collapse;font-size:13px;color:var(--text)}.admin-table th{background:rgba(255,255,255,.065);color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.3px;text-align:left;padding:10px 8px}.admin-table td{padding:11px 8px;border-bottom:1px solid rgba(255,255,255,.075)}.admin-table tr:last-child td{border-bottom:0}.wide-card{overflow:auto}.migration-ok{background:rgba(56,239,125,.12);color:#a6ffd0;border-color:rgba(56,239,125,.24)}.migration-pending{background:rgba(245,158,11,.12);color:#ffd18a;border-color:rgba(245,158,11,.28)}.admin-home-hero{border-radius:30px;padding:22px;background:linear-gradient(135deg,rgba(255,255,255,.105),rgba(255,255,255,.055));border:1px solid var(--line);box-shadow:var(--shadow-soft);margin-bottom:16px}.admin-home-hero h2{font-size:25px;font-weight:980;letter-spacing:-.04em}.admin-home-hero p{color:var(--muted);font-size:13px;margin-top:5px;line-height:1.45}.quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.quick-actions .btn{width:100%}
 .info-menu-btn,.info-modal{display:none!important}
@@ -183,23 +183,27 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
   <div class="login-box">
     <div class="logo"><span class="brand-mark" aria-hidden="true"></span></div>
     <h2>Entrar como cliente</h2>
-    <p>Escribe el ID que recibiste por WhatsApp para ver tu perfil y pedir donas.</p>
+    <p>Escribe tu usuario para ver tu perfil y pedir donas.</p>
     <div class="client-id-box">
-      <label for="userClientIdInput">IDCliente</label>
-      <input id="userClientIdInput" class="dark-field" style="margin-bottom:10px" placeholder="Ejemplo: C1712345678901" onkeydown="if(event.key==='Enter') openUserById()">
+      <label for="userClientIdInput">Usuario</label>
+      <input id="userClientIdInput" class="dark-field" style="margin-bottom:10px" autocomplete="username" placeholder="Ejemplo: bryan.hurtado" onkeydown="if(event.key==='Enter') openUserById()">
       <div id="customerPasswordGroup" class="field-group" style="display:none;text-align:left"><label class="field-label" for="userPasswordInput">Contraseña de este perfil</label><input id="userPasswordInput" class="dark-field" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter') openUserById()"></div>
-      <button id="userEnterBtn" class="btn btn-dark" style="width:100%" onclick="openUserById()">Entrar con ID →</button>
+      <button id="userEnterBtn" class="btn btn-dark" style="width:100%" onclick="openUserById()">Entrar →</button>
       <p id="userLoginStatus" class="login-status" role="status" aria-live="polite"></p>
       <div id="userLoginError" role="alert" class="muted" style="color:#ffb1ba;min-height:20px"></div>
-      <div class="mini-note">Tu ID aparece en el QR o te lo puede dar el vendedor al registrarte.</div>
-      <details style="margin-top:14px;text-align:left"><summary class="muted" style="cursor:pointer">Olvidé mi contraseña</summary>
-        <p class="muted">Pide un código temporal al vendedor.</p>
-      <input id="resetPasswordCode" class="dark-field" maxlength="8" autocomplete="off" placeholder="Código del vendedor">
-        <input id="resetNewPassword" class="dark-field" type="password" autocomplete="new-password" placeholder="Contraseña nueva, mínimo 8 caracteres">
-        <button class="btn btn-outline" style="width:100%" onclick="resetCustomerPassword()">Restablecer contraseña</button>
-      </details>
+      <div id="customerActivation" class="field-group" hidden style="text-align:left">
+        <p class="muted">Para crear o recuperar tu contraseña, confirma el WhatsApp registrado.</p>
+        <button id="sendActivationCode" class="btn btn-outline" style="width:100%" onclick="startCustomerActivation()">Enviar código por WhatsApp</button>
+        <div id="customerActivationFields" hidden>
+          <label class="field-label" for="activationCode">Código de 6 dígitos</label><input id="activationCode" class="dark-field" inputmode="numeric" autocomplete="one-time-code" maxlength="6">
+          <label class="field-label" for="activationPassword">Nueva contraseña</label><input id="activationPassword" class="dark-field" type="password" autocomplete="new-password" minlength="8" placeholder="Mínimo 8 caracteres">
+          <button id="completeActivationButton" class="btn btn-dark" style="width:100%" onclick="completeCustomerActivation()">Guardar contraseña y entrar</button>
+        </div>
+        <p id="customerActivationStatus" class="muted" role="status" aria-live="polite"></p>
+      </div>
+      <div class="mini-note">Tu usuario te lo comparte el vendedor al registrarte. También puedes consultarlo en Mi perfil.</div>
+      <button class="btn btn-ghost" style="width:100%;margin-top:8px" onclick="showCustomerActivation()">Olvidé mi contraseña</button>
     </div>
-    <div class="motion-settings"><label class="motion-picker" for="loginMotionPreference">Animaciones <select id="loginMotionPreference" data-motion-preference><option value="system">Automáticas</option><option value="full">Activadas</option><option value="reduced">Reducidas</option></select></label><p class="motion-hint" data-motion-hint role="status"></p></div>
     <button class="btn btn-ghost" style="width:100%;margin-top:10px" onclick="goToRoleScreen()">← Volver al inicio</button>
   </div>
 </div>
@@ -209,20 +213,15 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
   <div class="wrap">
     <div class="admin-home-hero">
       <h2>Centro de ventas</h2>
-      <p>Busca clientes, registra compras por QR y administra el programa sin mostrar opciones internas al cliente.</p>
+      <p>Busca clientes por nombre o ID, registra compras y administra el programa sin mostrar opciones internas al cliente.</p>
       <div class="quick-actions">
         <button class="btn btn-primary" onclick="showScreen('screen-new')">➕ Nuevo cliente</button>
-        <button id="qrToggleBtn" class="btn btn-outline" onclick="toggleScanner()">📷 Escanear QR</button>
         <a id="claimCodesLink" class="btn btn-outline" href="/admin-claims.html">🔐 Códigos de contraseña</a>
         <button id="staffDashboardButton" class="btn btn-ghost" onclick="showAdmin()">📊 Dashboard</button>
         <button class="btn btn-red" onclick="logout()">Cerrar sesión</button>
       </div>
     </div>
 
-    <div id="scannerWrap" class="card scanner-wrap">
-      <div class="row" style="justify-content:space-between;margin-bottom:12px"><b>Escáner QR</b><button class="btn btn-ghost" onclick="toggleScanner()">Cerrar</button></div>
-      <div id="qr-reader"></div>
-    </div>
 
     <div class="card">
       <div class="card-title">🔍 Buscar cliente</div>
@@ -240,7 +239,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
 <div id="screen-client" class="screen">
   <div class="header profile-header"><h1><span class="brand-mark" aria-hidden="true"></span><span class="brand-wordmark">DONAS<span>RACHA<span class="brand-dot">.</span></span></span></h1><p id="clientHeaderSub">Tu antojo, más cerca</p></div>
   <div class="wrap">
-    <div class="profile-tools"><button class="back-btn" onclick="clientGoBack()">← Volver</button><button id="clientTourReplay" class="text-action" hidden onclick="window.DonasTour?.start()">Ver tutorial</button><label class="motion-picker" for="profileMotionPreference">Animaciones <select id="profileMotionPreference" data-motion-preference><option value="system">Automáticas</option><option value="full">Activadas</option><option value="reduced">Reducidas</option></select></label></div>
+    <div class="profile-tools"><button class="back-btn" onclick="clientGoBack()">← Volver</button><button id="clientTourReplay" class="text-action" hidden onclick="window.DonasTour?.start()">Ver tutorial</button></div>
     <div id="clientUserTabs" class="client-top-nav" data-tour="profile-nav" style="display:none" role="navigation" aria-label="Área del cliente">
       <button id="client-top-profile" class="client-top-link active" onclick="setClientTab('profile')"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M4 22v-3a8 8 0 0 1 16 0v3"/></svg> Perfil</button>
       <button id="client-top-delivery" data-tour="orders-tab" class="client-top-link" onclick="setClientTab('delivery')"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h3l3 13h12l2-9H6M9 21h.01M19 21h.01"/></svg> Pedidos</button>
@@ -264,8 +263,8 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
       </section>
       <section class="profile-block" aria-labelledby="rewardTitle"><div class="profile-section-heading"><h2 id="rewardTitle">Tu próximo premio</h2></div><div id="nextReward" class="reward-preview"></div></section>
       <div class="profile-actions">
-        <button class="btn profile-primary" data-tour="qr" onclick="openProfilePanel('clientQrDialog')"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3h6v6H3zM15 3h6v6h-6zM3 15h6v6H3zM15 15h3v3h3v3h-6z"/></svg> Mi QR</button>
-        <button id="customerPasswordAction" class="btn btn-outline" onclick="openProfilePanel('customerPasswordSettings')"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V6a4 4 0 0 1 8 0v4"/></svg> Contraseña opcional</button>
+        <button id="clientDetailsButton" class="btn profile-primary" data-tour="details" onclick="openProfilePanel('clientDetailsDialog')"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M4 22v-3a8 8 0 0 1 16 0v3"/></svg> <span id="clientDetailsButtonLabel">Mis datos</span></button>
+        <button id="customerPasswordAction" class="btn btn-outline" onclick="openProfilePanel('customerPasswordSettings')"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V6a4 4 0 0 1 8 0v4"/></svg> Cambiar contraseña</button>
       </div>
       <section id="recentPurchasesSection" class="profile-block" aria-labelledby="recentPurchasesTitle"><div class="profile-section-heading"><h2 id="recentPurchasesTitle">Mis compras recientes</h2><button class="text-action" onclick="setClientTab('history')">Ver todas <span aria-hidden="true">›</span></button></div><div id="recentPurchases" class="recent-purchases"></div></section>
       <div id="alreadyMsg" class="daily-purchases" role="status" aria-live="polite"></div>
@@ -278,13 +277,14 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
         <p id="clientSince" class="muted"></p>
       </details>
       <dialog id="clientBadgesDialog" class="profile-dialog" aria-labelledby="allBadgesTitle"><button class="dialog-close" onclick="this.closest('dialog').close()" aria-label="Cerrar logros">✕</button><h2 id="allBadgesTitle">Mis logros</h2><div id="badgesWrap" class="achievement-grid"></div></dialog>
-      <dialog id="clientQrDialog" class="profile-dialog qr-box" aria-labelledby="qrPanelTitle"><button class="dialog-close" onclick="this.closest('dialog').close()" aria-label="Cerrar QR">✕</button><h2 id="qrPanelTitle">Mi QR</h2><p class="muted">Muéstralo al vendedor cuando compres.</p><img id="clientQr" alt="QR del cliente"><p class="muted">ID: <b id="clientIdLabel"></b></p><button class="btn profile-primary" onclick="downloadCurrentQR()">Descargar QR</button></dialog>
+      <dialog id="clientDetailsDialog" class="profile-dialog" aria-labelledby="clientDetailsTitle"><button class="dialog-close" onclick="this.closest('dialog').close()" aria-label="Cerrar datos del cliente">✕</button><h2 id="clientDetailsTitle">Mi perfil</h2><dl class="profile-data-list"><div><dt>Nombre</dt><dd id="profileName"></dd></div><div><dt>Celular</dt><dd id="profilePhone"></dd></div><div><dt>Fecha de registro</dt><dd id="profileRegistered"></dd></div><div><dt>Usuario</dt><dd id="profileId"></dd></div></dl></dialog>
             <dialog id="customerPasswordSettings" class="profile-dialog" aria-labelledby="passwordPanelTitle">
-        <button class="dialog-close" onclick="this.closest('dialog').close()" aria-label="Cerrar contraseña">✕</button><h2 id="passwordPanelTitle">Contraseña opcional</h2>
-        <p class="muted" style="margin-top:12px">Por defecto entras solo con tu ID. Si quieres proteger este perfil con contraseña, pide un código temporal al vendedor una sola vez.</p>
-        <label class="field-label" for="customerPasswordCode">Código del vendedor</label><input id="customerPasswordCode" class="field" autocomplete="off" maxlength="8">
+        <button class="dialog-close" onclick="this.closest('dialog').close()" aria-label="Cerrar contraseña">✕</button><h2 id="passwordPanelTitle">Cambiar contraseña</h2>
+        <p class="muted" style="margin-top:12px">Te enviaremos un código al WhatsApp registrado para confirmar el cambio.</p>
+        <button id="sendProfilePasswordCode" class="btn btn-outline" onclick="startProfilePasswordChange()">Enviar código por WhatsApp</button>
+        <label class="field-label" for="customerPasswordCode">Código de 6 dígitos</label><input id="customerPasswordCode" class="field" inputmode="numeric" autocomplete="one-time-code" maxlength="6">
         <label class="field-label" for="customerNewPassword">Nueva contraseña</label><input id="customerNewPassword" class="field" type="password" autocomplete="new-password" minlength="8" placeholder="Mínimo 8 caracteres">
-        <button class="btn btn-outline" onclick="saveCustomerPassword()">Activar o cambiar contraseña</button>
+        <button id="saveProfilePasswordButton" class="btn btn-outline" onclick="saveCustomerPassword()">Guardar nueva contraseña</button>
         <p id="customerPasswordMessage" class="muted" role="status"></p>
       </dialog>
     </div>
@@ -338,21 +338,21 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
 </div>
 
 <div id="screen-new" class="screen">
-  <div class="header"><h1>➕ Nuevo cliente</h1><p>Generar QR de fidelidad</p></div>
+  <div class="header"><h1>➕ Nuevo cliente</h1><p>Registrar en Donas Racha</p></div>
   <div class="wrap">
     <button class="back-btn" onclick="goHome()">← Volver</button>
     <div class="card">
       <div class="card-title">Datos del cliente</div>
       <div class="field-group"><label class="field-label" for="newName">Nombre completo</label><input id="newName" class="field" placeholder="Nombre completo" style="margin-bottom:12px"></div>
-      <div class="field-group"><label class="field-label" for="newWhatsapp">WhatsApp (opcional)</label><input id="newWhatsapp" class="field" placeholder="WhatsApp opcional"></div>
-      <button id="createBtn" class="btn btn-primary" style="width:100%;margin-top:14px" onclick="createClient()">✨ Registrar y generar QR</button>
+      <div class="field-group"><label class="field-label" for="newWhatsapp">WhatsApp del cliente</label><input id="newWhatsapp" class="field" type="tel" autocomplete="tel" required placeholder="Ejemplo: +50760001111"></div>
+      <button id="createBtn" class="btn btn-primary" style="width:100%;margin-top:14px" onclick="createClient()">Registrar cliente</button>
     </div>
-    <div id="newQrCard" class="card qr-box" style="display:none">
-      <div class="card-title" id="newQrName">QR creado</div>
-      <img id="newQrImg" alt="QR nuevo cliente"><br>
+    <div id="newClientCard" class="card" style="display:none" role="status" aria-live="polite">
+      <div class="card-title">Cliente registrado</div>
+      <p class="muted">Entrégale este usuario para que pueda entrar a su perfil.</p>
+      <dl class="profile-data-list"><div><dt>Nombre</dt><dd id="newClientName"></dd></div><div><dt>Usuario</dt><dd id="newClientId"></dd></div></dl>
       <div class="row" style="justify-content:center;flex-wrap:wrap;margin-top:12px">
-        <button class="btn btn-outline" onclick="downloadNewQR()">⬇️ Descargar</button>
-        <button class="btn btn-dark" onclick="shareNewQR()">↗️ Compartir</button>
+        <button class="btn btn-dark" onclick="shareNewUsername()">↗️ Compartir usuario</button>
         <button class="btn btn-green" onclick="sendNewWA()">💬 WhatsApp</button>
       </div>
     </div>
@@ -387,13 +387,21 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
       <div class="stat-card"><div id="sRewards" class="big">—</div><div class="lbl">Canjes</div></div>
     </div>
 
-    <nav class="admin-shortcuts" aria-label="Dashboard de ventas"><a href="#adminOrdersPanel">Pedidos</a><a href="#adminInventoryPanel" data-admin-only>Inventario</a><a href="#adminClients">Clientes</a></nav>
+    <nav class="admin-shortcuts" aria-label="Dashboard de ventas"><a href="#adminOrdersPanel">Pedidos</a><a href="#adminRedemptionsPanel">Canjes</a><a href="#adminInventoryPanel" data-admin-only>Inventario</a><a href="#adminClients">Clientes</a></nav>
     <div class="admin-grid">
       <section class="card admin-wide" id="adminOrdersPanel" aria-labelledby="adminOrdersTitle">
         <div class="operations-heading"><div><span class="eyebrow">ENTREGAS</span><h2 id="adminOrdersTitle">Pedidos del día</h2></div><button class="btn btn-outline" onclick="loadAdminOrders()">Actualizar</button></div>
         <p class="muted">Acepta, entrega y confirma el cobro. Los puntos se acreditan al finalizar, hasta 3 compras con puntos por cliente al día.</p>
         <label class="field-label" for="adminOrderFilter">Mostrar</label><select id="adminOrderFilter" class="field" onchange="loadAdminOrders()"><option value="ACTIVE">Pendientes y en curso</option><option value="ALL">Todos los recientes</option><option value="COMPLETED">Entregados</option><option value="CANCELLED">Cancelados</option></select>
         <p id="adminOrdersNotice" role="status" class="muted"></p><div id="adminOrdersList" class="admin-orders-grid"></div>
+      </section>
+      <section class="card admin-wide" id="adminRedemptionsPanel" aria-labelledby="adminRedemptionsTitle">
+        <div class="operations-heading"><div><span class="eyebrow">RECOMPENSAS</span><h2 id="adminRedemptionsTitle">Canjes por entregar</h2></div><button class="btn btn-outline" onclick="loadAdminRedemptions()">Actualizar</button></div>
+        <p class="muted">Confirma la entrega del premio o cancela un canje pendiente para devolver los puntos al cliente.</p>
+        <label class="field-label" for="adminRedemptionFilter">Mostrar</label>
+        <select id="adminRedemptionFilter" class="field" onchange="loadAdminRedemptions()"><option value="PENDING">Pendientes</option><option value="ALL">Todos los recientes</option><option value="FULFILLED">Entregados</option><option value="CANCELLED">Cancelados</option></select>
+        <p id="adminRedemptionsNotice" role="status" class="muted"></p>
+        <div id="adminRedemptionsList" class="admin-redemptions-grid"></div>
       </section>
       <div class="card" data-admin-only>
         <div class="card-title">🛠️ Datos en Supabase</div>
@@ -431,8 +439,8 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
       </div>
       <div class="card admin-wide wide-card">
         <div class="card-title">👥 Lista de clientes</div>
-        <label class="field-label" for="adminClientFilter">Buscar por nombre o ID</label>
-        <input id="adminClientFilter" class="field" placeholder="Nombre o ID de cliente" oninput="filterAdminClients()" style="margin:8px 0 12px;max-width:380px">
+        <label class="field-label" for="adminClientFilter">Buscar por nombre o usuario</label>
+        <input id="adminClientFilter" class="field" placeholder="Nombre o usuario" oninput="filterAdminClients()" style="margin:8px 0 12px;max-width:380px">
         <div id="adminClients"><div class="empty">Cargando...</div></div>
       </div>
     </div>
@@ -475,8 +483,6 @@ let allAdminClients = [];
 let clientRequestVersion = 0;
 let customerLoginController = null;
 let newClientData = null;
-let scanner = null;
-let scannerOpen = false;
 let openedAsUser = false;
 let lastRankingEntry = 'role';
 let customerWantsOrder = false;
@@ -488,12 +494,61 @@ let clientInventoryEnforced = false;
 const pendingPurchaseKeys = new Map();
 const pendingRedeemKeys = new Map();
 let pendingRegistration = null;
+const customerViews = new Set(['profile','delivery','ranking','history','shop']);
+function customerViewFromUrl() {
+  const view = new URLSearchParams(location.search).get('view');
+  return customerViews.has(view) ? view : 'profile';
+}
+function updateCustomerViewUrl(view, mode = 'push') {
+  if (!openedAsUser || !customerViews.has(view)) return;
+  const url = new URL(location.href);
+  url.searchParams.set('profile','1');
+  url.searchParams.set('view',view);
+  url.searchParams.delete('staff');
+  url.searchParams.delete('id');
+  url.searchParams.delete('flavor');
+  if (url.href !== location.href) window.history[mode === 'replace' ? 'replaceState' : 'pushState'](null,'',url);
+}
+function clearCustomerViewUrl() {
+  const url = new URL(location.href);
+  ['profile','view','id','flavor'].forEach(key => url.searchParams.delete(key));
+  if (url.href !== location.href) window.history.replaceState(null,'',url);
+}
+const staffViews = new Set(['home','dashboard','new','client','ranking']);
+function updateStaffViewUrl(view, mode = 'push', clientId = '') {
+  if (!requireAuth() || openedAsUser || !staffViews.has(view)) return;
+  const url = new URL(location.href);
+  ['profile','view','flavor'].forEach(key => url.searchParams.delete(key));
+  url.searchParams.set('staff',view);
+  if (view === 'client' && clientId) url.searchParams.set('id',clientId);
+  else url.searchParams.delete('id');
+  if (url.href !== location.href && mode !== 'none') window.history[mode === 'replace' ? 'replaceState' : 'pushState'](null,'',url);
+}
+function clearStaffViewUrl() {
+  const url = new URL(location.href);
+  ['staff','id'].forEach(key => url.searchParams.delete(key));
+  if (url.href !== location.href) window.history.replaceState(null,'',url);
+}
+async function restoreStaffView(mode = 'replace') {
+  const query = new URLSearchParams(location.search);
+  const view = query.get('staff');
+  if (view === 'dashboard') return showAdmin(mode);
+  if (view === 'new') return showScreen('screen-new',mode);
+  if (view === 'ranking') return showPublicRanking(mode);
+  if (view === 'client' && /^C[0-9A-Z_-]{3,63}$/.test(query.get('id') || '')) {
+    return openClient(query.get('id'),false,mode !== 'push');
+  }
+  goHome(mode);
+}
 
 window.addEventListener('load', async () => {
   preloadSupabaseProducts();
   document.getElementById('userClientIdInput').addEventListener('input', () => {
     document.getElementById('customerPasswordGroup').style.display = 'none';
     document.getElementById('userPasswordInput').value = '';
+    document.getElementById('customerActivation').hidden = true;
+    document.getElementById('customerActivationFields').hidden = true;
+    document.getElementById('customerActivationStatus').textContent = '';
   });
   ['clientDeliveryLocation','clientDeliveryNotes'].forEach(id => document.getElementById(id).addEventListener('input', () => { customerOrderPendingKey = null; }));
   document.querySelectorAll('input[name="clientPayment"]').forEach(input => input.addEventListener('change', () => { customerOrderPendingKey = null; }));
@@ -501,8 +556,13 @@ window.addEventListener('load', async () => {
   const customerLink = new URLSearchParams(location.search);
   if (customerLink.has('flavor')) { customerSelectedFlavor = customerLink.get('flavor'); customerWantsOrder = true; }
   if (customerLink.has('profile') || customerLink.has('flavor')) {
-    if (customerLink.has('id')) document.getElementById('userClientIdInput').value = customerLink.get('id');
-    goToUserLogin();
+    const savedId = sessionStorage.getItem('donasCustomerId');
+    const savedToken = sessionStorage.getItem('donasCustomerToken');
+    if (savedId && savedToken) await openClient(savedId,true,true);
+    else {
+      if (customerLink.has('id')) document.getElementById('userClientIdInput').value = customerLink.get('id');
+      goToUserLogin();
+    }
   } else if (sessionStorage.getItem('donasAdminAccessToken')) {
     if (!sessionStorage.getItem('donasStaffRole') && sessionStorage.getItem('donasAdminRefreshToken')) {
       try {
@@ -514,10 +574,26 @@ window.addEventListener('load', async () => {
       } catch (_) { logout(); return; }
     }
     hideOverlays();
-    goHome();
+    await restoreStaffView();
   } else {
     goToRoleScreen();
     loadHomeRanking();
+  }
+});
+
+window.addEventListener('popstate', async () => {
+  if (new URLSearchParams(location.search).has('profile')) {
+    if (openedAsUser && currentClient) setClientTab(customerViewFromUrl(),'none');
+    else if (sessionStorage.getItem('donasCustomerToken') && sessionStorage.getItem('donasCustomerId')) {
+      await openClient(sessionStorage.getItem('donasCustomerId'),true,true);
+    } else goToUserLogin();
+  } else if (openedAsUser) {
+    window.DonasTour?.stop();
+    openedAsUser = false;
+    currentClient = null;
+    goToRoleScreen();
+  } else if (requireAuth()) {
+    await restoreStaffView('none');
   }
 });
 
@@ -704,7 +780,6 @@ function hideOverlays() {
 
 function goToRoleScreen() {
   cancelCustomerLogin();
-  stopScanner();
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById('screen-home').classList.add('active');
   document.getElementById('roleOverlay').classList.remove('hidden');
@@ -745,7 +820,7 @@ async function checkLogin() {
     sessionStorage.setItem('donasStaffRole', staffRole);
     document.getElementById('loginInput').value = '';
     hideOverlays();
-    goHome();
+    await restoreStaffView();
     showToast('✅ Acceso correcto');
   } catch (err) {
     const error = document.getElementById('loginError');
@@ -763,26 +838,33 @@ function logout() {
   sessionStorage.removeItem('donasAdminRefreshToken');
   sessionStorage.removeItem('donasStaffRole');
   staffRole = 'SELLER';
+  clearStaffViewUrl();
   goToRoleScreen();
 }
 
 function requireAuth() { return !!sessionStorage.getItem('donasAdminAccessToken'); }
 function tryShowAdmin() { requireAuth() ? showAdmin() : goToAdminLogin(); }
 
-function showScreen(id) {
+function showScreen(id, historyMode = 'push') {
   if (id !== 'screen-client') window.DonasTour?.stop();
   clientRequestVersion++;
-  hideOverlays(); stopScanner();
+  hideOverlays();
+  if (id === 'screen-new') {
+    newClientData = null;
+    document.getElementById('newClientCard').style.display = 'none';
+  }
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
+  const staffScreen = {'screen-home':'home','screen-admin':'dashboard','screen-new':'new','screen-ranking':'ranking'}[id];
+  if (staffScreen) updateStaffViewUrl(staffScreen,historyMode);
 }
 
-function goHome() {
+function goHome(historyMode = 'push') {
   openedAsUser = false;
   const isAdmin = staffRole === 'ADMIN';
   document.getElementById('claimCodesLink').hidden = !isAdmin;
   document.getElementById('staffDashboardButton').textContent = '📊 Dashboard';
-  showScreen('screen-home'); loadHomeRanking();
+  showScreen('screen-home',historyMode); loadHomeRanking();
 }
 function rankingBack() { requireAuth() ? goHome() : goToRoleScreen(); }
 function clientGoBack() {
@@ -793,6 +875,7 @@ function clientGoBack() {
     document.getElementById('userPasswordInput').value = '';
     openedAsUser = false;
     currentClient = null;
+    clearCustomerViewUrl();
     goToRoleScreen();
   } else goHome();
 }
@@ -820,42 +903,10 @@ async function doSearch() {
   } catch (err) { el.innerHTML = '<div class="empty">❌ ' + safe(err.message) + '</div>'; }
 }
 
-function toggleScanner() {
-  scannerOpen ? stopScanner() : startScanner();
-}
-
-async function startScanner() {
-  const wrap = document.getElementById('scannerWrap');
-  const btn = document.getElementById('qrToggleBtn');
-  wrap.classList.add('open'); btn.textContent = '⏹ Detener QR';
-  try {
-    scanner = new Html5Qrcode('qr-reader');
-    await scanner.start({ facingMode:'environment' }, { fps:10, qrbox:{ width:220, height:220 } }, onQRScanned, () => {});
-    scannerOpen = true;
-  } catch (err) {
-    showToast('No se pudo abrir la cámara');
-  }
-}
-
-function stopScanner() {
-  if (scanner && scannerOpen) scanner.stop().catch(()=>{});
-  scanner = null; scannerOpen = false;
-  document.getElementById('scannerWrap').classList.remove('open');
-  const qrBtn = document.getElementById('qrToggleBtn'); if (qrBtn) qrBtn.textContent = '📷 Escanear QR';
-  const el = document.getElementById('qr-reader'); if (el) el.innerHTML = '';
-}
-
-function onQRScanned(text) {
-  stopScanner();
-  const id = extractIdFromQR(text);
-  if (!id) { showToast('QR inválido'); return; }
-  openClient(id, false);
-}
-
 async function openUserById() {
   const input = document.getElementById('userClientIdInput');
   const id = input ? input.value.trim() : '';
-  if (!id) { showToast('Escribe tu IDCliente'); return; }
+  if (!id) { showToast('Escribe tu usuario'); return; }
   await loginCustomerById(id);
 }
 function resetCustomerLoginState() {
@@ -863,7 +914,7 @@ function resetCustomerLoginState() {
   button.disabled = false;
   button.classList.remove('is-busy','is-success');
   button.removeAttribute('aria-busy');
-  button.textContent = 'Entrar con ID →';
+  button.textContent = 'Entrar →';
   document.getElementById('userLoginStatus').textContent = '';
 }
 function cancelCustomerLogin() {
@@ -880,11 +931,11 @@ async function loginCustomerById(id) {
   customerLoginController = controller;
   const {signal} = controller;
   const isCurrent = () => customerLoginController === controller && !signal.aborted;
-  button.disabled = true; button.classList.add('is-busy'); button.setAttribute('aria-busy','true'); button.textContent = 'Entrando…'; errorEl.textContent = ''; statusEl.textContent = 'Comprobando tu ID…';
+  button.disabled = true; button.classList.add('is-busy'); button.setAttribute('aria-busy','true'); button.textContent = 'Entrando…'; errorEl.textContent = ''; statusEl.textContent = 'Comprobando tu usuario…';
   document.getElementById('clientLoginSuccess').hidden = true;
   try {
     const result = await customerRequest('/api/customer/session', { method:'POST', signal, body:JSON.stringify({
-      publicId:id, password:document.getElementById('userPasswordInput').value
+      username:id, password:document.getElementById('userPasswordInput').value
     }) });
     if (!isCurrent()) return;
     sessionStorage.setItem('donasCustomerToken', result.accessToken);
@@ -918,6 +969,7 @@ async function loginCustomerById(id) {
     if (isCurrent() && openedAsUser && currentClient) window.DonasTour?.onLogin(result.customer.publicId);
   } catch (error) {
     if (!isCurrent() || error.name === 'AbortError') return;
+    if (error.code === 'PASSWORD_SETUP_REQUIRED') showCustomerActivation();
     if (error.code === 'PASSWORD_REQUIRED') {
       document.getElementById('customerPasswordGroup').style.display = '';
       document.getElementById('userPasswordInput').focus();
@@ -930,11 +982,7 @@ async function loginCustomerById(id) {
     }
   }
 }
-function extractIdFromQR(text) {
-  try { const url = new URL(text); return url.searchParams.get('id') || url.searchParams.get('client') || text; } catch(e) { return String(text || '').trim(); }
-}
-
-async function openClient(id, asUser) {
+async function openClient(id, asUser, restoring = false) {
   openedAsUser = !!asUser;
   showScreen('screen-client');
   const requestVersion = clientRequestVersion;
@@ -949,11 +997,16 @@ async function openClient(id, asUser) {
     if (!data.ok) throw new Error(data.error || 'Cliente no encontrado');
     currentClient = data.client;
     renderClient(data.client, asUser);
-    if (asUser) window.DonasTour?.onLogin(data.client.id);
+    if (!asUser) updateStaffViewUrl('client',restoring ? 'replace' : 'push',id);
+    if (asUser && !restoring) window.DonasTour?.onLogin(data.client.id);
     return true;
   } catch (err) {
     if (requestVersion !== clientRequestVersion) return;
     showToast('❌ ' + err.message);
+    if (asUser && ['AUTH_REQUIRED','INVALID_SESSION','PASSWORD_SETUP_REQUIRED'].includes(err.code)) {
+      sessionStorage.removeItem('donasCustomerToken');
+      sessionStorage.removeItem('donasCustomerId');
+    }
     asUser ? goToUserLogin() : goHome();
   }
 }
@@ -969,12 +1022,16 @@ function renderClient(c, asUser) {
   document.getElementById('clientAvailable').textContent = c.pointsAvailable || 0;
   document.getElementById('shopAvailablePoints').textContent = c.pointsAvailable || 0;
   document.getElementById('clientNextPoints').textContent = c.nextPurchasePoints || 10;
-  document.getElementById('clientIdLabel').textContent = c.id || '';
+  document.getElementById('profileName').textContent = c.name || 'No disponible';
+  document.getElementById('profilePhone').textContent = c.whatsapp || 'No registrado';
+  document.getElementById('profileRegistered').textContent = c.registrationDate ? fmtDate(c.registrationDate) : 'No disponible';
+  document.getElementById('profileId').textContent = c.username || 'No disponible';
+  document.getElementById('clientDetailsTitle').textContent = asUser ? 'Mi perfil' : 'Datos del cliente';
+  document.getElementById('clientDetailsButtonLabel').textContent = asUser ? 'Mis datos' : 'Datos del cliente';
   document.getElementById('levelProgress').style.width = Math.max(0, Math.min(100, Number(c.progressLevelPct) || 0)) + '%';
   window.DonasMotion?.profile(c);
   document.getElementById('levelText').textContent = Math.max(0, Math.min(100, Number(c.progressLevelPct) || 0)) + '%';
   document.getElementById('nextLevelText').textContent = c.nextLevel ? `${c.pointsToNextLevel} pts para ${c.nextLevel.emoji} ${c.nextLevel.name}` : 'Nivel máximo alcanzado';
-  document.getElementById('clientQr').src = c.qrUrl || '';
   const purchasesToday = Number(c.purchasesToday ?? (c.purchasedToday ? 1 : 0));
   const dailyLimit = Number(c.dailyPurchaseLimit || 3);
   const dailyStatus = document.getElementById('alreadyMsg');
@@ -998,7 +1055,7 @@ function renderClient(c, asUser) {
   renderShop(c.shopItems || [], c.pointsAvailable || 0);
   renderRedemptions(c.recentRedemptions || []);
   loadClientInlineRanking('racha');
-  setClientTab('profile');
+  let nextTab = asUser ? customerViewFromUrl() : 'profile';
   if (asUser && customerWantsOrder) {
     customerWantsOrder = false;
     if (customerSelectedFlavor) {
@@ -1006,8 +1063,9 @@ function renderClient(c, asUser) {
         (customerOrderQuantities.get(customerSelectedFlavor) || 0) + 1);
       customerSelectedFlavor = null;
     }
-    setClientTab('delivery');
+    nextTab = 'delivery';
   }
+  setClientTab(nextTab,'replace');
   if (!asUser) {
     const tabs = document.getElementById('clientUserTabs');
     const ranking = document.getElementById('clientRankingSection');
@@ -1057,7 +1115,8 @@ function renderHistory(hist) {
   el.innerHTML = hist.map(h => { const isRedeem = h.type === 'redeem'; const icon = isRedeem ? '🎁' : '🍩'; const title = labels[h.entryType] || (isRedeem ? 'Canje realizado' : 'Compra registrada'); const pts = h.points ? ` · ${h.points > 0 ? '+' : ''}${h.points} pts` : ''; return `<div class="history-item"><div style="font-size:20px">${icon}</div><div class="grow"><div class="name">${title}</div><div class="sub">${fmtDateTime(h.date)}${pts}</div></div></div>`; }).join('');
 }
 
-function setClientTab(tab) {
+function setClientTab(tab, historyMode = 'push') {
+  if (!customerViews.has(tab)) return;
   if (tab === 'delivery' && !openedAsUser) return;
   document.getElementById('clientSummary').hidden = tab === 'delivery';
   ['profile','delivery'].forEach(key => document.getElementById('client-top-' + key).setAttribute('aria-pressed', String(key === 'delivery' ? tab === 'delivery' : tab !== 'delivery')));
@@ -1077,6 +1136,7 @@ function setClientTab(tab) {
     if (btn) btn.classList.toggle('active', key === tab);
   });
   window.DonasMotion?.panel(sections[tab]);
+  if (historyMode !== 'none') updateCustomerViewUrl(tab,historyMode);
   if (tab === 'ranking') loadClientInlineRanking('racha');
   if (tab === 'delivery' && openedAsUser) loadClientDelivery();
 }
@@ -1169,34 +1229,58 @@ async function saveCustomerPassword() {
   const message = document.getElementById('customerPasswordMessage');
   const code = document.getElementById('customerPasswordCode').value.trim();
   const newPassword = document.getElementById('customerNewPassword').value;
-  if (!code || newPassword.length < 8) { message.textContent = 'Escribe el código del vendedor y una contraseña de al menos 8 caracteres.'; return; }
+  if (!/^\d{6}$/.test(code) || newPassword.length < 8) { message.textContent = 'Escribe el código de WhatsApp y una contraseña de al menos 8 caracteres.'; return; }
   message.textContent = 'Guardando...';
   try {
-    const result = await customerRequest('/api/customer/password', { method:'POST', body:JSON.stringify({
-      publicId:sessionStorage.getItem('donasCustomerId'), code, newPassword
+    const button = document.getElementById('saveProfilePasswordButton');
+    button.disabled = true;
+    const result = await customerRequest('/api/customer/activation', { method:'POST', body:JSON.stringify({
+      action:'complete', username:currentClient.username, code, newPassword
     }) });
     sessionStorage.setItem('donasCustomerToken', result.accessToken);
     document.getElementById('customerPasswordCode').value = '';
     document.getElementById('customerNewPassword').value = '';
-    message.textContent = 'Contraseña activada. La próxima vez se pedirá después de tu ID.';
+    message.textContent = 'Contraseña actualizada. Tus otras sesiones se cerraron.';
   } catch (error) { message.textContent = error.message; }
+  finally { document.getElementById('saveProfilePasswordButton').disabled = false; }
 }
 
-async function resetCustomerPassword() {
-  const message = document.getElementById('userLoginError');
-  const publicId = document.getElementById('userClientIdInput').value.trim();
-  const code = document.getElementById('resetPasswordCode').value.trim();
-  const newPassword = document.getElementById('resetNewPassword').value;
-  if (!publicId || !code || newPassword.length < 8) {
-    message.textContent = 'Escribe tu ID, el código del vendedor y la nueva contraseña.'; return;
-  }
-  message.textContent = 'Restableciendo...';
+function showCustomerActivation() {
+  document.getElementById('customerActivation').hidden = false;
+  document.getElementById('customerActivationStatus').textContent = 'Escribe tu usuario y pide un código para el WhatsApp registrado.';
+}
+
+async function startCustomerActivation() {
+  const username = document.getElementById('userClientIdInput').value.trim();
+  const message = document.getElementById('customerActivationStatus');
+  if (!username) { message.textContent = 'Primero escribe tu usuario.'; return; }
+  const button = document.getElementById('sendActivationCode');
+  button.disabled = true; message.textContent = 'Enviando código…';
   try {
-    const result = await customerRequest('/api/customer/password', { method:'POST', body:JSON.stringify({ publicId, code, newPassword }) });
+    const result = await customerRequest('/api/customer/activation', { method:'POST', body:JSON.stringify({ action:'start', username }) });
+    document.getElementById('customerActivationFields').hidden = false;
+    message.textContent = `Código enviado al WhatsApp ${result.maskedPhone}.`;
+    document.getElementById('activationCode').focus();
+  } catch (error) { message.textContent = error.message; }
+  finally { button.disabled = false; }
+}
+
+async function completeCustomerActivation() {
+  const username = document.getElementById('userClientIdInput').value.trim();
+  const code = document.getElementById('activationCode').value.trim();
+  const newPassword = document.getElementById('activationPassword').value;
+  const message = document.getElementById('customerActivationStatus');
+  if (!username || !/^\d{6}$/.test(code) || newPassword.length < 8) {
+    message.textContent = 'Escribe tu usuario, el código de 6 dígitos y una contraseña de al menos 8 caracteres.'; return;
+  }
+  const button = document.getElementById('completeActivationButton');
+  button.disabled = true; message.textContent = 'Verificando código…';
+  try {
+    const result = await customerRequest('/api/customer/activation', { method:'POST', body:JSON.stringify({ action:'complete', username, code, newPassword }) });
     sessionStorage.setItem('donasCustomerToken', result.accessToken);
     sessionStorage.setItem('donasCustomerId', result.customer.publicId);
-    document.getElementById('resetPasswordCode').value = '';
-    document.getElementById('resetNewPassword').value = '';
+    document.getElementById('activationCode').value = '';
+    document.getElementById('activationPassword').value = '';
     openedAsUser = true; hideOverlays();
     await openClient(result.customer.publicId, true);
     if (currentClient && openedAsUser) {
@@ -1205,6 +1289,19 @@ async function resetCustomerPassword() {
       setTimeout(() => { status.hidden = true; }, 2600);
     }
   } catch (error) { message.textContent = error.message; }
+  finally { button.disabled = false; }
+}
+
+async function startProfilePasswordChange() {
+  const message = document.getElementById('customerPasswordMessage');
+  const button = document.getElementById('sendProfilePasswordCode');
+  button.disabled = true; message.textContent = 'Enviando código…';
+  try {
+    const result = await customerRequest('/api/customer/activation', { method:'POST', body:JSON.stringify({ action:'start', username:currentClient.username }) });
+    message.textContent = `Código enviado al WhatsApp ${result.maskedPhone}.`;
+    document.getElementById('customerPasswordCode').focus();
+  } catch (error) { message.textContent = error.message; }
+  finally { button.disabled = false; }
 }
 
 function setClientRanking(type) {
@@ -1250,7 +1347,8 @@ function renderRedemptions(items) {
   const el = document.getElementById('redemptionsWrap');
   if (!el) return;
   if (!items.length) { el.innerHTML = '<div class="empty">Aún no has canjeado recompensas.</div>'; return; }
-  el.innerHTML = items.map(r => `<div class="redemption-item"><div style="font-size:20px">🎁</div><div class="grow"><div class="name">${safe(r.itemName || 'Canje')}</div><div class="sub">${fmtDateTime(r.date)} · -${r.points || 0} pts · ${safe(r.status || 'pendiente')}</div></div></div>`).join('');
+  const labels = { PENDING:'Pendiente de entrega', FULFILLED:'Entregado', CANCELLED:'Cancelado · puntos devueltos' };
+  el.innerHTML = items.map(r => `<div class="redemption-item"><div style="font-size:20px">🎁</div><div class="grow"><div class="name">${safe(r.itemName || 'Canje')}</div><div class="sub">${fmtDateTime(r.date)} · ${Number(r.points) || 0} pts · ${safe(labels[String(r.status || '').toUpperCase()] || r.status || 'Pendiente')}</div></div></div>`).join('');
 }
 async function redeemItem(itemId) {
   if (!currentClient) return;
@@ -1312,6 +1410,7 @@ async function createClient() {
   const name = document.getElementById('newName').value.trim();
   const whatsapp = document.getElementById('newWhatsapp').value.trim();
   if (!name) { showToast('Escribe el nombre'); return; }
+  if (!whatsapp) { showToast('Escribe el WhatsApp del cliente'); return; }
   const btn = document.getElementById('createBtn');
   btn.disabled = true; btn.textContent = 'Creando...';
   const fingerprint = `${name}\u0000${whatsapp}`;
@@ -1321,19 +1420,25 @@ async function createClient() {
     if (!data.ok) throw new Error(data.error || 'No se pudo crear');
     pendingRegistration = null;
     newClientData = data.client;
-    document.getElementById('newQrCard').style.display = 'block';
-    document.getElementById('newQrName').textContent = data.client.name;
-    document.getElementById('newQrImg').src = data.client.qrUrl;
+    document.getElementById('newClientCard').style.display = 'block';
+    document.getElementById('newClientName').textContent = data.client.name || 'No disponible';
+    document.getElementById('newClientId').textContent = data.client.username || 'No disponible';
     document.getElementById('newName').value = '';
     document.getElementById('newWhatsapp').value = '';
     showToast('✅ Cliente creado');
   } catch (err) { showToast('❌ ' + err.message); }
-  finally { btn.disabled = false; btn.textContent = '✨ Registrar y generar QR'; }
+  finally { btn.disabled = false; btn.textContent = 'Registrar cliente'; }
 }
-function downloadCurrentQR(){ if(currentClient) downloadUrl(currentClient.qrUrl, `QR_${currentClient.name}.png`); }
-function downloadNewQR(){ if(newClientData) downloadUrl(newClientData.qrUrl, `QR_${newClientData.name}.png`); }
-function downloadUrl(url, name){ const a=document.createElement('a'); a.href=url; a.download=name; a.target='_blank'; document.body.appendChild(a); a.click(); a.remove(); }
-async function shareNewQR(){ if(!newClientData) return; const text=`🍩 Tu QR de Donas Racha: ${newClientData.qrUrl}`; if(navigator.share) await navigator.share({title:'Donas Racha',text}); else { await navigator.clipboard.writeText(text); showToast('Copiado'); } }
+async function shareNewUsername() {
+  if (!newClientData) return;
+  const message = `🍩 Donas Racha — Tu usuario: ${newClientData.username}\nEntra a tu perfil: https://donas-racha.vercel.app/\nLa primera vez, crea tu contraseña con el código que llegará a tu WhatsApp.`;
+  try {
+    if (navigator.share) await navigator.share({ title:'Donas Racha', text:message });
+    else { await navigator.clipboard.writeText(message); showToast('Usuario y enlace copiados'); }
+  } catch (error) {
+    if (error.name !== 'AbortError') showToast('No se pudo compartir el usuario');
+  }
+}
 function sendNewWA() {
   if (!newClientData) return;
 
@@ -1350,10 +1455,11 @@ Ya formas parte de nuestro programa de fidelización.
 *Entra a tu perfil:*
 ${web}
 
-*Tu ID de cliente:*
-${newClientData.id}
+*Tu usuario:*
+${newClientData.username}
 
-Guarda este mensaje. Este es tu ID permanente para ingresar a tu perfil.
+Guarda este mensaje. Este es tu usuario para ingresar a tu perfil.
+La primera vez, crea tu contraseña con el código que llegará a este WhatsApp.
 
 Desde tu perfil podrás:
 - Ver tu racha y consultar tus puntos.
@@ -1372,7 +1478,7 @@ Gracias por elegir Donas Racha.`
   );
 }
 
-function showPublicRanking() { lastRankingEntry = requireAuth() ? 'home' : 'role'; hideOverlays(); showScreen('screen-ranking'); loadRanking('compras'); }
+function showPublicRanking(historyMode = 'push') { lastRankingEntry = requireAuth() ? 'home' : 'role'; hideOverlays(); showScreen('screen-ranking',historyMode); loadRanking('compras'); }
 async function loadRanking(type) {
   ['compras','puntos','racha','nivel','canjes'].forEach(t => document.getElementById('tab-'+t).classList.toggle('active', t===type));
   const el = document.getElementById('rankingList'); el.innerHTML = '<div class="empty">Cargando...</div>';
@@ -1388,13 +1494,14 @@ function renderRankingItems(list, type, compact) {
   }).join('');
 }
 
-async function showAdmin() {
+async function showAdmin(historyMode = 'push') {
   if (!requireAuth()) { goToAdminLogin(); return; }
   const isAdmin = staffRole === 'ADMIN';
   document.getElementById('screen-admin').classList.toggle('seller-mode', !isAdmin);
   document.getElementById('staffDashboardSubtitle').textContent = isAdmin ? 'Pedidos, inventario y clientes' : 'Pedidos, ventas y clientes';
-  showScreen('screen-admin');
+  showScreen('screen-admin',historyMode);
   loadAdminOrders();
+  loadAdminRedemptions();
   await loadAdminDashboard('compras');
   if (isAdmin) loadAdminInventory();
 }
@@ -1447,7 +1554,7 @@ function renderAdminClients(clients) {
   allAdminClients = clients;
   adminLoyaltyClients = new Map(clients.map(c => [c.id,c]));
   const term = document.getElementById('adminClientFilter').value.trim().toLocaleLowerCase('es');
-  const visible = term ? clients.filter(c => `${c.name} ${c.id}`.toLocaleLowerCase('es').includes(term)) : clients;
+  const visible = term ? clients.filter(c => `${c.name} ${c.username || ''} ${c.id}`.toLocaleLowerCase('es').includes(term)) : clients;
   if (!visible.length) { el.innerHTML = `<div class="empty">${term?'No encontramos clientes con esa búsqueda.':'Sin clientes'}</div>`; return; }
   el.innerHTML = `<table class="admin-table"><thead><tr><th>Cliente</th><th>Nivel</th><th>Puntos</th><th>Compras</th><th>Racha</th><th>Canjes</th><th></th></tr></thead><tbody>${visible.map(c => `<tr><td><b>${safe(c.name)}</b><br><span class="sub">${safe(c.whatsapp||'')}</span></td><td>${c.levelEmoji||'🥉'} ${safe(c.levelName||'Bronce')}</td><td>${c.pointsTotal||0}</td><td>${c.totalPurchases||0}</td><td>${c.currentStreak||0}</td><td>${c.redemptionsMade||c.rewardsEarned||0}</td><td><button class="btn btn-ghost" onclick="openClient('${esc(c.id)}', false)">Ver</button>${staffRole==='ADMIN' ? ` <button class="btn btn-outline" onclick="openAdminLoyalty('${esc(c.id)}')">Ajustar</button>` : ''}</td></tr>`).join('')}</tbody></table>`;
 }
@@ -1503,6 +1610,7 @@ function safe(s){ return String(s ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;',
 function esc(s){ return String(s ?? '').replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
 </script>
 <script src="assets/js/admin-operations.js"></script>
+<script src="assets/js/admin-redemptions.js"></script>
 <script src="assets/js/admin-loyalty.js"></script>
 <script src="assets/js/motion.js"></script>
 <script src="assets/js/client-tour.js" defer></script>
