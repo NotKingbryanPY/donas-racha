@@ -6,6 +6,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.Constraints
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
@@ -13,6 +14,7 @@ import com.bryan.donas.DonasApp
 import com.bryan.donas.data.db.RemoteOrderEntity
 import com.bryan.donas.data.db.SyncStateEntity
 import org.json.JSONObject
+import java.util.concurrent.TimeUnit
 
 class OrderSyncWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
     override suspend fun doWork(): Result {
@@ -38,14 +40,16 @@ class OrderSyncWorker(context: Context, params: WorkerParameters) : CoroutineWor
                     }
                 }
             }
+            var awaitingApplication = false
+            var pushFailed = false
             while (true) {
                 val pending = sync.pending()
                 if (pending.isEmpty()) break
                 val acks = try { client.push(pending) } catch (e: Exception) {
                     sync.markAttempt(pending.map { it.clientOperationId }, e.message?.take(160) ?: "Error de red")
-                    throw e
+                    pushFailed = true
+                    break
                 }
-                var awaitingApplication = false
                 db.withTransaction {
                     for (index in 0 until acks.length()) {
                         val ack = acks.getJSONObject(index)
@@ -58,8 +62,8 @@ class OrderSyncWorker(context: Context, params: WorkerParameters) : CoroutineWor
                         }
                     }
                 }
-                if (acks.length() != pending.size) return Result.retry()
-                if (awaitingApplication) return Result.retry()
+                if (acks.length() != pending.size) { pushFailed = true; break }
+                if (awaitingApplication) break
             }
             var pages = 0
             do {
@@ -79,10 +83,16 @@ class OrderSyncWorker(context: Context, params: WorkerParameters) : CoroutineWor
                             (item.getString("status") == "COMPLETED" && item.getString("payment_status") == "CONFIRMED")
                     )
                 }
+                val previousIds = orders.mapNotNull { order ->
+                    if (sync.order(order.id) == null) order.id else null
+                }.toSet()
+                val hadCursor = sync.orderCursor() != null
                 db.withTransaction {
                     sync.upsertOrders(orders)
                     sync.saveState(SyncStateEntity(orderCursor = response.optString("nextCursor").ifBlank { null }))
                 }
+                if (hadCursor) orders.filter { it.id in previousIds && it.status == "PENDING" }
+                    .forEach { OrderNotifications.show(applicationContext, it) }
                 pages++
             } while (response.optBoolean("hasMore") && pages < 20)
             var needsRetry = false
@@ -95,7 +105,7 @@ class OrderSyncWorker(context: Context, params: WorkerParameters) : CoroutineWor
                     }
                 } catch (_: Exception) { needsRetry = true }
             }
-            if (needsRetry) Result.retry() else Result.success()
+            if (needsRetry || awaitingApplication || pushFailed) Result.retry() else Result.success()
         } catch (e: BackendException) {
             if (e.status in 400..499 && e.status != 429) Result.failure() else Result.retry()
         } catch (_: Exception) { Result.retry() }
@@ -105,8 +115,22 @@ class OrderSyncWorker(context: Context, params: WorkerParameters) : CoroutineWor
 object OrderSync {
     fun request(context: Context) {
         val work = OneTimeWorkRequestBuilder<OrderSyncWorker>()
-            .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.UNMETERED).build())
+            .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
             .build()
         WorkManager.getInstance(context).enqueueUniqueWork("donas-order-sync", ExistingWorkPolicy.KEEP, work)
+    }
+
+    fun schedule(context: Context) {
+        val work = PeriodicWorkRequestBuilder<OrderSyncWorker>(15, TimeUnit.MINUTES)
+            .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
+            .build()
+        WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+            "donas-order-monitor", androidx.work.ExistingPeriodicWorkPolicy.KEEP, work)
+        request(context)
+    }
+
+    fun stop(context: Context) {
+        WorkManager.getInstance(context).cancelUniqueWork("donas-order-sync")
+        WorkManager.getInstance(context).cancelUniqueWork("donas-order-monitor")
     }
 }

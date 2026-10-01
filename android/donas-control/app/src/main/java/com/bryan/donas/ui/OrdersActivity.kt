@@ -1,11 +1,15 @@
 package com.bryan.donas.ui
 
 import android.os.Bundle
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
@@ -17,6 +21,7 @@ import androidx.work.WorkManager
 import com.bryan.donas.DonasApp
 import com.bryan.donas.data.BackendClient
 import com.bryan.donas.data.OrderSync
+import com.bryan.donas.data.OrderNotifications
 import com.bryan.donas.data.db.RemoteOrderEntity
 import com.bryan.donas.util.Money
 import com.google.android.material.button.MaterialButton
@@ -42,6 +47,7 @@ class OrdersActivity : AppCompatActivity() {
     private var confirmationOpen = false
     private var refreshing = false
     private val app get() = application as DonasApp
+    private val notificationPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,7 +82,7 @@ class OrdersActivity : AppCompatActivity() {
         sync = button("Actualizar pedidos") { refreshOrders() }
         logout = button("Cerrar sesión") {
             client.logout()
-            WorkManager.getInstance(this).cancelUniqueWork("donas-order-sync")
+            OrderSync.stop(this)
             renderSession()
             lifecycleScope.launch {
                 val dao = app.database.syncDao()
@@ -94,8 +100,13 @@ class OrdersActivity : AppCompatActivity() {
             if (job.state == WorkInfo.State.FAILED) notice.text = "No se pudo sincronizar. Comprueba la sesión, la conexión y la configuración del servidor."
         }
         renderSession()
-        if (client.signedIn) loadOrders()
-        if (client.signedIn) refreshOrders()
+        loadOrders()
+        if (client.signedIn) {
+            OrderSync.schedule(this)
+            refreshOrders()
+        }
+        if (Build.VERSION.SDK_INT >= 33 && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED)
+            notificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
     }
 
     private val Int.dp get() = (this * resources.displayMetrics.density).toInt()
@@ -116,10 +127,7 @@ class OrdersActivity : AppCompatActivity() {
         logout.isVisible = client.signedIn
         sync.isVisible = client.signedIn
         list.isVisible = true
-        if (!client.signedIn) {
-            list.removeAllViews()
-            showEmptyState("Entra con tu cuenta de vendedor para ver los pedidos.")
-        }
+        if (!client.signedIn) notice.text = "Inicia sesión una vez para conectar pedidos nuevos. Los pedidos guardados siguen visibles aquí."
     }
 
     private fun showEmptyState(message: String) {
@@ -142,6 +150,7 @@ class OrdersActivity : AppCompatActivity() {
                 app.database.syncDao().clearOrders()
                 app.database.syncDao().clearState()
                 renderSession()
+                OrderSync.schedule(this@OrdersActivity)
                 refreshOrders()
             } catch (e: Exception) { notice.text = e.message ?: "No se pudo iniciar sesión." }
             finally { login.isEnabled = true }
@@ -154,7 +163,7 @@ class OrdersActivity : AppCompatActivity() {
         val rejected = app.database.syncDao().rejectedCount()
         val unbooked = orders.count { it.status == "COMPLETED" && it.settled && app.database.operationDao().eventByKey("order-${it.id}") == null }
         if (rejected > 0 || unbooked > 0) notice.text = "Requieren conciliación: $rejected ventas rechazadas por el servidor y $unbooked pedidos sin asiento local. No repitas la venta."
-        if (orders.isEmpty()) showEmptyState("Todo al día. Todavía no hay pedidos.")
+        if (orders.isEmpty()) showEmptyState(if (client.signedIn) "Todo al día. Todavía no hay pedidos." else "Inicia sesión una vez para recibir pedidos.")
         orders.sortedBy { if (it.status in listOf("COMPLETED", "CANCELLED")) 1 else 0 }.forEach(::renderOrder)
     }
 
@@ -166,6 +175,7 @@ class OrdersActivity : AppCompatActivity() {
         try {
             val rows = client.recentOrders()
             val dao = app.database.syncDao()
+            val oldIds = dao.recentOrders().map { it.id }.toSet()
             val orders = (0 until rows.length()).map { index ->
                 val row = rows.getJSONObject(index)
                 val id = row.getString("id")
@@ -198,6 +208,8 @@ class OrdersActivity : AppCompatActivity() {
                 dao.clearOrders()
                 dao.upsertOrders(orders)
             }
+            if (oldIds.isNotEmpty()) orders.filter { it.id !in oldIds && it.status == "PENDING" }
+                .forEach { OrderNotifications.show(this@OrdersActivity, it) }
             loadOrders()
             notice.text = if (orders.isEmpty()) "No hay pedidos en el servidor." else "${orders.size} pedidos consultados."
             OrderSync.request(this@OrdersActivity)

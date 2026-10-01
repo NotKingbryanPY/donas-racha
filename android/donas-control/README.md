@@ -18,6 +18,7 @@ Aplicación Android nativa para administrar un negocio ambulante de donas. La co
 - Dashboard, estadísticas de hoy/semana/mes e historial paginado con filtros.
 - Widget de cuatro sabores con − / cantidad / + por sabor (máximo 99 donas por venta). Al tocar Efectivo o Yappy guarda la venta local directamente, sin abrir la app; el resumen muestra el stock local total. La app ofrece el mismo selector visual de sabores desde «Nueva venta».
 - Pedidos desde el backend: inicio de sesión administrador, cola local de operaciones, copia local de pedidos, aceptar/cancelar/en camino y cierre «Cobrado y entregado» con elección de efectivo o Yappy. Pago, entrega y fidelidad se confirman juntos.
+- La sesión se renueva sin volver a pedir contraseña; la lista guardada se muestra apenas se abre Pedidos. Tras iniciar sesión una vez, WorkManager consulta pedidos automáticamente con conexión (Wi-Fi o datos) en intervalos del sistema de al menos 15 minutos y muestra una notificación por cada pedido nuevo pendiente detectado. Android 13+ pide permiso para avisos. El ahorro de batería, falta de red o permisos pueden retrasarlos; para avisos inmediatos con la app cerrada hace falta implementar push del servidor (FCM).
 - Exportación/importación SQLite, reinicio de movimientos y restablecimiento de fábrica con doble confirmación `RESETEAR`.
 - Material 3 XML, ViewBinding, modo oscuro, Room, WorkManager y DataStore. Permiso de Internet solo para pedidos y sincronización.
 

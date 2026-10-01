@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bryan.donas.DonasApp
 import com.bryan.donas.R
 import com.bryan.donas.data.BusinessSnapshot
+import com.bryan.donas.data.OrderSync
 import com.bryan.donas.databinding.ActivityMainBinding
 import com.bryan.donas.domain.*
 import com.bryan.donas.util.Money
@@ -34,6 +35,11 @@ class MainActivity : AppCompatActivity() {
     private var rendering = false
     private var shownPlan = 0L
     private var shownConfig = 0L
+
+    override fun onResume() {
+        super.onResume()
+        if ((application as DonasApp).backendClient.signedIn) OrderSync.schedule(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
