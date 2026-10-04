@@ -176,12 +176,14 @@ import UserNotifications
     func savePhysicalInventory(counts: [String:Int], revision: Int64) async {
         guard !busy,state.pending.isEmpty,network.stableWifi else { message="Sincroniza las ventas con Wi‑Fi estable antes de contar.";return }
         busy=true
+        let outcome: String
         do {
             let _: SavedInventory=try await client.request("/api/admin/customers/inventory",method:"POST",body:[
                 "counts":.object(counts.mapValues { .number(Int64($0)) }),"expectedRevision":.number(revision)])
-            message="Conteo compartido guardado."
-        } catch { message=error.localizedDescription }
+            outcome="Conteo compartido guardado."
+        } catch { outcome=error.localizedDescription }
         busy=false;await synchronize()
+        message=outcome
     }
     func export() throws -> URL {
         let file=FileManager.default.temporaryDirectory.appendingPathComponent("Donas-Control-\(Int(Date().timeIntervalSince1970)).json")
