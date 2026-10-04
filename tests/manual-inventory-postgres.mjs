@@ -50,6 +50,13 @@ await db.query("select * from public.api_transition_order($1,'OUT_FOR_DELIVERY',
 await db.query("select public.api_complete_paid_order($1,$2,'YAPPY')",[later.id,admin]);
 assert.equal(await earned(),2,'second completed order same day respects the three-purchase daily cap');
 assert.equal(Number((await inventory()).available_quantity),1);
+// Activate shared inventory after real historical purchases, offline sales and deliveries.
+// Existing stock must survive without replaying any of those old movements.
+for(const name of readdirSync(join(root,'supabase/migrations')).filter(x=>x.endsWith('.sql') && x>='20261003').sort()) {
+  await db.exec(readFileSync(join(root,'supabase/migrations',name),'utf8'));
+}
+assert.equal(Number((await inventory()).available_quantity),1,'cutover preserves the existing physical balance');
+assert.equal(Number((await db.query('select count(*) n from public.inventory_movements')).rows[0].n),0,'historical purchases and sales must not replay');
 await count({...counts,'DR-CHOCOLATE':0});
 assert.equal(Number((await inventory()).available_quantity),0,'new count replaces old stock even after purchases');
 await assert.rejects(db.query("select * from public.api_create_order_by_customer_id($1,$2,$3,'Edificio 4','CASH',null,$4::jsonb)",[customer.id,randomUUID(),'b'.repeat(64),JSON.stringify([{product_variant_id:variant,quantity:1}])]),/OUT_OF_STOCK/);
