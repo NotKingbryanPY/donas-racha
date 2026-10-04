@@ -1,5 +1,8 @@
 import Foundation
 import Security
+#if SWIFT_PACKAGE && !DONAS_PLAYGROUNDS
+import DonasControlCore
+#endif
 
 enum Keychain {
     static func read(_ key: String) -> Data? {
@@ -55,8 +58,16 @@ actor SessionClient {
     private var session: AdminSession?
     private var renewal: Task<AdminSession, Error>?
     private var generation=0
-    private let base=URL(string:"https://donas-racha.vercel.app")!
-    init() { if let saved=Keychain.read("session") { session=try? JSONDecoder().decode(AdminSession.self,from:saved) } }
+    private let base: URL
+    private let transport: URLSession
+    private let persist: @Sendable (AdminSession?) throws -> Void
+    init(base: URL=URL(string:"https://donas-racha.vercel.app")!,transport: URLSession = .shared,
+         initial: AdminSession?=SessionClient.savedSession,
+         persist: @escaping @Sendable (AdminSession?) throws -> Void = { value in
+             try Keychain.save(try value.map { try JSONEncoder().encode($0) },key:"session")
+         }) {
+        self.base=base;self.transport=transport;self.session=initial;self.persist=persist
+    }
     var signedIn: Bool { session != nil }
     var ownerID: String? { session?.userId }
     var role: String? { session?.role }
@@ -69,7 +80,7 @@ actor SessionClient {
         request.setValue("application/json",forHTTPHeaderField:"Accept")
         if body != nil { request.setValue("application/json",forHTTPHeaderField:"Content-Type") }
         if let token { request.setValue("Bearer \(token)",forHTTPHeaderField:"Authorization") }
-        let (data,response)=try await URLSession.shared.data(for:request)
+        let (data,response)=try await transport.data(for:request)
         guard let http=response as? HTTPURLResponse else { throw URLError(.badServerResponse) }
         let envelope=try? JSONDecoder().decode(APIEnvelope<T>.self,from:data)
         guard (200...299).contains(http.statusCode),envelope?.ok==true,let result=envelope?.data else {
@@ -79,7 +90,7 @@ actor SessionClient {
         return result
     }
     private func store(_ value: AdminSession) throws {
-        try Keychain.save(JSONEncoder().encode(value),key:"session");session=value
+        try persist(value);session=value
     }
     func login(email: String, password: String, expectedOwner: String?) async throws -> String {
         let body=try JSONEncoder().encode(["grantType":"password","email":email.trimmingCharacters(in:.whitespacesAndNewlines),"password":password])
@@ -95,18 +106,21 @@ actor SessionClient {
         if let renewal { return try await renewal.value.accessToken }
         let stamp=generation
         let task=Task<AdminSession,Error> {
-            try await self.raw("/api/auth/session",method:"POST",body:JSONEncoder().encode([
+            let refreshed: AdminSession=try await self.raw("/api/auth/session",method:"POST",body:JSONEncoder().encode([
                 "grantType":"refresh_token","refreshToken":saved.refreshToken]))
+            guard self.generation==stamp else { throw CancellationError() }
+            try self.store(refreshed)
+            return refreshed
         }
         renewal=task
         defer { renewal=nil }
         do {
             let refreshed=try await task.value
             guard generation==stamp else { throw CancellationError() }
-            try store(refreshed);return refreshed.accessToken
+            return refreshed.accessToken
         } catch let problem as APIProblem {
             if generation==stamp && (problem.code=="INVALID_CREDENTIALS" || problem.code=="STAFF_REQUIRED") {
-                try Keychain.save(nil,key:"session");session=nil
+                try persist(nil);session=nil
             }
             throw problem
         }
@@ -133,6 +147,6 @@ actor SessionClient {
     func logout(device: UUID) async throws {
         let _: JSONValue=try await request("/api/admin/customers/devices",method:"DELETE",body:["deviceId":.string(device.uuidString)])
         generation+=1;renewal?.cancel();renewal=nil
-        try Keychain.save(nil,key:"session");session=nil
+        try persist(nil);session=nil
     }
 }
