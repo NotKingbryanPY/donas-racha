@@ -89,7 +89,8 @@ select pv.id as variant_id,pv.sku,pv.name,pv.available as offered,
   coalesce(m.removed,0)::bigint as sold_quantity,
   coalesce(r.quantity,0)::bigint as reserved_quantity,
   greatest(0,coalesce(c.quantity,0)+coalesce(m.added,0)-coalesce(m.removed,0)-coalesce(r.quantity,0))::bigint as available_quantity,
-  (c.variant_id is not null and c.counted_at>=coalesce((select max(g.created_at)
+  (c.variant_id is not null and coalesce(c.quantity,0)+coalesce(m.added,0)-coalesce(m.removed,0)>=coalesce(r.quantity,0)
+    and c.counted_at>=coalesce((select max(g.created_at)
     from public.inventory_sync_gaps g where g.created_at>(select activated_at from public.inventory_revision where id)),
     '1970-01-01'::timestamptz)) as counted
 from public.product_variants pv

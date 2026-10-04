@@ -2,6 +2,7 @@
 .env.*
 !.env.example
 node_modules/
+outputs/
 test-output/
 .vercel/
 .tmp-pg-*/

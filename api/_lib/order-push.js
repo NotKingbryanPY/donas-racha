@@ -66,7 +66,7 @@ async function dispatch() {
     try {result=await (job.platform==='ANDROID'?sendAndroid(job):sendIOS(job));}
     catch (_) {result={delivered:false,invalidToken:false,error:'PROVIDER_UNAVAILABLE'};}
     await rpc('api_finish_order_push',{p_id:job.id,p_lease_id:job.leaseId,p_delivered:result.delivered,
-      p_invalid_token:result.invalidToken,p_error:result.error});
+      p_invalid_token:result.invalidToken,p_error:result.error,p_token:job.token});
   }));
   return {configured,processed:jobs.length};
 }

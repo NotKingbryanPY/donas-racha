@@ -85,7 +85,7 @@ begin
     from claimed j join public.push_devices d using(device_public_id) join public.orders o on o.id=j.order_id;
   return v_jobs;
 end; $$;
-create function public.api_finish_order_push(p_id uuid,p_lease_id uuid,p_delivered boolean,p_invalid_token boolean,p_error text)
+create function public.api_finish_order_push(p_id uuid,p_lease_id uuid,p_delivered boolean,p_invalid_token boolean,p_error text,p_token text default null)
 returns jsonb language plpgsql security definer set search_path='' as $$
 declare v_device uuid;
 begin
@@ -94,14 +94,14 @@ begin
     available_at=clock_timestamp()+make_interval(secs=>least(3600,30*(2^least(attempts,6))::integer))
     where id=p_id and lease_id=p_lease_id returning device_public_id into v_device;
   if p_invalid_token and v_device is not null then
-    update public.push_devices set active=false where device_public_id=v_device;
+    update public.push_devices set active=false where device_public_id=v_device and token=p_token;
   end if;
   return jsonb_build_object('saved',v_device is not null);
 end; $$;
 revoke execute on function public.api_register_push_device(uuid,uuid,text,text,text,text),public.api_unregister_push_device(uuid,uuid),
-  public.api_claim_order_push(text[]),public.api_finish_order_push(uuid,uuid,boolean,boolean,text) from public,anon,authenticated;
+  public.api_claim_order_push(text[]),public.api_finish_order_push(uuid,uuid,boolean,boolean,text,text) from public,anon,authenticated;
 grant execute on function public.api_register_push_device(uuid,uuid,text,text,text,text),public.api_unregister_push_device(uuid,uuid),
-  public.api_claim_order_push(text[]),public.api_finish_order_push(uuid,uuid,boolean,boolean,text) to service_role;
+  public.api_claim_order_push(text[]),public.api_finish_order_push(uuid,uuid,boolean,boolean,text,text) to service_role;
 notify pgrst,'reload schema';
 commit;
 

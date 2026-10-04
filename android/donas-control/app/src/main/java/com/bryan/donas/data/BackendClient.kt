@@ -16,13 +16,14 @@ import java.util.Locale
 import java.util.TimeZone
 import java.text.SimpleDateFormat
 
-class BackendClient(context: Context) {
+class BackendClient(context: Context,
+    private val baseUrl: String = "https://donas-racha.vercel.app",
+    tokenStore: SessionTokens? = null) {
     private val appContext = context.applicationContext
-    private val sessions = RemoteSessionStore(appContext)
+    private val sessions = tokenStore ?: RemoteSessionStore(appContext)
     private val devicePrefs = appContext.getSharedPreferences("remote_device", Context.MODE_PRIVATE)
     private var accessToken: String? = null
     private var expiresAt = 0L
-    private val baseUrl = "https://donas-racha.vercel.app"
 
     val signedIn: Boolean get() = sessions.hasSession()
     val role: String get() = devicePrefs.getString("role", "ADMIN") ?: "ADMIN"

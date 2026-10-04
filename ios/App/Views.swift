@@ -7,7 +7,7 @@ struct MainView: View {
         TabView(selection:$model.tab) {
             HomeView().tabItem { Label("Inicio",systemImage:"house.fill") }.tag(0)
             OrdersView().tabItem { Label("Pedidos",systemImage:"bag.fill") }.tag(1).badge(model.state.activeOrders.count)
-            SalesView().tabItem { Label("Ventas",systemImage:"dollarsign.circle.fill") }.tag(2)
+            if model.role=="ADMIN" { SalesView().tabItem { Label("Ventas",systemImage:"dollarsign.circle.fill") }.tag(2) }
             InventoryView().tabItem { Label("Inventario",systemImage:"shippingbox.fill") }.tag(3)
             SettingsView().tabItem { Label("Ajustes",systemImage:"gearshape.fill") }.tag(4)
         }.safeAreaInset(edge:.bottom) {
@@ -39,11 +39,13 @@ struct HomeView: View {
                         Metric(title:"Efectivo local",value:money(model.state.balance("CASH")),symbol:"banknote")
                         Metric(title:"Yappy local",value:money(model.state.balance("YAPPY")),symbol:"creditcard")
                     }
+                    if model.role=="ADMIN" {
                     Button("Registrar venta",systemImage:"plus.circle.fill") { model.tab=2 }.buttonStyle(.borderedProminent).controlSize(.large)
                     HStack {
                         Button(model.state.dayOpen ? "Cerrar jornada" : "Abrir jornada") { operation=model.state.dayOpen ? .close : .open }
                         Button("Comprar cajas") { operation = .purchase }
                     }.buttonStyle(.bordered)
+                    }
                     GroupBox("Ganancia y socios · libro local acumulado") {
                         VStack(alignment:.leading,spacing:8) {
                             Text(money(model.state.profit)).font(.title.bold())
@@ -181,12 +183,14 @@ struct EventRow: View {
 struct InventoryView: View {
     @EnvironmentObject var model: AppModel
     @State private var physical=false
+    @State private var opening=false
     var body: some View {
         NavigationStack {
             List {
                 Section("Este dispositivo · disponible sin conexión") {
                     ForEach(Flavor.allCases,id:\.rawValue) { flavor in LabeledContent(flavor.name,value:String(model.state.stock(flavor))) }
                     Text("Cada caja contiene 12 donas: 4 chocolate, 4 vainilla y 2 de cada sabor con chispas.").font(.caption)
+                    if model.state.lots.isEmpty && model.role=="ADMIN" { Button("Registrar existencias iniciales de este libro") { opening=true } }
                 }
                 Section("Inventario publicado · todo el negocio") {
                     if let snapshot=model.state.inventory {
@@ -198,12 +202,13 @@ struct InventoryView: View {
                             }
                         }
                         Text("Última consulta: \(snapshot.serverTime)").font(.caption).foregroundStyle(.secondary)
-                        Button("Registrar conteo físico compartido") { physical=true }
+                        if model.role=="ADMIN" { Button("Registrar conteo físico compartido") { physical=true } }
                     } else { Text("Conecta tu cuenta y actualiza para consultar las existencias de la página.") }
                 }
                 Section { Text("Las ventas de todos los socios llegan al inventario compartido después de sincronizar por Wi‑Fi. Las reservas ya están descontadas de las unidades disponibles en la página.") }.font(.caption).foregroundStyle(.secondary)
             }.navigationTitle("Inventario").refreshable { await model.synchronize() }
                 .toolbar { Button("Actualizar") { Task { await model.synchronize() } } }.sheet(isPresented:$physical) { PhysicalCountView() }
+                .sheet(isPresented:$opening) { OpeningStockView() }
         }
     }
 }
@@ -305,7 +310,7 @@ struct SettingsView: View {
                     Button("Sincronizar ahora") { Task { await model.synchronize() } }.disabled(model.busy)
                     Text("Las escrituras esperan 10 segundos de Wi‑Fi estable. iOS decide cuándo permite las tareas en segundo plano; al abrir la app vuelve a intentar los pendientes.").font(.caption)
                 }
-                Section("Configuración del libro local") {
+                if model.role=="ADMIN" { Section("Configuración del libro local") {
                     TextField("Costo por caja",text:$cost).keyboardType(.decimalPad)
                     TextField("Precio por dona",text:$price).keyboardType(.decimalPad)
                     Button("Guardar precios") {
@@ -314,7 +319,7 @@ struct SettingsView: View {
                     }
                     Text("Los nuevos precios se aplican a las ventas siguientes. Los pedidos conservan el precio confirmado en la página.").font(.caption)
                     NavigationLink("Socios y reparto estimado") { PartnersView() }
-                }
+                } }
                 Section("Copias del libro local") {
                     Button("Preparar copia") { do { exportURL=try model.export() } catch { model.message=error.localizedDescription } }
                     if let exportURL { ShareLink("Guardar o compartir copia",item:exportURL) }

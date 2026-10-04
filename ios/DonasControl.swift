@@ -29,6 +29,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
     static let syncID="com.bryan.donas.control.refresh"
     func application(_ application: UIApplication,didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey:Any]?=nil) -> Bool {
         UNUserNotificationCenter.current().delegate=self
+        #if !DONAS_PLAYGROUNDS
         BGTaskScheduler.shared.register(forTaskWithIdentifier:Self.syncID,using:nil) { task in
             guard let refresh=task as? BGAppRefreshTask else { task.setTaskCompleted(success:false);return }
             let work=Task { @MainActor in
@@ -38,12 +39,15 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
             }
             refresh.expirationHandler = { work.cancel() }
         }
+        #endif
         return true
     }
     static func scheduleSync() {
+        #if !DONAS_PLAYGROUNDS
         let request=BGAppRefreshTaskRequest(identifier:syncID)
         request.earliestBeginDate=Date().addingTimeInterval(15*60)
         try? BGTaskScheduler.shared.submit(request)
+        #endif
     }
     func application(_ application: UIApplication,didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         UserDefaults.standard.set(deviceToken.map { String(format:"%02x",$0) }.joined(),forKey:"apnsToken")

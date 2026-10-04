@@ -13,7 +13,11 @@ enum Keychain {
     static func save(_ data: Data?, key: String) throws {
         let query: [String: Any] = [kSecClass as String:kSecClassGenericPassword,
             kSecAttrService as String:"com.bryan.donas.control",kSecAttrAccount as String:key]
-        guard let data else { SecItemDelete(query as CFDictionary); return }
+        guard let data else {
+            let status=SecItemDelete(query as CFDictionary)
+            guard status==errSecSuccess || status==errSecItemNotFound else { throw BusinessError.invalid("No se pudo cerrar la sesión en el llavero.") }
+            return
+        }
         let attributes: [String: Any] = [kSecValueData as String:data,
             kSecAttrAccessible as String:kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]
         let update=SecItemUpdate(query as CFDictionary,attributes as CFDictionary)

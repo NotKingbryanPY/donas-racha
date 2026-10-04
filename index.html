@@ -412,7 +412,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
       </div>
       <div class="card admin-wide" id="adminInventoryPanel" data-admin-only>
         <div class="operations-heading"><div><span class="eyebrow">CONTROL MANUAL</span><h2>¿Cuántas donas tienes?</h2></div><span class="pill">Inventario web</span></div>
-        <p class="muted">Escribe el conteo físico completo, incluyendo las donas apartadas para pedidos. Guarda nuevamente después de comprar o vender fuera de la web. Las ventas de la app no modifican este conteo.</p>
+        <p class="muted">Las compras y ventas de Donas Control actualizan este inventario al sincronizar por Wi‑Fi. Usa el conteo físico para conciliar todo el negocio, incluyendo donas reservadas, después de sincronizar los dispositivos de los socios.</p>
         <div id="adminFlavorInventory" class="muted" style="margin-top:12px">Cargando inventario...</div>
         <div class="inventory-actions"><button id="saveInventoryButton" class="btn btn-primary" onclick="saveAdminInventory()">Guardar los 4 sabores</button><button class="btn btn-outline" onclick="loadAdminInventory()">Volver a consultar</button></div><p id="adminInventoryNotice" class="muted" role="status"></p>
       </div>
@@ -1156,7 +1156,7 @@ async function loadClientDelivery() {
     clientOrderVariants = flattenCatalog(catalog.products || []).filter(item => item.available)
       .map(item => ({ ...item, inventory:byId.get(String(item.id)) }));
     document.getElementById('clientInventoryStatus').textContent = clientInventoryEnforced
-      ? 'Disponibilidad según el último conteo del vendedor'
+      ? 'Inventario compartido · actualización automática mientras estás aquí'
       : 'Inventario por sabor en preparación. Puedes pedir; confirmaremos la disponibilidad antes de aceptar.';
     renderClientFlavors();
   } catch (error) { list.textContent = error.message; document.getElementById('clientInventoryStatus').textContent = 'No se pudo comprobar el inventario.'; }
@@ -1621,6 +1621,7 @@ function safe(s){ return String(s ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;',
 function esc(s){ return String(s ?? '').replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
 </script>
 <script src="assets/js/admin-operations.js"></script>
+<script src="assets/js/shared-inventory-refresh.js"></script>
 <script src="assets/js/admin-redemptions.js"></script>
 <script src="assets/js/admin-loyalty.js"></script>
 <script src="assets/js/motion.js"></script>

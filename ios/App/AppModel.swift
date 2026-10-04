@@ -27,6 +27,7 @@ import UserNotifications
         } catch { message=error.localizedDescription;return false }
     }
     func record(_ change: (inout BusinessState) throws -> Void) {
+        guard role=="ADMIN" else { message="Esta cuenta atiende pedidos. El administrador registra movimientos del negocio.";return }
         if commit(change) { message="Registro guardado. \(state.pending.count) pendientes de sincronizar.";Task { await synchronize() } }
     }
     func login(email: String, password: String) async {
@@ -116,6 +117,7 @@ import UserNotifications
             let inventory: InventorySnapshot=try await client.request("/api/admin/customers/inventory")
             commit { $0.inventory=inventory;$0.lastSync=Date() }
             signedIn=await client.signedIn
+            role=await client.role ?? role
             message=state.pending.isEmpty ? "Todo sincronizado." : "\(state.pending.count) registros esperando Wi‑Fi estable."
             if !state.rejected.isEmpty { message="\(state.rejected.count) registros requieren conciliación. No repitas la venta." }
         } catch {

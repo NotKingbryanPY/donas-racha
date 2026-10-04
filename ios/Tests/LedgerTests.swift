@@ -2,6 +2,13 @@ import XCTest
 @testable import DonasControlCore
 
 final class LedgerTests: XCTestCase {
+    func testExistingInventoryDoesNotCreateAnotherPurchase() throws {
+        var state=BusinessState()
+        try Ledger.seedInventory(&state,items:Dictionary(uniqueKeysWithValues:Flavor.allCases.map { ($0.rawValue,$0.perBox) }),costCents:600)
+        XCTAssertEqual(state.stock,12);XCTAssertEqual(state.pending.first?.type,"OPENING_BALANCE")
+        XCTAssertEqual(state.balance("INVENTORY"),600);XCTAssertEqual(state.balance("EQUITY"),-600)
+        XCTAssertThrowsError(try Ledger.seedInventory(&state,items:[:],costCents:0))
+    }
     func prepared() throws -> BusinessState {
         var state=BusinessState();try Ledger.openDay(&state,cash:10_000,yappy:0)
         try Ledger.purchase(&state,boxes:1,account:"CASH");return state

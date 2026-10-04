@@ -31,6 +31,16 @@ public enum Ledger {
         try add(&state,type:"SESSION_CLOSE",title:"Cierre de jornada",amount:0)
         state.dayOpen = false
     }
+    public static func seedInventory(_ state: inout BusinessState, items: [String:Int], costCents: Int64) throws {
+        try check(state.lots.isEmpty,"El inventario inicial solo se registra antes de comprar o vender en este libro.")
+        try check(items.count==4 && items.allSatisfy { Flavor(rawValue:$0.key) != nil && (0...100000).contains($0.value) },"Completa las existencias iniciales de los cuatro sabores.")
+        let quantity=items.values.reduce(0,+)
+        try check(quantity>0 && costCents>=0 && costCents<=1_000_000_000,"Cantidad o costo inicial inválidos.")
+        // Existing stock is an opening balance, never a new purchase in shared inventory.
+        try add(&state,type:"OPENING_BALANCE",title:"Existencias iniciales del libro",amount:0,items:items,
+            lines:[line("INVENTORY",costCents),line("EQUITY",-costCents)],details:["existingStock":.bool(true)])
+        state.lots.append(Lot(id:UUID(),remaining:items,costCents:costCents,createdAt:Date()))
+    }
     public static func purchase(_ state: inout BusinessState, boxes: Int, account: String, id: UUID = UUID()) throws {
         if state.events.contains(where: { $0.id == id }) { return }
         try check((1...10000).contains(boxes),"Compra entre 1 y 10000 cajas.")

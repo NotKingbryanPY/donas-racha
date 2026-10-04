@@ -17,7 +17,5 @@ struct LocalStore {
     func save(_ state: BusinessState) throws {
         let data=try JSONEncoder().encode(state)
         try data.write(to:url,options:[.atomic,.completeFileProtectionUntilFirstUserAuthentication])
-        var file=url;var values=URLResourceValues();values.isExcludedFromBackup=false
-        try file.setResourceValues(values)
     }
 }

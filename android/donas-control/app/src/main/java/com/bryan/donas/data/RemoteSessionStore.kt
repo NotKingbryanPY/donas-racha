@@ -12,7 +12,13 @@ import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
 
 /** Only the renewable session is persisted; the operator password is never stored. */
-class RemoteSessionStore(context: Context) {
+interface SessionTokens {
+    fun save(refreshToken: String)
+    fun refreshToken(): String?
+    fun hasSession(): Boolean
+    fun clear()
+}
+class RemoteSessionStore(context: Context) : SessionTokens {
     private val prefs = context.applicationContext.getSharedPreferences("remote_session", Context.MODE_PRIVATE)
     private val alias = "donas_remote_session_v1"
 
@@ -28,7 +34,7 @@ class RemoteSessionStore(context: Context) {
     }
 
     @android.annotation.SuppressLint("UseKtx") // KTX edit discards commit's success flag; rotated tokens must be durably saved.
-    @Synchronized fun save(refreshToken: String) {
+    @Synchronized override fun save(refreshToken: String) {
         val cipher = Cipher.getInstance("AES/GCM/NoPadding")
         cipher.init(Cipher.ENCRYPT_MODE, key())
         val bytes = cipher.doFinal(refreshToken.toByteArray(Charsets.UTF_8))
@@ -38,7 +44,7 @@ class RemoteSessionStore(context: Context) {
         }.commit()) { "No se pudo conservar la sesión en este dispositivo." }
     }
 
-    fun refreshToken(): String? = try {
+    override fun refreshToken(): String? = try {
         val iv = prefs.getString("iv", null) ?: return null
         val token = prefs.getString("token", null) ?: return null
         val cipher = Cipher.getInstance("AES/GCM/NoPadding")
@@ -49,6 +55,6 @@ class RemoteSessionStore(context: Context) {
         null
     }
 
-    fun hasSession() = prefs.contains("token")
-    fun clear() = prefs.edit { clear() }
+    override fun hasSession() = prefs.contains("token")
+    override fun clear() = prefs.edit { clear() }
 }
