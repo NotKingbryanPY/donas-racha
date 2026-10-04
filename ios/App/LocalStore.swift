@@ -12,6 +12,7 @@ struct LocalStore {
         guard FileManager.default.fileExists(atPath:url.path) else { return BusinessState() }
         let state=try JSONDecoder().decode(BusinessState.self,from:Data(contentsOf:url))
         guard state.schema==1 else { throw BusinessError.invalid("Esta copia requiere una versión más reciente de Donas Control.") }
+        try state.validateBackup()
         return state
     }
     func save(_ state: BusinessState) throws {

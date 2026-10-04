@@ -33,6 +33,11 @@ jobs:
           key: donas-pilot-debug-signing-v1
       - name: Build, test and lint
         working-directory: android/donas-control
+        env:
+          ORG_GRADLE_PROJECT_FIREBASE_APP_ID: ${{ vars.FIREBASE_ANDROID_APP_ID }}
+          ORG_GRADLE_PROJECT_FIREBASE_API_KEY: ${{ vars.FIREBASE_ANDROID_API_KEY }}
+          ORG_GRADLE_PROJECT_FIREBASE_PROJECT_ID: ${{ vars.FIREBASE_PROJECT_ID }}
+          ORG_GRADLE_PROJECT_FIREBASE_SENDER_ID: ${{ vars.FIREBASE_SENDER_ID }}
         run: bash ./gradlew testDebugUnitTest assemblePilot lintDebug
       - name: Save pilot APK
         uses: actions/upload-artifact@v4

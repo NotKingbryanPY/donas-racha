@@ -133,24 +133,29 @@ import UserNotifications
     func transition(_ order: RemoteOrder, to status: String, payment: String?=nil) async {
         guard !busy,network.online else { message="Conecta a Internet para confirmar el estado de un pedido.";return }
         busy=true
+        var outcome: String?
         var body: [String:JSONValue]=["status":.string(status)]
         if let payment { body["paymentReceived"] = .bool(true);body["paymentMethod"] = .string(payment) }
         do {
             let _: JSONValue=try await client.request("/api/admin/orders/\(order.id)/status",method:"POST",body:body)
-            if status=="COMPLETED" {
+            if status=="COMPLETED" && role=="ADMIN" {
                 let items=Dictionary(order.items.compactMap { item -> (String,Int)? in
                     guard let sku=item.sku,Flavor(rawValue:sku) != nil else { return nil };return (sku,item.quantity)
                 },uniquingKeysWith:+)
                 if items.count>0 && items.values.reduce(0,+)==order.items.reduce(0,{ $0+$1.quantity }) {
                     let booked=commit { next in
-                        if !next.dayOpen { try Ledger.openDay(&next,cash:0,yappy:0) }
+                        if !next.dayOpen {
+                            let cash=next.balance("CASH"),yappy=next.balance("YAPPY")
+                            try Ledger.openDay(&next,cash:cash,yappy:yappy)
+                        }
                         try Ledger.sale(&next,items:items,account:payment ?? order.paymentMethod,remoteID:order.id,revenueOverride:order.totalCents)
                     }
-                    if !booked { message="Entrega confirmada en el servidor. El asiento local requiere conciliación; no repitas el cobro." }
-                }
+                    if !booked { outcome="Entrega confirmada en el servidor. El asiento local requiere conciliación; no repitas el cobro." }
+                } else { outcome="Entrega confirmada. Faltan los sabores del pedido para conciliar el libro local; no repitas el cobro." }
             }
-        } catch { message="\(error.localizedDescription) Actualiza para comprobar el resultado antes de reintentar." }
+        } catch { outcome="\(error.localizedDescription) Actualiza para comprobar el resultado antes de reintentar." }
         busy=false;await synchronize()
+        if let outcome { message=outcome }
     }
     func savePhysicalInventory(counts: [String:Int], revision: Int64) async {
         guard !busy,state.pending.isEmpty,network.stableWifi else { message="Sincroniza las ventas con Wi‑Fi estable antes de contar.";return }
@@ -171,6 +176,7 @@ import UserNotifications
         let access=url.startAccessingSecurityScopedResource();defer { if access { url.stopAccessingSecurityScopedResource() } }
         var restored=try JSONDecoder().decode(BusinessState.self,from:Data(contentsOf:url))
         guard restored.schema==1 else { throw BusinessError.invalid("Versión de copia no compatible.") }
+        try restored.validateBackup()
         if let owner=SessionClient.savedSession?.userId,let old=restored.ownerID,owner != old { throw BusinessError.invalid("Esta copia pertenece a otra cuenta.") }
         // Preserve operation IDs and device ID: the server recognizes restored retries.
         restored.orders=[];restored.orderCursor=nil

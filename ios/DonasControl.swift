@@ -9,9 +9,9 @@ import BackgroundTasks
     var body: some Scene {
         WindowGroup {
             MainView().environmentObject(model).environmentObject(model.network)
-                .tint(Color(red:0.46,green:0.24,blue:0.16))
+                .tint(Color(red:0.42,green:0.25,blue:0.62))
                 .task {
-                    await model.requestNotifications()
+                    if model.signedIn { await model.requestNotifications() }
                     while !Task.isCancelled {
                         await model.synchronize()
                         do { try await Task.sleep(for:.seconds(15)) } catch { break }

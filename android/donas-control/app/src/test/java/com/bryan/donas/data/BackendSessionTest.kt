@@ -2,9 +2,10 @@ package com.bryan.donas.data
 
 import androidx.test.core.app.ApplicationProvider
 import android.content.Context
-import com.sun.net.httpserver.HttpServer
-import java.net.InetSocketAddress
-import java.util.concurrent.Executors
+import okhttp3.mockwebserver.MockWebServer
+import okhttp3.mockwebserver.Dispatcher
+import okhttp3.mockwebserver.RecordedRequest
+import okhttp3.mockwebserver.MockResponse
 import java.util.concurrent.atomic.AtomicInteger
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -33,20 +34,19 @@ class BackendSessionTest {
     @Volatile private var refreshStatus = 200
     @Volatile private var expiredLogin = true
     @Volatile private var rejectLoginAccess = false
-    private lateinit var server: HttpServer
-    private val pool = Executors.newCachedThreadPool()
+    private lateinit var server: MockWebServer
     private lateinit var client: BackendClient
 
     @Before fun setUp() {
-        server = HttpServer.create(InetSocketAddress("127.0.0.1", 0), 0)
-        server.executor = pool
-        server.createContext("/") { exchange ->
-            val path = exchange.requestURI.path
+        server = MockWebServer()
+        server.dispatcher = object : Dispatcher() {
+          override fun dispatch(request: RecordedRequest): MockResponse {
+            val path = request.requestUrl!!.encodedPath
             var status = 200
             val data = when (path) {
                 "/api/auth/session" -> {
-                    val request = JSONObject(exchange.requestBody.bufferedReader().readText())
-                    val refreshing = request.getString("grantType") == "refresh_token"
+                    val body = JSONObject(request.body.readUtf8())
+                    val refreshing = body.getString("grantType") == "refresh_token"
                     if (refreshing) { refreshes.incrementAndGet(); status = refreshStatus }
                     JSONObject().put("accessToken", if (refreshing) "renewed-access" else "first-access")
                         .put("refreshToken", if (refreshing) "rotated-refresh-token" else "original-refresh-token")
@@ -54,23 +54,21 @@ class BackendSessionTest {
                             "2000-01-01T00:00:00.000Z" else "2099-01-01T00:00:00.000Z")
                 }
                 "/api/admin/orders" -> {
-                    if (rejectLoginAccess && exchange.requestHeaders.getFirst("Authorization") == "Bearer first-access") status = 401
+                    if (rejectLoginAccess && request.getHeader("Authorization") == "Bearer first-access") status = 401
                     JSONObject().put("orders", org.json.JSONArray())
                 }
                 else -> JSONObject()
             }
             val response = if (status == 200) JSONObject().put("ok", true).put("data", data)
                 else JSONObject().put("ok", false).put("error", JSONObject().put("message", "Test failure").put("code", "INVALID_CREDENTIALS"))
-            val bytes = response.toString().toByteArray()
-            exchange.sendResponseHeaders(status, bytes.size.toLong())
-            exchange.responseBody.use { it.write(bytes) }
-            exchange.close()
+            return MockResponse().setResponseCode(status).setHeader("Content-Type", "application/json").setBody(response.toString())
+          }
         }
         server.start()
         val context = ApplicationProvider.getApplicationContext<Context>()
-        client = BackendClient(context, "http://127.0.0.1:${server.address.port}", tokens)
+        client = BackendClient(context, server.url("/").toString().trimEnd('/'), tokens)
     }
-    @After fun tearDown() { server.stop(0); pool.shutdownNow() }
+    @After fun tearDown() { server.shutdown() }
 
     @Test fun temporaryFailuresKeepRenewableSession() = runBlocking {
         client.login("admin@example.test", "password")

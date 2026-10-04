@@ -2,6 +2,23 @@ import XCTest
 @testable import DonasControlCore
 
 final class LedgerTests: XCTestCase {
+    func testNextDayPreservesExistingMoney() throws {
+        var state=try prepared()
+        try Ledger.closeDay(&state)
+        let cash=state.balance("CASH")
+        try Ledger.openDay(&state,cash:cash,yappy:0)
+        XCTAssertEqual(state.balance("CASH"),cash)
+        try state.validateBackup()
+    }
+    func testDamagedBackupIsRejected() throws {
+        var state=try prepared();try state.validateBackup()
+        state.config.unitPriceCents=Int64.max
+        XCTAssertThrowsError(try state.validateBackup())
+        state=try prepared();state.events.append(state.events[0])
+        XCTAssertThrowsError(try state.validateBackup())
+        state=try prepared();state.lots[0].remaining[Flavor.chocolate.rawValue] = -1
+        XCTAssertThrowsError(try state.validateBackup())
+    }
     func testExistingInventoryDoesNotCreateAnotherPurchase() throws {
         var state=BusinessState()
         try Ledger.seedInventory(&state,items:Dictionary(uniqueKeysWithValues:Flavor.allCases.map { ($0.rawValue,$0.perBox) }),costCents:600)

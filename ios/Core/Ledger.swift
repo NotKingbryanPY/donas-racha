@@ -22,8 +22,9 @@ public enum Ledger {
     public static func openDay(_ state: inout BusinessState, cash: Int64, yappy: Int64) throws {
         try check(!state.dayOpen,"Ya hay una jornada abierta.")
         try check(cash>=0 && yappy>=0 && cash+yappy<=1_000_000_000,"Saldos iniciales inválidos.")
+        let cashChange=cash-state.balance("CASH"),yappyChange=yappy-state.balance("YAPPY")
         try add(&state,type:"SESSION_START",title:"Inicio de jornada",amount:cash+yappy,
-            lines:[line("CASH",cash),line("YAPPY",yappy),line("EQUITY",-cash-yappy)])
+            lines:[line("CASH",cashChange),line("YAPPY",yappyChange),line("EQUITY",-cashChange-yappyChange)])
         state.dayOpen = true
     }
     public static func closeDay(_ state: inout BusinessState) throws {

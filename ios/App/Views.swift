@@ -32,7 +32,7 @@ struct HomeView: View {
                         Text("Tu negocio, al día").font(.largeTitle.bold())
                         Label(network.stableWifi ? "Wi‑Fi estable" : network.online ? "Conectado · esperando Wi‑Fi estable" : "Trabajando sin conexión",systemImage:network.online ? "wifi" : "wifi.slash")
                         Text("\(model.state.pending.count) pendientes · \(model.state.dayOpen ? "Jornada abierta" : "Jornada cerrada")").font(.subheadline)
-                    }.frame(maxWidth:.infinity,alignment:.leading).padding(22).background(Color.brown.opacity(0.12),in:RoundedRectangle(cornerRadius:24))
+                    }.frame(maxWidth:.infinity,alignment:.leading).padding(22).background(Color.purple.opacity(0.10),in:RoundedRectangle(cornerRadius:24))
                     LazyVGrid(columns:[GridItem(.adaptive(minimum:155))],spacing:12) {
                         Metric(title:"Pedidos activos",value:String(model.state.activeOrders.count),symbol:"bag")
                         Metric(title:"Stock local",value:"\(model.state.stock) donas",symbol:"shippingbox")
@@ -253,8 +253,9 @@ struct OperationForm: View {
                     Text("Costo total: \(money(model.state.config.boxCostCents*Int64(boxes)))")
                 } else if kind == .close { Text("Stock al cierre: \(model.state.stock) donas. Revisa el conteo físico antes de cerrar.") }
                 else {
-                    TextField(kind == .open ? "Efectivo que agregas como capital" : "Importe",text:$amount).keyboardType(.decimalPad)
-                    if kind == .open || kind == .transfer { TextField(kind == .open ? "Yappy que agregas como capital" : "Comisión",text:$second).keyboardType(.decimalPad) }
+                    TextField(kind == .open ? "Saldo actual de efectivo" : "Importe",text:$amount).keyboardType(.decimalPad)
+                    if kind == .open || kind == .transfer { TextField(kind == .open ? "Saldo actual de Yappy" : "Comisión",text:$second).keyboardType(.decimalPad) }
+                    if kind == .open { Text("Confirma el saldo real. Solo la diferencia con el libro se registra como ajuste de capital.").font(.caption) }
                 }
                 if kind != .open && kind != .close {
                     Picker("Cuenta",selection:$account) { Text("Efectivo").tag("CASH");Text("Yappy").tag("YAPPY");if kind == .purchase { Text("Compra a crédito").tag("LOAN") } }
@@ -262,6 +263,12 @@ struct OperationForm: View {
                 if [.expense,.personal,.partner].contains(kind) { TextField(kind == .partner ? "Nombre del socio" : "Motivo",text:$description) }
                 Button("Guardar") { save() }.buttonStyle(.borderedProminent).disabled(model.storageProblem)
             }.navigationTitle(kind.rawValue).navigationBarTitleDisplayMode(.inline).toolbar { Button("Volver") { dismiss() } }
+                .onAppear {
+                    if kind == .open {
+                        amount=String(format:"%.2f",Double(model.state.balance("CASH"))/100)
+                        second=String(format:"%.2f",Double(model.state.balance("YAPPY"))/100)
+                    }
+                }
         }
     }
     private func save() {
