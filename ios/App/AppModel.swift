@@ -114,12 +114,28 @@ import UserNotifications
                 }
                 if !page.hasMore { break }
             }
+            // A seller may deliver from Android while this administrator keeps the local book.
+            // Ignore deliveries predating this book's opening balance.
+            var unbooked=0
+            if role=="ADMIN",let start=state.events.first?.date {
+                let fractional=ISO8601DateFormatter();fractional.formatOptions=[.withInternetDateTime,.withFractionalSeconds]
+                let plain=ISO8601DateFormatter()
+                for order in state.orders where order.status=="COMPLETED" && order.paymentStatus=="CONFIRMED" && !state.events.contains(where:{ $0.remoteOrderID==order.id }) {
+                    guard let delivered=fractional.date(from:order.updatedAt) ?? plain.date(from:order.updatedAt),delivered>=start else { continue }
+                    let items=Dictionary(order.items.compactMap { item -> (String,Int)? in
+                        guard let sku=item.sku,Flavor(rawValue:sku) != nil else { return nil };return (sku,item.quantity)
+                    },uniquingKeysWith:+)
+                    guard state.dayOpen,!items.isEmpty,items.values.reduce(0,+)==order.items.reduce(0,{ $0+$1.quantity }) else { unbooked+=1;continue }
+                    if !commit({ try Ledger.sale(&$0,items:items,account:order.paymentMethod,remoteID:order.id,revenueOverride:order.totalCents) }) { unbooked+=1 }
+                }
+            }
             let inventory: InventorySnapshot=try await client.request("/api/admin/customers/inventory")
             commit { $0.inventory=inventory;$0.lastSync=Date() }
             signedIn=await client.signedIn
             role=await client.role ?? role
             message=state.pending.isEmpty ? "Todo sincronizado." : "\(state.pending.count) registros esperando Wi‑Fi estable."
             if !state.rejected.isEmpty { message="\(state.rejected.count) registros requieren conciliación. No repitas la venta." }
+            if unbooked>0 { message="\(unbooked) entregas confirmadas esperan asiento local. Abre jornada y revisa las existencias; no repitas el cobro." }
         } catch {
             signedIn=await client.signedIn
             message="\(error.localizedDescription) Los registros locales se conservan."
