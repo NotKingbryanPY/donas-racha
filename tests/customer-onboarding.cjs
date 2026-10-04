@@ -22,7 +22,7 @@ global.fetch = async (url, options) => {
     const id = parsed.searchParams.get('id')?.slice(3);
     return json([A, B].includes(id) ? [{ id, public_id: id === A ? 'CAAAA' : 'CBBBB', status: 'ACTIVE' }] : []);
   }
-  if (table === 'customer_web_access') return json([{ credential_version: 1 }]);
+  if (table === 'customer_web_access') return json([{ credential_version: 1, password_hash: 'a'.repeat(128) }]);
   if (table === 'consume_api_rate_limit') return json({ allowed: true });
   if (table === 'customer_onboarding') {
     if (options.method === 'POST') {

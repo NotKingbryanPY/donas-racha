@@ -1,11 +1,11 @@
-const { requireAdmin } = require('../../../_lib/auth');
+const { requireStaff } = require('../../../_lib/auth');
 const { withApi } = require('../../../_lib/http');
 const { enforceRateLimit } = require('../../../_lib/rate-limit');
 const { rpc } = require('../../../_lib/supabase');
 const { enumValue, requiredString, uuid } = require('../../../_lib/validation');
 
 module.exports = withApi(['POST'], async (req, context) => {
-  const user = await requireAdmin(req);
+  const user = await requireStaff(req);
   await enforceRateLimit(req, 'admin_order_payment', 60, 60, user.id);
   const body = context.parseJsonBody(req);
   const reference = body.externalReference == null ? null : requiredString(body.externalReference, 'externalReference', 1, 120);

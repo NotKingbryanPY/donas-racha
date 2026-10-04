@@ -11,6 +11,7 @@ import UserNotifications
     @Published var tab=0
     @Published private(set) var storageProblem=false
     @Published private(set) var pushRegistered=false
+    @Published private(set) var role=SessionClient.savedSession?.role ?? "ADMIN"
     let network=NetworkStatus()
     private let client=SessionClient()
     private var store: LocalStore?
@@ -34,6 +35,7 @@ import UserNotifications
             let owner=try await client.login(email:email,password:password,expectedOwner:state.ownerID)
             guard commit({ $0.ownerID=owner }) else { busy=false;return }
             signedIn=true;message="Sesión guardada en el llavero."
+            role=await client.role ?? "ADMIN"
             await requestNotifications()
         } catch { message=error.localizedDescription }
         busy=false
@@ -77,7 +79,7 @@ import UserNotifications
         busy=true;defer { busy=false }
         do {
             // Only upload after ten uninterrupted seconds of Wi-Fi. Reads can use cellular.
-            while network.stableWifi && !state.pending.isEmpty {
+            while role=="ADMIN" && network.stableWifi && !state.pending.isEmpty {
                 let batch=Array(state.pending.prefix(50))
                 let response=try await client.push(batch,device:state.deviceID)
                 let sent=Set(batch.map(\.clientOperationId))

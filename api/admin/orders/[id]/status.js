@@ -1,4 +1,4 @@
-const { requireAdmin } = require('../../../_lib/auth');
+const { requireStaff } = require('../../../_lib/auth');
 const { withApi } = require('../../../_lib/http');
 const { enforceRateLimit } = require('../../../_lib/rate-limit');
 const { rpc } = require('../../../_lib/supabase');
@@ -6,7 +6,7 @@ const { enumValue, uuid } = require('../../../_lib/validation');
 const { assertAccountingReady } = require('../../../_lib/order-transition-policy');
 
 module.exports = withApi(['PATCH', 'POST'], async (req, context) => {
-  const user = await requireAdmin(req);
+  const user = await requireStaff(req);
   await enforceRateLimit(req, 'admin_order_status', 120, 60, user.id);
   const body = context.parseJsonBody(req);
   if (String(body.status).toUpperCase() === 'COMPLETED' && body.paymentReceived === true) {

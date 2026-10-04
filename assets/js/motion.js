@@ -1,42 +1,18 @@
-/* Progressive decoration. No requests, data calculations, or scanner lifecycle changes. */
+/* Progressive decoration. No requests or data calculations. */
 (() => {
   'use strict';
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const fine = matchMedia('(hover: hover) and (pointer: fine)');
   const connection = navigator.connection;
-  const preferenceKey = 'donasMotionPreference';
-  const validPreference = value => ['system','full','reduced'].includes(value) ? value : 'system';
-  let preference = 'system', preferenceSaved = true;
-  try { preference = validPreference(localStorage.getItem(preferenceKey)); } catch (_) { preferenceSaved = false; }
-  const lite = () => preference === 'reduced' || (preference === 'system' && (reduced.matches || !!connection?.saveData));
+  const lite = () => reduced.matches || !!connection?.saveData;
   const syncMotion = () => {
     document.documentElement.classList.toggle('motion-lite', !!lite());
-    document.documentElement.classList.toggle('motion-full', preference === 'full');
-    document.querySelectorAll('[data-motion-preference]').forEach(select => { select.value = preference; });
-    const explanation = preference === 'full' ? 'Animaciones activadas solo en esta web.'
-      : preference === 'reduced' ? 'Animaciones reducidas en esta web.'
-      : reduced.matches ? 'Tu navegador solicita menos movimiento. Puedes activarlo solo aquí.'
-      : connection?.saveData ? 'El ahorro de datos reduce el movimiento. Puedes activarlo solo aquí.'
-      : 'Se usa la preferencia de movimiento del dispositivo.';
-    document.querySelectorAll('[data-motion-hint]').forEach(el => { el.textContent = explanation + (preferenceSaved ? '' : ' La elección dura mientras esta página esté abierta.'); });
     if (lite()) document.getAnimations().forEach(a => { if (a.effect?.getTiming().iterations === Infinity) a.cancel(); else { try { a.finish(); } catch (_) { a.cancel(); } } });
+    document.dispatchEvent(new Event('donas:motionchange'));
   };
   reduced.addEventListener('change', syncMotion);
   connection?.addEventListener?.('change', syncMotion);
   syncMotion();
-  document.querySelectorAll('[data-motion-preference]').forEach(select => {
-    select.addEventListener('change', () => {
-      preference = validPreference(select.value);
-      try { localStorage.setItem(preferenceKey,preference); preferenceSaved = true; } catch (_) { preferenceSaved = false; }
-      syncMotion();
-      document.dispatchEvent(new Event('donas:motionchange'));
-    });
-  });
-  window.addEventListener('storage', event => {
-    if (event.key !== preferenceKey && event.key !== null) return;
-    preference = validPreference(event.newValue); syncMotion();
-    document.dispatchEvent(new Event('donas:motionchange'));
-  });
   // The brand entrance belongs to a completed customer login, never page load.
   function customerWelcome({signal, reveal}) {
     if (signal.aborted) return Promise.resolve();

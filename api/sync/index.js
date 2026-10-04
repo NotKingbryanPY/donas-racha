@@ -1,4 +1,4 @@
-const { requireAdmin } = require('../_lib/auth');
+const { requireAdmin, requireStaff } = require('../_lib/auth');
 const { ApiError, withApi } = require('../_lib/http');
 const { enforceRateLimit } = require('../_lib/rate-limit');
 const { rpc } = require('../_lib/supabase');
@@ -46,7 +46,7 @@ function normalizeOperations(value) {
 }
 
 module.exports = withApi(['GET','POST'], async (req, context) => {
-  const admin = await requireAdmin(req);
+  const admin = await (req.method === 'GET' ? requireStaff(req) : requireAdmin(req));
   if (req.method === 'GET') {
     await enforceRateLimit(req, 'sync_pull', 120, 60, admin.id);
     const cursor = parseCursor(req.query.cursor);

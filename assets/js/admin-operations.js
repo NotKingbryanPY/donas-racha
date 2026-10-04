@@ -17,6 +17,8 @@ async function adminRequest(path, method='GET', body, retried=false) {
       const session = await vercelPost('/api/auth/session', {grantType:'refresh_token',refreshToken:sessionStorage.getItem('donasAdminRefreshToken')});
       sessionStorage.setItem('donasAdminAccessToken',session.accessToken);
       sessionStorage.setItem('donasAdminRefreshToken',session.refreshToken);
+      staffRole=session.role;
+      sessionStorage.setItem('donasStaffRole',staffRole);
       return adminRequest(path,method,body,true);
     }
     const payload = await response.json().catch(() => null);

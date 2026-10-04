@@ -31,7 +31,7 @@ class OrderSyncWorker(context: Context, params: WorkerParameters) : CoroutineWor
         val db = app.database
         val sync = db.syncDao()
         return try {
-            val upload = inputData.getBoolean("upload", true) && StableWifi.ready(applicationContext)
+            val upload = client.canUpload && inputData.getBoolean("upload", true) && StableWifi.ready(applicationContext)
             app.repository.initialize()
             // Backfill operations created before the outbox migration, without changing the accounting ledger.
             while (true) {
@@ -108,7 +108,7 @@ class OrderSyncWorker(context: Context, params: WorkerParameters) : CoroutineWor
                     .edit { putString("snapshot", inventory.toString()) }
             } catch (_: Exception) { /* Older servers still support order monitoring. */ }
             var needsRetry = false
-            for (order in sync.settledOrders()) {
+            for (order in if (client.canUpload) sync.settledOrders() else emptyList()) {
                 try {
                     val before = db.operationDao().eventByKey("order-${order.id}")
                     if (before == null) {

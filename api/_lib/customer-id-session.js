@@ -3,6 +3,7 @@ const { ApiError } = require('./http');
 const { getConfig, serviceRequest } = require('./supabase');
 
 const ID = /^C[0-9A-Z_-]{3,63}$/;
+const USERNAME = /^[a-z0-9]{1,30}(?:\.[a-z0-9]{1,30})?[0-9]*$/;
 const MAX_AGE_SECONDS = 7 * 24 * 60 * 60;
 
 function normalizedPublicId(value) {
@@ -23,11 +24,26 @@ function issueSession(customerId, version) {
 
 async function customerByPublicId(publicId) {
   const rows = await serviceRequest('customers', { query: new URLSearchParams({
-    select: 'id,public_id,display_name,whatsapp_e164,status,registered_at,last_purchase_at',
+    select: 'id,public_id,username,display_name,whatsapp_e164,status,registered_at,last_purchase_at',
     public_id: `eq.${normalizedPublicId(publicId)}`, status: 'eq.ACTIVE', limit: '1'
   }).toString() });
   if (!rows?.[0]) throw new ApiError(404, 'CUSTOMER_NOT_FOUND', 'No encontramos ese ID de cliente activo.');
   return rows[0];
+}
+
+async function customerByLogin(value) {
+  const login = typeof value === 'string' ? value.trim().toLowerCase() : '';
+  if (!USERNAME.test(login) && !ID.test(login.toUpperCase()))
+    throw new ApiError(400, 'INVALID_CUSTOMER_USERNAME', 'Escribe un usuario válido.');
+  if (USERNAME.test(login)) {
+    const rows = await serviceRequest('customers', { query: new URLSearchParams({
+      select: 'id,public_id,username,display_name,whatsapp_e164,status,registered_at,last_purchase_at',
+      username: `eq.${login}`, status:'eq.ACTIVE', limit:'1'
+    }).toString() });
+    if (rows?.[0]) return rows[0];
+  }
+  if (ID.test(login.toUpperCase())) return customerByPublicId(login.toUpperCase());
+  throw new ApiError(404, 'CUSTOMER_NOT_FOUND', 'No encontramos ese usuario activo.');
 }
 
 async function accessFor(customerId) {
@@ -40,7 +56,7 @@ async function accessFor(customerId) {
 
 async function requireIdCustomer(req) {
   const match = String(req.headers.authorization || '').match(/^Bearer\s+(dr1\.([A-Za-z0-9_-]{20,300})\.([A-Za-z0-9_-]{43}))$/);
-  if (!match) throw new ApiError(401, 'AUTH_REQUIRED', 'Escribe tu ID para entrar al perfil.');
+  if (!match) throw new ApiError(401, 'AUTH_REQUIRED', 'Entra con tu usuario y contraseña.');
   const given = Buffer.from(match[3], 'base64url');
   const expected = signature(match[2]);
   if (given.length !== expected.length || !timingSafeEqual(given, expected)) {
@@ -56,14 +72,15 @@ async function requireIdCustomer(req) {
     throw new ApiError(401, 'INVALID_SESSION', 'La sesión expiró. Entra de nuevo con tu ID.');
   }
   const rows = await serviceRequest('customers', { query: new URLSearchParams({
-    select: 'id,public_id,display_name,whatsapp_e164,status,registered_at,last_purchase_at',
+    select: 'id,public_id,username,display_name,whatsapp_e164,status,registered_at,last_purchase_at',
     id: `eq.${payload.id}`, status: 'eq.ACTIVE', limit: '1'
   }).toString() });
   const customer = rows?.[0];
   if (!customer) throw new ApiError(403, 'CUSTOMER_NOT_FOUND', 'El cliente ya no está activo.');
   const access = await accessFor(customer.id);
+  if (!access.password_hash) throw new ApiError(401, 'PASSWORD_SETUP_REQUIRED', 'Primero crea una contraseña para activar tu perfil.');
   if (access.credential_version !== payload.version) throw new ApiError(401, 'INVALID_SESSION', 'Vuelve a entrar con tu ID.');
   return { user: { id: customer.id, kind: 'CUSTOMER_ID' }, customer, credentialVersion: payload.version };
 }
 
-module.exports = { accessFor, customerByPublicId, issueSession, normalizedPublicId, requireIdCustomer };
+module.exports = { accessFor, customerByLogin, customerByPublicId, issueSession, normalizedPublicId, requireIdCustomer };

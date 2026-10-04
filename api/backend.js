@@ -1,6 +1,6 @@
 const { randomBytes } = require('node:crypto');
 const { ApiError, withApi } = require('./_lib/http');
-const { requireAdmin, requireCustomer } = require('./_lib/auth');
+const { requireCustomer, requireStaff } = require('./_lib/auth');
 const { enforceRateLimit } = require('./_lib/rate-limit');
 const { customerByPublicId, normalizedPublicId } = require('./_lib/customer-id-session');
 const { rpc, serviceRequest } = require('./_lib/supabase');
@@ -52,14 +52,9 @@ function nextPoints(streak, s) {
   return streak >= 14 ? s.points_streak_14 : streak >= 7 ? s.points_streak_7 : streak >= 3 ? s.points_streak_3 : s.points_base;
 }
 
-function qrUrl(publicId) {
-  const destination = `https://donas-racha.vercel.app/?profile=1&id=${encodeURIComponent(publicId)}`;
-  return `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(destination)}&format=png&margin=10`;
-}
-
 function brief(c, a, st, level) {
   return {
-    id:c.public_id, name:c.display_name, whatsapp:c.whatsapp_e164 || '',
+    id:c.public_id, username:c.username || '', name:c.display_name, whatsapp:c.whatsapp_e164 || '',
     registrationDate:c.registered_at, lastPurchase:c.last_purchase_at,
     currentStreak:st?.current_count || 0, totalPurchases:a?.purchase_count || 0,
     rewardsEarned:a?.redemption_count || 0, redemptionsMade:a?.redemption_count || 0,
@@ -100,7 +95,7 @@ async function clientDetails(customer) {
     ? (Number.isInteger(dayStreak) && dayStreak > 0 ? dayStreak : streak.current_count || 0)
     : daysSinceQualified <= config.streak_tolerance_days+1 ? (streak.current_count || 0)+1 : 1;
   const result = {
-    ...brief(customer,account,streak,level), qrUrl:qrUrl(customer.public_id),
+    ...brief(customer,account,streak,level),
     purchasedToday:todayPurchases.length > 0,
     purchasesToday:todayPurchases.length, dailyPurchaseLimit:DAILY_PURCHASE_LIMIT,
     progressLevelPct:progress, pointsToNextLevel:next ? next.minimum_lifetime_points-account.lifetime_points : 0,
@@ -130,7 +125,7 @@ async function clientDetails(customer) {
 
 async function adminClients() {
   const [customers, accounts, streaks, levels] = await Promise.all([
-    allRows('customers', { select:'id,public_id,display_name,whatsapp_e164,registered_at,last_purchase_at', status:'eq.ACTIVE', order:'created_at.desc,id.desc' }),
+    allRows('customers', { select:'id,public_id,username,display_name,whatsapp_e164,registered_at,last_purchase_at', status:'eq.ACTIVE', order:'created_at.desc,id.desc' }),
     allRows('loyalty_accounts', { select:'customer_id,available_points,lifetime_points,purchase_points,purchase_count,redemption_count,level_key', order:'customer_id.asc' }),
     allRows('customer_streaks', { select:'customer_id,current_count', order:'customer_id.asc' }),
     rows('loyalty_levels', { select:'key,name,emoji,minimum_lifetime_points' })
@@ -153,7 +148,7 @@ async function customerForRequest(req, publicId) {
     if (customer.public_id !== publicId) throw new ApiError(403,'CUSTOMER_FORBIDDEN','No puedes abrir otro perfil.');
     return customer;
   }
-  await requireAdmin(req);
+  await requireStaff(req);
   return customerByPublicId(publicId);
 }
 
@@ -163,8 +158,28 @@ async function getAction(req, action) {
     await enforceRateLimit(req,'backend_profile',90,60,id);
     return { client:await clientDetails(await customerForRequest(req,id)) };
   }
-  const admin = await requireAdmin(req);
-  await enforceRateLimit(req,'backend_admin_read',120,60,admin.id);
+  const staff = await requireStaff(req);
+  await enforceRateLimit(req,'backend_admin_read',120,60,staff.id);
+  if (!['buscarCliente','getCanjes','getConfig','getAdminLoyaltyHistory','getStats','getTodosClientes'].includes(action))
+    throw new ApiError(404,'UNKNOWN_ACTION','La acción no existe.');
+  if (staff.role !== 'ADMIN' && !['buscarCliente','getCanjes'].includes(action))
+    throw new ApiError(403,'ADMIN_REQUIRED','Esta operación requiere rol de administrador.');
+  if (action === 'getCanjes') {
+    const status = String(req.query.status || 'PENDING').toUpperCase();
+    if (!['PENDING','FULFILLED','CANCELLED','ALL'].includes(status))
+      throw new ApiError(400,'INVALID_REDEMPTION_STATUS','El estado de canje no es válido.');
+    const items = await rows('reward_redemptions',{
+      select:'id,public_code,points_cost_snapshot,reward_name_snapshot,status,created_at,fulfilled_at,cancelled_at,customers(public_id,display_name)',
+      ...(status === 'ALL' ? {} : { status:`eq.${status}` }),
+      order:status === 'PENDING' ? 'created_at.asc' : 'created_at.desc',limit:'200'
+    });
+    return { redemptions:items.map(item => ({
+      id:item.id,code:item.public_code,points:item.points_cost_snapshot,
+      reward:item.reward_name_snapshot,status:item.status,createdAt:item.created_at,
+      fulfilledAt:item.fulfilled_at,cancelledAt:item.cancelled_at,
+      customerId:item.customers?.public_id || '',customerName:item.customers?.display_name || 'Cliente'
+    })) };
+  }
   if (action === 'getConfig') return { config:publicSettings(await settings()) };
   if (action === 'getStats') return { stats:await rpc('api_business_stats',{}) };
   if (action === 'getTodosClientes') return { clients:await adminClients() };
@@ -180,7 +195,7 @@ async function getAction(req, action) {
     const search = String(req.query.q || '').trim().toLocaleLowerCase('es');
     if (!search || search.length > 120) throw new ApiError(400,'INVALID_SEARCH','Escribe un nombre, ID o WhatsApp.');
     const clients = await adminClients();
-    return { clients:clients.filter(c => `${c.name} ${c.id} ${c.whatsapp}`.toLocaleLowerCase('es').includes(search)).slice(0,50) };
+    return { clients:clients.filter(c => `${c.name} ${c.username} ${c.id} ${c.whatsapp}`.toLocaleLowerCase('es').includes(search)).slice(0,50) };
   }
   throw new ApiError(404,'UNKNOWN_ACTION','La acción no existe.');
 }
@@ -204,12 +219,26 @@ async function postAction(req, action, body) {
     const result = await rpc('api_redeem_customer_reward',{p_customer_id:customer.id,p_reward_key:rewardKey,p_idempotency_key:key});
     return { ...result, message:'Canje realizado. El vendedor entregará tu recompensa.', client:await clientDetails(customer) };
   }
-  const admin = await requireAdmin(req);
-  await enforceRateLimit(req,'backend_admin_write',60,60,admin.id);
+  const staff = await requireStaff(req);
+  await enforceRateLimit(req,'backend_admin_write',60,60,staff.id);
+  if (staff.role !== 'ADMIN' && !['nuevoCliente','registrarCompra','getAdminDashboard','resolverCanje'].includes(action))
+    throw new ApiError(403,'ADMIN_REQUIRED','Esta operación requiere rol de administrador.');
+  const admin = staff;
+  if (action === 'resolverCanje') {
+    const redemptionId = uuid(body.redemptionId,'redemptionId');
+    const status = String(body.status || '').toUpperCase();
+    if (!['FULFILLED','CANCELLED'].includes(status))
+      throw new ApiError(400,'INVALID_REDEMPTION_STATUS','El estado de canje no es válido.');
+    const result = await rpc('api_staff_resolve_redemption',{
+      p_staff_user_id:staff.id,p_redemption_id:redemptionId,p_status:status
+    });
+    return { redemption:result };
+  }
   if (action === 'nuevoCliente') {
     const name = String(body.name || '').trim();
     if (!name || name.length>120) throw new ApiError(400,'INVALID_NAME','Escribe un nombre de hasta 120 caracteres.');
     const whatsapp = normalizedPhone(body.whatsapp);
+    if (!whatsapp) throw new ApiError(400,'CUSTOMER_PHONE_REQUIRED','El WhatsApp es necesario para compartir el acceso y coordinar pedidos.');
     const key = uuid(body.idempotencyKey,'idempotencyKey');
     const publicId = `C${randomBytes(9).toString('hex').toUpperCase()}`;
     const result = await rpc('api_register_customer',{p_public_id:publicId,p_name:name,p_whatsapp:whatsapp,p_idempotency_key:key});

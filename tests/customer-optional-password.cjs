@@ -33,12 +33,12 @@ async function call(name, body, headers={}) {
 
 (async()=>{
   const first=await call('session',{publicId:'CABC123'});
-  assert.equal(first.statusCode,200);
-  const oldToken=first.body.data.accessToken;
+  assert.equal(first.statusCode,401);
+  assert.equal(first.body.error.code,'PASSWORD_SETUP_REQUIRED');
 
   const set=await call('password',{publicId:'CABC123',code:'a'.repeat(8),newPassword:'long-passphrase-123'});
   assert.equal(set.statusCode,200);
-  assert.notEqual(set.body.data.accessToken,oldToken);
+  const token=set.body.data.accessToken;
 
   const missing=await call('session',{publicId:'CABC123'});
   assert.equal(missing.statusCode,401);
@@ -51,8 +51,7 @@ async function call(name, body, headers={}) {
 
   const profile=response();
   await route({method:'GET',url:'/api/customer/profile',query:{route:'profile'},
-    headers:{authorization:`Bearer ${oldToken}`}},profile);
-  assert.equal(profile.statusCode,401);
-  assert.equal(profile.body.error.code,'INVALID_SESSION');
-  console.log('PASS optional password prompts after ID and invalidates earlier ID-only sessions');
+    headers:{authorization:`Bearer ${token}`}},profile);
+  assert.equal(profile.statusCode,200);
+  console.log('PASS passwordless login blocked, legacy recovery code and password login');
 })().catch(error=>{console.error(error);process.exitCode=1;});

@@ -25,6 +25,8 @@ class BackendClient(context: Context) {
     private val baseUrl = "https://donas-racha.vercel.app"
 
     val signedIn: Boolean get() = sessions.hasSession()
+    val role: String get() = devicePrefs.getString("role", "ADMIN") ?: "ADMIN"
+    val canUpload: Boolean get() = role == "ADMIN"
 
     private fun request(path: String, method: String = "GET", body: JSONObject? = null, bearer: String? = null, retryAuth: Boolean = true): JSONObject {
         val connection = (URL(baseUrl + path).openConnection() as HttpURLConnection).apply {
@@ -64,6 +66,7 @@ class BackendClient(context: Context) {
 
     private fun saveSession(data: JSONObject) {
         sessions.save(data.getString("refreshToken"))
+        devicePrefs.edit { putString("role", data.optString("role", "ADMIN")) }
         accessToken = data.getString("accessToken")
         expiresAt = requireNotNull(SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).apply {
             timeZone = TimeZone.getTimeZone("UTC")

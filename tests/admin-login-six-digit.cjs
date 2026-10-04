@@ -13,7 +13,7 @@ global.fetch=async (raw,options={})=>{
     return json({access_token:'admin-access',refresh_token:'admin-refresh-token',expires_in:3600});
   }
   if(url.pathname==='/auth/v1/user') return json({id:'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'});
-  if(url.pathname==='/rest/v1/app_user_roles') return json([{auth_user_id:'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'}]);
+  if(url.pathname==='/rest/v1/app_user_roles') return json([{role:'SELLER'}]);
   throw new Error(`Unexpected URL ${raw}`);
 };
 const route=require('../api/auth/session');
@@ -22,5 +22,6 @@ const route=require('../api/auth/session');
   await route({method:'POST',url:'/api/auth/session',headers:{},body:{grantType:'password',email:'seller@example.test',password:'654321'}},res);
   assert.equal(res.statusCode,200,JSON.stringify(res.body));
   assert.equal(res.body.data.accessToken,'admin-access');
+  assert.equal(res.body.data.role,'SELLER');
   console.log('PASS seller auth accepts a six-character Supabase password');
 })().catch(error=>{console.error(error);process.exitCode=1;});

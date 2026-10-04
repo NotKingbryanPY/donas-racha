@@ -33,6 +33,10 @@ async function readResponse(response) {
     if (message.includes('PAYMENT_REQUIRED')) throw new ApiError(409, 'PAYMENT_REQUIRED', 'Confirma el pago recibido antes de completar la entrega.');
     if (message.includes('INVALID_TRANSITION')) throw new ApiError(409, 'INVALID_TRANSITION', 'La transición de estado no está permitida.');
     if (message.includes('ORDER_NOT_FOUND')) throw new ApiError(404, 'ORDER_NOT_FOUND', 'No se encontró el pedido.');
+    if (message.includes('REDEMPTION_NOT_FOUND')) throw new ApiError(404, 'REDEMPTION_NOT_FOUND', 'No se encontró el canje.');
+    if (message.includes('REDEMPTION_ALREADY_RESOLVED')) throw new ApiError(409, 'REDEMPTION_ALREADY_RESOLVED', 'Este canje ya fue resuelto. Actualiza la lista.');
+    if (message.includes('REDEMPTION_SPEND_MISSING')) throw new ApiError(409, 'REDEMPTION_SPEND_MISSING', 'Este canje heredado no tiene un gasto verificable. Pide al administrador que lo revise.');
+    if (message.includes('INVALID_REDEMPTION_STATUS')) throw new ApiError(400, 'INVALID_REDEMPTION_STATUS', 'El estado de canje no es válido.');
     if (message.includes('PHONE_EXISTS')) throw new ApiError(409, 'PHONE_EXISTS', 'Ya existe un cliente activo con ese WhatsApp.');
     if (message.includes('INSUFFICIENT_POINTS')) throw new ApiError(409, 'INSUFFICIENT_POINTS', 'No tienes puntos suficientes.');
     if (message.includes('INVALID_ADJUSTMENT')) throw new ApiError(400, 'INVALID_ADJUSTMENT', 'El ajuste no es válido. Revisa cantidad, fecha y motivo.');
@@ -45,6 +49,8 @@ async function readResponse(response) {
     if (message.includes('CUSTOMER_NOT_FOUND')) throw new ApiError(404, 'CUSTOMER_NOT_FOUND', 'No encontramos ese ID de cliente activo.');
     if (message.includes('CUSTOMER_NOT_LINKED')) throw new ApiError(403, 'CUSTOMER_NOT_LINKED', 'La cuenta no está vinculada a un cliente activo.');
     if (message.includes('INVALID_PASSWORD_TOKEN')) throw new ApiError(403, 'INVALID_PASSWORD_TOKEN', 'El código temporal no es válido o expiró. Pide uno nuevo al vendedor.');
+    if (message.includes('PASSWORD_ALREADY_SET')) throw new ApiError(409, 'PASSWORD_ALREADY_SET', 'Este perfil ya tiene contraseña. Entra con ella para continuar.');
+    if (message.includes('PASSWORD_CHANGED')) throw new ApiError(409, 'PASSWORD_CHANGED', 'La contraseña cambió. Entra de nuevo e inténtalo otra vez.');
     if (message.includes('CUSTOMER_PHONE_REQUIRED')) throw new ApiError(409, 'CUSTOMER_PHONE_REQUIRED', 'El cliente necesita un WhatsApp registrado antes de pedir.');
     if (message.includes('AUTH_REQUIRED')) throw new ApiError(401, 'AUTH_REQUIRED', 'Inicia sesión para hacer pedidos.');
     if (message.includes('ORDER_FORBIDDEN')) throw new ApiError(403, 'ORDER_FORBIDDEN', 'No puedes consultar este pedido.');

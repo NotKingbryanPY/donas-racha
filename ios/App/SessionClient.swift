@@ -26,7 +26,7 @@ enum Keychain {
     }
 }
 struct AdminSession: Codable, Sendable {
-    let accessToken: String; let refreshToken: String; let expiresAt: String; let userId: String
+    let accessToken: String; let refreshToken: String; let expiresAt: String; let userId: String;let role: String
     var expiry: Date {
         let formatter=ISO8601DateFormatter(); formatter.formatOptions=[.withInternetDateTime,.withFractionalSeconds]
         return formatter.date(from:expiresAt) ?? ISO8601DateFormatter().date(from:expiresAt) ?? .distantPast
@@ -55,6 +55,7 @@ actor SessionClient {
     init() { if let saved=Keychain.read("session") { session=try? JSONDecoder().decode(AdminSession.self,from:saved) } }
     var signedIn: Bool { session != nil }
     var ownerID: String? { session?.userId }
+    var role: String? { session?.role }
     static var savedSession: AdminSession? { Keychain.read("session").flatMap { try? JSONDecoder().decode(AdminSession.self,from:$0) } }
 
     private func raw<T: Decodable & Sendable>(_ path: String, method: String="GET", body: Data?=nil,
@@ -100,7 +101,7 @@ actor SessionClient {
             guard generation==stamp else { throw CancellationError() }
             try store(refreshed);return refreshed.accessToken
         } catch let problem as APIProblem {
-            if generation==stamp && (problem.code=="INVALID_CREDENTIALS" || problem.code=="ADMIN_REQUIRED") {
+            if generation==stamp && (problem.code=="INVALID_CREDENTIALS" || problem.code=="STAFF_REQUIRED") {
                 try Keychain.save(nil,key:"session");session=nil
             }
             throw problem
@@ -111,7 +112,8 @@ actor SessionClient {
         let access=try await token()
         do { return try await raw(path,method:method,body:encoded,token:access) }
         catch let problem as APIProblem where problem.status==401 {
-            return try await raw(path,method:method,body:encoded,token:token(rejected:access))
+            let refreshed=try await token(rejected:access)
+            return try await raw(path,method:method,body:encoded,token:refreshed)
         }
     }
     func push(_ operations: [SyncOperation], device: UUID) async throws -> SyncResponse {
@@ -120,7 +122,8 @@ actor SessionClient {
         let access=try await token()
         do { return try await raw("/api/sync",method:"POST",body:body,token:access) }
         catch let problem as APIProblem where problem.status==401 {
-            return try await raw("/api/sync",method:"POST",body:body,token:token(rejected:access))
+            let refreshed=try await token(rejected:access)
+            return try await raw("/api/sync",method:"POST",body:body,token:refreshed)
         }
     }
     func logout(device: UUID) async throws {

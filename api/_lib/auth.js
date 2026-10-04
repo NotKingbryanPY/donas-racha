@@ -27,11 +27,19 @@ async function requireCustomer(req) {
   return requireIdCustomer(req);
 }
 
-async function requireAdmin(req) {
+async function requireStaff(req) {
   const user = await requireUser(req);
-  const query = new URLSearchParams({ select: 'auth_user_id', auth_user_id: `eq.${user.id}`, role: 'eq.ADMIN', limit: '1' }).toString();
+  const query = new URLSearchParams({ select: 'role', auth_user_id: `eq.${user.id}` }).toString();
   const roles = await serviceRequest('app_user_roles', { query });
-  if (!roles || !roles[0]) throw new ApiError(403, 'ADMIN_REQUIRED', 'Esta operación requiere rol de administrador.');
+  const role = roles?.some(item => item.role === 'ADMIN') ? 'ADMIN' :
+    roles?.some(item => item.role === 'SELLER') ? 'SELLER' : null;
+  if (!role) throw new ApiError(403, 'STAFF_REQUIRED', 'Esta operación requiere una cuenta de vendedor o administrador.');
+  return { ...user, role };
+}
+
+async function requireAdmin(req) {
+  const user = await requireStaff(req);
+  if (user.role !== 'ADMIN') throw new ApiError(403, 'ADMIN_REQUIRED', 'Esta operación requiere rol de administrador.');
   return user;
 }
 
@@ -40,4 +48,4 @@ async function optionalUser(req) {
   return requireUser(req);
 }
 
-module.exports = { optionalUser, requireAdmin, requireCustomer, requireUser };
+module.exports = { optionalUser, requireAdmin, requireCustomer, requireStaff, requireUser };

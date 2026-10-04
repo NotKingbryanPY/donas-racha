@@ -29,7 +29,7 @@ grant select on public.push_devices,public.order_push_jobs to service_role;
 create function public.api_register_push_device(p_auth_user_id uuid,p_device_public_id uuid,p_platform text,p_token text,p_environment text,p_app_version text)
 returns jsonb language plpgsql security definer set search_path='' as $$
 begin
-  if not exists(select 1 from public.app_user_roles where auth_user_id=p_auth_user_id and role='ADMIN') then
+  if not exists(select 1 from public.app_user_roles where auth_user_id=p_auth_user_id and role in ('ADMIN','SELLER')) then
     raise exception 'ADMIN_REQUIRED' using errcode='42501'; end if;
   if exists(select 1 from public.push_devices where device_public_id=p_device_public_id and auth_user_id<>p_auth_user_id and active) then
     raise exception 'DEVICE_REVOKED' using errcode='42501'; end if;
@@ -58,7 +58,7 @@ begin
   if new.status='PENDING' then
     insert into public.order_push_jobs(order_id,device_public_id)
       select new.id,d.device_public_id from public.push_devices d
-      where d.active and exists(select 1 from public.app_user_roles r where r.auth_user_id=d.auth_user_id and r.role='ADMIN')
+      where d.active and exists(select 1 from public.app_user_roles r where r.auth_user_id=d.auth_user_id and r.role in ('ADMIN','SELLER'))
       on conflict(order_id,device_public_id) do nothing;
   end if;
   return new;
@@ -74,7 +74,7 @@ begin
     join public.orders o on o.id=j.order_id
     where j.delivered_at is null and j.attempts<10 and j.available_at<=clock_timestamp()
       and d.active and d.platform=any(p_platforms) and o.status='PENDING'
-      and exists(select 1 from public.app_user_roles r where r.auth_user_id=d.auth_user_id and r.role='ADMIN')
+      and exists(select 1 from public.app_user_roles r where r.auth_user_id=d.auth_user_id and r.role in ('ADMIN','SELLER'))
     order by j.available_at limit 20 for update of j skip locked
   ), claimed as (
     update public.order_push_jobs j set lease_id=gen_random_uuid(),attempts=attempts+1,
@@ -104,3 +104,4 @@ grant execute on function public.api_register_push_device(uuid,uuid,text,text,te
   public.api_claim_order_push(text[]),public.api_finish_order_push(uuid,uuid,boolean,boolean,text) to service_role;
 notify pgrst,'reload schema';
 commit;
+

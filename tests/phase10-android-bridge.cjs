@@ -17,7 +17,7 @@ for (const type of ['SESSION_START', 'SESSION_CLOSE', 'REVERSAL', 'TRANSFER']) a
 assert.match(sql, /sync_operations_type_check/);
 
 const route = fs.readFileSync(path.join(root, 'api/auth/session.js'), 'utf8');
-assert.match(route, /requireAdmin/);
+assert.match(route, /requireStaff/);
 assert.match(route, /enforceRateLimit/);
 assert.match(route, /refresh_token/);
 assert.doesNotMatch(route, /serviceRoleKey/);
