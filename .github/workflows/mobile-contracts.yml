@@ -1,0 +1,35 @@
+name: Shared inventory and mobile API tests
+on:
+  push:
+    branches: ["codex/**", main]
+    paths: ["api/**", "supabase/**", "tests/**", "assets/js/shared-inventory-refresh.js", ".github/workflows/mobile-contracts.yml"]
+  pull_request:
+    paths: ["api/**", "supabase/**", "tests/**", "assets/js/shared-inventory-refresh.js", ".github/workflows/mobile-contracts.yml"]
+  workflow_dispatch:
+jobs:
+  contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: API, session and push contracts
+        run: |
+          node tests/session-resilience.cjs
+          node tests/order-push.cjs
+          node tests/shared-inventory-refresh.cjs
+          node tests/full-supabase-backend.cjs
+          node tests/security-contract.cjs
+          node tests/web-script-syntax.cjs
+          node tests/customer-order-auth.cjs
+      - name: Install pinned PostgreSQL test runtime
+        run: |
+          npm install --prefix "$RUNNER_TEMP/donas-pg" --no-audit --no-fund @electric-sql/pglite@0.5.8
+          echo "PGLITE_MODULE=file://$RUNNER_TEMP/donas-pg/node_modules/@electric-sql/pglite/dist/index.js" >> "$GITHUB_ENV"
+      - name: Apply migrations and exercise shared stock and roles
+        run: |
+          node tests/shared-inventory-postgres.mjs
+          node tests/seller-role-postgres.mjs
+          node tests/manual-inventory-postgres.mjs
