@@ -1,6 +1,7 @@
 package com.bryan.donas.data
 
 import android.content.Context
+import androidx.core.content.edit
 import androidx.room.withTransaction
 import androidx.work.CoroutineWorker
 import androidx.work.ExistingWorkPolicy
@@ -15,15 +16,22 @@ import com.bryan.donas.data.db.RemoteOrderEntity
 import com.bryan.donas.data.db.SyncStateEntity
 import org.json.JSONObject
 import java.util.concurrent.TimeUnit
+import androidx.work.workDataOf
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 class OrderSyncWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
-    override suspend fun doWork(): Result {
+    companion object { private val gate = Mutex() }
+    override suspend fun doWork(): Result = gate.withLock { synchronize() }
+
+    private suspend fun synchronize(): Result {
         val app = applicationContext as DonasApp
         val client = app.backendClient
         if (!client.signedIn) return Result.success()
         val db = app.database
         val sync = db.syncDao()
         return try {
+            val upload = inputData.getBoolean("upload", true) && StableWifi.ready(applicationContext)
             app.repository.initialize()
             // Backfill operations created before the outbox migration, without changing the accounting ledger.
             while (true) {
@@ -42,7 +50,7 @@ class OrderSyncWorker(context: Context, params: WorkerParameters) : CoroutineWor
             }
             var awaitingApplication = false
             var pushFailed = false
-            while (true) {
+            while (upload && StableWifi.connected(applicationContext)) {
                 val pending = sync.pending()
                 if (pending.isEmpty()) break
                 val acks = try { client.push(pending) } catch (e: Exception) {
@@ -86,15 +94,19 @@ class OrderSyncWorker(context: Context, params: WorkerParameters) : CoroutineWor
                 val previousIds = orders.mapNotNull { order ->
                     if (sync.order(order.id) == null) order.id else null
                 }.toSet()
-                val hadCursor = sync.orderCursor() != null
                 db.withTransaction {
                     sync.upsertOrders(orders)
                     sync.saveState(SyncStateEntity(orderCursor = response.optString("nextCursor").ifBlank { null }))
                 }
-                if (hadCursor) orders.filter { it.id in previousIds && it.status == "PENDING" }
+                orders.filter { it.id in previousIds && it.status == "PENDING" }
                     .forEach { OrderNotifications.show(applicationContext, it) }
                 pages++
             } while (response.optBoolean("hasMore") && pages < 20)
+            try {
+                val inventory = client.inventory()
+                applicationContext.getSharedPreferences("shared_inventory", Context.MODE_PRIVATE)
+                    .edit { putString("snapshot", inventory.toString()) }
+            } catch (_: Exception) { /* Older servers still support order monitoring. */ }
             var needsRetry = false
             for (order in sync.settledOrders()) {
                 try {
@@ -115,22 +127,33 @@ class OrderSyncWorker(context: Context, params: WorkerParameters) : CoroutineWor
 object OrderSync {
     fun request(context: Context) {
         val work = OneTimeWorkRequestBuilder<OrderSyncWorker>()
-            .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
+            .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.UNMETERED).build())
             .build()
         WorkManager.getInstance(context).enqueueUniqueWork("donas-order-sync", ExistingWorkPolicy.KEEP, work)
+        val monitor = OneTimeWorkRequestBuilder<OrderSyncWorker>()
+            .setInputData(workDataOf("upload" to false))
+            .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()).build()
+        WorkManager.getInstance(context).enqueueUniqueWork("donas-order-check", ExistingWorkPolicy.KEEP, monitor)
     }
 
     fun schedule(context: Context) {
         val work = PeriodicWorkRequestBuilder<OrderSyncWorker>(15, TimeUnit.MINUTES)
+            .setInputData(workDataOf("upload" to false))
             .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
             .build()
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
-            "donas-order-monitor", androidx.work.ExistingPeriodicWorkPolicy.KEEP, work)
+            "donas-order-monitor", androidx.work.ExistingPeriodicWorkPolicy.UPDATE, work)
+        val upload = PeriodicWorkRequestBuilder<OrderSyncWorker>(15, TimeUnit.MINUTES)
+            .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.UNMETERED).build()).build()
+        WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+            "donas-wifi-sync", androidx.work.ExistingPeriodicWorkPolicy.UPDATE, upload)
         request(context)
     }
 
     fun stop(context: Context) {
         WorkManager.getInstance(context).cancelUniqueWork("donas-order-sync")
         WorkManager.getInstance(context).cancelUniqueWork("donas-order-monitor")
+        WorkManager.getInstance(context).cancelUniqueWork("donas-order-check")
+        WorkManager.getInstance(context).cancelUniqueWork("donas-wifi-sync")
     }
 }

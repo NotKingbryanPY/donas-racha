@@ -39,6 +39,13 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         if ((application as DonasApp).backendClient.signedIn) OrderSync.schedule(this)
+        lifecycleScope.launch {
+            val app = application as DonasApp
+            val data = app.operations.dashboard()
+            val dao = app.database.syncDao()
+            val active = dao.recentOrders().count { it.status in setOf("PENDING", "ACCEPTED", "OUT_FOR_DELIVERY") }
+            binding.home.operationSummary.text = "$active pedidos activos · ${data.stock} donas locales\nEfectivo ${Money.format(data.cash)} · Yappy ${Money.format(data.yappy)}\n${dao.pendingCount()} registros esperando Wi‑Fi"
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,6 +74,7 @@ class MainActivity : AppCompatActivity() {
         binding.home.editPlan.setOnClickListener { binding.navigation.selectedItemId = R.id.nav_sharing }
         binding.home.openOperations.setOnClickListener { startActivity(Intent(this, OperationsActivity::class.java)) }
         binding.home.openOrders.setOnClickListener { startActivity(Intent(this, OrdersActivity::class.java)) }
+        binding.home.openInventory.setOnClickListener { startActivity(Intent(this, InventoryActivity::class.java)) }
         binding.home.openCustomerScan.setOnClickListener { startActivity(Intent(this, CustomerPurchaseActivity::class.java)) }
         binding.retry.setOnClickListener { model.initialize() }
         binding.business.cost.doAfterTextChanged { if (!rendering) { model.cost = it.toString(); previewConfig() } }

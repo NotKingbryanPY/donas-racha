@@ -15,6 +15,8 @@ async function requireUser(req) {
   const response = await fetch(`${config.url}/auth/v1/user`, {
     headers: { apikey: config.anonKey, authorization: `Bearer ${token}` }
   });
+  if (response.status === 429) throw new ApiError(429, 'AUTH_RATE_LIMITED', 'Espera un momento para renovar la sesión.');
+  if (response.status >= 500) throw new ApiError(502, 'AUTH_UNAVAILABLE', 'La autenticación no está disponible temporalmente.');
   if (!response.ok) throw new ApiError(401, 'INVALID_SESSION', 'La sesión no es válida o expiró.');
   const user = await readResponse(response);
   if (!user || !user.id) throw new ApiError(401, 'INVALID_SESSION', 'La sesión no es válida o expiró.');

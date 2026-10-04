@@ -29,6 +29,7 @@ async function readResponse(response) {
     if (message.includes('ADMIN_REQUIRED')) throw new ApiError(403, 'ADMIN_REQUIRED', 'La cuenta no tiene permisos administrativos.');
     if (message.includes('INVALID_OPERATION')) throw new ApiError(400, 'INVALID_OPERATION', 'La operación de sincronización no es válida.');
     if (message.includes('OUT_OF_STOCK')) throw new ApiError(409, 'OUT_OF_STOCK', 'Este sabor no está disponible.');
+    if (message.includes('INVENTORY_CONFLICT')) throw new ApiError(409, 'INVENTORY_CONFLICT', 'El inventario cambió en otro dispositivo. Actualiza y revisa el conteo antes de guardar.');
     if (message.includes('PAYMENT_REQUIRED')) throw new ApiError(409, 'PAYMENT_REQUIRED', 'Confirma el pago recibido antes de completar la entrega.');
     if (message.includes('INVALID_TRANSITION')) throw new ApiError(409, 'INVALID_TRANSITION', 'La transición de estado no está permitida.');
     if (message.includes('ORDER_NOT_FOUND')) throw new ApiError(404, 'ORDER_NOT_FOUND', 'No se encontró el pedido.');

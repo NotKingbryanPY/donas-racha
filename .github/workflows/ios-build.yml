@@ -1,0 +1,41 @@
+name: iOS build and accounting tests
+on:
+  push:
+    branches: ["codex/**", main]
+    paths: ["ios/**", ".github/workflows/ios-build.yml"]
+  pull_request:
+    paths: ["ios/**", ".github/workflows/ios-build.yml"]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test offline accounting
+        working-directory: ios
+        run: swift test
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate and compile iPhone/iPad app
+        working-directory: ios
+        run: |
+          xcodegen generate
+          xcodebuild -project DonasControl.xcodeproj -scheme DonasControl -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath DerivedData CODE_SIGNING_ALLOWED=NO build
+      - name: Open iPad app and capture screen
+        working-directory: ios
+        run: |
+          DEVICE=$(xcrun simctl list devices available -j | python3 -c 'import json,sys;d=json.load(sys.stdin);print(next(x["udid"] for v in d["devices"].values() for x in v if "iPad" in x["name"]))')
+          xcrun simctl boot "$DEVICE"
+          xcrun simctl bootstatus "$DEVICE" -b
+          xcrun simctl install "$DEVICE" DerivedData/Build/Products/Debug-iphonesimulator/DonasControl.app
+          xcrun simctl launch "$DEVICE" com.bryan.donas.control
+          sleep 8
+          xcrun simctl io "$DEVICE" screenshot ipad-home.png
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: donas-control-ios-simulator
+          path: |
+            ios/DerivedData/Build/Products/Debug-iphonesimulator/DonasControl.app
+            ios/ipad-home.png

@@ -10,8 +10,12 @@ android {
         applicationId = "com.bryan.donas"
         minSdk = 23
         targetSdk = 35
-        versionCode = 8
-        versionName = "1.2.2"
+        versionCode = 9
+        versionName = "1.3.0"
+        listOf("APP_ID", "API_KEY", "PROJECT_ID", "SENDER_ID").forEach { name ->
+            val value = providers.gradleProperty("FIREBASE_$name").orNull.orEmpty()
+            buildConfigField("String", "FIREBASE_$name", "\"${value.replace("\\", "\\\\").replace("\"", "\\\"")}\"")
+        }
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         manifestPlaceholders["appLabel"] = "@string/app_name"
     }
@@ -46,6 +50,7 @@ android {
 }
 ksp { arg("room.schemaLocation", "$projectDir/schemas") }
 dependencies {
+    implementation("com.google.firebase:firebase-messaging:24.1.0")
     implementation("androidx.core:core-ktx:1.15.0")
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("com.google.android.material:material:1.12.0")

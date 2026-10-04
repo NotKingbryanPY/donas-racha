@@ -4,9 +4,10 @@ const { enforceRateLimit } = require('../_lib/rate-limit');
 const { getConfig } = require('../_lib/supabase');
 
 module.exports = withApi(['POST'], async (req, context) => {
-  await enforceRateLimit(req, 'admin_login', 10, 300);
   const body = context.parseJsonBody(req, 4096);
   const refresh = body.grantType === 'refresh_token';
+  // Renewal is routine traffic from several devices, not a password attempt.
+  await enforceRateLimit(req, refresh ? 'admin_refresh' : 'admin_login', refresh ? 120 : 10, 300);
   if (body.grantType !== 'password' && !refresh) {
     throw new ApiError(400, 'VALIDATION_ERROR', 'Tipo de sesión no válido.');
   }
@@ -25,6 +26,7 @@ module.exports = withApi(['POST'], async (req, context) => {
     body: JSON.stringify(credentials)
   });
   if (!response.ok) {
+    if (response.status === 429) throw new ApiError(429, 'AUTH_RATE_LIMITED', 'Espera un momento para renovar la sesión.');
     if (response.status >= 500) throw new ApiError(502, 'AUTH_UNAVAILABLE', 'No se pudo conectar con la autenticación.');
     throw new ApiError(401, 'INVALID_CREDENTIALS', 'La sesión no es válida.');
   }
@@ -32,8 +34,9 @@ module.exports = withApi(['POST'], async (req, context) => {
   if (!session.access_token || !session.refresh_token || !Number.isFinite(session.expires_in)) {
     throw new ApiError(502, 'AUTH_INVALID_RESPONSE', 'La autenticación devolvió una respuesta incompleta.');
   }
-  await requireAdmin({ headers: { authorization: `Bearer ${session.access_token}` } });
+  const admin = await requireAdmin({ headers: { authorization: `Bearer ${session.access_token}` } });
   return {
+    userId: admin.id,
     accessToken: session.access_token,
     refreshToken: session.refresh_token,
     expiresAt: new Date(Date.now() + session.expires_in * 1000).toISOString()

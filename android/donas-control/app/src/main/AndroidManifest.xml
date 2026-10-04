@@ -1,8 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <application android:name=".DonasApp" android:allowBackup="false" android:fullBackupContent="@xml/backup_rules" android:dataExtractionRules="@xml/data_extraction_rules" android:label="${appLabel}" android:icon="@drawable/ic_donut" android:supportsRtl="true" android:theme="@style/Theme.Donas">
         <meta-data android:name="com.google.mlkit.vision.DEPENDENCIES" android:value="barcode_ui" />
+        <service android:name=".data.DonasMessagingService" android:exported="false">
+            <intent-filter><action android:name="com.google.firebase.MESSAGING_EVENT" /></intent-filter>
+        </service>
+        <activity android:name=".ui.InventoryActivity" android:exported="false" />
         <activity android:name=".ui.CustomerPurchaseActivity" android:exported="false" />
         <activity android:name=".ui.OperationsActivity" android:exported="false" />
         <activity android:name=".ui.OrdersActivity" android:exported="false" />

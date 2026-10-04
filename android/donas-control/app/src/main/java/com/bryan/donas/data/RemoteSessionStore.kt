@@ -27,14 +27,15 @@ class RemoteSessionStore(context: Context) {
         }.generateKey()
     }
 
-    fun save(refreshToken: String) {
+    @android.annotation.SuppressLint("UseKtx") // KTX edit discards commit's success flag; rotated tokens must be durably saved.
+    @Synchronized fun save(refreshToken: String) {
         val cipher = Cipher.getInstance("AES/GCM/NoPadding")
         cipher.init(Cipher.ENCRYPT_MODE, key())
         val bytes = cipher.doFinal(refreshToken.toByteArray(Charsets.UTF_8))
-        prefs.edit {
+        check(prefs.edit().apply {
             putString("iv", Base64.encodeToString(cipher.iv, Base64.NO_WRAP))
             putString("token", Base64.encodeToString(bytes, Base64.NO_WRAP))
-        }
+        }.commit()) { "No se pudo conservar la sesión en este dispositivo." }
     }
 
     fun refreshToken(): String? = try {

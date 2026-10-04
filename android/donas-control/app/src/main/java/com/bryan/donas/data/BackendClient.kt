@@ -26,7 +26,7 @@ class BackendClient(context: Context) {
 
     val signedIn: Boolean get() = sessions.hasSession()
 
-    private fun request(path: String, method: String = "GET", body: JSONObject? = null, bearer: String? = null): JSONObject {
+    private fun request(path: String, method: String = "GET", body: JSONObject? = null, bearer: String? = null, retryAuth: Boolean = true): JSONObject {
         val connection = (URL(baseUrl + path).openConnection() as HttpURLConnection).apply {
             requestMethod = method
             connectTimeout = 15_000
@@ -45,6 +45,9 @@ class BackendClient(context: Context) {
                 ?.bufferedReader(Charsets.UTF_8)?.use { it.readText() }.orEmpty()
             val response = try { JSONObject(content) } catch (_: Exception) { JSONObject() }
             if (status !in 200..299 || !response.optBoolean("ok")) {
+                if (status == 401 && bearer != null && retryAuth) {
+                    return request(path, method, body, token(rejectedToken = bearer), false)
+                }
                 val detail = response.optJSONObject("error")?.optString("message")?.takeIf { it.isNotBlank() }
                 throw BackendException(status, detail ?: "Error de conexión con el servidor ($status).",
                     response.optJSONObject("error")?.optString("code"))
@@ -56,7 +59,7 @@ class BackendClient(context: Context) {
     suspend fun login(email: String, password: String) = withContext(Dispatchers.IO) {
         val data = request("/api/auth/session", "POST", JSONObject()
             .put("grantType", "password").put("email", email.trim()).put("password", password))
-        saveSession(data)
+        synchronized(this@BackendClient) { saveSession(data) }
     }
 
     private fun saveSession(data: JSONObject) {
@@ -67,7 +70,8 @@ class BackendClient(context: Context) {
         }.parse(data.getString("expiresAt"))).time
     }
 
-    @Synchronized private fun token(): String {
+    @Synchronized private fun token(rejectedToken: String? = null): String {
+        if (rejectedToken != null && rejectedToken == accessToken) expiresAt = 0
         if (accessToken != null && System.currentTimeMillis() < expiresAt - 60_000) return accessToken!!
         val refresh = sessions.refreshToken() ?: throw BackendException(401, "Inicia sesión para sincronizar.")
         val data = try {
@@ -80,7 +84,7 @@ class BackendClient(context: Context) {
         return accessToken!!
     }
 
-    fun logout() {
+    @Synchronized fun logout() {
         sessions.clear()
         accessToken = null
         expiresAt = 0
@@ -89,6 +93,24 @@ class BackendClient(context: Context) {
     private fun deviceId(): String {
         devicePrefs.getString("id", null)?.let { return it }
         return UUID.randomUUID().toString().also { id -> devicePrefs.edit { putString("id", id) } }
+    }
+
+    suspend fun inventory(): JSONObject = withContext(Dispatchers.IO) {
+        request("/api/admin/customers/inventory", bearer = token())
+    }
+
+    suspend fun saveInventory(counts: JSONObject, revision: Long): JSONObject = withContext(Dispatchers.IO) {
+        request("/api/admin/customers/inventory", "POST", JSONObject().put("counts", counts)
+            .put("expectedRevision", revision), token())
+    }
+
+    suspend fun registerPush(pushToken: String) = withContext(Dispatchers.IO) {
+        request("/api/admin/customers/devices", "POST", JSONObject().put("deviceId", deviceId())
+            .put("platform", "ANDROID").put("token", pushToken).put("appVersion", BuildConfig.VERSION_NAME), token())
+    }
+
+    suspend fun unregisterPush() = withContext(Dispatchers.IO) {
+        request("/api/admin/customers/devices", "DELETE", JSONObject().put("deviceId", deviceId()), token())
     }
 
     suspend fun push(items: List<SyncOutboxEntity>): JSONArray = withContext(Dispatchers.IO) {

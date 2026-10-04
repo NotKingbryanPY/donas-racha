@@ -81,14 +81,18 @@ class OrdersActivity : AppCompatActivity() {
         root.addView(loginFields, fullWidth())
         sync = button("Actualizar pedidos") { refreshOrders() }
         logout = button("Cerrar sesión") {
-            client.logout()
-            OrderSync.stop(this)
-            renderSession()
             lifecycleScope.launch {
+                try { if (com.bryan.donas.BuildConfig.FIREBASE_APP_ID.isNotBlank()) client.unregisterPush() } catch (_: Exception) {
+                    notice.text = "Conecta a Internet para desvincular los avisos y cerrar sesión."
+                    return@launch
+                }
+                client.logout()
+                OrderSync.stop(this@OrdersActivity)
+                renderSession()
                 val dao = app.database.syncDao()
                 dao.clearOrders(); dao.clearState()
+                notice.text = "Sesión cerrada."
             }
-            notice.text = "Sesión cerrada."
         }
         root.addView(sync, fullWidth())
         root.addView(logout, fullWidth())
@@ -150,6 +154,7 @@ class OrdersActivity : AppCompatActivity() {
                 app.database.syncDao().clearOrders()
                 app.database.syncDao().clearState()
                 renderSession()
+                com.bryan.donas.data.PushRegistration.register(this@OrdersActivity)
                 OrderSync.schedule(this@OrdersActivity)
                 refreshOrders()
             } catch (e: Exception) { notice.text = e.message ?: "No se pudo iniciar sesión." }
@@ -205,10 +210,9 @@ class OrdersActivity : AppCompatActivity() {
                 )
             }
             app.database.withTransaction {
-                dao.clearOrders()
                 dao.upsertOrders(orders)
             }
-            if (oldIds.isNotEmpty()) orders.filter { it.id !in oldIds && it.status == "PENDING" }
+            orders.filter { it.id !in oldIds && it.status == "PENDING" }
                 .forEach { OrderNotifications.show(this@OrdersActivity, it) }
             loadOrders()
             notice.text = if (orders.isEmpty()) "No hay pedidos en el servidor." else "${orders.size} pedidos consultados."

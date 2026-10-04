@@ -3,6 +3,7 @@ const { ApiError, withApi } = require('../../_lib/http');
 const handlers = Object.freeze({
   lookup: require('../../_lib/admin_handlers/lookup'),
   inventory: require('../../_lib/admin_handlers/inventory'),
+  devices: require('../../_lib/admin_handlers/devices'),
   'claim-token': require('../../_lib/admin_handlers/claim-token')
 });
 const unknown = withApi(['POST'], async () => {
