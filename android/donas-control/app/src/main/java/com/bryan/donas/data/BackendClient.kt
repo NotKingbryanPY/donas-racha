@@ -17,7 +17,7 @@ import java.util.TimeZone
 import java.text.SimpleDateFormat
 
 class BackendClient(context: Context,
-    private val baseUrl: String = "https://dracha.store",
+    private val baseUrl: String = "https://www.dracha.store",
     tokenStore: SessionTokens? = null) {
     private val appContext = context.applicationContext
     private val sessions = tokenStore ?: RemoteSessionStore(appContext)
@@ -49,12 +49,16 @@ class BackendClient(context: Context,
         check(identityUpdate.commit()) { "No se pudo guardar la identidad de la copia. Vuelve a sincronizar antes de registrar ventas." }
     }
 
-    private fun request(path: String, method: String = "GET", body: JSONObject? = null, bearer: String? = null, retryAuth: Boolean = true): JSONObject {
-        val connection = (URL(baseUrl + path).openConnection() as HttpURLConnection).apply {
+    private fun request(path: String, method: String = "GET", body: JSONObject? = null, bearer: String? = null,
+                        retryAuth: Boolean = true, url: URL = URL(baseUrl + path), redirects: Int = 0): JSONObject {
+        val connection = (url.openConnection() as HttpURLConnection).apply {
             requestMethod = method
+            instanceFollowRedirects = false
+            useCaches = false
             connectTimeout = 15_000
             readTimeout = 20_000
             setRequestProperty("Accept", "application/json")
+            setRequestProperty("Cache-Control", "no-store")
             if (bearer != null) setRequestProperty("Authorization", "Bearer $bearer")
             if (body != null) {
                 doOutput = true
@@ -64,6 +68,23 @@ class BackendClient(context: Context,
         try {
             if (body != null) connection.outputStream.use { it.write(body.toString().toByteArray(Charsets.UTF_8)) }
             val status = connection.responseCode
+            if (status == 307 || status == 308) {
+                val destination = connection.getHeaderField("Location")?.let { URL(url, it) }
+                val aliases = setOf("dracha.store", "www.dracha.store")
+                val sameOrigin = destination != null && destination.protocol == url.protocol &&
+                    destination.host.equals(url.host, ignoreCase = true) && effectivePort(destination) == effectivePort(url)
+                val canonicalAlias = destination != null && url.protocol == "https" && destination.protocol == "https" &&
+                    effectivePort(url) == 443 && effectivePort(destination) == 443 &&
+                    url.host.lowercase(Locale.US) in aliases && destination.host.lowercase(Locale.US) in aliases &&
+                    destination.path == url.path && destination.query == url.query
+                if (destination == null || destination.userInfo != null || destination.ref != null ||
+                    !(sameOrigin || canonicalAlias) || redirects >= 2) {
+                    throw BackendException(status, "El servidor redirigió la conexión a una dirección no válida. Tus datos siguen guardados.", "UNSAFE_REDIRECT")
+                }
+                // 307/308 preserve the method and JSON body; never send credentials to another origin.
+                connection.disconnect()
+                return request(path, method, body, bearer, retryAuth, destination, redirects + 1)
+            }
             val content = (if (status in 200..299) connection.inputStream else connection.errorStream)
                 ?.bufferedReader(Charsets.UTF_8)?.use { it.readText() }.orEmpty()
             val response = try { JSONObject(content) } catch (_: Exception) { JSONObject() }
@@ -72,12 +93,16 @@ class BackendClient(context: Context,
                     return request(path, method, body, token(rejectedToken = bearer), false)
                 }
                 val detail = response.optJSONObject("error")?.optString("message")?.takeIf { it.isNotBlank() }
-                throw BackendException(status, detail ?: "Error de conexión con el servidor ($status).",
+                val fallback = if (status == 304) "El servidor devolvió una respuesta de caché sin datos (304). Vuelve a intentar; tus registros siguen guardados."
+                    else "Error de conexión con el servidor ($status)."
+                throw BackendException(status, detail ?: fallback,
                     response.optJSONObject("error")?.optString("code"))
             }
             return response.getJSONObject("data")
         } finally { connection.disconnect() }
     }
+
+    private fun effectivePort(url: URL): Int = if (url.port >= 0) url.port else url.defaultPort
 
     suspend fun login(email: String, password: String) = withContext(Dispatchers.IO) {
         val data = request("/api/auth/session", "POST", JSONObject()

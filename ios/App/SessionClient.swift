@@ -61,7 +61,7 @@ actor SessionClient {
     private let base: URL
     private let transport: URLSession
     private let persist: @Sendable (AdminSession?) throws -> Void
-    init(base: URL=URL(string:"https://dracha.store")!,transport: URLSession = .shared,
+    init(base: URL=URL(string:"https://www.dracha.store")!,transport: URLSession = .shared,
          initial: AdminSession?=SessionClient.savedSession,
          persist: @escaping @Sendable (AdminSession?) throws -> Void = { value in
              try Keychain.save(try value.map { try JSONEncoder().encode($0) },key:"session")
@@ -76,6 +76,8 @@ actor SessionClient {
     private func raw<T: Decodable & Sendable>(_ path: String, method: String="GET", body: Data?=nil,
                                              token: String?=nil) async throws -> T {
         var request=URLRequest(url:URL(string:base.absoluteString+path)!)
+        request.cachePolicy = .reloadIgnoringLocalCacheData
+        request.setValue("no-store",forHTTPHeaderField:"Cache-Control")
         request.httpMethod=method;request.httpBody=body;request.timeoutInterval=20
         request.setValue("application/json",forHTTPHeaderField:"Accept")
         if body != nil { request.setValue("application/json",forHTTPHeaderField:"Content-Type") }

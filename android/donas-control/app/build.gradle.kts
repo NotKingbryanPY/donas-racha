@@ -10,8 +10,8 @@ android {
         applicationId = "com.bryan.donas"
         minSdk = 23
         targetSdk = 35
-        versionCode = 10
-        versionName = "1.3.0"
+        versionCode = 11
+        versionName = "1.3.1"
         listOf("APP_ID", "API_KEY", "PROJECT_ID", "SENDER_ID").forEach { name ->
             val value = providers.gradleProperty("FIREBASE_$name").orNull.orEmpty()
             buildConfigField("String", "FIREBASE_$name", "\"${value.replace("\\", "\\\\").replace("\"", "\\\"")}\"")

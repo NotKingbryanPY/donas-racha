@@ -25,10 +25,13 @@ try {
     } finally { Pop-Location }
     $outputDirectory = Join-Path $projectRoot 'outputs'
     New-Item -ItemType Directory -Path $outputDirectory -Force | Out-Null
-    $officialApk = Join-Path $outputDirectory 'Donas-Control-1.3.0-oficial.apk'
+    $appGradle = Get-Content -LiteralPath (Join-Path $projectRoot 'android/donas-control/app/build.gradle.kts') -Raw
+    $officialVersion = [regex]::Match($appGradle, 'versionName\s*=\s*"([0-9.]+)"').Groups[1].Value
+    if (-not $officialVersion) { throw 'No se encontró la versión del APK.' }
+    $officialApk = Join-Path $outputDirectory "Donas-Control-$officialVersion-oficial.apk"
     Copy-Item -LiteralPath (Join-Path $projectRoot 'android/donas-control/app/build/outputs/apk/official/app-official.apk') -Destination $officialApk
     $digest = (Get-FileHash -LiteralPath $officialApk -Algorithm SHA256).Hash.ToLowerInvariant()
-    Set-Content -LiteralPath "$officialApk.sha256" -Value "$digest  Donas-Control-1.3.0-oficial.apk" -Encoding ascii
+    Set-Content -LiteralPath "$officialApk.sha256" -Value "$digest  Donas-Control-$officialVersion-oficial.apk" -Encoding ascii
     Write-Output "APK oficial generado: $officialApk"
 } finally {
     foreach ($entry in $previousEnvironment.GetEnumerator()) { [Environment]::SetEnvironmentVariable($entry.Key, $entry.Value, 'Process') }
