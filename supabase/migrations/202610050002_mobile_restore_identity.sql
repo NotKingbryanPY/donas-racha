@@ -1,5 +1,6 @@
 -- A restored ledger must retain its original sync device, including reversal ownership.
 begin;
+alter table public.app_devices add column restored_to_official boolean not null default false;
 create function public.api_restore_device_identity(
   p_auth_user_id uuid,p_client_operation_id uuid,p_server_sequence bigint default null
 ) returns jsonb language plpgsql security definer set search_path='' as $$
@@ -21,6 +22,7 @@ begin
   if cardinality(v_devices)<>1 then raise exception 'RESTORE_DEVICE_CONFLICT' using errcode='P0001'; end if;
   select * into v_device from public.app_devices where device_public_id=v_devices[1];
   if v_device.status<>'ACTIVE' then raise exception 'DEVICE_REVOKED' using errcode='42501'; end if;
+  update public.app_devices set restored_to_official=true where id=v_device.id;
   return jsonb_build_object('deviceId',v_device.device_public_id);
 end; $$;
 revoke execute on function public.api_restore_device_identity(uuid,uuid,bigint) from public,anon,authenticated;
@@ -35,6 +37,9 @@ begin
   perform pg_advisory_xact_lock(26092601);
   if exists(select 1 from public.app_devices where device_public_id=p_device_public_id and auth_user_id<>p_auth_user_id) then
     raise exception 'DEVICE_OWNER_CONFLICT' using errcode='42501'; end if;
+  if exists(select 1 from public.app_devices where device_public_id=p_device_public_id and restored_to_official)
+    and p_app_version not like '%-official' then
+    raise exception 'DEVICE_MOVED_TO_OFFICIAL' using errcode='P0001'; end if;
   return public.api_push_sync_before_device_ownership(p_auth_user_id,p_device_public_id,p_device_name,p_app_version,p_operations);
 end; $$;
 revoke execute on function public.api_push_sync_operations(uuid,uuid,text,text,jsonb) from public,anon,authenticated;

@@ -40,7 +40,7 @@ class BackendClient(context: Context,
             if (!restored.isNull("deviceId")) {
                 val original = UUID.fromString(restored.getString("deviceId")).toString()
                 devicePrefs.edit(commit = true) { putString("id", original) }
-            } else check(proof.serverSequence == null) { "No se encontró el dispositivo original de esta copia." }
+            } else error("Sincroniza los registros en el piloto y vuelve a exportar su copia antes de trasladarlos.")
         }
         devicePrefs.edit(commit = true) { putBoolean("restoreNeedsIdentity", false) }
     }
@@ -140,7 +140,8 @@ class BackendClient(context: Context,
             .put("type", it.type).put("occurredAt", it.occurredAt).put("payload", JSONObject(it.payloadJson))) }
         request("/api/sync", "POST", JSONObject().put("deviceId", deviceId())
             .put("deviceName", "${Build.MANUFACTURER} ${Build.MODEL}".take(80))
-            .put("appVersion", BuildConfig.VERSION_NAME).put("operations", operations), token())
+            .put("appVersion", BuildConfig.VERSION_NAME + if (BuildConfig.BUILD_TYPE == "official") "-official" else "")
+            .put("operations", operations), token())
             .getJSONArray("acknowledgements")
     }
 
