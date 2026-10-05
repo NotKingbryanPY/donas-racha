@@ -56,6 +56,17 @@ module.exports = withApi(['GET','POST'], async (req, context) => {
   }
   await enforceRateLimit(req, 'sync_push', 30, 60, admin.id);
   const body = context.parseJsonBody(req, 262144);
+  if (body.action === 'restore-device') {
+    if (body.serverSequence !== null && body.serverSequence !== undefined &&
+        (!Number.isSafeInteger(body.serverSequence) || body.serverSequence < 1)) {
+      throw new ApiError(400, 'VALIDATION_ERROR', 'La prueba de sincronización de la copia no es válida.');
+    }
+    return rpc('api_restore_device_identity', {
+      p_auth_user_id: admin.id,
+      p_client_operation_id: uuid(body.clientOperationId, 'clientOperationId'),
+      p_server_sequence: body.serverSequence ?? null
+    });
+  }
   const operations = normalizeOperations(body.operations);
   const result = await rpc('api_push_sync_operations', {
     p_auth_user_id:admin.id,

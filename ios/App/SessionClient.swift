@@ -61,7 +61,7 @@ actor SessionClient {
     private let base: URL
     private let transport: URLSession
     private let persist: @Sendable (AdminSession?) throws -> Void
-    init(base: URL=URL(string:"https://donas-racha.vercel.app")!,transport: URLSession = .shared,
+    init(base: URL=URL(string:"https://dracha.store")!,transport: URLSession = .shared,
          initial: AdminSession?=SessionClient.savedSession,
          persist: @escaping @Sendable (AdminSession?) throws -> Void = { value in
              try Keychain.save(try value.map { try JSONEncoder().encode($0) },key:"session")

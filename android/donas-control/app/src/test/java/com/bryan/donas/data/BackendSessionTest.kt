@@ -34,6 +34,7 @@ class BackendSessionTest {
     @Volatile private var refreshStatus = 200
     @Volatile private var expiredLogin = true
     @Volatile private var rejectLoginAccess = false
+    @Volatile private var restoreSupported = true
     private lateinit var server: MockWebServer
     private lateinit var client: BackendClient
 
@@ -57,6 +58,12 @@ class BackendSessionTest {
                     if (rejectLoginAccess && request.getHeader("Authorization") == "Bearer first-access") status = 401
                     JSONObject().put("orders", org.json.JSONArray())
                 }
+                "/api/sync" -> {
+                    val body = JSONObject(request.body.readUtf8())
+                    assertEquals("restore-device", body.getString("action"))
+                    assertEquals(7L, body.getLong("serverSequence"))
+                    if (restoreSupported) JSONObject().put("deviceId", "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb") else JSONObject()
+                }
                 else -> JSONObject()
             }
             val response = if (status == 200) JSONObject().put("ok", true).put("data", data)
@@ -66,9 +73,39 @@ class BackendSessionTest {
         }
         server.start()
         val context = ApplicationProvider.getApplicationContext<Context>()
+        context.getSharedPreferences("remote_device", Context.MODE_PRIVATE).edit().clear().commit()
         client = BackendClient(context, server.url("/").toString().trimEnd('/'), tokens)
     }
     @After fun tearDown() { server.shutdown() }
+
+    private fun importedProof() = com.bryan.donas.data.db.SyncOutboxEntity(
+        clientOperationId = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa", localEventId = 1,
+        type = "SALE", occurredAt = "2026-10-04T00:00:00.000Z", payloadJson = "{}",
+        state = "ACKED", serverSequence = 7)
+
+    @Test fun restoredBookKeepsOriginalDeviceBeforeAllowingUploads() = runBlocking {
+        val prefs = ApplicationProvider.getApplicationContext<Context>().getSharedPreferences("remote_device", Context.MODE_PRIVATE)
+        prefs.edit().putBoolean("restoreNeedsIdentity", true).commit()
+        client.login("admin@example.test", "password")
+        assertFalse(client.canUpload)
+        client.recoverRestoredDevice(importedProof())
+        assertTrue(client.canUpload)
+        assertEquals("bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb", prefs.getString("id", null))
+        assertFalse(prefs.getBoolean("restoreNeedsIdentity", true))
+    }
+
+    @Test fun oldServerCannotReplayRestoredSalesUnderANewDevice() = runBlocking {
+        val prefs = ApplicationProvider.getApplicationContext<Context>().getSharedPreferences("remote_device", Context.MODE_PRIVATE)
+        prefs.edit().putBoolean("restoreNeedsIdentity", true).commit()
+        client.login("admin@example.test", "password")
+        restoreSupported = false
+        try { client.recoverRestoredDevice(importedProof()); fail("Restoration must remain blocked") }
+        catch (_: IllegalStateException) { }
+        assertFalse(client.canUpload)
+        assertTrue(prefs.getBoolean("restoreNeedsIdentity", false))
+        try { client.push(listOf(importedProof())); fail("Cannot upload without the original identity") }
+        catch (_: IllegalStateException) { }
+    }
 
     @Test fun temporaryFailuresKeepRenewableSession() = runBlocking {
         client.login("admin@example.test", "password")

@@ -18,6 +18,9 @@ interface SyncDao {
     @Query("SELECT * FROM sync_outbox WHERE state = 'PENDING' ORDER BY localEventId LIMIT :limit")
     suspend fun pending(limit: Int = 50): List<SyncOutboxEntity>
 
+    @Query("SELECT * FROM sync_outbox ORDER BY CASE WHEN serverSequence IS NOT NULL THEN 0 ELSE 1 END, localEventId LIMIT 1")
+    suspend fun restoreProof(): SyncOutboxEntity?
+
     @Query("UPDATE sync_outbox SET state='ACKED', serverSequence=:sequence, lastError=NULL WHERE clientOperationId=:id")
     suspend fun acknowledge(id: String, sequence: Long)
 

@@ -1,4 +1,4 @@
-name: Android pilot build
+name: Android official validation
 
 on:
   push:
@@ -31,12 +31,15 @@ jobs:
         with:
           path: ~/.android/debug.keystore
           key: donas-pilot-debug-signing-v1
-      - name: Verify installed pilot signing identity
+      - name: Create isolated signing key for emulator validation
         shell: bash
         run: |
-          test -f "$HOME/.android/debug.keystore" || { echo 'Original pilot key is required; refusing to create an incompatible update.'; exit 1; }
-          EXPECTED='34:4B:EB:BE:06:EB:CF:53:03:45:73:60:B8:12:57:40:8E:38:3C:32:E7:67:8E:C5:3D:7E:73:AD:34:99:13:02'
-          keytool -list -v -keystore "$HOME/.android/debug.keystore" -storepass android -alias androiddebugkey | grep -F "$EXPECTED"
+          STORE="$RUNNER_TEMP/validation.keystore"
+          keytool -genkeypair -keystore "$STORE" -storepass validation-only -keypass validation-only -alias validation -keyalg RSA -keysize 3072 -validity 365 -dname 'CN=CI validation only'
+          echo "DONAS_OFFICIAL_STORE_FILE=$STORE" >> "$GITHUB_ENV"
+          echo 'DONAS_OFFICIAL_STORE_PASSWORD=validation-only' >> "$GITHUB_ENV"
+          echo 'DONAS_OFFICIAL_KEY_ALIAS=validation' >> "$GITHUB_ENV"
+          echo 'DONAS_OFFICIAL_KEY_PASSWORD=validation-only' >> "$GITHUB_ENV"
       - name: Build, test and lint
         working-directory: android/donas-control
         env:
@@ -44,17 +47,11 @@ jobs:
           ORG_GRADLE_PROJECT_FIREBASE_API_KEY: ${{ vars.FIREBASE_ANDROID_API_KEY }}
           ORG_GRADLE_PROJECT_FIREBASE_PROJECT_ID: ${{ vars.FIREBASE_PROJECT_ID }}
           ORG_GRADLE_PROJECT_FIREBASE_SENDER_ID: ${{ vars.FIREBASE_SENDER_ID }}
-        run: bash ./gradlew testDebugUnitTest assemblePilot assembleOfficial lintDebug lintOfficial assembleDebugAndroidTest
-      - name: Save pilot APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: donas-control-pilot
-          path: android/donas-control/app/build/outputs/apk/pilot/app-pilot.apk
-          if-no-files-found: error
+        run: bash ./gradlew testDebugUnitTest assembleOfficial lintDebug lintOfficial assembleDebugAndroidTest
       - name: Save official APK and release mapping
         uses: actions/upload-artifact@v4
         with:
-          name: donas-control-official
+          name: donas-control-official-validation-only
           path: |
             android/donas-control/app/build/outputs/apk/official/app-official.apk
             android/donas-control/app/build/outputs/mapping/official/mapping.txt
@@ -87,6 +84,14 @@ jobs:
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
+      - name: Create isolated signing key for device tests
+        run: |
+          STORE="$RUNNER_TEMP/validation.keystore"
+          keytool -genkeypair -keystore "$STORE" -storepass validation-only -keypass validation-only -alias validation -keyalg RSA -keysize 3072 -validity 365 -dname 'CN=CI validation only'
+          echo "DONAS_OFFICIAL_STORE_FILE=$STORE" >> "$GITHUB_ENV"
+          echo 'DONAS_OFFICIAL_STORE_PASSWORD=validation-only' >> "$GITHUB_ENV"
+          echo 'DONAS_OFFICIAL_KEY_ALIAS=validation' >> "$GITHUB_ENV"
+          echo 'DONAS_OFFICIAL_KEY_PASSWORD=validation-only' >> "$GITHUB_ENV"
       - name: Test optimized official app on Android
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -97,31 +102,9 @@ jobs:
           working-directory: android/donas-control
           script: |
             bash ./gradlew -PDEVICE_TEST_BUILD=official connectedOfficialAndroidTest
-            adb shell am start -W -n com.bryan.donas.pilot/com.bryan.donas.ui.MainActivity
+            adb shell am start -W -n com.bryan.donas.control/com.bryan.donas.ui.MainActivity
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: official-device-tests-api-${{ matrix.api }}
           path: android/donas-control/app/build/reports/androidTests/connected/**
-  publish:
-    needs: build
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
-        with:
-          name: donas-control-pilot
-          path: apk
-      - name: Publish installable pilot
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          VERSION=$(sed -n 's/.*versionName = "\([^"]*\)"/\1/p' android/donas-control/app/build.gradle.kts | head -1)
-          FILE="Donas-Control-${VERSION}-piloto.apk"
-          mv apk/app-pilot.apk "$FILE"
-          sha256sum "$FILE" > "$FILE.sha256"
-          TAG="android-pilot-${VERSION}-${GITHUB_RUN_NUMBER}"
-          gh release create "$TAG" "$FILE" "$FILE.sha256" --target "$GITHUB_SHA" --prerelease --title "Donas Control ${VERSION} · piloto" --notes-file docs/ANDROID_PILOT_RELEASE.md

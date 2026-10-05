@@ -339,13 +339,29 @@ class OperationsActivity : AppCompatActivity() {
             .setNegativeButton("Cancelar", null).setPositiveButton("Importar") { _, _ -> runAction("Copia importada.") { importDatabase(uri) } }.show()
     }
     private suspend fun importDatabase(uri: android.net.Uri) {
+        check(!app.backendClient.signedIn) { "Cierra la sesión de Pedidos antes de importar. Después conecta la misma cuenta administradora que usaba la copia." }
         val main = applicationContext.getDatabasePath("donas.db")
         val temp = applicationContext.getDatabasePath("donas-import.db")
         contentResolver.openInputStream(uri)?.use { input -> temp.outputStream().use { input.copyTo(it) } } ?: error("No se pudo leer la copia.")
-        val validation = androidx.room.Room.databaseBuilder(applicationContext, com.bryan.donas.data.db.AppDatabase::class.java, "donas-import.db").build()
-        try { requireNotNull(validation.businessDao().state()) { "La copia no contiene configuración válida." } } finally { validation.close() }
+        val validation = androidx.room.Room.databaseBuilder(applicationContext, com.bryan.donas.data.db.AppDatabase::class.java, "donas-import.db")
+            .addMigrations(com.bryan.donas.data.db.AppDatabase.MIGRATION_2_3, com.bryan.donas.data.db.AppDatabase.MIGRATION_3_4).build()
+        try {
+            requireNotNull(validation.businessDao().state()) { "La copia no contiene configuración válida." }
+            validation.openHelper.writableDatabase.query("PRAGMA wal_checkpoint(TRUNCATE)").close()
+        } finally { validation.close() }
+        com.bryan.donas.data.OrderSync.stop(this)
+        check(getSharedPreferences("remote_device", MODE_PRIVATE).edit()
+            .remove("id").putBoolean("restoreNeedsIdentity", true).commit()) { "No se pudo proteger la identidad de la copia. Vuelve a intentar." }
+        app.database.openHelper.writableDatabase.query("PRAGMA wal_checkpoint(TRUNCATE)").close()
         app.database.close()
-        temp.copyTo(main, overwrite = true); temp.delete()
+        val previous = applicationContext.getDatabasePath("donas-before-import.db")
+        previous.delete()
+        if (main.exists() && !main.renameTo(previous)) {
+            app.reopenDatabase(); error("No se pudo conservar la base anterior.")
+        }
+        if (!temp.renameTo(main)) {
+            previous.renameTo(main); app.reopenDatabase(); error("No se pudo aplicar la copia; se conservó la base anterior.")
+        }
         applicationContext.getDatabasePath("donas.db-wal").delete(); applicationContext.getDatabasePath("donas.db-shm").delete()
         app.reopenDatabase(); app.repository.initialize()
         withContext(Dispatchers.Main) { restartApp() }

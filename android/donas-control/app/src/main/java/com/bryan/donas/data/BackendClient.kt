@@ -27,7 +27,23 @@ class BackendClient(context: Context,
 
     val signedIn: Boolean get() = sessions.hasSession()
     val role: String get() = devicePrefs.getString("role", "ADMIN") ?: "ADMIN"
-    val canUpload: Boolean get() = role == "ADMIN"
+    val canUpload: Boolean get() = role == "ADMIN" && !devicePrefs.getBoolean("restoreNeedsIdentity", false)
+
+    suspend fun recoverRestoredDevice(proof: SyncOutboxEntity?) = withContext(Dispatchers.IO) {
+        if (!devicePrefs.getBoolean("restoreNeedsIdentity", false)) return@withContext
+        check(role == "ADMIN") { "Conecta la misma cuenta administradora que usaba la copia." }
+        if (proof != null) {
+            val restored = request("/api/sync", "POST", JSONObject().put("action", "restore-device")
+                .put("clientOperationId", proof.clientOperationId)
+                .put("serverSequence", proof.serverSequence ?: JSONObject.NULL), token())
+            check(restored.has("deviceId")) { "El servidor debe actualizarse para trasladar esta copia sin duplicar inventario." }
+            if (!restored.isNull("deviceId")) {
+                val original = UUID.fromString(restored.getString("deviceId")).toString()
+                devicePrefs.edit(commit = true) { putString("id", original) }
+            } else check(proof.serverSequence == null) { "No se encontró el dispositivo original de esta copia." }
+        }
+        devicePrefs.edit(commit = true) { putBoolean("restoreNeedsIdentity", false) }
+    }
 
     private fun request(path: String, method: String = "GET", body: JSONObject? = null, bearer: String? = null, retryAuth: Boolean = true): JSONObject {
         val connection = (URL(baseUrl + path).openConnection() as HttpURLConnection).apply {
@@ -118,6 +134,7 @@ class BackendClient(context: Context,
     }
 
     suspend fun push(items: List<SyncOutboxEntity>): JSONArray = withContext(Dispatchers.IO) {
+        check(canUpload) { "Verifica la identidad de la copia antes de sincronizar su inventario." }
         val operations = JSONArray()
         items.forEach { operations.put(JSONObject().put("clientOperationId", it.clientOperationId)
             .put("type", it.type).put("occurredAt", it.occurredAt).put("payload", JSONObject(it.payloadJson))) }

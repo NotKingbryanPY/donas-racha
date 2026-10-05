@@ -64,6 +64,15 @@ assert.equal(Number((await stock())[0].available_quantity),6,'offline operations
 assert.equal((await db.query("select has_table_privilege('anon','public.push_devices','SELECT') ok")).rows[0].ok,false);
 // Different devices may reuse local event IDs, but each operation is applied once.
 const secondDevice=randomUUID();
+const proofSequence=(await db.query('select server_sequence from public.sync_operations where client_operation_id=$1',[purchase.clientOperationId])).rows[0].server_sequence;
+const recovered=(await db.query('select public.api_restore_device_identity($1,$2,$3) result',[admin,purchase.clientOperationId,proofSequence])).rows[0].result;
+assert.equal(recovered.deviceId,device,'restore must reuse the original sync identity, not replay into a new device');
+await assert.rejects(db.query('select public.api_restore_device_identity($1,$2,$3)',[admin,purchase.clientOperationId,Number(proofSequence)+999999]),/RESTORE_PROOF_NOT_FOUND/);
+const foreignAdmin=randomUUID();
+await db.query('insert into auth.users(id) values($1)',[foreignAdmin]);
+await db.query("insert into public.app_user_roles(auth_user_id,role) values($1,'ADMIN')",[foreignAdmin]);
+await assert.rejects(db.query('select public.api_restore_device_identity($1,$2,$3)',[foreignAdmin,purchase.clientOperationId,proofSequence]),/DEVICE_OWNER_CONFLICT/);
+await assert.rejects(db.query("select public.api_push_sync_operations($1,$2,'Otro administrador','1.3.0',$3)",[foreignAdmin,device,JSON.stringify([purchase])]),/DEVICE_OWNER_CONFLICT/);
 const pushSecond=async operations=>(await db.query("select public.api_push_sync_operations($1,$2,'Segundo equipo','1.3.0',$3) result",[admin,secondDevice,JSON.stringify(operations)])).rows[0].result;
 const otherSale=operation('SALE',{localEventId:6,details:{quantity:1,items:[{sku:'DR-CHOCOLATE',quantity:1}]}});
 await pushSecond([otherSale]);await pushSecond([otherSale]);

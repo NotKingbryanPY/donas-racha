@@ -28,6 +28,15 @@ android {
     testOptions { unitTests.isIncludeAndroidResources = true }
     testBuildType = providers.gradleProperty("DEVICE_TEST_BUILD").orElse("debug").get()
     sourceSets.getByName("androidTest").assets.srcDir("schemas")
+    val distributionStore = providers.environmentVariable("DONAS_OFFICIAL_STORE_FILE").orNull
+    if (distributionStore != null) {
+        signingConfigs.create("officialDistribution") {
+            storeFile = file(distributionStore)
+            storePassword = providers.environmentVariable("DONAS_OFFICIAL_STORE_PASSWORD").get()
+            keyAlias = providers.environmentVariable("DONAS_OFFICIAL_KEY_ALIAS").get()
+            keyPassword = providers.environmentVariable("DONAS_OFFICIAL_KEY_PASSWORD").get()
+        }
+    }
     buildTypes {
         create("pilot") {
             initWith(getByName("debug"))
@@ -43,9 +52,9 @@ android {
         }
         create("official") {
             initWith(getByName("release"))
-            // Keep the installed pilot identity and certificate so Room and Keystore survive the update.
-            applicationIdSuffix = ".pilot"
-            signingConfig = signingConfigs.getByName("debug")
+            // A permanent identity; the pilot stays installed until its backup is transferred.
+            applicationIdSuffix = ".control"
+            signingConfig = if (distributionStore != null) signingConfigs.getByName("officialDistribution") else null
             isDebuggable = false
             manifestPlaceholders["appLabel"] = "@string/app_name"
             matchingFallbacks += listOf("release")

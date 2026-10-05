@@ -31,6 +31,7 @@ class OrderSyncWorker(context: Context, params: WorkerParameters) : CoroutineWor
         val db = app.database
         val sync = db.syncDao()
         return try {
+            if (client.role == "ADMIN") client.recoverRestoredDevice(sync.restoreProof())
             val upload = client.canUpload && inputData.getBoolean("upload", true) && StableWifi.ready(applicationContext)
             app.repository.initialize()
             // Backfill operations created before the outbox migration, without changing the accounting ledger.
