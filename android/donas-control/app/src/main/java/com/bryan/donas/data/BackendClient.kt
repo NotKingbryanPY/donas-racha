@@ -17,7 +17,7 @@ import java.util.TimeZone
 import java.text.SimpleDateFormat
 
 class BackendClient(context: Context,
-    private val baseUrl: String = "https://donas-racha.vercel.app",
+    private val baseUrl: String = "https://dracha.store",
     tokenStore: SessionTokens? = null) {
     private val appContext = context.applicationContext
     private val sessions = tokenStore ?: RemoteSessionStore(appContext)

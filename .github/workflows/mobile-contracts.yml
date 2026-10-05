@@ -20,6 +20,7 @@ jobs:
           node tests/session-resilience.cjs
           node tests/order-push.cjs
           node tests/shared-inventory-refresh.cjs
+          node tests/inventory-revision-api.cjs
           node tests/full-supabase-backend.cjs
           node tests/security-contract.cjs
           node tests/web-script-syntax.cjs
@@ -33,3 +34,29 @@ jobs:
           node tests/shared-inventory-postgres.mjs
           node tests/seller-role-postgres.mjs
           node tests/manual-inventory-postgres.mjs
+  concurrency:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: test-only-password
+          POSTGRES_DB: donas_concurrency
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install PostgreSQL client for tests
+        run: |
+          npm install --prefix "$RUNNER_TEMP/donas-pg-client" --no-audit --no-fund pg@8.16.3
+          echo "POSTGRES_MODULE=file://$RUNNER_TEMP/donas-pg-client/node_modules/pg/lib/index.js" >> "$GITHUB_ENV"
+      - name: Exercise competing devices against PostgreSQL
+        env:
+          POSTGRES_TEST_URL: postgresql://postgres:test-only-password@localhost:5432/donas_concurrency
+        run: node tests/shared-inventory-postgres.mjs

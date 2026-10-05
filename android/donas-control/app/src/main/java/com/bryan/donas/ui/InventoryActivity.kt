@@ -89,6 +89,10 @@ class InventoryActivity : AppCompatActivity() {
             OrderSync.request(this@InventoryActivity); return@launch
         }
         val current = snapshot ?: return@launch
+        if (!current.optBoolean("shared") || !current.has("revision")) {
+            notice.text = "El inventario compartido todavía no está activado en el servidor. Actualiza el servidor antes de guardar un conteo desde la app."
+            return@launch
+        }
         val flavors = current.optJSONArray("flavors") ?: return@launch
         val fields = mutableMapOf<String, TextInputEditText>()
         val form = LinearLayout(this@InventoryActivity).apply { orientation = LinearLayout.VERTICAL; setPadding(28, 0, 28, 0) }

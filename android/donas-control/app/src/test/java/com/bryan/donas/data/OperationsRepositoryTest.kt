@@ -11,7 +11,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [28])
+@Config(sdk = [23, 28, 35])
 class OperationsRepositoryTest {
     private lateinit var db: AppDatabase
     private lateinit var business: BusinessRepository
@@ -21,6 +21,21 @@ class OperationsRepositoryTest {
         business = BusinessRepository(db); operations = OperationsRepository(db); business.initialize()
     }
     @After fun close() { db.close() }
+
+    @Test fun outboxPreservesSaleBeforeReversalWhenTheClockMovesBackwards() = runBlocking {
+        operations.startSession(initialCash = 600)
+        operations.purchase(1, listOf(PaymentSource("CASH", 600)))
+        operations.quickSale("CASH", requestKey = "sale-before-clock-change", flavors = mapOf("DR-CHOCOLATE" to 1))
+        operations.undoLastSale("reversal-after-clock-change")
+        val pending = db.syncDao().pending()
+        val reversal = pending.single { it.type == "REVERSAL" }
+        db.openHelper.writableDatabase.execSQL(
+            "UPDATE sync_outbox SET occurredAt=? WHERE clientOperationId=?",
+            arrayOf("2001-01-01T00:00:00.000Z", reversal.clientOperationId))
+        val ordered = db.syncDao().pending()
+        assertTrue(ordered.indexOfFirst { it.type == "SALE" } < ordered.indexOfFirst { it.type == "REVERSAL" })
+        assertEquals(12, operations.dashboard().stock)
+    }
 
     @Test fun completeBusinessFlowBalancesAndAllocates() = runBlocking {
         operations.startSession(initialCash = 2000, requestKey = "start")

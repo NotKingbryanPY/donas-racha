@@ -2,8 +2,16 @@ import {readFileSync,readdirSync} from 'node:fs';
 import {resolve,join} from 'node:path';
 import assert from 'node:assert/strict';
 import {randomUUID} from 'node:crypto';
-const {PGlite}=await import(process.env.PGLITE_MODULE || '@electric-sql/pglite');
-const root=resolve(import.meta.dirname,'..'); const db=new PGlite();
+const root=resolve(import.meta.dirname,'..');
+let db;
+if(process.env.POSTGRES_TEST_URL) {
+  const pg=await import(process.env.POSTGRES_MODULE || 'pg');
+  const pool=new (pg.Pool || pg.default.Pool)({connectionString:process.env.POSTGRES_TEST_URL,max:8,options:'-c statement_timeout=15000'});
+  db={exec:sql=>pool.query(sql),query:(sql,parameters)=>pool.query(sql,parameters),close:()=>pool.end()};
+} else {
+  const {PGlite}=await import(process.env.PGLITE_MODULE || '@electric-sql/pglite');
+  db=new PGlite();
+}
 await db.exec(`create role anon;create role authenticated;create role service_role;create schema auth;create table auth.users(id uuid primary key);create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid $$;create schema extensions;create function extensions.gen_random_bytes(integer) returns bytea language sql as $$ select decode(substr(replace(gen_random_uuid()::text,'-','')||replace(gen_random_uuid()::text,'-',''),1,$1*2),'hex') $$;create function extensions.digest(text,text) returns bytea language sql as $$ select convert_to($1,'UTF8') $$;create publication supabase_realtime;`);
 for(const file of readdirSync(join(root,'supabase/migrations')).filter(x=>x.endsWith('.sql')).sort()) {
   await db.exec(readFileSync(join(root,'supabase/migrations',file),'utf8').replace('create extension if not exists pgcrypto with schema extensions;',''));
@@ -54,4 +62,49 @@ await push([sale,purchase,reversal]);assert.equal(Number((await stock())[0].avai
 await push([operation('SALE',{localEventId:6,details:{quantity:1,items:[{sku:'DR-CHOCOLATE',quantity:1}]}})]);
 assert.equal(Number((await stock())[0].available_quantity),6,'offline operations received later still apply');
 assert.equal((await db.query("select has_table_privilege('anon','public.push_devices','SELECT') ok")).rows[0].ok,false);
-await db.close();console.log('PASS shared inventory: 4/4/2/2 boxes, retry/reversal, reservation/delivery, revision conflict, offline arrival and push leases');
+// Different devices may reuse local event IDs, but each operation is applied once.
+const secondDevice=randomUUID();
+const pushSecond=async operations=>(await db.query("select public.api_push_sync_operations($1,$2,'Segundo equipo','1.3.0',$3) result",[admin,secondDevice,JSON.stringify(operations)])).rows[0].result;
+const otherSale=operation('SALE',{localEventId:6,details:{quantity:1,items:[{sku:'DR-CHOCOLATE',quantity:1}]}});
+await pushSecond([otherSale]);await pushSecond([otherSale]);
+assert.equal(Number((await stock())[0].available_quantity),5,'device-local event IDs must not collide');
+const review=await snapshot();
+await db.query('select public.api_set_shared_inventory($1,$2,$3)',[admin,JSON.stringify({...counts,'DR-CHOCOLATE':1}),review.revision]);
+await assert.rejects(db.query('select public.api_set_shared_inventory($1,$2,$3)',[admin,JSON.stringify({...counts,'DR-CHOCOLATE':99}),review.revision]),/INVENTORY_CONFLICT/);
+const reserve=async()=>db.query("select * from public.api_create_order_by_customer_id($1,$2,$3,'Última unidad','CASH',null,$4)",[customer.id,randomUUID(),randomUUID().replaceAll('-','').repeat(2),JSON.stringify([{product_variant_id:variant,quantity:1}])]);
+const lastOrder=(await reserve()).rows[0];
+await assert.rejects(reserve(),/OUT_OF_STOCK/,'a second device cannot reserve the last unit again');
+assert.equal(Number((await stock())[0].available_quantity),0);
+await pushSecond([operation('SALE',{localEventId:7,details:{quantity:1,items:[{sku:'DR-CHOCOLATE',quantity:1}]}})]);
+assert.equal((await stock())[0].counted,false,'an offline sale of reserved stock must require reconciliation');
+await assert.rejects(reserve(),/OUT_OF_STOCK/);
+await db.query("select * from public.api_transition_order($1,'CANCELLED',$2,null)",[lastOrder.id,admin]);
+assert.equal(Number((await stock())[0].available_quantity),0,'cancellation must not create stock already sold offline');
+// Inspect the actual PostgreSQL definitions after all migrations, including seller overrides.
+for(const signature of ['api_transition_order(uuid,public.order_status,uuid,text)','api_record_order_payment(uuid,uuid,public.payment_status,uuid,text)']) {
+  const definition=(await db.query('select pg_get_functiondef($1::regprocedure) definition',[`public.${signature}`])).rows[0].definition;
+  assert(definition.indexOf('pg_advisory_xact_lock(26092601)')<definition.indexOf('return query'),'inventory must lock before the original writer');
+}
+if(process.env.POSTGRES_TEST_URL) {
+  const revision=(await snapshot()).revision;
+  const competingCounts=await Promise.allSettled([1,2].map(quantity=>db.query(
+    'select public.api_set_shared_inventory($1,$2,$3)',[admin,JSON.stringify({...counts,'DR-CHOCOLATE':quantity}),revision])));
+  assert.equal(competingCounts.filter(result=>result.status==='fulfilled').length,1);
+  assert.match(competingCounts.find(result=>result.status==='rejected').reason.message,/INVENTORY_CONFLICT/);
+  await db.query('select public.api_set_shared_inventory($1,$2,$3)',[admin,JSON.stringify({...counts,'DR-CHOCOLATE':1}),(await snapshot()).revision]);
+  const competingOrders=await Promise.allSettled([reserve(),reserve()]);
+  assert.equal(competingOrders.filter(result=>result.status==='fulfilled').length,1);
+  assert.match(competingOrders.find(result=>result.status==='rejected').reason.message,/OUT_OF_STOCK/);
+  const winner=competingOrders.find(result=>result.status==='fulfilled').value.rows[0];
+  await db.query("select * from public.api_transition_order($1,'ACCEPTED',$2,null)",[winner.id,admin]);
+  await db.query("select * from public.api_transition_order($1,'OUT_FOR_DELIVERY',$2,null)",[winner.id,admin]);
+  const concurrentWriters=await Promise.all([
+    db.query("select public.api_complete_paid_order($1,$2,'CASH') result",[winner.id,admin]),
+    db.query("select public.api_complete_paid_order($1,$2,'CASH') result",[winner.id,admin]),
+    db.query("select * from public.api_record_order_payment($1,$1,'CONFIRMED',$2,null)",[winner.id,admin])]);
+  assert.equal(concurrentWriters.slice(0,2).filter(result=>result.rows[0].result.replayed===false).length,1);
+  assert.equal(Number((await db.query('select count(*) quantity from public.flavor_sales where order_id=$1',[winner.id])).rows[0].quantity),1);
+  assert.equal(Number((await stock())[0].available_quantity),0);
+  console.log('PASS concurrent PostgreSQL connections: one count wins, one last-unit reservation wins, concurrent payment/delivery applies once without deadlock');
+}
+await db.close();console.log('PASS shared inventory: boxes, retry/reversal, delivery, two-device IDs/count conflicts, last-unit reservations, offline oversale reconciliation and lock order');

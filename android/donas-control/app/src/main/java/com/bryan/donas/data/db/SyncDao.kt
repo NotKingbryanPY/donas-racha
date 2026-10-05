@@ -14,7 +14,8 @@ interface SyncDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun enqueue(item: SyncOutboxEntity): Long
 
-    @Query("SELECT * FROM sync_outbox WHERE state = 'PENDING' ORDER BY occurredAt, localEventId LIMIT :limit")
+    // Local event IDs preserve dependencies even when the phone clock is corrected offline.
+    @Query("SELECT * FROM sync_outbox WHERE state = 'PENDING' ORDER BY localEventId LIMIT :limit")
     suspend fun pending(limit: Int = 50): List<SyncOutboxEntity>
 
     @Query("UPDATE sync_outbox SET state='ACKED', serverSequence=:sequence, lastError=NULL WHERE clientOperationId=:id")

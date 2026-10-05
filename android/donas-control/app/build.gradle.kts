@@ -10,7 +10,7 @@ android {
         applicationId = "com.bryan.donas"
         minSdk = 23
         targetSdk = 35
-        versionCode = 9
+        versionCode = 10
         versionName = "1.3.0"
         listOf("APP_ID", "API_KEY", "PROJECT_ID", "SENDER_ID").forEach { name ->
             val value = providers.gradleProperty("FIREBASE_$name").orNull.orEmpty()
@@ -26,6 +26,7 @@ android {
     }
     kotlinOptions { jvmTarget = "17" }
     testOptions { unitTests.isIncludeAndroidResources = true }
+    testBuildType = providers.gradleProperty("DEVICE_TEST_BUILD").orElse("debug").get()
     sourceSets.getByName("androidTest").assets.srcDir("schemas")
     buildTypes {
         create("pilot") {
@@ -39,6 +40,15 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
+        create("official") {
+            initWith(getByName("release"))
+            // Keep the installed pilot identity and certificate so Room and Keystore survive the update.
+            applicationIdSuffix = ".pilot"
+            signingConfig = signingConfigs.getByName("debug")
+            isDebuggable = false
+            manifestPlaceholders["appLabel"] = "@string/app_name"
+            matchingFallbacks += listOf("release")
         }
     }
     lint {
