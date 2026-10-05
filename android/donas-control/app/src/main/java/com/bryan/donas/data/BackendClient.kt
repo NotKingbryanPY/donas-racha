@@ -29,20 +29,24 @@ class BackendClient(context: Context,
     val role: String get() = devicePrefs.getString("role", "ADMIN") ?: "ADMIN"
     val canUpload: Boolean get() = role == "ADMIN" && !devicePrefs.getBoolean("restoreNeedsIdentity", false)
 
+    // Keep the recovered identity and upload guard atomic, and require commit's success result.
+    @android.annotation.SuppressLint("UseKtx")
     suspend fun recoverRestoredDevice(proof: SyncOutboxEntity?) = withContext(Dispatchers.IO) {
         if (!devicePrefs.getBoolean("restoreNeedsIdentity", false)) return@withContext
         check(role == "ADMIN") { "Conecta la misma cuenta administradora que usaba la copia." }
+        var recoveredId: String? = null
         if (proof != null) {
             val restored = request("/api/sync", "POST", JSONObject().put("action", "restore-device")
                 .put("clientOperationId", proof.clientOperationId)
                 .put("serverSequence", proof.serverSequence ?: JSONObject.NULL), token())
             check(restored.has("deviceId")) { "El servidor debe actualizarse para trasladar esta copia sin duplicar inventario." }
             if (!restored.isNull("deviceId")) {
-                val original = UUID.fromString(restored.getString("deviceId")).toString()
-                devicePrefs.edit(commit = true) { putString("id", original) }
+                recoveredId = UUID.fromString(restored.getString("deviceId")).toString()
             } else error("Sincroniza los registros en el piloto y vuelve a exportar su copia antes de trasladarlos.")
         }
-        devicePrefs.edit(commit = true) { putBoolean("restoreNeedsIdentity", false) }
+        val identityUpdate = devicePrefs.edit().putBoolean("restoreNeedsIdentity", false)
+        recoveredId?.let { identityUpdate.putString("id", it) }
+        check(identityUpdate.commit()) { "No se pudo guardar la identidad de la copia. Vuelve a sincronizar antes de registrar ventas." }
     }
 
     private fun request(path: String, method: String = "GET", body: JSONObject? = null, bearer: String? = null, retryAuth: Boolean = true): JSONObject {
