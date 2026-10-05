@@ -254,7 +254,10 @@ class OperationsActivity : AppCompatActivity() {
         }.show()
     }
     private fun expense() {
-        val categories = arrayOf("Transporte", "Comida", "Universidad", "Entretenimiento", "Donas", "Publicidad", "Materiales", "Otro")
+        val categories = buildList {
+            add("Transporte"); add("Comida"); add("Universidad"); add("Entretenimiento")
+            add("Donas"); add("Publicidad"); add("Materiales"); add("Otro")
+        }.toTypedArray()
         MaterialAlertDialogBuilder(this).setTitle("Categoría").setItems(categories) { _, categoryIndex ->
             val types = arrayOf("Negocio · Efectivo", "Negocio · Yappy", "Personal · Efectivo", "Personal · Yappy")
             MaterialAlertDialogBuilder(this).setTitle("Tipo y cuenta").setItems(types) { _, type ->
@@ -388,7 +391,10 @@ class OperationsActivity : AppCompatActivity() {
     }
 
     private fun filterHistory() {
-        val labels = arrayOf("Todo", "Ventas", "Compras", "Gastos", "Préstamos", "Transferencias", "Reversiones", "Solo Efectivo", "Solo Yappy")
+        val labels = buildList {
+            add("Todo"); add("Ventas"); add("Compras"); add("Gastos"); add("Préstamos")
+            add("Transferencias"); add("Reversiones"); add("Solo Efectivo"); add("Solo Yappy")
+        }.toTypedArray()
         MaterialAlertDialogBuilder(this).setTitle("Filtrar historial").setItems(labels) { _, index ->
             historyType = when (index) { 1 -> "SALE"; 2 -> "PURCHASE"; 3 -> "EXPENSE"; 4 -> "LOAN"; 5 -> "TRANSFER"; 6 -> "REVERSAL"; else -> null }
             historyAccount = when (index) { 7 -> "CASH"; 8 -> "YAPPY"; else -> null }
