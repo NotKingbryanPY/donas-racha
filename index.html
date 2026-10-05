@@ -1442,7 +1442,7 @@ async function createClient() {
 }
 async function shareNewUsername() {
   if (!newClientData) return;
-  const message = `🍩 Donas Racha — Tu usuario: ${newClientData.username}\nEntra a tu perfil: https://donas-racha.vercel.app/\nLa primera vez, escribe tu usuario y crea tu contraseña.`;
+  const message = `🍩 Donas Racha — Tu usuario: ${newClientData.username}\nEntra a tu perfil: https://dracha.store/\nLa primera vez, escribe tu usuario y crea tu contraseña.`;
   try {
     if (navigator.share) await navigator.share({ title:'Donas Racha', text:message });
     else { await navigator.clipboard.writeText(message); showToast('Usuario y enlace copiados'); }
@@ -1455,7 +1455,7 @@ function sendNewWA() {
 
   const phone = (newClientData.whatsapp || '').replace(/\D/g, '');
 
-  const web = "https://donas-racha.vercel.app/";
+  const web = "https://dracha.store/";
 
   const msg = encodeURIComponent(
 `Hola ${newClientData.name},
