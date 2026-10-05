@@ -56,7 +56,6 @@ android {
             applicationIdSuffix = ".control"
             signingConfig = if (distributionStore != null) signingConfigs.getByName("officialDistribution") else null
             isDebuggable = false
-            testProguardFiles("proguard-instrumentation.pro")
             manifestPlaceholders["appLabel"] = "@string/app_name"
             matchingFallbacks += listOf("release")
         }
