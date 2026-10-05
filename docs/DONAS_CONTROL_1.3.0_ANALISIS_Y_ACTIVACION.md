@@ -1,5 +1,7 @@
 # Donas Control 1.3.0: análisis y activación
 
+La distribución oficial Android, su firma permanente y el traslado seguro desde el piloto se explican en [ANDROID_OFICIAL_1.3.0.md](ANDROID_OFICIAL_1.3.0.md). La versión oficial usa `com.bryan.donas.control`.
+
 ## Punto de partida y decisión
 
 La página ya gestionaba clientes, fidelidad, pedidos y roles ADMIN/SELLER con Supabase. Android tenía una contabilidad offline amplia con Room, FIFO, jornadas, socios y widget. El archivo iOS anterior solo consultaba pedidos. El inventario web era un conteo independiente de las ventas offline.
@@ -29,7 +31,7 @@ Si dos personas venden las mismas unidades físicas offline, puede haber una dif
 No se modificó la base productiva ni se publicaron automáticamente las migraciones: no hay credenciales Supabase/Vercel en este workspace. Los cambios quedan en una rama de revisión.
 
 1. Respaldar Supabase y las bases locales. Sincronizar todos los dispositivos con pendientes antes del cambio.
-2. Verificar las migraciones anteriores, incluidas vendedores y clientes. Aplicar en orden `supabase/migrations/202610030001_shared_inventory.sql` y `supabase/migrations/202610030002_order_push.sql`.
+2. Verificar las migraciones anteriores, incluidas vendedores y clientes. Aplicar las pendientes en orden: `supabase/migrations/202610030001_shared_inventory.sql`, `supabase/migrations/202610030002_order_push.sql`, `supabase/migrations/202610050001_inventory_lock_order.sql` y `supabase/migrations/202610050002_mobile_restore_identity.sql`.
 3. Publicar la web/API de la rama después de sus funciones SQL.
 4. Revisar los cuatro sabores. La migración conserva el balance anterior y no suma nuevamente las compras históricas. Hacer un conteo físico de todo el negocio, incluidas las unidades reservadas, con todos los equipos sincronizados.
 5. Actualizar apps, conectar cada cuenta una vez y autorizar avisos. Probar caja 4/4/2/2, venta offline, reconexión Wi‑Fi, pedido, cancelación, cobro/entrega y descuento único.
@@ -40,7 +42,7 @@ El conteo absorbe los movimientos ya aplicados. Una venta aún offline en otro e
 
 El código está implementado; las claves Firebase/Apple no están disponibles y no se han probado entregas push reales.
 
-**Android:** crear Firebase para el paquete distribuido (`com.bryan.donas.pilot` en el piloto). Configurar GitHub Repository Variables `FIREBASE_ANDROID_APP_ID`, `FIREBASE_ANDROID_API_KEY`, `FIREBASE_PROJECT_ID`, `FIREBASE_SENDER_ID`; el workflow las pasa a Gradle. Para build local, usar propiedades `FIREBASE_APP_ID`, `FIREBASE_API_KEY`, `FIREBASE_PROJECT_ID`, `FIREBASE_SENDER_ID`. Una configuración de otro paquete no es intercambiable.
+**Android:** crear Firebase para el paquete oficial `com.bryan.donas.control`. Configurar GitHub Repository Variables `FIREBASE_ANDROID_APP_ID`, `FIREBASE_ANDROID_API_KEY`, `FIREBASE_PROJECT_ID`, `FIREBASE_SENDER_ID`; el workflow las pasa a Gradle. Para build local, usar propiedades `FIREBASE_APP_ID`, `FIREBASE_API_KEY`, `FIREBASE_PROJECT_ID`, `FIREBASE_SENDER_ID`. Una configuración de otro paquete no es intercambiable.
 
 **Servidor FCM:** configurar en Vercel `FCM_PROJECT_ID`, `FCM_CLIENT_EMAIL`, `FCM_PRIVATE_KEY` de una cuenta de servicio autorizada. La clave privada nunca se incluye en el APK.
 

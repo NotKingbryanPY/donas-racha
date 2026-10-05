@@ -1,6 +1,6 @@
 # Donas Control 1.3.0
 
-Aplicación Android nativa para administrar un negocio ambulante de donas. La contabilidad funciona sin conexión; los pedidos se sincronizan cuando hay red. Package `com.bryan.donas`, Android 6.0/API 23 o superior.
+Aplicación Android nativa para administrar un negocio ambulante de donas. La contabilidad funciona sin conexión; los pedidos se sincronizan cuando hay red. Android 6.0/API 23 o superior. La variante oficial usa `com.bryan.donas.control`, versión 1.3.0/código 10 y firma permanente; consultar [la guía de instalación y traslado](../../docs/ANDROID_OFICIAL_1.3.0.md).
 
 ## Funciones
 
@@ -42,7 +42,7 @@ JDK 17, Android SDK 35, Build Tools 35.0.0 y Gradle 8.11.1:
 
 Las pruebas instrumentadas se compilan con el comando anterior. Para ejecutarlas hace falta un Android conectado y autorizado: `connectedDebugAndroidTest`.
 
-El APK debug se genera en `app/build/outputs/apk/debug/app-debug.apk`. Para distribución pública debe crearse una clave release privada y conservarse para futuras actualizaciones.
+El APK debug se genera en `app/build/outputs/apk/debug/app-debug.apk`. Para generar el APK oficial con su clave permanente privada usar `scripts/build-android-official.ps1` desde la raíz, con JDK/SDK configurados. El script no publica claves y entrega `outputs/Donas-Control-1.3.0-oficial.apk`. Los APK de CI tienen firma temporal para pruebas y no deben distribuirse como actualizaciones oficiales.
 
 ## Pasar desde el APK 1.1.1
 
