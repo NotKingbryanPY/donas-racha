@@ -1,0 +1,91 @@
+{
+  "sourceCommit": "7cd501bf1055a45c9169d1aa798af68bea852867",
+  "apk": "Donas-Control-1.3.0-oficial.apk",
+  "apkSha256": "427562f9cd71710c9036b2d4fee647b13c24676d25ae6c1e1a79e7b697e1233d",
+  "package": "com.bryan.donas.control",
+  "version": "1.3.0",
+  "versionCode": 10,
+  "debuggable": false,
+  "optimizedWithR8": true,
+  "certificateSha256": "5681a1329740c46b2c7a718e3e8a431951c7b6486fc625196dc3dd7ecadb249d",
+  "abis": [
+    "arm64-v8a",
+    "armeabi-v7a",
+    "x86",
+    "x86_64"
+  ],
+  "nativePageAlignment": 16384,
+  "androidUnitTests": {
+    "passed": 89,
+    "failures": 0,
+    "errors": 0,
+    "ledgerSdks": [
+      23,
+      28,
+      35
+    ]
+  },
+  "lintDebug": "passed",
+  "lintOfficial": "passed",
+  "postgresConcurrency": {
+    "engine": "PostgreSQL 16, multiple connections",
+    "workflowRun": 37311689599,
+    "status": "passed",
+    "checks": [
+      "same revision count: one winner",
+      "last donut: one reservation",
+      "payment and delivery: one sale without deadlock",
+      "same owner restore identity",
+      "old pilot writes refused after transfer"
+    ]
+  },
+  "ios": {
+    "testsPassed": 17,
+    "workflowRun": 37311689500,
+    "compiledAndLaunchedOnIpadSimulator": true,
+    "playgroundsArchive": "Donas-Control-iPad-1.3.0.zip",
+    "independentSignedIpa": false,
+    "physicalIpadVerified": false,
+    "automaticAndroidHistoryImport": false
+  },
+  "production": {
+    "sharedInventoryMigrationsApplied": false,
+    "apiDeployment": false,
+    "firebaseConfiguredInApk": false,
+    "realFcmApnsDeliveryVerified": false
+  },
+  "deviceTests": {
+    "status": "passed",
+    "workflowRun": 37311689364,
+    "devices": [
+      {
+        "api": 23,
+        "android": "6.0",
+        "databaseTestsPassed": 3,
+        "dashboardLaunched": true,
+        "appProcessStayedAlive": true
+      },
+      {
+        "api": 35,
+        "android": "15",
+        "databaseTestsPassed": 3,
+        "dashboardLaunched": true,
+        "appProcessStayedAlive": true
+      }
+    ]
+  },
+  "limitations": [
+    "Keep pilot installed until backup and balances are verified.",
+    "The server must be activated before safe pilot-to-official restore.",
+    "Offline sales are unknown to other devices until synchronization.",
+    "Separate installations keep separate money books.",
+    "No guarantee of zero errors on every manufacturer device."
+  ],
+  "apkSizeBytes": 3787752,
+  "builtInCIAndSignedLocallyWithPermanentKey": true,
+  "apkSignatureSchemesVerified": [
+    "v1",
+    "v2",
+    "v3"
+  ]
+}
