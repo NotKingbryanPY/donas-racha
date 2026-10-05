@@ -26,6 +26,9 @@ async function readResponse(response) {
     if (message.includes('IDEMPOTENCY_CONFLICT')) throw new ApiError(409, 'IDEMPOTENCY_CONFLICT', 'La clave de idempotencia ya fue usada con otros datos.');
     if (message.includes('SYNC_IDEMPOTENCY_CONFLICT')) throw new ApiError(409, 'SYNC_IDEMPOTENCY_CONFLICT', 'La operación de sincronización ya existe con otros datos.');
     if (message.includes('DEVICE_REVOKED')) throw new ApiError(403, 'DEVICE_REVOKED', 'Este dispositivo perdió autorización para sincronizar.');
+    if (message.includes('DEVICE_OWNER_CONFLICT')) throw new ApiError(403, 'DEVICE_OWNER_CONFLICT', 'Conecta la misma cuenta administradora que usaba la copia.');
+    if (message.includes('DEVICE_MOVED_TO_OFFICIAL')) throw new ApiError(409, 'DEVICE_MOVED_TO_OFFICIAL', 'Este libro se trasladó a Donas Control oficial. Continúa registrando allí.');
+    if (message.includes('RESTORE_PROOF_NOT_FOUND') || message.includes('RESTORE_DEVICE_CONFLICT')) throw new ApiError(409, 'RESTORE_DEVICE_CONFLICT', 'No se pudo verificar la identidad de la copia. Sincroniza el piloto y vuelve a exportarla.');
     if (message.includes('ADMIN_REQUIRED')) throw new ApiError(403, 'ADMIN_REQUIRED', 'La cuenta no tiene permisos administrativos.');
     if (message.includes('INVALID_OPERATION')) throw new ApiError(400, 'INVALID_OPERATION', 'La operación de sincronización no es válida.');
     if (message.includes('OUT_OF_STOCK')) throw new ApiError(409, 'OUT_OF_STOCK', 'Este sabor no está disponible.');
