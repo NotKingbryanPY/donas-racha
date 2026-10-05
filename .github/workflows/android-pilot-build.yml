@@ -1,5 +1,9 @@
 name: Android official validation
 
+concurrency:
+  group: android-official-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
 on:
   push:
     branches: ["codex/**", main]
@@ -26,11 +30,6 @@ jobs:
         with:
           packages: platform-tools platforms;android-35 build-tools;35.0.0
       - uses: gradle/actions/setup-gradle@v4
-      - name: Reuse pilot debug signature
-        uses: actions/cache@v4
-        with:
-          path: ~/.android/debug.keystore
-          key: donas-pilot-debug-signing-v1
       - name: Create isolated signing key for emulator validation
         shell: bash
         run: |
@@ -75,10 +74,6 @@ jobs:
         with:
           packages: platform-tools platforms;android-35 build-tools;35.0.0
       - uses: gradle/actions/setup-gradle@v4
-      - uses: actions/cache@v4
-        with:
-          path: ~/.android/debug.keystore
-          key: donas-pilot-debug-signing-v1
       - name: Enable emulator acceleration
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
