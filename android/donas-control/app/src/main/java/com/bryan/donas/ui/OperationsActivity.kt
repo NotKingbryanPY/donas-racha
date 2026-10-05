@@ -338,6 +338,8 @@ class OperationsActivity : AppCompatActivity() {
             .setMessage("La copia reemplazará todos los datos actuales. Esta operación valida la base antes de aplicarla.")
             .setNegativeButton("Cancelar", null).setPositiveButton("Importar") { _, _ -> runAction("Copia importada.") { importDatabase(uri) } }.show()
     }
+    // The import must stop if the identity guard cannot be persisted; KTX edit discards commit's result.
+    @android.annotation.SuppressLint("UseKtx")
     private suspend fun importDatabase(uri: android.net.Uri) {
         check(!app.backendClient.signedIn) { "Cierra la sesión de Pedidos antes de importar. Después conecta la misma cuenta administradora que usaba la copia." }
         val main = applicationContext.getDatabasePath("donas.db")
