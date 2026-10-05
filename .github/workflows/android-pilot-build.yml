@@ -97,7 +97,10 @@ jobs:
           working-directory: android/donas-control
           script: |
             bash ./gradlew -PDEVICE_TEST_BUILD=official connectedOfficialAndroidTest
+            adb install -r app/build/outputs/apk/official/app-official.apk
             adb shell am start -W -n com.bryan.donas.control/com.bryan.donas.ui.MainActivity
+            sleep 2
+            adb shell pidof com.bryan.donas.control
       - uses: actions/upload-artifact@v4
         if: always()
         with:
