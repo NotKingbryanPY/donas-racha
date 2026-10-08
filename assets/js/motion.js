@@ -147,7 +147,7 @@
   fine.addEventListener('change', resetTilt);
   reduced.addEventListener('change', resetTilt);
   document.addEventListener('donas:motionchange', resetTilt);
-  let progressObserver, progressAnimation;
+  let progressObserver, progressAnimation, progressCanStart=false;
   const stockSnapshots = new Map();
   const stockAnimations = new WeakMap();
   window.DonasMotion = {
@@ -169,6 +169,7 @@
         first = requestAnimationFrame(() => { second = requestAnimationFrame(done); });
       });
       if (signal?.aborted || document.hidden) return;
+      progressCanStart=false; progressObserver?.disconnect();
       const animation = progressAnimation;
       if (!animation || animation.playState !== 'running') return;
       await new Promise(resolve => {
@@ -203,10 +204,10 @@
       const pct = Math.max(0, Math.min(100, Number(client.progressLevelPct) || 0));
       bar.parentElement.setAttribute('aria-valuenow', String(pct));
       document.getElementById('clientStreak').parentElement.classList.toggle('streak-active', Number(client.currentStreak) > 0);
-      progressObserver?.disconnect(); progressAnimation?.cancel();
+      progressObserver?.disconnect(); progressAnimation?.cancel(); progressCanStart=true;
       if (!lite() && 'IntersectionObserver' in window && bar.animate) {
         progressObserver = new IntersectionObserver(entries => {
-          if (!entries.some(e => e.isIntersecting)) return;
+          if (!progressCanStart || !entries.some(e => e.isIntersecting)) return;
           progressObserver.disconnect();
           progressAnimation = bar.animate([{transform:'scaleX(0)'},{transform:'scaleX(1)'}], {duration:800,easing:'cubic-bezier(.22,.68,0,1)'});
         }, {threshold:.3});

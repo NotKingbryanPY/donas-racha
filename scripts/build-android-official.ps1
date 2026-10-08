@@ -1,5 +1,6 @@
 param(
-    [string]$Credentials = (Join-Path $env:USERPROFILE '.codex/keys/donas-control-official/credentials.json')
+    [string]$Credentials = (Join-Path $env:USERPROFILE '.codex/keys/donas-control-official/credentials.json'),
+    [string]$FirebaseConfigPath
 )
 $ErrorActionPreference = 'Stop'
 if (-not (Test-Path -LiteralPath $Credentials)) { throw 'No existe la clave oficial. Conserva la firma original; no generes otra para actualizar la app.' }
@@ -11,6 +12,12 @@ $officialEnvironment = @{
     DONAS_OFFICIAL_KEY_ALIAS = $officialSigning.keyAlias
     DONAS_OFFICIAL_KEY_PASSWORD = $officialSigning.keyPassword
 }
+if ($FirebaseConfigPath) {
+    . (Join-Path $PSScriptRoot 'Get-FirebaseAndroidConfiguration.ps1')
+    $firebaseEnvironment = Get-FirebaseAndroidConfiguration -Path $FirebaseConfigPath
+    foreach ($entry in $firebaseEnvironment.GetEnumerator()) { $officialEnvironment[$entry.Key] = $entry.Value }
+    Write-Output 'Configuración Firebase validada para com.bryan.donas.control / donascontrol-1f5df.'
+}
 $previousEnvironment = @{}
 $projectRoot = Split-Path -Parent $PSScriptRoot
 try {
@@ -20,7 +27,7 @@ try {
     }
     Push-Location (Join-Path $projectRoot 'android/donas-control')
     try {
-        & './gradlew.bat' testDebugUnitTest assembleOfficial lintDebug lintOfficial
+        & './gradlew.bat' '-Pkotlin.compiler.execution.strategy=in-process' testDebugUnitTest lintDebug lintOfficial assembleOfficial
         if ($LASTEXITCODE -ne 0) { throw 'Falló la verificación de la app oficial.' }
     } finally { Pop-Location }
     $outputDirectory = Join-Path $projectRoot 'outputs'

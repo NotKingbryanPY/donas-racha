@@ -18,6 +18,7 @@ module.exports = withApi(['GET','POST','DELETE'], async (req, context) => {
   await enforceRateLimit(req,'push_devices',30,60,admin.id);
   const body=context.parseJsonBody(req,8192);
   const id=uuid(body.deviceId,'deviceId');
+  if (admin.deviceId && admin.deviceId!==id) throw new ApiError(403,'DEVICE_REVOKED','La credencial pertenece a otro dispositivo.');
   if (req.method==='DELETE') return rpc('api_unregister_push_device',{p_auth_user_id:admin.id,p_device_public_id:id});
   const platform=String(body.platform || ''); const token=String(body.token || '');
   const environment=String(body.environment || 'production'); const version=String(body.appVersion || '');

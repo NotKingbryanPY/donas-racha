@@ -28,7 +28,7 @@ async function sendAndroid(job) {
   const response = await fetch(`https://fcm.googleapis.com/v1/projects/${encodeURIComponent(process.env.FCM_PROJECT_ID)}/messages:send`, {
     method:'POST',signal:AbortSignal.timeout(10000),headers:{authorization:`Bearer ${await oauthToken()}`,'content-type':'application/json'},
     body:JSON.stringify({message:{token:job.token,data:{orderId:job.orderId,publicCode:job.publicCode},
-      android:{priority:'HIGH',ttl:'86400s',collapse_key:job.orderId}}})
+      android:{priority:'HIGH',ttl:'86400s'}}})
   });
   const result = await response.json();
   const code = result.error?.details?.find(d=>d.errorCode)?.errorCode || result.error?.status;

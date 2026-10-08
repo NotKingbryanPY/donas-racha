@@ -26,6 +26,7 @@ class BackendClient(context: Context,
     private var expiresAt = 0L
 
     val signedIn: Boolean get() = sessions.hasSession()
+    val usesFirebaseAccount: Boolean get() = sessions.refreshToken()?.startsWith("firebase:") == true
     val role: String get() = devicePrefs.getString("role", "ADMIN") ?: "ADMIN"
     val canUpload: Boolean get() = role == "ADMIN" && !devicePrefs.getBoolean("restoreNeedsIdentity", false)
 
@@ -60,6 +61,7 @@ class BackendClient(context: Context,
             setRequestProperty("Accept", "application/json")
             setRequestProperty("Cache-Control", "no-store")
             if (bearer != null) setRequestProperty("Authorization", "Bearer $bearer")
+            if (bearer != null) setRequestProperty("X-Donas-Device", deviceId())
             if (body != null) {
                 doOutput = true
                 setRequestProperty("Content-Type", "application/json; charset=utf-8")
@@ -89,6 +91,11 @@ class BackendClient(context: Context,
                 ?.bufferedReader(Charsets.UTF_8)?.use { it.readText() }.orEmpty()
             val response = try { JSONObject(content) } catch (_: Exception) { JSONObject() }
             if (status !in 200..299 || !response.optBoolean("ok")) {
+                if (status == 401 && (bearer?.startsWith("drd.") == true ||
+                        (response.optJSONObject("error")?.optString("code") == "DEVICE_REVOKED" && sessions.refreshToken()?.startsWith("firebase:") == true))) {
+                    logout()
+                    throw BackendException(401, "El dispositivo perdió autorización. Solicita otra invitación.", "DEVICE_REVOKED")
+                }
                 if (status == 401 && bearer != null && retryAuth) {
                     return request(path, method, body, token(rejectedToken = bearer), false)
                 }
@@ -120,9 +127,29 @@ class BackendClient(context: Context,
     }
 
     @Synchronized private fun token(rejectedToken: String? = null): String {
+        val firebaseSession = sessions.refreshToken()?.takeIf { it.startsWith("firebase:") }
+        if (firebaseSession != null) {
+            if (!PushRegistration.initialize(appContext)) throw BackendException(503, "Firebase no está disponible en este APK.")
+            val user = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser
+            if (user == null || user.uid != firebaseSession.removePrefix("firebase:")) {
+                logout(); throw BackendException(401, "Inicia sesión con la cuenta vinculada al dispositivo.", "DEVICE_REVOKED")
+            }
+            return try {
+                com.google.android.gms.tasks.Tasks.await(user.getIdToken(rejectedToken != null), 20, java.util.concurrent.TimeUnit.SECONDS).token
+                    ?: throw BackendException(503, "No se pudo renovar la sesión Firebase.")
+            } catch (e: java.util.concurrent.ExecutionException) {
+                if (e.cause is com.google.firebase.auth.FirebaseAuthInvalidUserException) {
+                    logout(); throw BackendException(401, "La cuenta Firebase perdió acceso.", "DEVICE_REVOKED")
+                }
+                throw BackendException(503, "No se pudo renovar la sesión. Los datos locales siguen guardados.")
+            } catch (e: java.util.concurrent.TimeoutException) {
+                throw BackendException(503, "La renovación tardó demasiado. Vuelve a intentar con conexión.")
+            }
+        }
         if (rejectedToken != null && rejectedToken == accessToken) expiresAt = 0
         if (accessToken != null && System.currentTimeMillis() < expiresAt - 60_000) return accessToken!!
         val refresh = sessions.refreshToken() ?: throw BackendException(401, "Inicia sesión para sincronizar.")
+        if (refresh.startsWith("drd.")) return refresh
         val data = try {
             request("/api/auth/session", "POST", JSONObject().put("grantType", "refresh_token").put("refreshToken", refresh))
         } catch (e: BackendException) {
@@ -134,14 +161,63 @@ class BackendClient(context: Context,
     }
 
     @Synchronized fun logout() {
+        val wasFirebase = sessions.refreshToken()?.startsWith("firebase:") == true
         sessions.clear()
+        if (wasFirebase && PushRegistration.initialize(appContext)) FirebaseCredentialState.signOut(appContext)
         accessToken = null
         expiresAt = 0
     }
 
-    private fun deviceId(): String {
+    @android.annotation.SuppressLint("UseKtx")
+    @Synchronized fun deviceId(): String {
         devicePrefs.getString("id", null)?.let { return it }
-        return UUID.randomUUID().toString().also { id -> devicePrefs.edit { putString("id", id) } }
+        return UUID.randomUUID().toString().also { id -> check(devicePrefs.edit().putString("id", id).commit()) { "No se pudo guardar la identidad del dispositivo." } }
+    }
+
+    suspend fun provision(invitation: String) = withContext(Dispatchers.IO) {
+        check(!devicePrefs.getBoolean("restoreNeedsIdentity", false)) { "Verifica la copia con su cuenta original antes de autorizar este dispositivo." }
+        val data = request("/api/admin/customers/provisioning", "POST", JSONObject()
+            .put("action", "claim").put("deviceId", deviceId()).put("invitation", invitation.trim()))
+        synchronized(this@BackendClient) {
+            sessions.save(data.getString("credential"))
+            devicePrefs.edit { putString("role", data.getString("role")) }
+            accessToken = null; expiresAt = 0
+        }
+    }
+
+    suspend fun linkFirebaseAccount(idToken: String, uid: String) = withContext(Dispatchers.IO) {
+        val data = request("/api/admin/customers/firebase-identity", "POST", JSONObject()
+            .put("deviceId", deviceId()).put("firebaseIdToken", idToken), token())
+        check(data.optBoolean("linked") && data.getString("firebaseUid") == uid) { "No se pudo verificar el vínculo de la cuenta." }
+        synchronized(this@BackendClient) {
+            sessions.save("firebase:$uid")
+            devicePrefs.edit { putString("role", data.getString("role")) }
+            accessToken = null; expiresAt = 0
+        }
+    }
+
+    suspend fun useLinkedFirebaseAccount(idToken: String, uid: String) = withContext(Dispatchers.IO) {
+        val data = request("/api/admin/customers/firebase-identity", bearer = idToken, retryAuth = false)
+        check(data.getString("deviceId") == deviceId()) { "Autoriza primero este dispositivo." }
+        synchronized(this@BackendClient) {
+            sessions.save("firebase:$uid")
+            devicePrefs.edit { putString("role", data.getString("role")) }
+            accessToken = null; expiresAt = 0
+        }
+    }
+
+    suspend fun catalog(): List<com.bryan.donas.data.db.FlavorEntity> = withContext(Dispatchers.IO) {
+        val rows = request("/api/admin/customers/catalog", bearer = token()).getJSONArray("flavors")
+        (0 until rows.length()).map { i -> rows.getJSONObject(i).let { row ->
+            com.bryan.donas.data.db.FlavorEntity(row.getString("id"), row.getString("sku"), row.getString("name"),
+                row.getBoolean("available"), row.getBoolean("active"), row.getString("updated_at"))
+        } }
+    }
+
+    suspend fun updateFlavor(item: com.bryan.donas.data.db.CatalogOperationEntity) = withContext(Dispatchers.IO) {
+        request("/api/admin/customers/catalog", "POST", JSONObject().put("operationId", item.operationId)
+            .put("variantId", item.variantId).put("name", item.name).put("available", item.available)
+            .put("expectedUpdatedAt", item.expectedUpdatedAt), token())
     }
 
     suspend fun inventory(): JSONObject = withContext(Dispatchers.IO) {
@@ -179,8 +255,9 @@ class BackendClient(context: Context,
         request("/api/sync?limit=100$query", bearer = token())
     }
 
-    suspend fun recentOrders(): JSONArray = withContext(Dispatchers.IO) {
-        request("/api/admin/orders?limit=100", bearer = token()).getJSONArray("orders")
+    suspend fun recentOrders(orderId: String? = null): JSONArray = withContext(Dispatchers.IO) {
+        val query = if (orderId == null) "limit=100" else "limit=1&orderId=${UUID.fromString(orderId)}"
+        request("/api/admin/orders?$query", bearer = token()).getJSONArray("orders")
     }
 
     suspend fun customerProfile(publicId: String): CustomerPurchaseProfile = withContext(Dispatchers.IO) {

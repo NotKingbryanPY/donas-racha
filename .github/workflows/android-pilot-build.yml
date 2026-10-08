@@ -46,6 +46,7 @@ jobs:
           ORG_GRADLE_PROJECT_FIREBASE_API_KEY: ${{ vars.FIREBASE_ANDROID_API_KEY }}
           ORG_GRADLE_PROJECT_FIREBASE_PROJECT_ID: ${{ vars.FIREBASE_PROJECT_ID }}
           ORG_GRADLE_PROJECT_FIREBASE_SENDER_ID: ${{ vars.FIREBASE_SENDER_ID }}
+          ORG_GRADLE_PROJECT_FIREBASE_WEB_CLIENT_ID: ${{ vars.FIREBASE_WEB_CLIENT_ID }}
         run: bash ./gradlew testDebugUnitTest assembleOfficial lintDebug lintOfficial assembleDebugAndroidTest
       - name: Save official APK and release mapping
         uses: actions/upload-artifact@v4
@@ -98,7 +99,7 @@ jobs:
           script: |
             bash ./gradlew -PDEVICE_TEST_BUILD=official connectedOfficialAndroidTest
             adb install -r app/build/outputs/apk/official/app-official.apk
-            adb shell am start -W -n com.bryan.donas.control/com.bryan.donas.ui.MainActivity
+            adb shell am start -W -n com.bryan.donas.control/com.bryan.donas.ui.OrdersActivity
             sleep 2
             adb shell pidof com.bryan.donas.control
       - uses: actions/upload-artifact@v4

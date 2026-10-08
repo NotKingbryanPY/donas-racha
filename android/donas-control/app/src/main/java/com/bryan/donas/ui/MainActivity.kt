@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
             val data = app.operations.dashboard()
             val dao = app.database.syncDao()
             val active = dao.recentOrders().count { it.status in setOf("PENDING", "ACCEPTED", "OUT_FOR_DELIVERY") }
-            binding.home.operationSummary.text = "$active pedidos activos · ${data.stock} donas locales\nEfectivo ${Money.format(data.cash)} · Yappy ${Money.format(data.yappy)}\n${dao.pendingCount()} registros esperando Wi‑Fi"
+            binding.home.operationSummary.text = "$active pedidos activos · ${data.stock} donas locales\nEfectivo ${Money.format(data.cash)} · Yappy ${Money.format(data.yappy)}\n${dao.pendingCount()} registros pendientes de sincronizar"
         }
     }
 

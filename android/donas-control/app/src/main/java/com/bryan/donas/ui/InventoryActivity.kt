@@ -13,7 +13,7 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bryan.donas.DonasApp
 import com.bryan.donas.data.OrderSync
-import com.bryan.donas.data.StableWifi
+import com.bryan.donas.data.NetworkConnection
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
@@ -41,9 +41,10 @@ class InventoryActivity : AppCompatActivity() {
         fun button(label: String, action: () -> Unit) = MaterialButton(this).apply { text = label; setOnClickListener { action() } }
         root.addView(button("← Inicio") { finish() })
         root.addView(TextView(this).apply { text = "Inventario compartido"; textSize = 26f })
-        notice = TextView(this).apply { text = "Las ventas quedan guardadas y se envían con Wi‑Fi estable. Las reservas web se muestran por separado." }
+        notice = TextView(this).apply { text = "Las ventas quedan guardadas y se envían al recuperar conexión. Las reservas web se muestran por separado." }
         root.addView(notice)
         root.addView(button("Actualizar") { refresh() })
+        root.addView(button("Sabores y disponibilidad") { startActivity(android.content.Intent(this, CatalogActivity::class.java)) })
         rows = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         root.addView(rows)
         root.addView(button("Registrar conteo físico") { count() })
@@ -76,7 +77,7 @@ class InventoryActivity : AppCompatActivity() {
             getSharedPreferences("shared_inventory", Context.MODE_PRIVATE).edit { putString("snapshot", snapshot.toString()) }
             render()
             val pending = app.database.syncDao().pendingCount()
-            notice.text = "$pending registros pendientes de enviar por Wi‑Fi. Última consulta: ${snapshot?.optString("serverTime").orEmpty()}"
+            notice.text = "$pending registros pendientes de sincronización. Última consulta: ${snapshot?.optString("serverTime").orEmpty()}"
             OrderSync.request(this@InventoryActivity)
         } catch (e: Exception) { notice.text = "Mostrando última copia guardada. ${e.message.orEmpty()}" }
         finally { busy = false }
@@ -84,8 +85,8 @@ class InventoryActivity : AppCompatActivity() {
 
     private fun count() = lifecycleScope.launch {
         if (busy) return@launch
-        if (!StableWifi.connected(this@InventoryActivity) || app.database.syncDao().pendingCount() > 0) {
-            notice.text = "Primero conecta Wi‑Fi y sincroniza los registros pendientes antes de contar."
+        if (!NetworkConnection.connected(this@InventoryActivity) || (app.database.syncDao().pendingCount() > 0 || app.database.syncDao().rejectedCount() > 0)) {
+            notice.text = "Primero conecta a Internet y sincroniza los registros pendientes antes de contar."
             OrderSync.request(this@InventoryActivity); return@launch
         }
         val current = snapshot ?: return@launch
@@ -116,8 +117,8 @@ class InventoryActivity : AppCompatActivity() {
                         dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE).isEnabled = false
                         lifecycleScope.launch {
                             try {
-                                check(StableWifi.ready(this@InventoryActivity)) { "Espera a tener Wi‑Fi estable." }
-                                check(app.database.syncDao().pendingCount() == 0) { "Hay nuevos registros pendientes. Sincroniza primero." }
+                                check(NetworkConnection.connected(this@InventoryActivity)) { "Necesitas conexión para confirmar el conteo global." }
+                                check(app.database.syncDao().pendingCount() == 0 && app.database.syncDao().rejectedCount() == 0) { "Hay nuevos registros pendientes. Sincroniza primero." }
                                 app.backendClient.saveInventory(counts, current.getLong("revision"))
                                 dialog.dismiss(); refresh()
                             } catch (e: Exception) { notice.text = e.message; dialog.dismiss(); refresh() }

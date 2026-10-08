@@ -16,7 +16,6 @@ import com.bryan.donas.data.db.RemoteOrderEntity
 import com.bryan.donas.data.db.SyncStateEntity
 import org.json.JSONObject
 import java.util.concurrent.TimeUnit
-import androidx.work.workDataOf
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
@@ -32,7 +31,7 @@ class OrderSyncWorker(context: Context, params: WorkerParameters) : CoroutineWor
         val sync = db.syncDao()
         return try {
             if (client.role == "ADMIN") client.recoverRestoredDevice(sync.restoreProof())
-            val upload = client.canUpload && inputData.getBoolean("upload", true) && StableWifi.ready(applicationContext)
+            val upload = client.canUpload && NetworkConnection.connected(applicationContext)
             app.repository.initialize()
             // Backfill operations created before the outbox migration, without changing the accounting ledger.
             while (true) {
@@ -49,9 +48,18 @@ class OrderSyncWorker(context: Context, params: WorkerParameters) : CoroutineWor
                     }
                 }
             }
+            for (change in if (client.role == "ADMIN") sync.pendingCatalog() else emptyList()) {
+                try {
+                    client.updateFlavor(change)
+                    sync.catalogResult(change.operationId, "ACKED", null)
+                } catch (e: BackendException) {
+                    if (e.status in listOf(400, 404, 409)) sync.catalogResult(change.operationId, "CONFLICT", e.message)
+                    else throw e
+                }
+            }
             var awaitingApplication = false
             var pushFailed = false
-            while (upload && StableWifi.connected(applicationContext)) {
+            while (upload && NetworkConnection.connected(applicationContext)) {
                 val pending = sync.pending()
                 if (pending.isEmpty()) break
                 val acks = try { client.push(pending) } catch (e: Exception) {
@@ -108,6 +116,8 @@ class OrderSyncWorker(context: Context, params: WorkerParameters) : CoroutineWor
                 applicationContext.getSharedPreferences("shared_inventory", Context.MODE_PRIVATE)
                     .edit { putString("snapshot", inventory.toString()) }
             } catch (_: Exception) { /* Older servers still support order monitoring. */ }
+            try { sync.cacheFlavors(client.catalog()) } catch (_: Exception) { /* Keep the durable catalog copy. */ }
+            applicationContext.getSharedPreferences("sync_status", Context.MODE_PRIVATE).edit { putLong("lastPull", System.currentTimeMillis()); remove("error") }
             var needsRetry = false
             for (order in if (client.canUpload) sync.settledOrders() else emptyList()) {
                 try {
@@ -118,36 +128,40 @@ class OrderSyncWorker(context: Context, params: WorkerParameters) : CoroutineWor
                     }
                 } catch (_: Exception) { needsRetry = true }
             }
-            if (needsRetry || awaitingApplication || pushFailed) Result.retry() else Result.success()
+            if (pages >= 20 || needsRetry || awaitingApplication || pushFailed) Result.retry() else Result.success()
         } catch (e: BackendException) {
+            applicationContext.getSharedPreferences("sync_status", Context.MODE_PRIVATE).edit { putString("error", e.message?.take(160)) }
+            if (e.code == "DEVICE_REVOKED" || e.status == 401) {
+                client.logout(); sync.clearOrders(); sync.clearState()
+            }
             if (e.status in 400..499 && e.status != 429) Result.failure() else Result.retry()
-        } catch (_: Exception) { Result.retry() }
+        } catch (e: Exception) {
+            applicationContext.getSharedPreferences("sync_status", Context.MODE_PRIVATE).edit { putString("error", e.message?.take(160) ?: "No se pudo contactar al servidor") }
+            Result.retry()
+        }
     }
 }
 
 object OrderSync {
     fun request(context: Context) {
         val work = OneTimeWorkRequestBuilder<OrderSyncWorker>()
-            .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.UNMETERED).build())
+            .setBackoffCriteria(androidx.work.BackoffPolicy.EXPONENTIAL, 30, TimeUnit.SECONDS)
+            .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
             .build()
         WorkManager.getInstance(context).enqueueUniqueWork("donas-order-sync", ExistingWorkPolicy.KEEP, work)
-        val monitor = OneTimeWorkRequestBuilder<OrderSyncWorker>()
-            .setInputData(workDataOf("upload" to false))
-            .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()).build()
-        WorkManager.getInstance(context).enqueueUniqueWork("donas-order-check", ExistingWorkPolicy.KEEP, monitor)
     }
 
     fun schedule(context: Context) {
+        val manager = WorkManager.getInstance(context)
+        // Retire older overlapping jobs while preserving the single periodic monitor identity.
+        manager.cancelUniqueWork("donas-order-check")
+        manager.cancelUniqueWork("donas-wifi-sync")
         val work = PeriodicWorkRequestBuilder<OrderSyncWorker>(15, TimeUnit.MINUTES)
-            .setInputData(workDataOf("upload" to false))
+            .setBackoffCriteria(androidx.work.BackoffPolicy.EXPONENTIAL, 30, TimeUnit.SECONDS)
             .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
             .build()
-        WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+        manager.enqueueUniquePeriodicWork(
             "donas-order-monitor", androidx.work.ExistingPeriodicWorkPolicy.UPDATE, work)
-        val upload = PeriodicWorkRequestBuilder<OrderSyncWorker>(15, TimeUnit.MINUTES)
-            .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.UNMETERED).build()).build()
-        WorkManager.getInstance(context).enqueueUniquePeriodicWork(
-            "donas-wifi-sync", androidx.work.ExistingPeriodicWorkPolicy.UPDATE, upload)
         request(context)
     }
 

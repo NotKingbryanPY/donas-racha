@@ -32,11 +32,12 @@ begin
 
   -- A paid delivery can be the third credited purchase of the day.
   insert into auth.users(id) values(v_actor);
-  insert into public.products(slug,name) values('cutover-test','Dona test') returning id into v_product;
-  insert into public.product_variants(product_id,sku,name,unit_price_cents)
-    values(v_product,'CUTOVERTEST','Chocolate',100) returning id into v_variant;
+  insert into public.app_user_roles(auth_user_id,role) values(v_actor,'ADMIN');
+  select id into v_variant from public.product_variants where sku='DR-CHOCOLATE';
+  if v_variant is null then raise exception 'seed donut catalog before this fixture'; end if;
+  perform public.api_set_manual_inventory(v_actor,jsonb_build_object('DR-CHOCOLATE',10,'DR-VAINILLA',10,'DR-CHOCOLATE-CHISPAS',10,'DR-VAINILLA-CHISPAS',10));
   select id into v_order from public.api_create_order_by_customer_id(
-    v_customer.id,gen_random_uuid(),repeat('a',64),'Edificio de pruebas','CASH',null,
+    v_customer.id,gen_random_uuid(),repeat('a',64),'Entrada Edificio 4','CASH',null,
     jsonb_build_array(jsonb_build_object('product_variant_id',v_variant,'quantity',1)));
   if (select purchase_count from public.loyalty_accounts where customer_id=v_customer.id) <> 2 then
     raise exception 'order placement awarded points before payment';

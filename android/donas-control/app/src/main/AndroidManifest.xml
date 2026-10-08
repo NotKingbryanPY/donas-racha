@@ -7,20 +7,19 @@
         <service android:name=".data.DonasMessagingService" android:exported="false">
             <intent-filter><action android:name="com.google.firebase.MESSAGING_EVENT" /></intent-filter>
         </service>
+        <activity android:name=".ui.CatalogActivity" android:exported="false" />
+        <activity android:name=".ui.FirebaseAccountActivity" android:exported="false" />
         <activity android:name=".ui.InventoryActivity" android:exported="false" />
         <activity android:name=".ui.CustomerPurchaseActivity" android:exported="false" />
         <activity android:name=".ui.OperationsActivity" android:exported="false" />
-        <activity android:name=".ui.OrdersActivity" android:exported="false" />
+        <activity android:name=".ui.OrdersActivity" android:exported="true" android:launchMode="singleTop">
+            <intent-filter><action android:name="android.intent.action.MAIN" /><category android:name="android.intent.category.LAUNCHER" /></intent-filter>
+        </activity>
         <receiver android:name=".ui.QuickSaleReceiver" android:exported="false" />
         <receiver android:name=".ui.DonasWidgetProvider" android:exported="true">
             <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter>
             <meta-data android:name="android.appwidget.provider" android:resource="@xml/donas_widget_info" />
         </receiver>
-        <activity android:name=".ui.MainActivity" android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".ui.MainActivity" android:exported="false" />
     </application>
 </manifest>

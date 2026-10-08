@@ -5,7 +5,7 @@
   const VERSION = 1;
   const STEPS = [
     { title: 'Tu perfil', text: 'Aquí encuentras tu resumen y cambias entre Perfil y Pedidos. Dentro del perfil puedes abrir las demás secciones.', tab: 'profile', target: '[data-tour="profile-nav"]' },
-    { title: 'Puntos, racha y nivel', text: 'Los puntos totales muestran lo acumulado; los disponibles son los que puedes usar en la tienda. Tu racha y tu nivel reflejan tu progreso según las reglas vigentes que aparecen en el perfil.', tab: 'profile', target: '[data-tour="points"]' },
+    { title: 'Puntos, racha y nivel', text: 'La cifra principal muestra tus puntos disponibles para canjear. Debajo ves los acumulados en total, que se usan para tu nivel y ranking. Tu racha y tu nivel reflejan tu progreso según las reglas vigentes que aparecen en el perfil.', tab: 'profile', target: '[data-tour="points"]' },
     { title: 'Mis datos', text: 'Aquí puedes consultar tu nombre, celular, fecha de registro y usuario. Puedes abrirlos ahora o seguir con el tutorial.', tab: 'profile', target: '[data-tour="details"]', action: 'details' },
     { title: 'Logros y próximo premio', text: 'Consulta aquí los logros que has conseguido y cuánto te falta para el próximo premio disponible.', tab: 'profile', target: '[data-tour="achievements"] h2' },
     { title: 'Tienda', text: 'En la tienda puedes ver las recompensas, sus costos y tus puntos disponibles para canjear.', tab: 'shop', target: '#client-tab-shop' },

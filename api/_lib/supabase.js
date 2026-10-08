@@ -31,6 +31,9 @@ async function readResponse(response) {
     if (message.includes('RESTORE_PROOF_NOT_FOUND') || message.includes('RESTORE_DEVICE_CONFLICT')) throw new ApiError(409, 'RESTORE_DEVICE_CONFLICT', 'No se pudo verificar la identidad de la copia. Sincroniza el piloto y vuelve a exportarla.');
     if (message.includes('ADMIN_REQUIRED')) throw new ApiError(403, 'ADMIN_REQUIRED', 'La cuenta no tiene permisos administrativos.');
     if (message.includes('INVALID_OPERATION')) throw new ApiError(400, 'INVALID_OPERATION', 'La operación de sincronización no es válida.');
+    if (message.includes('INVALID_INVITATION')) throw new ApiError(403, 'INVALID_INVITATION', 'La invitación expiró o ya se utilizó.');
+    if (message.includes('CATALOG_CONFLICT')) throw new ApiError(409, 'CATALOG_CONFLICT', 'El sabor cambió en otro dispositivo. Revisa la versión actual.');
+    if (message.includes('FLAVOR_NOT_FOUND')) throw new ApiError(404, 'FLAVOR_NOT_FOUND', 'El sabor ya no existe.');
     if (message.includes('OUT_OF_STOCK')) throw new ApiError(409, 'OUT_OF_STOCK', 'Este sabor no está disponible.');
     if (message.includes('INVENTORY_CONFLICT')) throw new ApiError(409, 'INVENTORY_CONFLICT', 'El inventario cambió en otro dispositivo. Actualiza y revisa el conteo antes de guardar.');
     if (message.includes('PAYMENT_REQUIRED')) throw new ApiError(409, 'PAYMENT_REQUIRED', 'Confirma el pago recibido antes de completar la entrega.');
@@ -66,6 +69,7 @@ async function serviceRequest(path, { method = 'GET', query, body, prefer } = {}
   const config = getConfig();
   const suffix = query ? `?${query}` : '';
   const response = await fetch(`${config.url}/rest/v1/${path}${suffix}`, {
+    signal:AbortSignal.timeout(15000),
     method,
     headers: {
       apikey: config.serviceRoleKey,

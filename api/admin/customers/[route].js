@@ -2,6 +2,9 @@ const { ApiError, withApi } = require('../../_lib/http');
 
 const handlers = Object.freeze({
   lookup: require('../../_lib/admin_handlers/lookup'),
+  catalog: require('../../_lib/admin_handlers/catalog'),
+  provisioning: require('../../_lib/admin_handlers/provisioning'),
+  'firebase-identity': require('../../_lib/admin_handlers/firebase-identity'),
   inventory: require('../../_lib/admin_handlers/inventory'),
   devices: require('../../_lib/admin_handlers/devices'),
   'claim-token': require('../../_lib/admin_handlers/claim-token')

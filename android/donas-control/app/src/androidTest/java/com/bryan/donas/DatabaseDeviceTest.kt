@@ -33,7 +33,7 @@ class DatabaseDeviceTest {
         val name = "donas-device-test.db"
         context.deleteDatabase(name)
         fun open() = Room.databaseBuilder(context, AppDatabase::class.java, name)
-            .addMigrations(AppDatabase.MIGRATION_2_3, AppDatabase.MIGRATION_3_4).build()
+            .addMigrations(AppDatabase.MIGRATION_2_3, AppDatabase.MIGRATION_3_4, AppDatabase.MIGRATION_4_5).build()
         var db = open()
         try {
             BusinessRepository(db).initialize()
@@ -86,7 +86,7 @@ class DatabaseDeviceTest {
             raw.version = 3
         } finally { raw.close() }
         val migrated = Room.databaseBuilder(context, AppDatabase::class.java, name)
-            .addMigrations(AppDatabase.MIGRATION_2_3, AppDatabase.MIGRATION_3_4).build()
+            .addMigrations(AppDatabase.MIGRATION_2_3, AppDatabase.MIGRATION_3_4, AppDatabase.MIGRATION_4_5).build()
         try {
             val order = migrated.syncDao().order("test-order")
             assertNotNull(order)

@@ -8,6 +8,14 @@ import androidx.room.Upsert
 
 @Dao
 interface SyncDao {
+    @Upsert suspend fun cacheFlavors(items: List<FlavorEntity>)
+    @Query("SELECT * FROM flavor_cache ORDER BY sku") suspend fun flavors(): List<FlavorEntity>
+    @Insert suspend fun enqueueCatalog(item: CatalogOperationEntity)
+    @Query("SELECT * FROM catalog_outbox WHERE state='PENDING' ORDER BY rowid LIMIT 50") suspend fun pendingCatalog(): List<CatalogOperationEntity>
+    @Query("SELECT * FROM catalog_outbox WHERE state!='ACKED'") suspend fun catalogIssues(): List<CatalogOperationEntity>
+    @Query("UPDATE catalog_outbox SET state=:state,lastError=:error WHERE operationId=:id") suspend fun catalogResult(id: String, state: String, error: String?)
+    @Query("DELETE FROM catalog_outbox WHERE operationId=:id AND state='CONFLICT'") suspend fun discardCatalogConflict(id: String)
+
     @Query("SELECT e.* FROM events e LEFT JOIN sync_outbox s ON s.localEventId=e.id WHERE s.localEventId IS NULL ORDER BY e.id LIMIT :limit")
     suspend fun unqueuedEvents(limit: Int = 50): List<EventEntity>
 
@@ -39,8 +47,8 @@ interface SyncDao {
     @Upsert
     suspend fun upsertOrders(orders: List<RemoteOrderEntity>)
 
-    @Query("SELECT * FROM remote_orders ORDER BY createdAt DESC LIMIT 100")
-    suspend fun recentOrders(): List<RemoteOrderEntity>
+    @Query("SELECT * FROM remote_orders ORDER BY CASE WHEN id=:selectedId THEN 0 ELSE 1 END, createdAt DESC LIMIT 100")
+    suspend fun recentOrders(selectedId: String? = null): List<RemoteOrderEntity>
 
     @Query("SELECT * FROM remote_orders WHERE status='COMPLETED' AND settled=1 ORDER BY createdAt")
     suspend fun settledOrders(): List<RemoteOrderEntity>

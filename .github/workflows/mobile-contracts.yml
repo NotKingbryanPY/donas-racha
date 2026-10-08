@@ -5,9 +5,9 @@ concurrency:
 on:
   push:
     branches: ["codex/**", main]
-    paths: ["api/**", "supabase/**", "tests/**", "assets/js/shared-inventory-refresh.js", ".github/workflows/mobile-contracts.yml"]
+    paths: ["api/**", "supabase/**", "tests/**", "assets/**", "index.html", "package*.json", ".github/workflows/mobile-contracts.yml"]
   pull_request:
-    paths: ["api/**", "supabase/**", "tests/**", "assets/js/shared-inventory-refresh.js", ".github/workflows/mobile-contracts.yml"]
+    paths: ["api/**", "supabase/**", "tests/**", "assets/**", "index.html", "package*.json", ".github/workflows/mobile-contracts.yml"]
   workflow_dispatch:
 jobs:
   contracts:
@@ -23,12 +23,20 @@ jobs:
           node tests/session-resilience.cjs
           node tests/order-push.cjs
           node tests/shared-inventory-refresh.cjs
+          node tests/public-realtime-config.cjs
+          node tests/catalog-realtime.cjs
           node tests/inventory-revision-api.cjs
           node tests/device-restore-api.cjs
           node tests/full-supabase-backend.cjs
           node tests/security-contract.cjs
           node tests/web-script-syntax.cjs
           node tests/customer-order-auth.cjs
+          node tests/pilot-device-auth.cjs
+          node tests/notification-order-api.cjs
+          npm ci --no-audit --no-fund
+          node tests/firebase-staff-auth.cjs
+          node tests/firebase-identity-api.cjs
+          node tests/staff-device-list.cjs
       - name: Install pinned PostgreSQL test runtime
         run: |
           npm install --prefix "$RUNNER_TEMP/donas-pg" --no-audit --no-fund @electric-sql/pglite@0.5.8
@@ -38,6 +46,33 @@ jobs:
           node tests/shared-inventory-postgres.mjs
           node tests/seller-role-postgres.mjs
           node tests/manual-inventory-postgres.mjs
+          node tests/pilot-catalog-postgres.mjs
+          node tests/three-daily-purchases-postgres.mjs
+          node tests/preflight-cutover-postgres.mjs
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install pinned browser test runtime
+        run: |
+          npm install --prefix "$RUNNER_TEMP/donas-browser" --no-audit --no-fund playwright@1.62.1
+          "$RUNNER_TEMP/donas-browser/node_modules/.bin/playwright" install --with-deps chromium
+          echo "NODE_PATH=$RUNNER_TEMP/donas-browser/node_modules" >> "$GITHUB_ENV"
+      - name: Exercise profile, orders and the real catalog SDK with simulated providers
+        run: |
+          node tests/serve-fixture.cjs &
+          fixture_pid=$!
+          trap 'kill "$fixture_pid" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:8765/ >/dev/null; then break; fi
+            sleep 1
+          done
+          node tests/integration-order-web.cjs
+          node tests/catalog-realtime-web.cjs
   concurrency:
     runs-on: ubuntu-latest
     timeout-minutes: 15

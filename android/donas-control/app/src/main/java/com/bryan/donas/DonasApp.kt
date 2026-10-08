@@ -20,9 +20,11 @@ class DonasApp : Application() {
     override fun onCreate() {
         super.onCreate()
         reopenDatabase()
-        if (backendClient.signedIn) com.bryan.donas.data.OrderSync.schedule(this)
-        com.bryan.donas.data.PushRegistration.register(this)
-        database.invalidationTracker.addObserver(object : androidx.room.InvalidationTracker.Observer("sync_outbox") {
+        if (backendClient.signedIn) {
+            com.bryan.donas.data.OrderSync.schedule(this)
+            com.bryan.donas.data.PushRegistration.register(this)
+        }
+        database.invalidationTracker.addObserver(object : androidx.room.InvalidationTracker.Observer("sync_outbox", "catalog_outbox") {
             override fun onInvalidated(tables: Set<String>) {
                 if (backendClient.signedIn) com.bryan.donas.data.OrderSync.request(this@DonasApp)
             }

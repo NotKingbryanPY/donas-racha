@@ -21,9 +21,10 @@ function parseCursor(value) {
   if (!value) return { updatedAt:'1970-01-01T00:00:00.000Z', id:ZERO_UUID };
   try {
     const decoded = JSON.parse(Buffer.from(String(value), 'base64url').toString('utf8'));
+    if (typeof decoded.updatedAt !== 'string' || decoded.updatedAt.length > 40) throw new Error();
     const date = new Date(decoded.updatedAt);
     if (!UUID.test(decoded.id) || Number.isNaN(date.getTime())) throw new Error();
-    return { updatedAt:date.toISOString(), id:String(decoded.id).toLowerCase() };
+    return { updatedAt:decoded.updatedAt, id:String(decoded.id).toLowerCase() };
   } catch (_) { throw new ApiError(400, 'INVALID_CURSOR', 'El cursor de sincronización no es válido.'); }
 }
 function cursorFor(row) {
@@ -67,6 +68,7 @@ module.exports = withApi(['GET','POST'], async (req, context) => {
       p_server_sequence: body.serverSequence ?? null
     });
   }
+  if (admin.deviceId && admin.deviceId !== body.deviceId) throw new ApiError(403,'DEVICE_REVOKED','La credencial pertenece a otro dispositivo.');
   const operations = normalizeOperations(body.operations);
   const result = await rpc('api_push_sync_operations', {
     p_auth_user_id:admin.id,
