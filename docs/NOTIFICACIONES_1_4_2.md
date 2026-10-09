@@ -37,4 +37,13 @@ No solicitar exclusión global de batería ni mantener un proceso perpetuo. Si l
 
 ## Validación
 
-Resultados automatizados y APK se completan tras la compilación. Ya pasaron las pruebas del proveedor simulado FCM/APNs, diagnóstico privado/aislamiento, UI web del diagnóstico, sintaxis web, consulta exacta de pedido, autenticación de dispositivo y operaciones de inventario compartido en PostgreSQL aislado. Ninguna de ellas equivale a entrega FCM real con pantalla bloqueada.
+El 9 de octubre de 2026 se verificó el código `63f3691c7aa2829b121704d9835bf9f7b11308cd`:
+
+- **104 pruebas Android** locales, 15 suites, cero errores/fallos; lint debug y official sin problemas. La compilación oficial terminó correctamente.
+- [CI Android 37960224488](https://github.com/NotKingbryanPY/donas-racha/actions/runs/37960224488): build aprobado; tres pruebas instrumentadas en API 23 y tres en API 35, incluida persistencia offline de venta/outbox y migración de pedidos. Instalación y apertura del APK optimizado aprobadas en ambos emuladores. La firma de CI es temporal y no sirve para actualizar el teléfono oficial.
+- [CI web/API 37960224481](https://github.com/NotKingbryanPY/donas-racha/actions/runs/37960224481): contratos, concurrencia PostgreSQL y navegador aprobados. También pasaron localmente proveedor simulado FCM/APNs, aislamiento del diagnóstico, UI/sintaxis web, consulta de pedido exacto, autenticación de dispositivo e inventario compartido en PostgreSQL aislado.
+- APK para actualizar: `outputs/Donas-Control-1.4.2-oficial.apk`, 5 366 737 bytes, paquete `com.bryan.donas.control`, versionCode 14, minSdk 23, targetSdk 35. Apksigner verificó firmas v1/v2, el certificado permanente y zipalign de 16 KiB. SHA-256 del archivo: `3e7eb61aa8f29ee18b324a55235c0d2def0571f27cb53d9ba8dab8f376992f1d`. La revisión estática de 606 entradas no encontró patrones de claves privadas ni credenciales privilegiadas; no reemplaza la auditoría del servidor.
+
+[PR 38](https://github.com/NotKingbryanPY/donas-racha/pull/38) se integró en `main` como `d31f438341ed255b9d6feb88c22e9354ef5d6daa`. [Vercel Production](https://vercel.com/king-entertainment/donas-racha/7ijuEddVjjPXD6jYXQ9wV1VFSi8t) informó éxito para ese commit. Consultas de lectura a `www.dracha.store` confirmaron el nuevo botón y script de diagnóstico, catálogo/inventario/configuración pública Realtime con HTTP 200, y rechazo anónimo HTTP 401 de pedidos y diagnóstico push. No se crearon pedidos ni se modificó stock en estas comprobaciones.
+
+**Pendiente:** activar las variables privadas FCM/CRON en Vercel, el secreto de reintentos GitHub y comprobar registro, entrega real, sonido, apertura del pedido exacto y descarga Room en el Honor X7c con pantalla bloqueada. No se prueba entrega FCM real con proveedores simulados ni con emuladores sin las credenciales de producción. La corrección de código está publicada; la activación y validación integral siguen pendientes.
