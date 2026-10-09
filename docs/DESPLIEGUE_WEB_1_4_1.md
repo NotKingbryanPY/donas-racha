@@ -2,6 +2,8 @@
 
 El repositorio `NotKingbryanPY/donas-racha` ya está vinculado al proyecto Vercel `king-entertainment/donas-racha`. El usuario confirmó acceso desde el iPad. Se continúa en ese proyecto y en `dracha.store`. La propuesta existente es [PR 37](https://github.com/NotKingbryanPY/donas-racha/pull/37), rama `codex/donas-control-ios-shared-stock`, base `main`. Su despliegue Preview permite revisar los cambios antes de pasarlos al dominio público.
 
+Actualización: PR 37 ya se integró y la web/API están publicadas. Los pasos 1–3 se completaron. Ver [resultados de producción](DESPLIEGUE_PRODUCCION_1_4_1.md); continuar con la autorización del teléfono, FCM y las pruebas reales.
+
 ## Estado antes de publicar
 
 - Supabase: el usuario aplicó 02/03/04 y entregó 05 sin anomalías. No repetir 02. Los scripts 06/07 son cierres, no pasos siguientes.
@@ -50,7 +52,7 @@ Abre [Donas Racha](https://www.dracha.store/) y repite las comprobaciones de las
 
 ## 4. Autorizar el teléfono una sola vez
 
-En la web actualizada entra con tu cuenta ADMIN existente. En la sección **Dispositivos administrativos**, elige ADMIN o SELLER y genera una invitación. Pégala únicamente en el teléfono de confianza: vale 15 minutos y un uso. No enviarla al chat ni guardarla en Git.
+En la web actualizada entra con tu cuenta ADMIN existente. En la sección **Dispositivos autorizados**, elige ADMIN o SELLER y pulsa **Crear invitación**. Pégala únicamente en el teléfono de confianza: vale 15 minutos y un uso. No enviarla al chat ni guardarla en Git.
 
 Instala el APK oficial 1.4.1 sobre la app oficial existente, conservando Room. Introduce la invitación en Donas Control. La app abre Pedidos y conserva una credencial individual revocable durante 90 días. El registro Firebase por sí solo no concede permisos administrativos.
 

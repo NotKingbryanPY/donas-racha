@@ -19,7 +19,7 @@ El diagnóstico y los cambios web/offline anteriores están en [AUDITORIA_INTEGR
 | Web | `index.html`, `assets/css/redesign.css`, `assets/js/order-confirmation.js`, `shared-inventory-refresh.js`, `catalog-realtime.js`, `client-tour.js`, `motion.js`, `staff-devices.js`: navegación, puntos, confirmación, contacto, catálogo y tutorial. SDK oficial público fijado en `assets/vendor/`. |
 | Firebase / compilación | `.firebaserc`, `firebase.json`, `firestore.rules`, `firestore.indexes.json`, `scripts/firebase-connect.ps1`, `Get-FirebaseAndroidConfiguration.ps1`, `build-android-official.ps1`, workflows y pruebas de contrato/emulador. La configuración pública descargada y los APK quedan fuera de Git. |
 
-Los archivos Kotlin están bajo `android/donas-control/app/src/main/java/com/bryan/donas/`. La lista incluye el trabajo coordinado anterior y los nuevos cambios de Firebase; no implica que el hosting ya use esta versión.
+Los archivos Kotlin están bajo `android/donas-control/app/src/main/java/com/bryan/donas/`. La lista incluye el trabajo coordinado anterior y los cambios de Firebase. API/web ya publicada: ver [DESPLIEGUE_PRODUCCION_1_4_1.md](DESPLIEGUE_PRODUCCION_1_4_1.md).
 
 ## Acceso administrativo
 
@@ -52,7 +52,7 @@ Los archivos están en `supabase/sql-editor/phase18/`. El paquete 02 se genera c
 
 ## Backend y FCM pendientes de activación
 
-Publicar los cambios de API y web en el hosting actual, instalando `npm ci` y usando Node 22. `FIREBASE_AUTH_PROJECT_ID=donascontrol-1f5df` es público y ya tiene ese valor por defecto. La verificación de ID tokens usa certificados públicos de Google y no necesita una clave de cuenta de servicio.
+Los cambios de API y web están publicados en el hosting actual, con dependencia Firebase Admin y Node 22. `FIREBASE_AUTH_PROJECT_ID=donascontrol-1f5df` es público y ya tiene ese valor por defecto. La verificación de ID tokens usa certificados públicos de Google y no necesita una clave de cuenta de servicio.
 
 Firebase Cloud Messaging HTTP v1 (`fcm.googleapis.com`) está habilitado: se comprobó `ENABLED` en Service Usage para este proyecto. El envío todavía necesita una cuenta de servicio con permiso FCM y su autorización en el servidor. Configurar únicamente en las variables protegidas del hosting `FCM_PROJECT_ID`, `FCM_CLIENT_EMAIL`, `FCM_PRIVATE_KEY`. Nunca pegar claves en el chat, SQL, APK, frontend ni Git. `google-services.json` no reemplaza estas credenciales. No se creó una clave privada sin un destino de servidor disponible. Ver la [configuración oficial del servidor FCM](https://firebase.google.com/docs/cloud-messaging/server-environment).
 
