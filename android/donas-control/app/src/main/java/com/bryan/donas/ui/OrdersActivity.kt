@@ -14,6 +14,7 @@ import androidx.core.view.isVisible
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
 import androidx.room.withTransaction
 import androidx.work.WorkInfo
@@ -87,7 +88,7 @@ class OrdersActivity : AppCompatActivity() {
                             android.content.Intent(android.provider.Settings.ACTION_APP_NOTIFICATION_SETTINGS)
                                 .putExtra(android.provider.Settings.EXTRA_APP_PACKAGE, packageName)
                         else android.content.Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                            android.net.Uri.parse("package:$packageName"))
+                            "package:$packageName".toUri())
                         startActivity(settings)
                     }.setNegativeButton("Volver", null).show()
             } else {

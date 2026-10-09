@@ -2,7 +2,7 @@
 
 ## Diagnóstico comprobado
 
-El usuario tiene un Honor X7c, Donas Control 1.4.1 y notificaciones permitidas. El trabajo real de GitHub [37944131779](https://github.com/NotKingbryanPY/donas-racha/actions/runs/37944131779), del 9 de octubre de 2026, registró `Order push dispatcher not configured.`. Faltaba el secreto del repositorio `ORDER_PUSH_CRON_SECRET`; el script anterior salía con código cero y mostraba éxito sin despachar. Esto confirma que el respaldo de reintentos estaba inactivo. No demuestra por sí solo si las tres variables FCM de Vercel existen o si sus credenciales son válidas.
+El usuario tiene un Honor X7c, Donas Control 1.4.1 y notificaciones permitidas. Confirmó que no configuró `FCM_PROJECT_ID`, `FCM_CLIENT_EMAIL`, `FCM_PRIVATE_KEY` ni `CRON_SECRET` en Vercel Production. Es la causa principal: el servidor no dispone de un emisor FCM autorizado. El trabajo real de GitHub [37944131779](https://github.com/NotKingbryanPY/donas-racha/actions/runs/37944131779), del 9 de octubre de 2026, registró `Order push dispatcher not configured.`. Faltaba también el secreto del repositorio `ORDER_PUSH_CRON_SECRET`; el script anterior salía con código cero y mostraba éxito sin despachar. El respaldo de reintentos estaba inactivo.
 
 En Android, el receptor FCM mostraba el aviso inmediatamente, pero pedía una descarga ordinaria con `KEEP`. Android podía demorarla, y una solicitud durante otra descarga podía descartarse. La cola contable se enviaba antes de consultar pedidos. El registro del teléfono no diferenciaba que el emisor FCM del servidor estuviera desactivado.
 
