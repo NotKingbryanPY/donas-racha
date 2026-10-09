@@ -2,7 +2,7 @@ const { timingSafeEqual } = require('node:crypto');
 const { withApi, ApiError } = require('../http');
 const { requireStaff } = require('../auth');
 const { enforceRateLimit } = require('../rate-limit');
-const { rpc } = require('../supabase');
+const { rpc, serviceRequest } = require('../supabase');
 const { uuid } = require('../validation');
 const push = require('../order-push');
 
@@ -11,8 +11,23 @@ module.exports = withApi(['GET','POST','DELETE'], async (req, context) => {
     const actual=Buffer.from(String(req.headers.authorization || ''));
     const expected=Buffer.from(`Bearer ${process.env.CRON_SECRET || ''}`);
     if (process.env.CRON_SECRET && actual.length===expected.length && timingSafeEqual(actual,expected)) return push.dispatch();
-    await requireStaff(req);
-    return {configured:push.providers()};
+    const staff=await requireStaff(req);
+    const query=new URL(req.url,'https://www.dracha.store').searchParams;
+    const id=query.get('deviceId') || staff.deviceId;
+    const summary={configured:push.providers(),retryConfigured:Boolean(process.env.CRON_SECRET)};
+    if (!id) return summary;
+    uuid(id,'deviceId');
+    if (staff.deviceId && staff.deviceId!==id) throw new ApiError(403,'DEVICE_REVOKED','La credencial pertenece a otro dispositivo.');
+    const probe=query.get('check')==='android';
+    if (probe) await enforceRateLimit(req,'push_check',5,60,staff.id);
+    const rows=await serviceRequest('push_devices',{query:new URLSearchParams({
+      select:probe?'platform,active,updated_at,app_version,token':'platform,active,updated_at,app_version',
+      device_public_id:'eq.'+id,auth_user_id:'eq.'+staff.id,limit:'1'
+    }).toString()});
+    const device=rows?.[0];
+    const registration=device ? {active:device.active,platform:device.platform,updatedAt:device.updated_at,appVersion:device.app_version} : {active:false};
+    const check=probe ? (!device?.active || device.platform!=='ANDROID' ? {status:'DEVICE_NOT_REGISTERED',validated:false} : await push.checkAndroid(device.token)) : undefined;
+    return {...summary,registration,...(check?{check}:{})};
   }
   const admin=await requireStaff(req);
   await enforceRateLimit(req,'push_devices',30,60,admin.id);
@@ -29,5 +44,5 @@ module.exports = withApi(['GET','POST','DELETE'], async (req, context) => {
   const result=await rpc('api_register_push_device',{p_auth_user_id:admin.id,p_device_public_id:id,p_platform:platform,
     p_token:token,p_environment:environment,p_app_version:version});
   try {await push.dispatch();} catch (_) { /* Persistent jobs are retried by the dispatcher. */ }
-  return result;
+  return {...result,configured:push.providers(),retryConfigured:Boolean(process.env.CRON_SECRET)};
 });

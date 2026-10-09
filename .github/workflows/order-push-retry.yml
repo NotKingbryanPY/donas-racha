@@ -9,9 +9,18 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 2
     steps:
-      - name: Dispatch pending alerts when configured
+      - name: Dispatch pending alerts and verify the Android emitter
         env:
           CRON_SECRET: ${{ secrets.ORDER_PUSH_CRON_SECRET }}
         run: |
-          if [ -z "$CRON_SECRET" ]; then echo 'Order push dispatcher not configured.'; exit 0; fi
-          curl --fail --silent --show-error --max-time 60 -H "Authorization: Bearer $CRON_SECRET" 'https://www.dracha.store/api/admin/customers/devices'
+          if [ -z "$CRON_SECRET" ]; then echo '::error::Missing repository secret ORDER_PUSH_CRON_SECRET. Retry dispatcher is inactive.'; exit 1; fi
+          curl --fail --silent --show-error --max-time 60 -H "Authorization: Bearer $CRON_SECRET" 'https://www.dracha.store/api/admin/customers/devices' --output "$RUNNER_TEMP/push-result.json"
+          node - "$RUNNER_TEMP/push-result.json" <<'NODE'
+          const result = JSON.parse(require('node:fs').readFileSync(process.argv[2], 'utf8'));
+          if (!result.ok || !result.data?.configured?.android) {
+            console.error('::error::Android FCM emitter is not configured in Vercel.'); process.exit(1);
+          }
+          const {processed,accepted,retryable,invalidTokens} = result.data;
+          console.log(JSON.stringify({processed,accepted,retryable,invalidTokens}));
+          if (retryable > 0) { console.error('::error::FCM could not accept some alerts; jobs remain queued.'); process.exit(1); }
+          NODE

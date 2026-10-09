@@ -28,3 +28,16 @@ async function loadStaffDevices() {
     }
   }catch(error){document.getElementById('staffDevicesMessage').textContent='Dispositivos: '+error.message;}
 }
+async function loadPushEmitter() {
+  if(staffRole!=='ADMIN')return;
+  const message=document.getElementById('pushEmitterMessage');
+  message.textContent='Comprobando el emisor del servidor…';
+  try {
+    const result=await adminRequest('/api/admin/customers/devices');
+    message.textContent=(result.configured?.android ?
+      'Emisor Android configurado. Comprueba las credenciales y el teléfono desde «Comprobar avisos» en Donas Control.' :
+      'Emisor Android sin configurar: faltan las variables FCM del servidor en Vercel. La configuración Firebase del APK no las sustituye.')+
+      (result.retryConfigured ? ' El secreto de reintentos del servidor está configurado; verifica también el workflow en GitHub.' :
+        ' Reintentos pendientes: configura CRON_SECRET en Vercel y ORDER_PUSH_CRON_SECRET en GitHub con el mismo valor privado.');
+  }catch(error){message.textContent='No se pudo comprobar el emisor: '+error.message;}
+}

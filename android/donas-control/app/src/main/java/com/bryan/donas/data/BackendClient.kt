@@ -229,6 +229,10 @@ class BackendClient(context: Context,
             .put("expectedRevision", revision), token())
     }
 
+    suspend fun pushStatus() = withContext(Dispatchers.IO) {
+        request("/api/admin/customers/devices?deviceId=${deviceId()}&check=android", bearer = token())
+    }
+
     suspend fun registerPush(pushToken: String) = withContext(Dispatchers.IO) {
         request("/api/admin/customers/devices", "POST", JSONObject().put("deviceId", deviceId())
             .put("platform", "ANDROID").put("token", pushToken).put("appVersion", BuildConfig.VERSION_NAME), token())

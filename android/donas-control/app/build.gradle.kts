@@ -10,8 +10,8 @@ android {
         applicationId = "com.bryan.donas"
         minSdk = 23
         targetSdk = 35
-        versionCode = 13
-        versionName = "1.4.1"
+        versionCode = 14
+        versionName = "1.4.2"
         listOf("APP_ID", "API_KEY", "PROJECT_ID", "SENDER_ID", "WEB_CLIENT_ID").forEach { name ->
             val value = providers.gradleProperty("FIREBASE_$name").orNull ?: when (name) { "PROJECT_ID" -> "donascontrol-1f5df"; "SENDER_ID" -> "476925718096"; else -> "" }
             buildConfigField("String", "FIREBASE_$name", "\"${value.replace("\\", "\\\\").replace("\"", "\\\"")}\"")
@@ -95,6 +95,7 @@ dependencies {
     testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
     testImplementation("org.robolectric:robolectric:4.14.1")
     testImplementation("androidx.test:core:1.6.1")
+    testImplementation("androidx.work:work-testing:2.9.1")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test:runner:1.6.2")

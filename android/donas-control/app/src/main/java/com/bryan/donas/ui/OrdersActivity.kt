@@ -41,6 +41,11 @@ class OrdersActivity : AppCompatActivity() {
     private lateinit var logout: MaterialButton
     private lateinit var sync: MaterialButton
     private lateinit var notice: TextView
+    private lateinit var pushNotice: TextView
+    private lateinit var checkPush: MaterialButton
+    private val pushStateListener = android.content.SharedPreferences.OnSharedPreferenceChangeListener { _, _ ->
+        runOnUiThread { renderPushHealth() }
+    }
     private lateinit var list: LinearLayout
     private lateinit var loginFields: LinearLayout
     private val pendingOrders = mutableSetOf<String>()
@@ -48,7 +53,7 @@ class OrdersActivity : AppCompatActivity() {
     private var refreshing = false
     private var targetOrderId: String? = null
     private val app get() = application as DonasApp
-    private val notificationPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { }
+    private val notificationPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { renderPushHealth() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,6 +76,26 @@ class OrdersActivity : AppCompatActivity() {
         root.addView(TextView(this).apply { text = "Pedidos"; textSize = 24f }, fullWidth())
         notice = TextView(this).apply { text = "Acepta, entrega y cobra. Los puntos se aplican al finalizar, hasta 3 compras con puntos por cliente al día."; textSize = 14f; setPadding(0, 8.dp, 0, 12.dp) }
         root.addView(notice, fullWidth())
+        pushNotice = TextView(this).apply { textSize = 14f; setPadding(0, 4.dp, 0, 8.dp) }
+        root.addView(pushNotice, fullWidth())
+        checkPush = button("Comprobar avisos") {
+            if (!OrderNotifications.enabled(this)) {
+                MaterialAlertDialogBuilder(this).setTitle("Notificaciones de pedidos")
+                    .setMessage("Activa las notificaciones y el canal Pedidos nuevos en los ajustes de Android de Donas Control.")
+                    .setPositiveButton("Abrir ajustes") { _, _ ->
+                        val settings = if (Build.VERSION.SDK_INT >= 26)
+                            android.content.Intent(android.provider.Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                                .putExtra(android.provider.Settings.EXTRA_APP_PACKAGE, packageName)
+                        else android.content.Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                            android.net.Uri.parse("package:$packageName"))
+                        startActivity(settings)
+                    }.setNegativeButton("Volver", null).show()
+            } else {
+                com.bryan.donas.data.PushRegistration.register(this)
+                pushNotice.text = "Comprobando el teléfono y el emisor FCM…"
+            }
+        }
+        root.addView(checkPush, fullWidth())
         loginFields = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         val invitationInput = input("Invitación de dispositivo (un solo uso)", false)
         val invitation = invitationInput.editText as TextInputEditText
@@ -115,10 +140,15 @@ class OrdersActivity : AppCompatActivity() {
         root.addView(button("Cuenta · Correo o Google") { startActivity(android.content.Intent(this, FirebaseAccountActivity::class.java)) }, fullWidth())
         list = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         root.addView(list, fullWidth())
-        WorkManager.getInstance(this).getWorkInfosForUniqueWorkLiveData("donas-order-sync").observe(this) { jobs ->
+        listOf("donas-order-sync", "donas-order-monitor").forEach { workName ->
+          WorkManager.getInstance(this).getWorkInfosForUniqueWorkLiveData(workName).observe(this) { jobs ->
             val job = jobs.lastOrNull() ?: return@observe
             if (job.state == WorkInfo.State.SUCCEEDED) { notice.text = "Pedidos actualizados."; loadOrders() }
             if (job.state == WorkInfo.State.FAILED) { renderSession(); loadOrders(); notice.text = "No se pudo sincronizar. Comprueba la sesión, la conexión y la configuración del servidor." }
+        }
+        }
+        WorkManager.getInstance(this).getWorkInfosByTagLiveData("donas-order-push").observe(this) { jobs ->
+            if (jobs.any { it.state == WorkInfo.State.SUCCEEDED }) loadOrders()
         }
         renderSession()
         loadOrders()
@@ -139,6 +169,24 @@ class OrdersActivity : AppCompatActivity() {
         outState.putString("orderId", targetOrderId); super.onSaveInstanceState(outState)
     }
 
+    override fun onStart() {
+        super.onStart()
+        getSharedPreferences("push_health", MODE_PRIVATE).registerOnSharedPreferenceChangeListener(pushStateListener)
+        renderPushHealth()
+    }
+    override fun onStop() {
+        getSharedPreferences("push_health", MODE_PRIVATE).unregisterOnSharedPreferenceChangeListener(pushStateListener)
+        super.onStop()
+    }
+    override fun onResume() {
+        super.onResume()
+        renderSession()
+        renderPushHealth()
+    }
+    private fun renderPushHealth() {
+        if (::pushNotice.isInitialized) pushNotice.text = com.bryan.donas.data.PushHealth.summary(this, client.signedIn)
+    }
+
     private val Int.dp get() = (this * resources.displayMetrics.density).toInt()
     private fun fullWidth() = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
     private fun input(label: String, secret: Boolean): TextInputLayout {
@@ -153,6 +201,8 @@ class OrdersActivity : AppCompatActivity() {
     private fun button(label: String, action: () -> Unit) = MaterialButton(this).apply { text = label; setOnClickListener { action() } }
 
     private fun renderSession() {
+        checkPush.isEnabled = client.signedIn
+        renderPushHealth()
         loginFields.isVisible = !client.signedIn
         logout.isVisible = client.signedIn
         sync.isVisible = client.signedIn
