@@ -22,6 +22,7 @@ jobs:
         run: |
           node tests/session-resilience.cjs
           node tests/order-push.cjs
+          node tests/push-health-api.cjs
           node tests/shared-inventory-refresh.cjs
           node tests/public-realtime-config.cjs
           node tests/catalog-realtime.cjs

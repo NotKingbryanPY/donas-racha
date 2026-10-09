@@ -19,6 +19,16 @@ import com.bryan.donas.ui.OrdersActivity
 
 object OrderNotifications {
     private const val CHANNEL = "new_orders"
+    fun enabled(context: Context): Boolean {
+        if (Build.VERSION.SDK_INT >= 33 && ContextCompat.checkSelfPermission(
+                context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) return false
+        if (!NotificationManagerCompat.from(context).areNotificationsEnabled()) return false
+        if (Build.VERSION.SDK_INT >= 26) {
+            val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            if (manager.getNotificationChannel(CHANNEL)?.importance == NotificationManager.IMPORTANCE_NONE) return false
+        }
+        return true
+    }
     fun showNew(context: Context, id: String, code: String) = showMessage(context, id,
         "Donas Racha — Nuevo pedido", "Pedido $code recibido. Toca para consultar los detalles.")
 
@@ -29,9 +39,7 @@ object OrderNotifications {
 
     @android.annotation.SuppressLint("MissingPermission")
     @Synchronized private fun showMessage(context: Context, id: String, title: String, body: String) {
-        if (Build.VERSION.SDK_INT >= 33 && ContextCompat.checkSelfPermission(
-                context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) return
-        if (!NotificationManagerCompat.from(context).areNotificationsEnabled()) return
+        if (!enabled(context)) return
         val seen = context.getSharedPreferences("order_alerts", Context.MODE_PRIVATE)
         if (seen.contains(id)) return
         val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

@@ -4,6 +4,7 @@ const { rpc } = require('./supabase');
 const b64 = value => Buffer.from(JSON.stringify(value)).toString('base64url');
 const pem = value => String(value || '').replace(/\\n/g, '\n');
 let googleToken;
+let googleTokenRequest;
 
 function providers() {
   const android = ['FCM_PROJECT_ID','FCM_CLIENT_EMAIL','FCM_PRIVATE_KEY'].every(k => process.env[k]);
@@ -12,10 +13,17 @@ function providers() {
 }
 async function oauthToken() {
   if (googleToken && googleToken.expiresAt > Date.now()+60000) return googleToken.token;
+  if (!googleTokenRequest) googleTokenRequest = fetchOAuthToken().finally(() => { googleTokenRequest = null; });
+  return googleTokenRequest;
+}
+async function fetchOAuthToken() {
   const now = Math.floor(Date.now()/1000);
   const input = `${b64({alg:'RS256',typ:'JWT'})}.${b64({iss:process.env.FCM_CLIENT_EMAIL,
     scope:'https://www.googleapis.com/auth/firebase.messaging',aud:'https://oauth2.googleapis.com/token',iat:now,exp:now+3600})}`;
-  const assertion = `${input}.${sign('RSA-SHA256',Buffer.from(input),pem(process.env.FCM_PRIVATE_KEY)).toString('base64url')}`;
+  let signature;
+  try { signature = sign('RSA-SHA256',Buffer.from(input),pem(process.env.FCM_PRIVATE_KEY)).toString('base64url'); }
+  catch (_) { throw new Error('FCM_KEY_INVALID'); }
+  const assertion = `${input}.${signature}`;
   const response = await fetch('https://oauth2.googleapis.com/token', {method:'POST',
     headers:{'content-type':'application/x-www-form-urlencoded'}, signal:AbortSignal.timeout(10000),
     body:new URLSearchParams({grant_type:'urn:ietf:params:oauth:grant-type:jwt-bearer',assertion})});
@@ -24,15 +32,26 @@ async function oauthToken() {
   googleToken = {token:data.access_token,expiresAt:Date.now()+Number(data.expires_in || 3600)*1000};
   return googleToken.token;
 }
-async function sendAndroid(job) {
+async function sendAndroid(job, validateOnly = false) {
   const response = await fetch(`https://fcm.googleapis.com/v1/projects/${encodeURIComponent(process.env.FCM_PROJECT_ID)}/messages:send`, {
     method:'POST',signal:AbortSignal.timeout(10000),headers:{authorization:`Bearer ${await oauthToken()}`,'content-type':'application/json'},
-    body:JSON.stringify({message:{token:job.token,data:{orderId:job.orderId,publicCode:job.publicCode},
+    body:JSON.stringify({... (validateOnly ? {validate_only:true} : {}),
+      message:{token:job.token,data:validateOnly ? {type:'configuration_check'} : {orderId:job.orderId,publicCode:job.publicCode},
       android:{priority:'HIGH',ttl:'86400s'}}})
   });
   const result = await response.json();
   const code = result.error?.details?.find(d=>d.errorCode)?.errorCode || result.error?.status;
   return {delivered:response.ok,invalidToken:code==='UNREGISTERED',error:response.ok?null:`FCM_${code || response.status}`};
+}
+function providerError(error) {
+  return ['FCM_AUTH_FAILED','FCM_KEY_INVALID'].includes(error?.message) ? error.message : 'PROVIDER_UNAVAILABLE';
+}
+async function checkAndroid(token) {
+  if (!providers().android) return {status:'FCM_NOT_CONFIGURED',validated:false};
+  try {
+    const result = await sendAndroid({token}, true);
+    return {status:result.delivered ? 'FCM_VALIDATED' : result.error,validated:result.delivered};
+  } catch (error) { return {status:providerError(error),validated:false}; }
 }
 function sendIOS(job) {
   const now = Math.floor(Date.now()/1000);
@@ -59,15 +78,20 @@ function sendIOS(job) {
 async function dispatch() {
   const configured=providers();
   const platforms=[...(configured.android?['ANDROID']:[]),...(configured.ios?['IOS']:[])];
-  if (!platforms.length) return {configured,processed:0};
+  if (!platforms.length) return {configured,processed:0,accepted:0,retryable:0,invalidTokens:0};
   const jobs=await rpc('api_claim_order_push',{p_platforms:platforms});
+  let accepted=0, retryable=0, invalidTokens=0;
   await Promise.all(jobs.map(async job=>{
     let result;
     try {result=await (job.platform==='ANDROID'?sendAndroid(job):sendIOS(job));}
-    catch (_) {result={delivered:false,invalidToken:false,error:'PROVIDER_UNAVAILABLE'};}
+    catch (error) {result={delivered:false,invalidToken:false,error:providerError(error)};}
     await rpc('api_finish_order_push',{p_id:job.id,p_lease_id:job.leaseId,p_delivered:result.delivered,
       p_invalid_token:result.invalidToken,p_error:result.error,p_token:job.token});
+    if (result.delivered) accepted++;
+    else if (result.invalidToken) invalidTokens++;
+    else retryable++;
   }));
-  return {configured,processed:jobs.length};
+  // Provider acceptance is not confirmation that Android displayed the alert.
+  return {configured,processed:jobs.length,accepted,retryable,invalidTokens};
 }
-module.exports = {dispatch,providers};
+module.exports = {dispatch,providers,checkAndroid};

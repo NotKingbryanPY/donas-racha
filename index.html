@@ -405,6 +405,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
       <button id="staffDeviceIssue" class="btn btn-outline" onclick="issueStaffDevice()">Crear invitación</button>
       <label class="field-label" for="staffDeviceInvitation">Invitación para pegar en Donas Control</label><input id="staffDeviceInvitation" class="field" readonly autocomplete="off" placeholder="Se mostrará al crearla">
       <button class="btn btn-outline" onclick="loadStaffDevices()">Actualizar dispositivos</button><p id="staffDevicesMessage" role="status"></p><div id="staffDevicesList"></div>
+      <button class="btn btn-outline" onclick="loadPushEmitter()">Comprobar avisos Android</button><p id="pushEmitterMessage" role="status" class="muted"></p>
     </section>
     <div class="admin-grid">
       <section class="card admin-wide" id="adminOrdersPanel" aria-labelledby="adminOrdersTitle">

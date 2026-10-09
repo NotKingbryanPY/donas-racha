@@ -18,6 +18,7 @@ import org.json.JSONObject
 import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.CancellationException
 
 class OrderSyncWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
     companion object { private val gate = Mutex() }
@@ -57,31 +58,6 @@ class OrderSyncWorker(context: Context, params: WorkerParameters) : CoroutineWor
                     else throw e
                 }
             }
-            var awaitingApplication = false
-            var pushFailed = false
-            while (upload && NetworkConnection.connected(applicationContext)) {
-                val pending = sync.pending()
-                if (pending.isEmpty()) break
-                val acks = try { client.push(pending) } catch (e: Exception) {
-                    sync.markAttempt(pending.map { it.clientOperationId }, e.message?.take(160) ?: "Error de red")
-                    pushFailed = true
-                    break
-                }
-                db.withTransaction {
-                    for (index in 0 until acks.length()) {
-                        val ack = acks.getJSONObject(index)
-                        val id = ack.getString("clientOperationId")
-                        when (ack.getString("status")) {
-                            "APPLIED" -> sync.acknowledge(id, ack.getLong("serverSequence"))
-                            "REJECTED" -> sync.reject(id, ack.getLong("serverSequence"), ack.optString("errorCode", "Requiere conciliación"))
-                            "RECEIVED" -> if (pending.firstOrNull { it.clientOperationId == id }?.type !in setOf("SALE", "REVERSAL"))
-                                sync.acknowledge(id, ack.getLong("serverSequence")) else awaitingApplication = true
-                        }
-                    }
-                }
-                if (acks.length() != pending.size) { pushFailed = true; break }
-                if (awaitingApplication) break
-            }
             var pages = 0
             do {
                 val response = client.pull(sync.orderCursor())
@@ -111,6 +87,32 @@ class OrderSyncWorker(context: Context, params: WorkerParameters) : CoroutineWor
                     .forEach { OrderNotifications.show(applicationContext, it) }
                 pages++
             } while (response.optBoolean("hasMore") && pages < 20)
+            var awaitingApplication = false
+            var pushFailed = false
+            while (upload && NetworkConnection.connected(applicationContext)) {
+                val pending = sync.pending()
+                if (pending.isEmpty()) break
+                val acks = try { client.push(pending) } catch (e: CancellationException) { throw e
+                } catch (e: Exception) {
+                    sync.markAttempt(pending.map { it.clientOperationId }, e.message?.take(160) ?: "Error de red")
+                    pushFailed = true
+                    break
+                }
+                db.withTransaction {
+                    for (index in 0 until acks.length()) {
+                        val ack = acks.getJSONObject(index)
+                        val id = ack.getString("clientOperationId")
+                        when (ack.getString("status")) {
+                            "APPLIED" -> sync.acknowledge(id, ack.getLong("serverSequence"))
+                            "REJECTED" -> sync.reject(id, ack.getLong("serverSequence"), ack.optString("errorCode", "Requiere conciliación"))
+                            "RECEIVED" -> if (pending.firstOrNull { it.clientOperationId == id }?.type !in setOf("SALE", "REVERSAL"))
+                                sync.acknowledge(id, ack.getLong("serverSequence")) else awaitingApplication = true
+                        }
+                    }
+                }
+                if (acks.length() != pending.size) { pushFailed = true; break }
+                if (awaitingApplication) break
+            }
             try {
                 val inventory = client.inventory()
                 applicationContext.getSharedPreferences("shared_inventory", Context.MODE_PRIVATE)
@@ -129,6 +131,7 @@ class OrderSyncWorker(context: Context, params: WorkerParameters) : CoroutineWor
                 } catch (_: Exception) { needsRetry = true }
             }
             if (pages >= 20 || needsRetry || awaitingApplication || pushFailed) Result.retry() else Result.success()
+        } catch (e: CancellationException) { throw e
         } catch (e: BackendException) {
             applicationContext.getSharedPreferences("sync_status", Context.MODE_PRIVATE).edit { putString("error", e.message?.take(160)) }
             if (e.code == "DEVICE_REVOKED" || e.status == 401) {
@@ -143,6 +146,21 @@ class OrderSyncWorker(context: Context, params: WorkerParameters) : CoroutineWor
 }
 
 object OrderSync {
+    internal fun pushWork(highPriority: Boolean): androidx.work.OneTimeWorkRequest {
+        val work = OneTimeWorkRequestBuilder<OrderSyncWorker>()
+            .setBackoffCriteria(androidx.work.BackoffPolicy.EXPONENTIAL, 30, TimeUnit.SECONDS)
+            .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
+        // Before Android 12, expedited work would require another foreground service.
+        if (highPriority && android.os.Build.VERSION.SDK_INT >= 31)
+            work.setExpedited(androidx.work.OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+        return work.addTag("donas-order-push").build()
+    }
+    fun receivedPush(context: Context, highPriority: Boolean, messageId: String = java.util.UUID.randomUUID().toString()) {
+        // Different messages must not wait for the backoff of a previous failed job.
+        // Repeated delivery of the same message is coalesced; the worker mutex serializes Room/outbox work.
+        WorkManager.getInstance(context).enqueueUniqueWork("donas-order-push-$messageId",
+            ExistingWorkPolicy.KEEP, pushWork(highPriority))
+    }
     fun request(context: Context) {
         val work = OneTimeWorkRequestBuilder<OrderSyncWorker>()
             .setBackoffCriteria(androidx.work.BackoffPolicy.EXPONENTIAL, 30, TimeUnit.SECONDS)
@@ -166,6 +184,9 @@ object OrderSync {
     }
 
     fun stop(context: Context) {
+        PushRegistration.stop(context)
+        WorkManager.getInstance(context).cancelUniqueWork("donas-order-push")
+        WorkManager.getInstance(context).cancelAllWorkByTag("donas-order-push")
         WorkManager.getInstance(context).cancelUniqueWork("donas-order-sync")
         WorkManager.getInstance(context).cancelUniqueWork("donas-order-monitor")
         WorkManager.getInstance(context).cancelUniqueWork("donas-order-check")
