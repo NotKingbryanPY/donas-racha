@@ -2,8 +2,12 @@
 .env.*
 !.env.example
 node_modules/
+outputs/
 test-output/
 .vercel/
+.firebase/
+firebase-debug.log*
+firestore-debug.log*
 .tmp-pg-*/
 migration-data/
 migration-report*.json

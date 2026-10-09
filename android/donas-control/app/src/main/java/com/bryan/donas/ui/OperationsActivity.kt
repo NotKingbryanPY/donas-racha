@@ -254,7 +254,10 @@ class OperationsActivity : AppCompatActivity() {
         }.show()
     }
     private fun expense() {
-        val categories = arrayOf("Transporte", "Comida", "Universidad", "Entretenimiento", "Donas", "Publicidad", "Materiales", "Otro")
+        val categories = buildList {
+            add("Transporte"); add("Comida"); add("Universidad"); add("Entretenimiento")
+            add("Donas"); add("Publicidad"); add("Materiales"); add("Otro")
+        }.toTypedArray()
         MaterialAlertDialogBuilder(this).setTitle("Categoría").setItems(categories) { _, categoryIndex ->
             val types = arrayOf("Negocio · Efectivo", "Negocio · Yappy", "Personal · Efectivo", "Personal · Yappy")
             MaterialAlertDialogBuilder(this).setTitle("Tipo y cuenta").setItems(types) { _, type ->
@@ -338,14 +341,32 @@ class OperationsActivity : AppCompatActivity() {
             .setMessage("La copia reemplazará todos los datos actuales. Esta operación valida la base antes de aplicarla.")
             .setNegativeButton("Cancelar", null).setPositiveButton("Importar") { _, _ -> runAction("Copia importada.") { importDatabase(uri) } }.show()
     }
+    // The import must stop if the identity guard cannot be persisted; KTX edit discards commit's result.
+    @android.annotation.SuppressLint("UseKtx")
     private suspend fun importDatabase(uri: android.net.Uri) {
+        check(!app.backendClient.signedIn) { "Cierra la sesión de Pedidos antes de importar. Después conecta la misma cuenta administradora que usaba la copia." }
         val main = applicationContext.getDatabasePath("donas.db")
         val temp = applicationContext.getDatabasePath("donas-import.db")
         contentResolver.openInputStream(uri)?.use { input -> temp.outputStream().use { input.copyTo(it) } } ?: error("No se pudo leer la copia.")
-        val validation = androidx.room.Room.databaseBuilder(applicationContext, com.bryan.donas.data.db.AppDatabase::class.java, "donas-import.db").build()
-        try { requireNotNull(validation.businessDao().state()) { "La copia no contiene configuración válida." } } finally { validation.close() }
+        val validation = androidx.room.Room.databaseBuilder(applicationContext, com.bryan.donas.data.db.AppDatabase::class.java, "donas-import.db")
+            .addMigrations(com.bryan.donas.data.db.AppDatabase.MIGRATION_2_3, com.bryan.donas.data.db.AppDatabase.MIGRATION_3_4).build()
+        try {
+            requireNotNull(validation.businessDao().state()) { "La copia no contiene configuración válida." }
+            validation.openHelper.writableDatabase.query("PRAGMA wal_checkpoint(TRUNCATE)").close()
+        } finally { validation.close() }
+        com.bryan.donas.data.OrderSync.stop(this)
+        check(getSharedPreferences("remote_device", MODE_PRIVATE).edit()
+            .remove("id").putBoolean("restoreNeedsIdentity", true).commit()) { "No se pudo proteger la identidad de la copia. Vuelve a intentar." }
+        app.database.openHelper.writableDatabase.query("PRAGMA wal_checkpoint(TRUNCATE)").close()
         app.database.close()
-        temp.copyTo(main, overwrite = true); temp.delete()
+        val previous = applicationContext.getDatabasePath("donas-before-import.db")
+        previous.delete()
+        if (main.exists() && !main.renameTo(previous)) {
+            app.reopenDatabase(); error("No se pudo conservar la base anterior.")
+        }
+        if (!temp.renameTo(main)) {
+            previous.renameTo(main); app.reopenDatabase(); error("No se pudo aplicar la copia; se conservó la base anterior.")
+        }
         applicationContext.getDatabasePath("donas.db-wal").delete(); applicationContext.getDatabasePath("donas.db-shm").delete()
         app.reopenDatabase(); app.repository.initialize()
         withContext(Dispatchers.Main) { restartApp() }
@@ -370,7 +391,10 @@ class OperationsActivity : AppCompatActivity() {
     }
 
     private fun filterHistory() {
-        val labels = arrayOf("Todo", "Ventas", "Compras", "Gastos", "Préstamos", "Transferencias", "Reversiones", "Solo Efectivo", "Solo Yappy")
+        val labels = buildList {
+            add("Todo"); add("Ventas"); add("Compras"); add("Gastos"); add("Préstamos")
+            add("Transferencias"); add("Reversiones"); add("Solo Efectivo"); add("Solo Yappy")
+        }.toTypedArray()
         MaterialAlertDialogBuilder(this).setTitle("Filtrar historial").setItems(labels) { _, index ->
             historyType = when (index) { 1 -> "SALE"; 2 -> "PURCHASE"; 3 -> "EXPENSE"; 4 -> "LOAN"; 5 -> "TRANSFER"; 6 -> "REVERSAL"; else -> null }
             historyAccount = when (index) { 7 -> "CASH"; 8 -> "YAPPY"; else -> null }

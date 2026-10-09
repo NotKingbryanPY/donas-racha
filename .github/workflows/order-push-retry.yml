@@ -1,0 +1,17 @@
+name: Retry queued order alerts
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+permissions: {}
+jobs:
+  retry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Dispatch pending alerts when configured
+        env:
+          CRON_SECRET: ${{ secrets.ORDER_PUSH_CRON_SECRET }}
+        run: |
+          if [ -z "$CRON_SECRET" ]; then echo 'Order push dispatcher not configured.'; exit 0; fi
+          curl --fail --silent --show-error --max-time 60 -H "Authorization: Bearer $CRON_SECRET" 'https://www.dracha.store/api/admin/customers/devices'

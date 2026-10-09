@@ -16,7 +16,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
     SaleLotAllocationEntity::class, ExpenseEntity::class, AccountTransferEntity::class,
     LoanEntity::class, LoanPaymentEntity::class, ProfitAllocationEntity::class,
     PartnerPaymentEntity::class, SyncOutboxEntity::class, RemoteOrderEntity::class,
-    SyncStateEntity::class], version = 4, exportSchema = true,
+    SyncStateEntity::class, FlavorEntity::class, CatalogOperationEntity::class], version = 5, exportSchema = true,
     autoMigrations = [AutoMigration(from = 1, to = 2)])
 abstract class AppDatabase : RoomDatabase() {
     abstract fun businessDao(): BusinessDao
@@ -38,7 +38,13 @@ abstract class AppDatabase : RoomDatabase() {
                 db.execSQL("ALTER TABLE remote_orders ADD COLUMN settled INTEGER NOT NULL DEFAULT 0")
             }
         }
+        val MIGRATION_4_5 = object : Migration(4, 5) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("CREATE TABLE IF NOT EXISTS flavor_cache (id TEXT NOT NULL PRIMARY KEY, sku TEXT NOT NULL, name TEXT NOT NULL, available INTEGER NOT NULL, active INTEGER NOT NULL, updatedAt TEXT NOT NULL)")
+                db.execSQL("CREATE TABLE IF NOT EXISTS catalog_outbox (operationId TEXT NOT NULL PRIMARY KEY, variantId TEXT NOT NULL, name TEXT NOT NULL, available INTEGER NOT NULL, expectedUpdatedAt TEXT NOT NULL, state TEXT NOT NULL, lastError TEXT)")
+            }
+        }
         fun open(context: Context) = Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "donas.db")
-            .addMigrations(MIGRATION_2_3, MIGRATION_3_4).build()
+            .addMigrations(MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5).build()
     }
 }

@@ -244,15 +244,15 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
   <div class="wrap">
     <div class="profile-tools"><button class="back-btn" onclick="clientGoBack()">← Volver</button><button id="clientTourReplay" class="text-action" hidden onclick="window.DonasTour?.start()">Ver tutorial</button></div>
     <div id="clientUserTabs" class="client-top-nav" data-tour="profile-nav" style="display:none" role="navigation" aria-label="Área del cliente">
-      <button id="client-top-profile" class="client-top-link active" onclick="setClientTab('profile')"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M4 22v-3a8 8 0 0 1 16 0v3"/></svg> Perfil</button>
-      <button id="client-top-delivery" data-tour="orders-tab" class="client-top-link" onclick="setClientTab('delivery')"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h3l3 13h12l2-9H6M9 21h.01M19 21h.01"/></svg> Pedidos</button>
+      <button id="client-top-profile" class="client-top-link active" onclick="setClientTab('profile')"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M4 22v-3a8 8 0 0 1 16 0v3"/></svg><span><b>Mi perfil</b><small>Puntos y recompensas</small></span></button>
+      <button id="client-top-delivery" data-tour="orders-tab" class="client-top-link" onclick="setClientTab('delivery')"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h3l3 13h12l2-9H6M9 21h.01M19 21h.01"/></svg><span><b>Pedidos</b><small>Pedir y ver mi estado</small></span></button>
     </div>
     <p id="clientName" class="client-name">Cargando...</p>
     <p id="clientLoginSuccess" class="login-success" role="status" hidden>✓ Listo · Entraste a tu perfil</p>
     <div id="clientSummary" data-tour="points" class="client-hero">
       <div class="summary-heading"><h2>Tu constancia suma.</h2><span id="clientLevel" class="level-badge">🥉 Bronce</span></div>
+      <div class="spendable-points"><strong><span id="clientSpendable">0</span> puntos</strong><span>Disponibles para canjear</span><small><b id="clientPoints">0</b> puntos acumulados en total</small></div>
       <div class="hero-stats">
-        <div class="hero-stat"><b id="clientPoints">0</b><span>puntos totales</span></div>
         <div class="hero-stat"><span aria-hidden="true">🔥</span><b id="clientStreak">0</b><span>de racha</span></div>
       </div>
       <div class="level-progress-row"><div class="progress-track" role="progressbar" aria-label="Progreso al siguiente nivel" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="levelProgress" class="progress-fill" style="width:0%"></div></div><span id="levelText">0%</span></div>
@@ -332,6 +332,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
         <label class="field-label" for="clientDeliveryNotes">Indicaciones (opcional)</label><input id="clientDeliveryNotes" class="field" maxlength="500" placeholder="Salón o referencia">
         <div class="payment-options"><label class="payment-option"><input type="radio" name="clientPayment" value="CASH" checked><span>💵 Efectivo al recibir</span></label><label class="payment-option"><input type="radio" name="clientPayment" value="YAPPY"><span>📱 Yappy al recibir</span></label></div>
         <button id="clientOrderButton" class="btn btn-primary" style="width:100%;margin-top:16px" onclick="submitClientOrder()">Confirmar pedido</button>
+        <button id="clientOrderRetry" class="btn btn-outline" hidden onclick="submitClientOrder()">Recuperar envío pendiente</button><button id="clientOrderView" class="btn btn-outline" hidden>Ver confirmación</button>
         <p id="clientOrderMessage" class="muted" role="status" style="margin-top:12px"></p>
       </div>
       <div class="card"><div class="card-title">📦 Mis pedidos</div><div id="clientOrdersList" class="muted">Cargando...</div></div>
@@ -339,6 +340,14 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
   </div>
 </div>
 
+<dialog id="clientOrderConfirmation" class="profile-dialog order-confirmation" aria-labelledby="confirmedOrderTitle">
+  <button class="dialog-close" onclick="this.closest('dialog').close()" aria-label="Cerrar confirmación">✕</button>
+  <div class="confirmation-stage" aria-hidden="true"><span class="confirmation-donut mini-donut"></span><span class="brand-mark"></span><span class="confirmation-check">✓</span></div>
+  <img src="assets/images/donas-racha-logo-light.svg" width="180" height="56" alt="Donas Racha">
+  <h2 id="confirmedOrderTitle">¡Pedido realizado!</h2><strong id="confirmedOrderCode"></strong><p id="confirmedOrderState"></p>
+  <a id="confirmedOrderWhatsapp" class="btn btn-green" target="_blank" rel="noopener noreferrer">Contactar por WhatsApp</a>
+  <button class="btn btn-outline" onclick="this.closest('dialog').close();loadClientDelivery()">Consultar mis pedidos</button>
+</dialog>
 <div id="screen-new" class="screen">
   <div class="header"><h1>➕ Nuevo cliente</h1><p>Registrar en Donas Racha</p></div>
   <div class="wrap">
@@ -390,6 +399,13 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
     </div>
 
     <nav class="admin-shortcuts" aria-label="Dashboard de ventas"><a href="#adminOrdersPanel">Pedidos</a><a href="#adminRedemptionsPanel">Canjes</a><a href="#adminInventoryPanel" data-admin-only>Inventario</a><a href="#adminClients">Clientes</a></nav>
+    <section class="card" id="staffDevicesPanel" data-admin-only aria-labelledby="staffDevicesTitle">
+      <h2 id="staffDevicesTitle">Dispositivos autorizados</h2><p class="muted">Autoriza Donas Control una vez y abre directamente Pedidos. La invitación expira en 15 minutos y se usa una sola vez.</p>
+      <label class="field-label" for="staffDeviceRole">Permisos del dispositivo</label><select id="staffDeviceRole" class="field"><option value="SELLER">Vendedor</option><option value="ADMIN">Administrador</option></select>
+      <button id="staffDeviceIssue" class="btn btn-outline" onclick="issueStaffDevice()">Crear invitación</button>
+      <label class="field-label" for="staffDeviceInvitation">Invitación para pegar en Donas Control</label><input id="staffDeviceInvitation" class="field" readonly autocomplete="off" placeholder="Se mostrará al crearla">
+      <button class="btn btn-outline" onclick="loadStaffDevices()">Actualizar dispositivos</button><p id="staffDevicesMessage" role="status"></p><div id="staffDevicesList"></div>
+    </section>
     <div class="admin-grid">
       <section class="card admin-wide" id="adminOrdersPanel" aria-labelledby="adminOrdersTitle">
         <div class="operations-heading"><div><span class="eyebrow">ENTREGAS</span><h2 id="adminOrdersTitle">Pedidos del día</h2></div><button class="btn btn-outline" onclick="loadAdminOrders()">Actualizar</button></div>
@@ -412,7 +428,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
       </div>
       <div class="card admin-wide" id="adminInventoryPanel" data-admin-only>
         <div class="operations-heading"><div><span class="eyebrow">CONTROL MANUAL</span><h2>¿Cuántas donas tienes?</h2></div><span class="pill">Inventario web</span></div>
-        <p class="muted">Escribe el conteo físico completo, incluyendo las donas apartadas para pedidos. Guarda nuevamente después de comprar o vender fuera de la web. Las ventas de la app no modifican este conteo.</p>
+        <p class="muted">Las compras y ventas de Donas Control actualizan este inventario al sincronizar por Wi‑Fi. Usa el conteo físico para conciliar todo el negocio, incluyendo donas reservadas, después de sincronizar los dispositivos de los socios.</p>
         <div id="adminFlavorInventory" class="muted" style="margin-top:12px">Cargando inventario...</div>
         <div class="inventory-actions"><button id="saveInventoryButton" class="btn btn-primary" onclick="saveAdminInventory()">Guardar los 4 sabores</button><button class="btn btn-outline" onclick="loadAdminInventory()">Volver a consultar</button></div><p id="adminInventoryNotice" class="muted" role="status"></p>
       </div>
@@ -491,6 +507,7 @@ let customerWantsOrder = false;
 let customerSelectedFlavor = null;
 let customerOrderQuantities = new Map();
 let customerOrderPendingKey = null;
+let customerOrderSubmitting = false;
 let customerOrderVariants = [];
 let clientInventoryEnforced = false;
 const pendingPurchaseKeys = new Map();
@@ -646,6 +663,7 @@ async function backendRequest(method, params, asCustomer = false, retried = fals
   if (!response.ok || !payload?.ok) {
     const error = new Error(payload?.error?.message || 'No pudimos conectar con Supabase.');
     error.code = payload?.error?.code || 'API_ERROR';
+    error.status = response.status;
     throw error;
   }
   return payload.data;
@@ -1020,6 +1038,7 @@ function renderClient(c, asUser) {
   document.getElementById('clientSince').textContent = c.registrationDate ? 'Cliente desde ' + fmtDate(c.registrationDate) : '';
   document.getElementById('clientLevel').textContent = `${c.levelEmoji || '🥉'} ${c.levelName || 'Bronce'}`;
   document.getElementById('clientPoints').textContent = c.pointsTotal || 0;
+  document.getElementById('clientSpendable').textContent = c.pointsAvailable || 0;
   document.getElementById('clientTotal').textContent = c.totalPurchases || 0;
   document.getElementById('clientStreak').textContent = c.currentStreak || 0;
   document.getElementById('clientAvailable').textContent = c.pointsAvailable || 0;
@@ -1136,7 +1155,7 @@ function setClientTab(tab, historyMode = 'push') {
   Object.keys(sections).forEach(key => { if (sections[key]) sections[key].style.display = key === tab ? '' : 'none'; });
   ['profile','ranking','shop','history','delivery'].forEach(key => {
     const btn = document.getElementById('client-tab-' + key);
-    if (btn) btn.classList.toggle('active', key === tab);
+    if (btn) { btn.classList.toggle('active', key === tab); btn.setAttribute('aria-pressed',String(key===tab)); }
   });
   window.DonasMotion?.panel(sections[tab]);
   if (historyMode !== 'none') updateCustomerViewUrl(tab,historyMode);
@@ -1145,6 +1164,7 @@ function setClientTab(tab, historyMode = 'push') {
 }
 
 async function loadClientDelivery() {
+  if (customerOrderSubmitting) return;
   const list = document.getElementById('clientFlavorList');
   list.innerHTML = '<div class="empty">Cargando sabores...</div>';
   try {
@@ -1153,10 +1173,10 @@ async function loadClientDelivery() {
     ]);
     const byId = new Map((inventory.flavors || []).map(row => [String(row.variant_id), row]));
     clientInventoryEnforced = !!inventory.enforced;
-    clientOrderVariants = flattenCatalog(catalog.products || []).filter(item => item.available)
+    clientOrderVariants = flattenCatalog(catalog.products || [])
       .map(item => ({ ...item, inventory:byId.get(String(item.id)) }));
     document.getElementById('clientInventoryStatus').textContent = clientInventoryEnforced
-      ? 'Disponibilidad según el último conteo del vendedor'
+      ? 'Inventario compartido · actualización automática mientras estás aquí'
       : 'Inventario por sabor en preparación. Puedes pedir; confirmaremos la disponibilidad antes de aceptar.';
     renderClientFlavors();
   } catch (error) { list.textContent = error.message; document.getElementById('clientInventoryStatus').textContent = 'No se pudo comprobar el inventario.'; }
@@ -1167,6 +1187,7 @@ async function loadClientDelivery() {
       ? orders.map(order => `<div class="history-item"><div class="grow"><b>${safe(order.public_code)}</b><div class="sub">${safe(clientOrderStatus(order.status))} · ${formatMoney(order.total_cents,order.currency_code)} · ${safe(new Date(order.created_at).toLocaleDateString('es-PA'))}</div></div></div>`).join('')
       : '<div class="empty">Todavía no tienes pedidos.</div>';
   } catch (error) { document.getElementById('clientOrdersList').textContent = error.message; }
+  await window.DonasOrderFeedback?.restore();
 }
 
 function clientOrderStatus(status) {
@@ -1176,13 +1197,15 @@ function clientOrderStatus(status) {
 function renderClientFlavors() {
   const list = document.getElementById('clientFlavorList');
   if (!clientOrderVariants.length) { list.innerHTML = '<div class="empty">No hay sabores disponibles ahora.</div>'; updateClientOrderTotal(); return; }
-  list.innerHTML = clientOrderVariants.map(item => { const left = item.inventory?.counted ? Math.max(0,Number(item.inventory.available_quantity) || 0) : 0; return `<div class="cart-row"><div class="cart-donut ${flavorTone(item.name)}"><span class="mini-donut"></span></div><div class="grow"><b>${safe(item.name)}</b><small>${formatMoney(item.unit_price_cents,item.currency_code)} c/u · <span class="flavor-remaining">${clientInventoryEnforced ? `<span class="stock-value" data-stock-key="${safe(item.id)}" data-stock-value="${left}">${left}</span> disponibles` : 'por confirmar'}</span></small></div><div class="quantity"><button aria-label="Quitar ${safe(item.name)}" onclick="changeClientOrderQty('${item.id}',-1)">−</button><span>${customerOrderQuantities.get(String(item.id)) || 0}</span><button aria-label="Añadir ${safe(item.name)}" ${clientInventoryEnforced && left <= (customerOrderQuantities.get(String(item.id)) || 0) ? 'disabled' : ''} onclick="changeClientOrderQty('${item.id}',1)">+</button></div></div>`; }).join('');
+  list.innerHTML = clientOrderVariants.map(item => { const left = item.inventory?.counted ? Math.max(0,Number(item.inventory.available_quantity) || 0) : 0; return `<div class="cart-row"><div class="cart-donut ${flavorTone(item.name)}"><span class="mini-donut"></span></div><div class="grow"><b>${safe(item.name)}</b><small>${formatMoney(item.unit_price_cents,item.currency_code)} c/u · ${!item.available ? 'No disponible para pedir · ' : ''}<span class="flavor-remaining">${clientInventoryEnforced ? `<span class="stock-value" data-stock-key="${safe(item.id)}" data-stock-value="${left}">${left}</span> disponibles` : 'por confirmar'}</span></small></div><div class="quantity"><button aria-label="Quitar ${safe(item.name)}" onclick="changeClientOrderQty('${item.id}',-1)">−</button><span>${customerOrderQuantities.get(String(item.id)) || 0}</span><button aria-label="Añadir ${safe(item.name)}" ${!item.available || customerOrderSubmitting || (clientInventoryEnforced && left <= (customerOrderQuantities.get(String(item.id)) || 0)) ? 'disabled' : ''} onclick="changeClientOrderQty('${item.id}',1)">+</button></div></div>`; }).join('');
   window.DonasMotion?.stock(list, 'customer');
   updateClientOrderTotal();
 }
 
 function changeClientOrderQty(id, delta) {
+  if (customerOrderSubmitting) return;
   const flavor = clientOrderVariants.find(item => String(item.id) === id);
+  if (!flavor || (!flavor.available && delta > 0)) return;
   const available = clientInventoryEnforced ? (flavor?.inventory?.counted ? Math.max(0,Number(flavor.inventory.available_quantity) || 0) : 0) : 100;
   const quantity = Math.max(0, Math.min(available, 100, (customerOrderQuantities.get(id) || 0) + delta));
   if (quantity) customerOrderQuantities.set(id, quantity); else customerOrderQuantities.delete(id);
@@ -1200,32 +1223,41 @@ function changeClientOrderQty(id, delta) {
 function updateClientOrderTotal() {
   const total = clientOrderVariants.reduce((sum,item) => sum + item.unit_price_cents * (customerOrderQuantities.get(String(item.id)) || 0), 0);
   document.getElementById('clientOrderTotal').textContent = formatMoney(total);
-  document.getElementById('clientOrderButton').disabled = total <= 0 || (clientInventoryEnforced && clientOrderVariants.some(item =>
+  document.getElementById('clientOrderButton').disabled = customerOrderSubmitting || total <= 0 || clientOrderVariants.some(item => !item.available && customerOrderQuantities.get(String(item.id))) || (clientInventoryEnforced && clientOrderVariants.some(item =>
     (customerOrderQuantities.get(String(item.id)) || 0) > (item.inventory?.counted ? Number(item.inventory.available_quantity) : 0)));
 }
 
 async function submitClientOrder() {
+  if (customerOrderSubmitting) return;
   const message = document.getElementById('clientOrderMessage');
   const locationText = document.getElementById('clientDeliveryLocation').value.trim();
   const items = clientOrderVariants.map(item => ({productVariantId:item.id,quantity:customerOrderQuantities.get(String(item.id)) || 0})).filter(item => item.quantity);
-  if (!items.length || locationText.length < 3) { message.textContent = 'Elige tus donas y escribe tu ubicación.'; return; }
+  const feedback=window.DonasOrderFeedback;
+  const saved=feedback.read();
+  if (!saved?.pending && (!items.length || locationText.length < 3)) { message.textContent = 'Elige tus donas y escribe tu ubicación.'; return; }
+  if (!saved?.pending && clientOrderVariants.some(item=>!item.available && customerOrderQuantities.get(String(item.id)))) { message.textContent='Revisa los sabores deshabilitados antes de pedir.'; return; }
+  const payload=saved?.pending?.payload || {idempotencyKey:crypto.randomUUID(), deliveryLocation:locationText,
+    customerNotes:document.getElementById('clientDeliveryNotes').value.trim(),
+    paymentMethod:document.querySelector('input[name="clientPayment"]:checked').value,items};
   const button = document.getElementById('clientOrderButton');
-  button.disabled = true; button.textContent = 'Enviando...'; message.textContent = '';
-  customerOrderPendingKey ||= crypto.randomUUID();
+  try { feedback.write({...saved,pending:{payload}}); } catch (_) { message.textContent='Permite el almacenamiento de esta sesión para conservar tu envío y vuelve a intentar.'; return; }
+  customerOrderSubmitting=true;
+  button.disabled = true; button.textContent = 'Verificando pedido…'; message.textContent = '';
+  feedback.lock(true);
   try {
-    const result = await customerRequest('/api/orders', { method:'POST', body:JSON.stringify({
-      idempotencyKey:customerOrderPendingKey, deliveryLocation:locationText,
-      customerNotes:document.getElementById('clientDeliveryNotes').value.trim(),
-      paymentMethod:document.querySelector('input[name="clientPayment"]:checked').value, items
-    }) });
-    customerOrderPendingKey = null;
-    customerOrderQuantities.clear(); renderClientFlavors();
-    message.textContent = `Pedido ${result.public_code} recibido. Pagarás al recibir.`;
-    try { const recent = await customerRequest('/api/customer/orders');
-      document.getElementById('clientOrdersList').innerHTML = (recent.orders || []).map(order => `<div class="history-item"><div class="grow"><b>${safe(order.public_code)}</b><div class="sub">${safe(clientOrderStatus(order.status))} · ${formatMoney(order.total_cents,order.currency_code)}</div></div></div>`).join('');
-    } catch (_) { /* The confirmed order code above remains visible. */ }
-  } catch (error) { message.textContent = error.message; }
-  finally { button.textContent = 'Confirmar pedido'; updateClientOrderTotal(); }
+    const result = await customerRequest('/api/orders', { method:'POST', body:JSON.stringify(payload),signal:AbortSignal.timeout(20000) });
+    if (!/^[0-9a-f-]{36}$/i.test(result?.id || '') || !/^DR-[0-9A-F]{10}$/.test(result?.public_code || '')) throw new Error('El servidor no devolvió una confirmación verificable. Recupera el mismo envío.');
+    feedback.write({confirmed:result.public_code});
+    customerOrderPendingKey = null; customerOrderQuantities.clear();
+    message.textContent = 'Pedido '+result.public_code+' recibido. Pagarás al recibir.';
+    feedback.show(result,!result.replayed);
+  } catch (error) {
+    if (error.status===400 || error.code==='OUT_OF_STOCK') feedback.write({...saved,pending:null});
+    message.textContent = error.message || 'No se pudo verificar el pedido. Recupera el mismo envío.';
+  } finally {
+    customerOrderSubmitting=false; feedback.lock(false); button.textContent = 'Confirmar pedido';
+    renderClientFlavors(); await feedback.restore();
+  }
 }
 
 async function saveCustomerPassword() {
@@ -1514,7 +1546,7 @@ async function showAdmin(historyMode = 'push') {
   loadAdminOrders();
   loadAdminRedemptions();
   await loadAdminDashboard('compras');
-  if (isAdmin) loadAdminInventory();
+  if (isAdmin) { loadAdminInventory(); window.loadStaffDevices?.(); }
 }
 
 async function loadAdminDashboard(type='compras') {
@@ -1621,6 +1653,10 @@ function safe(s){ return String(s ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;',
 function esc(s){ return String(s ?? '').replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
 </script>
 <script src="assets/js/admin-operations.js"></script>
+<script src="assets/js/staff-devices.js"></script>
+<script src="assets/js/order-confirmation.js"></script>
+<script src="assets/js/shared-inventory-refresh.js"></script>
+<script src="assets/js/catalog-realtime.js"></script>
 <script src="assets/js/admin-redemptions.js"></script>
 <script src="assets/js/admin-loyalty.js"></script>
 <script src="assets/js/motion.js"></script>

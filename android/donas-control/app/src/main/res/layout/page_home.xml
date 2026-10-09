@@ -35,6 +35,14 @@
         android:layout_marginTop="12dp"
         android:text="Abrir control de ventas" />
 
+    <TextView android:id="@+id/operationSummary" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:layout_marginTop="12dp"
+        android:textAppearance="@style/TextAppearance.Material3.BodyLarge" android:text="Cargando resumen…" />
+
+    <com.google.android.material.button.MaterialButton android:id="@+id/openInventory"
+        style="@style/Widget.Material3.Button.OutlinedButton" android:layout_width="match_parent"
+        android:layout_height="48dp" android:text="Inventario compartido" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/openOrders"
         style="@style/Widget.Material3.Button.OutlinedButton"

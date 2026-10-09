@@ -7,7 +7,8 @@ const {PGlite}=await import(process.env.PGLITE_MODULE || '@electric-sql/pglite')
 const root=resolve(import.meta.dirname,'..');
 const db=new PGlite();
 await db.exec(`create role anon; create role authenticated; create role service_role; create schema auth; create table auth.users(id uuid primary key); create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid $$; create schema extensions; create function extensions.gen_random_bytes(integer) returns bytea language sql as $$ select decode(substr(replace(gen_random_uuid()::text,'-','')||replace(gen_random_uuid()::text,'-',''),1,$1*2),'hex') $$; create function extensions.digest(text,text) returns bytea language sql as $$ select convert_to($1,'UTF8') $$; create publication supabase_realtime;`);
-for(const name of readdirSync(join(root,'supabase/migrations')).filter(x=>x.endsWith('.sql')).sort()) {
+// Historical contract of the manual-inventory phase; shared stock has its own tests.
+for(const name of readdirSync(join(root,'supabase/migrations')).filter(x=>x.endsWith('.sql') && x<'20261003').sort()) {
   await db.exec(readFileSync(join(root,'supabase/migrations',name),'utf8').replace('create extension if not exists pgcrypto with schema extensions;',''));
 }
 await db.exec(readFileSync(join(root,'supabase/manual/seed_donut_flavors.sql'),'utf8'));
@@ -47,8 +48,15 @@ const later=(await db.query("select * from public.api_create_order_by_customer_i
 await db.query("select * from public.api_transition_order($1,'ACCEPTED',$2,null)",[later.id,admin]);
 await db.query("select * from public.api_transition_order($1,'OUT_FOR_DELIVERY',$2,null)",[later.id,admin]);
 await db.query("select public.api_complete_paid_order($1,$2,'YAPPY')",[later.id,admin]);
-assert.equal(await earned(),1,'second completed order same day respects the daily reward cap');
+assert.equal(await earned(),2,'second completed order same day respects the three-purchase daily cap');
 assert.equal(Number((await inventory()).available_quantity),1);
+// Activate shared inventory after real historical purchases, offline sales and deliveries.
+// Existing stock must survive without replaying any of those old movements.
+for(const name of readdirSync(join(root,'supabase/migrations')).filter(x=>x.endsWith('.sql') && x>='20261003').sort()) {
+  await db.exec(readFileSync(join(root,'supabase/migrations',name),'utf8'));
+}
+assert.equal(Number((await inventory()).available_quantity),1,'cutover preserves the existing physical balance');
+assert.equal(Number((await db.query('select count(*) n from public.inventory_movements')).rows[0].n),0,'historical purchases and sales must not replay');
 await count({...counts,'DR-CHOCOLATE':0});
 assert.equal(Number((await inventory()).available_quantity),0,'new count replaces old stock even after purchases');
 await assert.rejects(db.query("select * from public.api_create_order_by_customer_id($1,$2,$3,'Edificio 4','CASH',null,$4::jsonb)",[customer.id,randomUUID(),'b'.repeat(64),JSON.stringify([{product_variant_id:variant,quantity:1}])]),/OUT_OF_STOCK/);

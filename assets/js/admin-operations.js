@@ -1,4 +1,5 @@
-/* Manual web stock and delivery controls; no background stock synchronization. */
+/* Shared stock; physical counts reconcile the movement ledger. */
+let adminInventoryRevision;
 let adminOrders = [];
 let adminOrdersLoading = false;
 let adminInventoryLoading = false;
@@ -37,7 +38,8 @@ async function loadAdminInventory() {
   const save = document.getElementById('saveInventoryButton');
   save.disabled = true; notice.textContent = 'Consultando inventario…';
   try {
-    const {flavors} = await adminRequest('/api/admin/customers/inventory');
+    const {flavors,revision} = await adminRequest('/api/admin/customers/inventory');
+    adminInventoryRevision = revision;
     root.innerHTML = inventorySkus.map(sku => {
       const row = flavors.find(item => item.sku === sku);
       if (!row) throw new Error('Falta un sabor en el catálogo.');
@@ -45,7 +47,7 @@ async function loadAdminInventory() {
       return `<label class="inventory-count-card"><span class="cart-donut ${flavorTone(row.name)}" aria-hidden="true"><span class="mini-donut"></span></span><b>${safe(row.name)}</b><small>${row.counted ? `<span class="stock-value" data-stock-key="${sku}-available" data-stock-value="${Math.max(0,Number(row.available_quantity))}">${Math.max(0,Number(row.available_quantity))}</span> disponibles · <span class="stock-value" data-stock-key="${sku}-reserved" data-stock-value="${Number(row.reserved_quantity)}">${Number(row.reserved_quantity)}</span> apartadas` : 'Primer conteo pendiente'}</small><input class="field" id="count-${sku}" type="number" min="0" max="100000" step="1" inputmode="numeric" value="${row.counted ? physical : ''}" placeholder="0" aria-label="Conteo físico de ${safe(row.name)}"></label>`;
     }).join('');
     window.DonasMotion?.stock(root, 'admin');
-    notice.textContent = 'Cuenta lo que tienes físicamente. Las reservas se descuentan por separado.';
+    notice.textContent = 'Inventario compartido con Donas Control. Antes de contar, sincroniza las ventas pendientes de todos los socios. Incluye las donas reservadas.';
     save.disabled = false;
   } catch(error) { notice.textContent = error.message; }
   finally { adminInventoryLoading = false; }
@@ -64,7 +66,7 @@ async function saveAdminInventory() {
   }
   button.disabled = true; button.classList.add('is-busy');
   try {
-    await adminRequest('/api/admin/customers/inventory','POST',{counts});
+    await adminRequest('/api/admin/customers/inventory','POST',{counts,expectedRevision:adminInventoryRevision});
     await loadAdminInventory();
     document.getElementById('adminInventoryNotice').textContent = '✓ Inventario guardado. Los clientes ya pueden consultar estas cantidades.';
     showToast('Inventario actualizado');

@@ -28,7 +28,7 @@ class OrdersActivityTest {
             if (view is android.view.ViewGroup) (0 until view.childCount).forEach { collect(view.getChildAt(it)) }
         }
         collect(activity.findViewById(android.R.id.content))
-        assertTrue(labels.toString(), labels.any { it.contains("cuenta de vendedor para ver los pedidos") })
+        assertTrue(labels.toString(), labels.any { it.contains("Inicia sesión una vez") })
         assertTrue(labels.toString(), labels.any { it.contains("Volver") })
         controller.pause().stop().destroy()
     }

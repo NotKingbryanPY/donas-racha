@@ -10,8 +10,12 @@ android {
         applicationId = "com.bryan.donas"
         minSdk = 23
         targetSdk = 35
-        versionCode = 8
-        versionName = "1.2.2"
+        versionCode = 13
+        versionName = "1.4.1"
+        listOf("APP_ID", "API_KEY", "PROJECT_ID", "SENDER_ID", "WEB_CLIENT_ID").forEach { name ->
+            val value = providers.gradleProperty("FIREBASE_$name").orNull ?: when (name) { "PROJECT_ID" -> "donascontrol-1f5df"; "SENDER_ID" -> "476925718096"; else -> "" }
+            buildConfigField("String", "FIREBASE_$name", "\"${value.replace("\\", "\\\\").replace("\"", "\\\"")}\"")
+        }
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         manifestPlaceholders["appLabel"] = "@string/app_name"
     }
@@ -22,7 +26,17 @@ android {
     }
     kotlinOptions { jvmTarget = "17" }
     testOptions { unitTests.isIncludeAndroidResources = true }
+    testBuildType = providers.gradleProperty("DEVICE_TEST_BUILD").orElse("debug").get()
     sourceSets.getByName("androidTest").assets.srcDir("schemas")
+    val distributionStore = providers.environmentVariable("DONAS_OFFICIAL_STORE_FILE").orNull
+    if (distributionStore != null) {
+        signingConfigs.create("officialDistribution") {
+            storeFile = file(distributionStore)
+            storePassword = providers.environmentVariable("DONAS_OFFICIAL_STORE_PASSWORD").get()
+            keyAlias = providers.environmentVariable("DONAS_OFFICIAL_KEY_ALIAS").get()
+            keyPassword = providers.environmentVariable("DONAS_OFFICIAL_KEY_PASSWORD").get()
+        }
+    }
     buildTypes {
         create("pilot") {
             initWith(getByName("debug"))
@@ -36,6 +50,15 @@ android {
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
+        create("official") {
+            initWith(getByName("release"))
+            // A permanent identity; the pilot stays installed until its backup is transferred.
+            applicationIdSuffix = ".control"
+            signingConfig = if (distributionStore != null) signingConfigs.getByName("officialDistribution") else null
+            isDebuggable = false
+            manifestPlaceholders["appLabel"] = "@string/app_name"
+            matchingFallbacks += listOf("release")
+        }
     }
     lint {
         abortOnError = true
@@ -46,6 +69,15 @@ android {
 }
 ksp { arg("room.schemaLocation", "$projectDir/schemas") }
 dependencies {
+    // Verified on Google Maven/AAR metadata: Auth 24.1+ requires Kotlin 2.3,
+    // Auth 25 also requires API 24. Preserve Kotlin 2.1.20 and Android 6/API 23.
+    implementation(platform("com.google.firebase:firebase-bom:34.12.0"))
+    implementation("com.google.firebase:firebase-messaging")
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
+    implementation("androidx.credentials:credentials:1.6.0")
+    implementation("androidx.credentials:credentials-play-services-auth:1.6.0")
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
     implementation("androidx.core:core-ktx:1.15.0")
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("com.google.android.material:material:1.12.0")
@@ -60,6 +92,7 @@ dependencies {
     implementation("androidx.work:work-runtime-ktx:2.9.1")
     implementation("com.google.android.gms:play-services-code-scanner:16.1.0")
     testImplementation("junit:junit:4.13.2")
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
     testImplementation("org.robolectric:robolectric:4.14.1")
     testImplementation("androidx.test:core:1.6.1")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0")

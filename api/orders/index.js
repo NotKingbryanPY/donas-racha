@@ -32,5 +32,7 @@ module.exports = withApi(['POST'], async (req, context) => {
     p_items: order.items.map(item => ({ product_variant_id: item.productVariantId, quantity: item.quantity }))
   });
   const created = Array.isArray(result) ? result[0] : result;
+  // A database trigger queued the alert in the order transaction; provider errors never fail the order.
+  try { await require('../_lib/order-push').dispatch(); } catch (_) { }
   return { ...created, __status: created && created.replayed ? 200 : 201 };
 });

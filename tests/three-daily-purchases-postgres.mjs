@@ -15,6 +15,7 @@ try {
     create publication supabase_realtime;`);
   for(const name of readdirSync(join(root,'supabase/migrations')).filter(file=>file.endsWith('.sql')).sort())
     await db.exec(readFileSync(join(root,'supabase/migrations',name),'utf8').replace('create extension if not exists pgcrypto with schema extensions;',''));
+  await db.exec(readFileSync(join(root,'supabase/manual/seed_donut_flavors.sql'),'utf8'));
   const customer=(await db.query("select * from public.api_register_customer('CTHREEDAILY','Cliente diario',null,$1)",[randomUUID()])).rows[0];
   const credit=(id,key=randomUUID(),source='SELLER')=>db.query('select public.api_credit_purchase($1,$2,$3) result',[id,key,source]);
   const firstKey=randomUUID();

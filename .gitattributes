@@ -1,0 +1,2 @@
+# Preserve the exact upstream bundle, including spaces in multiline JS literals.
+assets/vendor/supabase-*.js -text whitespace=-blank-at-eol,-blank-at-eof

@@ -1,11 +1,15 @@
 package com.bryan.donas.ui
 
 import android.os.Bundle
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
@@ -17,6 +21,7 @@ import androidx.work.WorkManager
 import com.bryan.donas.DonasApp
 import com.bryan.donas.data.BackendClient
 import com.bryan.donas.data.OrderSync
+import com.bryan.donas.data.OrderNotifications
 import com.bryan.donas.data.db.RemoteOrderEntity
 import com.bryan.donas.util.Money
 import com.google.android.material.button.MaterialButton
@@ -41,11 +46,14 @@ class OrdersActivity : AppCompatActivity() {
     private val pendingOrders = mutableSetOf<String>()
     private var confirmationOpen = false
     private var refreshing = false
+    private var targetOrderId: String? = null
     private val app get() = application as DonasApp
+    private val notificationPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         client = app.backendClient
+        targetOrderId = savedInstanceState?.getString("orderId") ?: intent.getStringExtra("orderId")
         root = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(18.dp, 18.dp, 18.dp, 18.dp) }
         val scroll = ScrollView(this).apply { addView(root) }
         setContentView(scroll)
@@ -59,12 +67,25 @@ class OrdersActivity : AppCompatActivity() {
             android.content.res.Configuration.UI_MODE_NIGHT_YES
         WindowCompat.getInsetsController(window, scroll).isAppearanceLightStatusBars = !dark
         WindowCompat.getInsetsController(window, scroll).isAppearanceLightNavigationBars = !dark
-        root.addView(button("← Volver") { finish() }, fullWidth())
+        root.addView(button("← Volver · Administración") { startActivity(android.content.Intent(this, MainActivity::class.java)) }, fullWidth())
         root.addView(TextView(this).apply { text = "Pedidos"; textSize = 24f }, fullWidth())
         notice = TextView(this).apply { text = "Acepta, entrega y cobra. Los puntos se aplican al finalizar, hasta 3 compras con puntos por cliente al día."; textSize = 14f; setPadding(0, 8.dp, 0, 12.dp) }
         root.addView(notice, fullWidth())
         loginFields = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
-        val emailInput = input("Correo", false)
+        val invitationInput = input("Invitación de dispositivo (un solo uso)", false)
+        val invitation = invitationInput.editText as TextInputEditText
+        loginFields.addView(invitationInput, fullWidth())
+        loginFields.addView(button("Autorizar este dispositivo") {
+            lifecycleScope.launch {
+                try {
+                    client.provision(invitation.text?.toString().orEmpty())
+                    invitation.setText(""); renderSession()
+                    com.bryan.donas.data.PushRegistration.register(this@OrdersActivity)
+                    OrderSync.schedule(this@OrdersActivity); refreshOrders()
+                } catch (e: Exception) { notice.text = e.message ?: "No se pudo autorizar." }
+            }
+        }, fullWidth())
+        val emailInput = input("Correo (acceso Supabase anterior)", false)
         val passwordInput = input("Contraseña", true)
         email = emailInput.editText as TextInputEditText
         password = passwordInput.editText as TextInputEditText
@@ -75,27 +96,47 @@ class OrdersActivity : AppCompatActivity() {
         root.addView(loginFields, fullWidth())
         sync = button("Actualizar pedidos") { refreshOrders() }
         logout = button("Cerrar sesión") {
-            client.logout()
-            WorkManager.getInstance(this).cancelUniqueWork("donas-order-sync")
-            renderSession()
             lifecycleScope.launch {
+                try { if (com.bryan.donas.data.PushRegistration.configured) client.unregisterPush() } catch (_: Exception) {
+                    notice.text = "Conecta a Internet para desvincular los avisos y cerrar sesión."
+                    return@launch
+                }
+                client.logout()
+                OrderSync.stop(this@OrdersActivity)
+                renderSession()
                 val dao = app.database.syncDao()
                 dao.clearOrders(); dao.clearState()
+                notice.text = "Sesión cerrada."
             }
-            notice.text = "Sesión cerrada."
         }
         root.addView(sync, fullWidth())
         root.addView(logout, fullWidth())
+        root.addView(button("Sabores y disponibilidad") { startActivity(android.content.Intent(this, CatalogActivity::class.java)) }, fullWidth())
+        root.addView(button("Cuenta · Correo o Google") { startActivity(android.content.Intent(this, FirebaseAccountActivity::class.java)) }, fullWidth())
         list = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         root.addView(list, fullWidth())
         WorkManager.getInstance(this).getWorkInfosForUniqueWorkLiveData("donas-order-sync").observe(this) { jobs ->
             val job = jobs.lastOrNull() ?: return@observe
             if (job.state == WorkInfo.State.SUCCEEDED) { notice.text = "Pedidos actualizados."; loadOrders() }
-            if (job.state == WorkInfo.State.FAILED) notice.text = "No se pudo sincronizar. Comprueba la sesión, la conexión y la configuración del servidor."
+            if (job.state == WorkInfo.State.FAILED) { renderSession(); loadOrders(); notice.text = "No se pudo sincronizar. Comprueba la sesión, la conexión y la configuración del servidor." }
         }
         renderSession()
-        if (client.signedIn) loadOrders()
+        loadOrders()
+        if (client.signedIn) {
+            OrderSync.schedule(this)
+            refreshOrders()
+        }
+        if (Build.VERSION.SDK_INT >= 33 && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED)
+            notificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
+    }
+
+    override fun onNewIntent(intent: android.content.Intent) {
+        super.onNewIntent(intent); setIntent(intent)
+        targetOrderId = intent.getStringExtra("orderId"); loadOrders()
         if (client.signedIn) refreshOrders()
+    }
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putString("orderId", targetOrderId); super.onSaveInstanceState(outState)
     }
 
     private val Int.dp get() = (this * resources.displayMetrics.density).toInt()
@@ -116,10 +157,7 @@ class OrdersActivity : AppCompatActivity() {
         logout.isVisible = client.signedIn
         sync.isVisible = client.signedIn
         list.isVisible = true
-        if (!client.signedIn) {
-            list.removeAllViews()
-            showEmptyState("Entra con tu cuenta de vendedor para ver los pedidos.")
-        }
+        if (!client.signedIn) notice.text = "Autoriza este dispositivo con una invitación. Inicia sesión una vez como alternativa. Sin red no llegan pedidos nuevos."
     }
 
     private fun showEmptyState(message: String) {
@@ -142,6 +180,8 @@ class OrdersActivity : AppCompatActivity() {
                 app.database.syncDao().clearOrders()
                 app.database.syncDao().clearState()
                 renderSession()
+                com.bryan.donas.data.PushRegistration.register(this@OrdersActivity)
+                OrderSync.schedule(this@OrdersActivity)
                 refreshOrders()
             } catch (e: Exception) { notice.text = e.message ?: "No se pudo iniciar sesión." }
             finally { login.isEnabled = true }
@@ -149,13 +189,25 @@ class OrdersActivity : AppCompatActivity() {
     }
 
     private fun loadOrders() = lifecycleScope.launch {
-        list.removeAllViews()
-        val orders = app.database.syncDao().recentOrders()
+        val orders = app.database.syncDao().recentOrders(targetOrderId)
+        val pending = app.database.syncDao().pendingCount()
         val rejected = app.database.syncDao().rejectedCount()
         val unbooked = orders.count { it.status == "COMPLETED" && it.settled && app.database.operationDao().eventByKey("order-${it.id}") == null }
+        // Finish Room reads before repainting so overlapping refreshes cannot append duplicate cards.
+        list.removeAllViews()
+        notice.text = if (!com.bryan.donas.data.NetworkConnection.connected(this@OrdersActivity))
+            "Sin conexión · $pending operaciones pendientes. Mostrando pedidos guardados; no llegan pedidos nuevos."
+            else if (pending > 0) "Pendiente de sincronización · $pending operaciones locales; no son ventas confirmadas por el servidor."
+            else if (client.signedIn) {
+                val state = getSharedPreferences("sync_status", MODE_PRIVATE)
+                if (state.contains("error")) "Error de sincronización: ${state.getString("error", "")}. Mostrando la copia guardada."
+                else if (state.getLong("lastPull", 0) > 0) "Sincronizado · última consulta ${java.text.DateFormat.getTimeInstance().format(java.util.Date(state.getLong("lastPull", 0)))}"
+                else "Última copia guardada. Actualiza para comprobar el servidor."
+            }
+            else "Autoriza el dispositivo. Inicia sesión una vez como alternativa."
         if (rejected > 0 || unbooked > 0) notice.text = "Requieren conciliación: $rejected ventas rechazadas por el servidor y $unbooked pedidos sin asiento local. No repitas la venta."
-        if (orders.isEmpty()) showEmptyState("Todo al día. Todavía no hay pedidos.")
-        orders.sortedBy { if (it.status in listOf("COMPLETED", "CANCELLED")) 1 else 0 }.forEach(::renderOrder)
+        if (orders.isEmpty()) showEmptyState(if (client.signedIn) "Todo al día. Todavía no hay pedidos." else "Inicia sesión una vez para recibir pedidos.")
+        orders.sortedBy { if (it.id == targetOrderId) -1 else if (it.status in listOf("COMPLETED", "CANCELLED")) 1 else 0 }.forEach(::renderOrder)
     }
 
     private fun refreshOrders() = lifecycleScope.launch {
@@ -165,7 +217,15 @@ class OrdersActivity : AppCompatActivity() {
         notice.text = "Consultando pedidos…"
         try {
             val rows = client.recentOrders()
+            val selectedId = targetOrderId
+            if (selectedId != null && (0 until rows.length()).none { rows.getJSONObject(it).getString("id") == selectedId }) {
+                val selected = client.recentOrders(selectedId)
+                if (selected.length() == 0) throw com.bryan.donas.data.BackendException(404,
+                    "El pedido de esta notificación no está disponible. Actualiza o consulta su código.", "ORDER_NOT_FOUND")
+                rows.put(selected.getJSONObject(0))
+            }
             val dao = app.database.syncDao()
+            val oldIds = dao.recentOrders().map { it.id }.toSet()
             val orders = (0 until rows.length()).map { index ->
                 val row = rows.getJSONObject(index)
                 val id = row.getString("id")
@@ -175,7 +235,12 @@ class OrdersActivity : AppCompatActivity() {
                     val item = items.getJSONObject(itemIndex)
                     normalizedItems.put(org.json.JSONObject()
                         .put("quantity", item.optInt("quantity"))
-                        .put("variantName", item.optString("variant_name_snapshot")))
+                        .put("variantName", item.optString("variant_name_snapshot"))
+                        .put("productVariantId", item.optString("product_variant_id"))
+                        .put("productName", item.optString("product_name_snapshot"))
+                        .put("sku", item.optString("sku_snapshot"))
+                        .put("unitPriceCents", item.optInt("unit_price_cents"))
+                        .put("lineTotalCents", item.optInt("line_total_cents")))
                 }
                 RemoteOrderEntity(
                     id = id,
@@ -195,13 +260,17 @@ class OrdersActivity : AppCompatActivity() {
                 )
             }
             app.database.withTransaction {
-                dao.clearOrders()
                 dao.upsertOrders(orders)
             }
+            orders.filter { it.id !in oldIds && it.status == "PENDING" }
+                .forEach { OrderNotifications.show(this@OrdersActivity, it) }
             loadOrders()
             notice.text = if (orders.isEmpty()) "No hay pedidos en el servidor." else "${orders.size} pedidos consultados."
             OrderSync.request(this@OrdersActivity)
         } catch (e: Exception) {
+            if ((e as? com.bryan.donas.data.BackendException)?.code == "DEVICE_REVOKED") {
+                app.database.syncDao().clearOrders(); app.database.syncDao().clearState(); renderSession(); loadOrders()
+            }
             notice.text = "No se pudieron consultar los pedidos: ${e.message ?: "error de conexión"}"
         } finally {
             refreshing = false
@@ -210,7 +279,7 @@ class OrdersActivity : AppCompatActivity() {
     }
 
     private fun renderOrder(order: RemoteOrderEntity) {
-        val shell = MaterialCardView(this).apply { radius = 20.dp.toFloat(); cardElevation = 0f }
+        val shell = MaterialCardView(this).apply { radius = 20.dp.toFloat(); cardElevation = 0f; if (order.id == targetOrderId) strokeWidth = 3.dp }
         val card = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(18.dp, 18.dp, 18.dp, 18.dp) }
         shell.addView(card)
         fun line(label: String, size: Float, bold: Boolean = false) {

@@ -19,4 +19,11 @@ class CustomerQrTest {
         assertNull(CustomerQr.customerId("C1"))
         assertNull(CustomerQr.customerId(null))
     }
+
+    @Test fun acceptsOfficialDomainWithoutAcceptingLookalikesOrCredentials() {
+        assertEquals("C1234", CustomerQr.customerId("https://dracha.store/?profile=1&id=C1234"))
+        assertEquals("C1234", CustomerQr.customerId("https://www.dracha.store/?profile=1&id=C1234"))
+        assertNull(CustomerQr.customerId("https://dracha.store.evil.example/?profile=1&id=C1234"))
+        assertNull(CustomerQr.customerId("https://user@dracha.store/?profile=1&id=C1234"))
+    }
 }

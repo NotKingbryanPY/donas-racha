@@ -14,7 +14,9 @@ object CustomerQr {
         if (publicId.matches(direct)) return direct
         return runCatching {
             val uri = URI(value)
-            if (uri.scheme != "https" || !uri.host.equals("donas-racha.vercel.app", ignoreCase = true) ||
+            if (uri.scheme != "https" || uri.host?.lowercase(Locale.ROOT) !in
+                setOf("donas-racha.vercel.app", "dracha.store", "www.dracha.store") ||
+                uri.rawUserInfo != null ||
                 uri.port != -1 || uri.path != "/" || uri.fragment != null) return null
             val params = uri.rawQuery?.split('&')?.mapNotNull { part ->
                 val bits = part.split('=', limit = 2)

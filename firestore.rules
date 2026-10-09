@@ -1,0 +1,29 @@
+// Model: userPreferences/{uid}; uid:string(1..128, immutable), schemaVersion:int(1),
+// theme:int(-1 system, 1 light, 2 dark), updatedAt:server timestamp. All required.
+// Only direct document get/set is used by Android. No business data lives here.
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAuthenticated() { return request.auth != null && request.auth.token.email_verified == true; }
+    function isOwner(uid) { return isAuthenticated() && request.auth.uid == uid; }
+    function uidUnchanged() { return request.resource.data.uid == request.auth.uid; }
+    function uidNotModified() { return request.resource.data.uid == resource.data.uid; }
+    function isValidPreferences(data) {
+      return data.keys().hasAll(['uid', 'schemaVersion', 'theme', 'updatedAt'])
+        && data.keys().hasOnly(['uid', 'schemaVersion', 'theme', 'updatedAt'])
+        && data.uid is string && data.uid.size() > 0 && data.uid.size() <= 128
+        && data.schemaVersion is int && data.schemaVersion == 1
+        && data.theme is int && data.theme in [-1, 1, 2]
+        && data.updatedAt is timestamp && data.updatedAt == request.time;
+    }
+    match /userPreferences/{uid} {
+      allow get: if isOwner(uid);
+      allow list: if false;
+      allow create: if isOwner(uid) && uidUnchanged() && isValidPreferences(request.resource.data);
+      allow update: if isOwner(uid) && resource.data.uid == request.auth.uid
+        && uidNotModified() && isValidPreferences(request.resource.data);
+      allow delete: if isOwner(uid) && resource.data.uid == request.auth.uid;
+    }
+    match /{document=**} { allow read, write: if false; }
+  }
+}

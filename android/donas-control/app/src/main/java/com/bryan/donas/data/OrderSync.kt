@@ -1,11 +1,13 @@
 package com.bryan.donas.data
 
 import android.content.Context
+import androidx.core.content.edit
 import androidx.room.withTransaction
 import androidx.work.CoroutineWorker
 import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.Constraints
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
@@ -13,15 +15,23 @@ import com.bryan.donas.DonasApp
 import com.bryan.donas.data.db.RemoteOrderEntity
 import com.bryan.donas.data.db.SyncStateEntity
 import org.json.JSONObject
+import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 class OrderSyncWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
-    override suspend fun doWork(): Result {
+    companion object { private val gate = Mutex() }
+    override suspend fun doWork(): Result = gate.withLock { synchronize() }
+
+    private suspend fun synchronize(): Result {
         val app = applicationContext as DonasApp
         val client = app.backendClient
         if (!client.signedIn) return Result.success()
         val db = app.database
         val sync = db.syncDao()
         return try {
+            if (client.role == "ADMIN") client.recoverRestoredDevice(sync.restoreProof())
+            val upload = client.canUpload && NetworkConnection.connected(applicationContext)
             app.repository.initialize()
             // Backfill operations created before the outbox migration, without changing the accounting ledger.
             while (true) {
@@ -38,14 +48,25 @@ class OrderSyncWorker(context: Context, params: WorkerParameters) : CoroutineWor
                     }
                 }
             }
-            while (true) {
+            for (change in if (client.role == "ADMIN") sync.pendingCatalog() else emptyList()) {
+                try {
+                    client.updateFlavor(change)
+                    sync.catalogResult(change.operationId, "ACKED", null)
+                } catch (e: BackendException) {
+                    if (e.status in listOf(400, 404, 409)) sync.catalogResult(change.operationId, "CONFLICT", e.message)
+                    else throw e
+                }
+            }
+            var awaitingApplication = false
+            var pushFailed = false
+            while (upload && NetworkConnection.connected(applicationContext)) {
                 val pending = sync.pending()
                 if (pending.isEmpty()) break
                 val acks = try { client.push(pending) } catch (e: Exception) {
                     sync.markAttempt(pending.map { it.clientOperationId }, e.message?.take(160) ?: "Error de red")
-                    throw e
+                    pushFailed = true
+                    break
                 }
-                var awaitingApplication = false
                 db.withTransaction {
                     for (index in 0 until acks.length()) {
                         val ack = acks.getJSONObject(index)
@@ -58,8 +79,8 @@ class OrderSyncWorker(context: Context, params: WorkerParameters) : CoroutineWor
                         }
                     }
                 }
-                if (acks.length() != pending.size) return Result.retry()
-                if (awaitingApplication) return Result.retry()
+                if (acks.length() != pending.size) { pushFailed = true; break }
+                if (awaitingApplication) break
             }
             var pages = 0
             do {
@@ -79,14 +100,26 @@ class OrderSyncWorker(context: Context, params: WorkerParameters) : CoroutineWor
                             (item.getString("status") == "COMPLETED" && item.getString("payment_status") == "CONFIRMED")
                     )
                 }
+                val previousIds = orders.mapNotNull { order ->
+                    if (sync.order(order.id) == null) order.id else null
+                }.toSet()
                 db.withTransaction {
                     sync.upsertOrders(orders)
                     sync.saveState(SyncStateEntity(orderCursor = response.optString("nextCursor").ifBlank { null }))
                 }
+                orders.filter { it.id in previousIds && it.status == "PENDING" }
+                    .forEach { OrderNotifications.show(applicationContext, it) }
                 pages++
             } while (response.optBoolean("hasMore") && pages < 20)
+            try {
+                val inventory = client.inventory()
+                applicationContext.getSharedPreferences("shared_inventory", Context.MODE_PRIVATE)
+                    .edit { putString("snapshot", inventory.toString()) }
+            } catch (_: Exception) { /* Older servers still support order monitoring. */ }
+            try { sync.cacheFlavors(client.catalog()) } catch (_: Exception) { /* Keep the durable catalog copy. */ }
+            applicationContext.getSharedPreferences("sync_status", Context.MODE_PRIVATE).edit { putLong("lastPull", System.currentTimeMillis()); remove("error") }
             var needsRetry = false
-            for (order in sync.settledOrders()) {
+            for (order in if (client.canUpload) sync.settledOrders() else emptyList()) {
                 try {
                     val before = db.operationDao().eventByKey("order-${order.id}")
                     if (before == null) {
@@ -95,18 +128,47 @@ class OrderSyncWorker(context: Context, params: WorkerParameters) : CoroutineWor
                     }
                 } catch (_: Exception) { needsRetry = true }
             }
-            if (needsRetry) Result.retry() else Result.success()
+            if (pages >= 20 || needsRetry || awaitingApplication || pushFailed) Result.retry() else Result.success()
         } catch (e: BackendException) {
+            applicationContext.getSharedPreferences("sync_status", Context.MODE_PRIVATE).edit { putString("error", e.message?.take(160)) }
+            if (e.code == "DEVICE_REVOKED" || e.status == 401) {
+                client.logout(); sync.clearOrders(); sync.clearState()
+            }
             if (e.status in 400..499 && e.status != 429) Result.failure() else Result.retry()
-        } catch (_: Exception) { Result.retry() }
+        } catch (e: Exception) {
+            applicationContext.getSharedPreferences("sync_status", Context.MODE_PRIVATE).edit { putString("error", e.message?.take(160) ?: "No se pudo contactar al servidor") }
+            Result.retry()
+        }
     }
 }
 
 object OrderSync {
     fun request(context: Context) {
         val work = OneTimeWorkRequestBuilder<OrderSyncWorker>()
-            .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.UNMETERED).build())
+            .setBackoffCriteria(androidx.work.BackoffPolicy.EXPONENTIAL, 30, TimeUnit.SECONDS)
+            .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
             .build()
         WorkManager.getInstance(context).enqueueUniqueWork("donas-order-sync", ExistingWorkPolicy.KEEP, work)
+    }
+
+    fun schedule(context: Context) {
+        val manager = WorkManager.getInstance(context)
+        // Retire older overlapping jobs while preserving the single periodic monitor identity.
+        manager.cancelUniqueWork("donas-order-check")
+        manager.cancelUniqueWork("donas-wifi-sync")
+        val work = PeriodicWorkRequestBuilder<OrderSyncWorker>(15, TimeUnit.MINUTES)
+            .setBackoffCriteria(androidx.work.BackoffPolicy.EXPONENTIAL, 30, TimeUnit.SECONDS)
+            .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
+            .build()
+        manager.enqueueUniquePeriodicWork(
+            "donas-order-monitor", androidx.work.ExistingPeriodicWorkPolicy.UPDATE, work)
+        request(context)
+    }
+
+    fun stop(context: Context) {
+        WorkManager.getInstance(context).cancelUniqueWork("donas-order-sync")
+        WorkManager.getInstance(context).cancelUniqueWork("donas-order-monitor")
+        WorkManager.getInstance(context).cancelUniqueWork("donas-order-check")
+        WorkManager.getInstance(context).cancelUniqueWork("donas-wifi-sync")
     }
 }

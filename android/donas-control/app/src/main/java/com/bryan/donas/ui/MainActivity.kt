@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bryan.donas.DonasApp
 import com.bryan.donas.R
 import com.bryan.donas.data.BusinessSnapshot
+import com.bryan.donas.data.OrderSync
 import com.bryan.donas.databinding.ActivityMainBinding
 import com.bryan.donas.domain.*
 import com.bryan.donas.util.Money
@@ -34,6 +35,18 @@ class MainActivity : AppCompatActivity() {
     private var rendering = false
     private var shownPlan = 0L
     private var shownConfig = 0L
+
+    override fun onResume() {
+        super.onResume()
+        if ((application as DonasApp).backendClient.signedIn) OrderSync.schedule(this)
+        lifecycleScope.launch {
+            val app = application as DonasApp
+            val data = app.operations.dashboard()
+            val dao = app.database.syncDao()
+            val active = dao.recentOrders().count { it.status in setOf("PENDING", "ACCEPTED", "OUT_FOR_DELIVERY") }
+            binding.home.operationSummary.text = "$active pedidos activos · ${data.stock} donas locales\nEfectivo ${Money.format(data.cash)} · Yappy ${Money.format(data.yappy)}\n${dao.pendingCount()} registros pendientes de sincronizar"
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,6 +74,7 @@ class MainActivity : AppCompatActivity() {
         binding.home.editPlan.setOnClickListener { binding.navigation.selectedItemId = R.id.nav_sharing }
         binding.home.openOperations.setOnClickListener { startActivity(Intent(this, OperationsActivity::class.java)) }
         binding.home.openOrders.setOnClickListener { startActivity(Intent(this, OrdersActivity::class.java)) }
+        binding.home.openInventory.setOnClickListener { startActivity(Intent(this, InventoryActivity::class.java)) }
         binding.home.openCustomerScan.setOnClickListener { startActivity(Intent(this, CustomerPurchaseActivity::class.java)) }
         binding.retry.setOnClickListener { model.initialize() }
         binding.business.cost.doAfterTextChanged { if (!rendering) { model.cost = it.toString(); previewConfig() } }

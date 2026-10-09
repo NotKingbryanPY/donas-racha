@@ -70,6 +70,7 @@ class OperationsRepository(private val db: AppDatabase) {
         require(boxes in 1..10000) { "Cantidad de cajas inválida." }
         val state = requireNotNull(business.state())
         val config = business.config(state.configId)
+        require(config.donutsPerBox == 12) { "Cada caja contiene 12 donas: 4 chocolate, 4 vainilla y 2 de cada sabor con chispas." }
         val total = Math.multiplyExact(boxes.toLong(), config.boxCostCents)
         require(sources.isNotEmpty() && sources.all { it.cents > 0 } && sources.fold(0L) { a, b -> Math.addExact(a, b.cents) } == total) { "Las fuentes deben coincidir exactamente con el total." }
         val balances = ops.balances().associate { it.code to it.cents }
