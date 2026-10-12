@@ -399,14 +399,6 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
     </div>
 
     <nav class="admin-shortcuts" aria-label="Dashboard de ventas"><a href="#adminOrdersPanel">Pedidos</a><a href="#adminRedemptionsPanel">Canjes</a><a href="#adminInventoryPanel" data-admin-only>Inventario</a><a href="#adminClients">Clientes</a></nav>
-    <section class="card" id="staffDevicesPanel" data-admin-only aria-labelledby="staffDevicesTitle">
-      <h2 id="staffDevicesTitle">Dispositivos autorizados</h2><p class="muted">Autoriza Donas Control una vez y abre directamente Pedidos. La invitación expira en 15 minutos y se usa una sola vez.</p>
-      <label class="field-label" for="staffDeviceRole">Permisos del dispositivo</label><select id="staffDeviceRole" class="field"><option value="SELLER">Vendedor</option><option value="ADMIN">Administrador</option></select>
-      <button id="staffDeviceIssue" class="btn btn-outline" onclick="issueStaffDevice()">Crear invitación</button>
-      <label class="field-label" for="staffDeviceInvitation">Invitación para pegar en Donas Control</label><input id="staffDeviceInvitation" class="field" readonly autocomplete="off" placeholder="Se mostrará al crearla">
-      <button class="btn btn-outline" onclick="loadStaffDevices()">Actualizar dispositivos</button><p id="staffDevicesMessage" role="status"></p><div id="staffDevicesList"></div>
-      <button class="btn btn-outline" onclick="loadPushEmitter()">Comprobar avisos Android</button><p id="pushEmitterMessage" role="status" class="muted"></p>
-    </section>
     <div class="admin-grid">
       <section class="card admin-wide" id="adminOrdersPanel" aria-labelledby="adminOrdersTitle">
         <div class="operations-heading"><div><span class="eyebrow">ENTREGAS</span><h2 id="adminOrdersTitle">Pedidos del día</h2></div><button class="btn btn-outline" onclick="loadAdminOrders()">Actualizar</button></div>
@@ -429,10 +421,15 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
       </div>
       <div class="card admin-wide" id="adminInventoryPanel" data-admin-only>
         <div class="operations-heading"><div><span class="eyebrow">CONTROL MANUAL</span><h2>¿Cuántas donas tienes?</h2></div><span class="pill">Inventario web</span></div>
-        <p class="muted">Las compras y ventas de Donas Control actualizan este inventario al sincronizar por Wi‑Fi. Usa el conteo físico para conciliar todo el negocio, incluyendo donas reservadas, después de sincronizar los dispositivos de los socios.</p>
+        <p class="muted">Registra las donas que tienes físicamente, incluyendo las apartadas para pedidos. La página descuenta las reservas y entregas automáticamente. Usa 0 cuando no queden.</p>
         <div id="adminFlavorInventory" class="muted" style="margin-top:12px">Cargando inventario...</div>
         <div class="inventory-actions"><button id="saveInventoryButton" class="btn btn-primary" onclick="saveAdminInventory()">Guardar los 4 sabores</button><button class="btn btn-outline" onclick="loadAdminInventory()">Volver a consultar</button></div><p id="adminInventoryNotice" class="muted" role="status"></p>
       </div>
+      <section class="card" data-admin-only aria-labelledby="adminCatalogTitle">
+        <h2 id="adminCatalogTitle">Catálogo de sabores</h2>
+        <div id="adminFlavorCatalog" class="grid2"></div><p id="adminCatalogNotice" role="status" class="muted"></p>
+        <button class="btn btn-outline" onclick="loadAdminCatalog()">Consultar catálogo</button>
+      </section>
       <div class="card" data-admin-only>
         <div class="card-title">⚙️ Config rápida</div>
         <div class="grid2">
@@ -1547,7 +1544,7 @@ async function showAdmin(historyMode = 'push') {
   loadAdminOrders();
   loadAdminRedemptions();
   await loadAdminDashboard('compras');
-  if (isAdmin) { loadAdminInventory(); window.loadStaffDevices?.(); }
+  if (isAdmin) { loadAdminInventory(); loadAdminCatalog(); }
 }
 
 async function loadAdminDashboard(type='compras') {
@@ -1654,7 +1651,7 @@ function safe(s){ return String(s ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;',
 function esc(s){ return String(s ?? '').replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
 </script>
 <script src="assets/js/admin-operations.js"></script>
-<script src="assets/js/staff-devices.js"></script>
+
 <script src="assets/js/order-confirmation.js"></script>
 <script src="assets/js/shared-inventory-refresh.js"></script>
 <script src="assets/js/catalog-realtime.js"></script>

@@ -1,8 +1,9 @@
-/* Shared stock; physical counts reconcile the movement ledger. */
+/* Web inventory: physical counts include units reserved for web orders. */
 let adminInventoryRevision;
 let adminOrders = [];
 let adminOrdersLoading = false;
 let adminInventoryLoading = false;
+let adminInventorySaving = false;
 const inventorySkus = ['DR-CHOCOLATE','DR-VAINILLA','DR-CHOCOLATE-CHISPAS','DR-VAINILLA-CHISPAS'];
 
 async function adminRequest(path, method='GET', body, retried=false) {
@@ -22,7 +23,11 @@ async function adminRequest(path, method='GET', body, retried=false) {
       return adminRequest(path,method,body,true);
     }
     const payload = await response.json().catch(() => null);
-    if (!response.ok || !payload?.ok) throw new Error(payload?.error?.message || 'No pudimos completar la operación.');
+    if (!response.ok || !payload?.ok) {
+      const error = new Error(payload?.error?.message || 'No pudimos completar la operación.');
+      error.code=payload?.error?.code; error.status=response.status; error.reference=payload?.correlationId;
+      throw error;
+    }
     return payload.data;
   } catch (error) {
     if (error.name === 'AbortError') throw new Error('La conexión tardó demasiado. Actualiza para comprobar si se guardó.');
@@ -30,8 +35,13 @@ async function adminRequest(path, method='GET', body, retried=false) {
   } finally { clearTimeout(timeout); }
 }
 
-async function loadAdminInventory() {
-  if (adminInventoryLoading) return;
+function inventoryError(error) {
+  if (error.code==='INVENTORY_CONFLICT') return 'El inventario cambió mientras contabas. Conservamos tus cantidades: pulsa Volver a consultar y revisa el conteo antes de guardarlo.';
+  if (error.status>=500 || /^PGRST|^42|^22|^23/.test(error.code || '')) return 'No se pudo guardar/consultar el inventario. Revisa la reparación SQL de la web. Código: '+(error.code || 'API_ERROR')+(error.reference ? ' · referencia '+error.reference : '')+'.';
+  return error.message;
+}
+async function loadAdminInventory(afterSave=false) {
+  if (adminInventoryLoading || (adminInventorySaving && !afterSave)) return false;
   adminInventoryLoading = true;
   const root = document.getElementById('adminFlavorInventory');
   const notice = document.getElementById('adminInventoryNotice');
@@ -39,6 +49,7 @@ async function loadAdminInventory() {
   save.disabled = true; notice.textContent = 'Consultando inventario…';
   try {
     const {flavors,revision} = await adminRequest('/api/admin/customers/inventory');
+    if (!Array.isArray(flavors) || !Number.isSafeInteger(revision) || revision<0) throw new Error('No recibimos una revisión válida del inventario. Vuelve a consultar antes de guardar.');
     adminInventoryRevision = revision;
     root.innerHTML = inventorySkus.map(sku => {
       const row = flavors.find(item => item.sku === sku);
@@ -47,32 +58,60 @@ async function loadAdminInventory() {
       return `<label class="inventory-count-card"><span class="cart-donut ${flavorTone(row.name)}" aria-hidden="true"><span class="mini-donut"></span></span><b>${safe(row.name)}</b><small>${row.counted ? `<span class="stock-value" data-stock-key="${sku}-available" data-stock-value="${Math.max(0,Number(row.available_quantity))}">${Math.max(0,Number(row.available_quantity))}</span> disponibles · <span class="stock-value" data-stock-key="${sku}-reserved" data-stock-value="${Number(row.reserved_quantity)}">${Number(row.reserved_quantity)}</span> apartadas` : 'Primer conteo pendiente'}</small><input class="field" id="count-${sku}" type="number" min="0" max="100000" step="1" inputmode="numeric" value="${row.counted ? physical : ''}" placeholder="0" aria-label="Conteo físico de ${safe(row.name)}"></label>`;
     }).join('');
     window.DonasMotion?.stock(root, 'admin');
-    notice.textContent = 'Inventario compartido con Donas Control. Antes de contar, sincroniza las ventas pendientes de todos los socios. Incluye las donas reservadas.';
+    const pending=flavors.filter(row=>!row.counted).map(row=>row.name);
+    notice.textContent='Cuenta las donas que tienes físicamente, incluidas las apartadas. Escribe 0 cuando no queden.'+(pending.length ? ' Confirma el conteo de: '+pending.join(', ')+'.' : '');
     save.disabled = false;
-  } catch(error) { notice.textContent = error.message; }
+    return true;
+  } catch(error) { adminInventoryRevision=undefined; notice.textContent=inventoryError(error); return false; }
   finally { adminInventoryLoading = false; }
 }
 
 async function saveAdminInventory() {
   const button = document.getElementById('saveInventoryButton');
-  if (button.disabled) return;
+  if (button.disabled || adminInventorySaving) return;
   const counts = {};
   for (const sku of inventorySkus) {
     const value = document.getElementById('count-'+sku)?.value;
     if (value == null || !/^\d+$/.test(value) || Number(value)>100000) {
-      document.getElementById('adminInventoryNotice').textContent = 'Completa los cuatro sabores. Escribe 0 cuando no queden.'; return;
+      document.getElementById('adminInventoryNotice').textContent = 'Completa los cuatro sabores. Escribe 0 cuando no queden.'; document.getElementById('count-'+sku)?.focus(); return;
     }
     counts[sku] = Number(value);
   }
-  button.disabled = true; button.classList.add('is-busy');
+  adminInventorySaving=true; button.disabled = true; button.classList.add('is-busy');
   try {
     await adminRequest('/api/admin/customers/inventory','POST',{counts,expectedRevision:adminInventoryRevision});
-    await loadAdminInventory();
-    document.getElementById('adminInventoryNotice').textContent = '✓ Inventario guardado. Los clientes ya pueden consultar estas cantidades.';
+    adminInventoryRevision=undefined;
+    const refreshed=await loadAdminInventory(true);
+    document.getElementById('adminInventoryNotice').textContent = refreshed ? '✓ Inventario guardado. Los clientes ya pueden consultar estas cantidades.' : '✓ El servidor guardó el inventario. No pudimos volver a consultarlo; pulsa Volver a consultar antes de guardar otro conteo.';
     showToast('Inventario actualizado');
-  } catch(error) { document.getElementById('adminInventoryNotice').textContent = error.message; }
-  finally { button.disabled = false; button.classList.remove('is-busy'); }
+  } catch(error) { document.getElementById('adminInventoryNotice').textContent = inventoryError(error); }
+  finally { adminInventorySaving=false; button.disabled = !Number.isSafeInteger(adminInventoryRevision); button.classList.remove('is-busy'); }
 }
+
+let adminCatalog=[];
+async function loadAdminCatalog() {
+  const root=document.getElementById('adminFlavorCatalog'), notice=document.getElementById('adminCatalogNotice');
+  try {
+    adminCatalog=(await adminRequest('/api/admin/customers/catalog')).flavors || [];
+    root.innerHTML=adminCatalog.map(row=>`<form class="inventory-count-card" data-flavor="${safe(row.id)}"><label>Nombre del sabor<input class="field" name="name" maxlength="100" required value="${safe(row.name)}"></label><label><input type="checkbox" name="available" ${row.available?'checked':''}> Disponible para pedir</label><small>La disponibilidad comercial no cambia las unidades físicas.</small><button class="btn btn-outline" type="submit">Guardar sabor</button><span role="status"></span></form>`).join('');
+    notice.textContent='Edita los sabores existentes. Los cambios se reflejan en el catálogo de clientes.';
+  } catch(error) { notice.textContent=inventoryError(error); }
+}
+document.getElementById('adminFlavorCatalog').addEventListener('submit',async event=>{
+  event.preventDefault(); const form=event.target.closest('form[data-flavor]'); if(!form)return;
+  const button=form.querySelector('button'), notice=form.querySelector('[role="status"]'); if(button.disabled)return;
+  const row=adminCatalog.find(item=>item.id===form.dataset.flavor); if(!row)return;
+  const payload={variantId:row.id,name:form.elements.name.value.trim(),available:form.elements.available.checked,expectedUpdatedAt:row.updated_at};
+  const snapshot=JSON.stringify(payload);
+  if(form.dataset.snapshot!==snapshot){form.dataset.operation=crypto.randomUUID();form.dataset.snapshot=snapshot;}
+  button.disabled=true;notice.textContent='Guardando…';
+  try {
+    const result=await adminRequest('/api/admin/customers/catalog','POST',{...payload,operationId:form.dataset.operation});
+    row.name=result.name;row.available=result.available;row.updated_at=result.updatedAt;
+    delete form.dataset.snapshot;delete form.dataset.operation;notice.textContent='✓ Sabor guardado.';
+  } catch(error) { notice.textContent=inventoryError(error); }
+  finally {button.disabled=false;}
+});
 
 async function loadAdminOrders() {
   if (adminOrdersLoading) return;

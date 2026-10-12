@@ -1,7 +1,9 @@
 {
   "name": "donas-racha-backend",
-  "version": "1.4.2",
+  "version": "1.5.0",
   "private": true,
-  "engines": { "node": "22.x" },
-  "dependencies": { "firebase-admin": "14.5.0" }
+  "engines": {
+    "node": "22.x"
+  },
+  "dependencies": {}
 }
