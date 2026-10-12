@@ -38,4 +38,12 @@ Pasaron diez suites de contratos web/API existentes, seis suites SQL de inventar
 
 Se detectó un fallo del test de preflight con CRLF en Windows: no inyectaba el fallo tardío previsto. Se normalizó ese texto antes de la inyección y el test pasó. No se cambió el paquete SQL histórico.
 
-Pendiente en Supabase: ejecutar los scripts y comprobar un conteo real de las cuatro cantidades desde la cuenta ADMIN. No se cambian cantidades de producción sin verificar físicamente; reservas sin unidades siguen pendientes de conciliación. La publicación y consultas públicas se registrarán después de integrar el cambio.
+Pendiente en Supabase: ejecutar los scripts y comprobar un conteo real de las cuatro cantidades desde la cuenta ADMIN. No se cambian cantidades de producción sin verificar físicamente; reservas sin unidades siguen pendientes de conciliación.
+
+## Integración y publicación
+
+[PR 39](https://github.com/NotKingbryanPY/donas-racha/pull/39) integrado como `73421a0fa9bf90faef7d878c199a9c4adb000a72`. El código `9a8bf0b56bd69e05f3cc4eeffb8dc4be1d2cdb10` pasó [CI 38274329446](https://github.com/NotKingbryanPY/donas-racha/actions/runs/38274329446): contracts, browser y concurrency. El workflow de push ya no existe en main.
+
+A las 16:09 UTC del 12 de octubre, Vercel no informó un estado para el commit integrado. La consulta HTTP 200 a dracha.store todavía contenía staffDevicesPanel y no adminCatalogTitle: seguía sirviendo la versión anterior. No se confirmó publicación. El inventario Supabase no fue modificado por esta sesión. Computer/Browser devolvió inventario vacío y navegadores iab/edge no disponibles; no hubo acceso UI a Vercel/Supabase.
+
+Acción externa necesaria: abrir el proyecto Vercel existente → Deployments → Create Deployment, usar main (que contiene el commit integrado) y elegir su configuración Production. Esperar Ready y comprobar la aparición de Catálogo de sabores y ausencia de Dispositivos autorizados. No redesplegar un commit antiguo. [Procedimiento oficial para desplegar una referencia Git](https://vercel.com/docs/git#creating-a-deployment-from-a-git-reference). Después ejecutar SQL 01/02/03 en orden; no afirmar limpieza de producción hasta recibir sus resultados.
