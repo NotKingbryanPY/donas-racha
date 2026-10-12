@@ -75,7 +75,7 @@ try {
   assert.equal((await diagnose()).status,'READY_TO_RETRY_FULL_02');
   assert.deepEqual(await ledger(),immutableBefore,'a truncated query does not commit business changes');
   // Also verify rollback after statements actually run but a late guard aborts.
-  const runtimeFailure=completeBundle.replace("commit;\nselect 'APPLIED'",
+  const runtimeFailure=completeBundle.replace(/\r\n/g,'\n').replace("commit;\nselect 'APPLIED'",
     "do $runtime_test$ begin raise exception 'TEST_LATE_FAILURE'; end; $runtime_test$;\ncommit;\nselect 'APPLIED'");
   await assert.rejects(db.exec(runtimeFailure),/TEST_LATE_FAILURE/);
   await db.exec('rollback');

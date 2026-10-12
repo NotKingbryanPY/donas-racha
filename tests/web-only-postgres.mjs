@@ -1,0 +1,51 @@
+import {readFileSync,readdirSync} from 'node:fs';
+import assert from 'node:assert/strict';
+import {randomUUID} from 'node:crypto';
+const {PGlite}=await import(process.env.PGLITE_MODULE || '@electric-sql/pglite');
+process.on('uncaughtException',error=>{console.error(error.code || '',error.message,error.where || '');process.exit(1);});
+const db=new PGlite(),sql=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
+await db.exec(`create role anon;create role authenticated;create role service_role;create schema auth;create table auth.users(id uuid primary key);create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid $$;create schema extensions;create function extensions.gen_random_bytes(integer) returns bytea language sql as $$ select decode(substr(replace(gen_random_uuid()::text,'-','')||replace(gen_random_uuid()::text,'-',''),1,$1*2),'hex') $$;create function extensions.digest(text,text) returns bytea language sql as $$ select convert_to($1,'UTF8') $$;create publication supabase_realtime;`);
+for(const file of readdirSync(new URL('../supabase/migrations/',import.meta.url)).filter(n=>n.endsWith('.sql')).sort())await db.exec(sql('supabase/migrations/'+file).replace('create extension if not exists pgcrypto with schema extensions;',''));
+await db.exec(sql('supabase/manual/seed_donut_flavors.sql'));
+const admin=randomUUID(),device=randomUUID();await db.query('insert into auth.users(id) values($1)',[admin]);await db.query("insert into public.app_user_roles(auth_user_id,role) values($1,'ADMIN')",[admin]);
+await db.query("insert into public.app_devices(auth_user_id,device_public_id,name,app_version) values($1,$2,'Old phone','1.4.2')",[admin,device]);
+await db.query("insert into public.push_devices(device_public_id,auth_user_id,platform,token,app_version) values($1,$2,'ANDROID','mock-token','1.4.2')",[device,admin]);
+const customer=(await db.query("select * from public.api_register_customer('CWEBTEST123','Ana','+50760001111',$1)",[randomUUID()])).rows[0];
+const variant=(await db.query("select id from public.product_variants where sku='DR-CHOCOLATE'")).rows[0].id;
+const counts={'DR-CHOCOLATE':20,'DR-VAINILLA':20,'DR-CHOCOLATE-CHISPAS':0,'DR-VAINILLA-CHISPAS':0};
+const snapshot=async()=>(await db.query('select public.api_inventory_snapshot() data')).rows[0].data;
+await db.query('select public.api_set_shared_inventory($1,$2,$3)',[admin,JSON.stringify(counts),(await snapshot()).revision]);
+const createOrder=async()=> (await db.query("select * from public.api_create_order_by_customer_id($1,$2,$3,'Edificio 4','CASH',null,$4)",[customer.id,randomUUID(),'a'.repeat(64),JSON.stringify([{product_variant_id:variant,quantity:2}])])).rows[0];
+await createOrder();
+const before=(await snapshot()).flavors;
+// A broken legacy wrapper previously surfaced only the generic operation error.
+await db.exec(`create or replace function public.api_set_manual_inventory_before_shared(p_auth_user_id uuid,p_counts jsonb) returns jsonb language plpgsql as $$ begin raise exception 'obsolete helper' using errcode='42703'; end $$;`);
+await assert.rejects(db.query('select public.api_set_shared_inventory($1,$2,$3)',[admin,JSON.stringify(counts),(await snapshot()).revision]),/obsolete helper/);
+await db.exec(sql('supabase/sql-editor/web-only/01_repair_inventory.sql'));
+assert.deepEqual((await snapshot()).flavors,before,'install must preserve stock and reservations');
+const revision=(await snapshot()).revision;
+await db.query('select public.api_set_shared_inventory($1,$2,$3)',[admin,JSON.stringify(counts),revision]);
+await assert.rejects(db.query('select public.api_set_shared_inventory($1,$2,$3)',[admin,JSON.stringify(counts),revision]),/INVENTORY_CONFLICT/);
+await assert.rejects(db.query('select public.api_set_shared_inventory($1,$2,null)',[admin,JSON.stringify(counts)]),/INVENTORY_REVISION_REQUIRED/);
+const jobs=Number((await db.query('select count(*) n from public.order_push_jobs')).rows[0].n);
+await db.exec(sql('supabase/sql-editor/web-only/02_archive_mobile.sql'));
+assert.equal(Number((await db.query('select count(*) n from donas_mobile_archive.order_push_jobs')).rows[0].n),jobs);
+assert.equal((await db.query("select to_regclass('public.push_devices') value")).rows[0].value,null);
+assert.equal((await db.query("select has_schema_privilege('service_role','donas_mobile_archive','USAGE') allowed")).rows[0].allowed,false);
+assert.equal((await db.query('select active from donas_mobile_archive.push_devices')).rows[0].active,false);
+assert.equal((await db.query("select to_regprocedure('public.api_push_sync_operations(uuid,uuid,text,text,jsonb)') value")).rows[0].value,null);
+const order=await createOrder();assert.equal(Number((await db.query('select count(*) n from donas_mobile_archive.order_push_jobs')).rows[0].n),jobs,'web orders must not queue APK alerts');
+await db.query("select * from public.api_transition_order($1,'ACCEPTED',$2,null)",[order.id,admin]);
+await db.query("select * from public.api_transition_order($1,'OUT_FOR_DELIVERY',$2,null)",[order.id,admin]);
+await db.query("select public.api_complete_paid_order($1,$2,'CASH')",[order.id,admin]);await db.query("select public.api_complete_paid_order($1,$2,'CASH')",[order.id,admin]);
+assert.equal(Number((await db.query('select count(*) n from public.payments where order_id=$1',[order.id])).rows[0].n),1);
+assert.equal(Number((await db.query('select purchase_count from public.loyalty_accounts where customer_id=$1',[customer.id])).rows[0].purchase_count),1);
+const flavor=(await db.query('select updated_at from public.product_variants where id=$1',[variant])).rows[0];
+await db.query('select public.api_update_flavor($1,$2,$3,$4,$5,$6,false)',[admin,randomUUID(),'b'.repeat(64),variant,flavor.updated_at,'Chocolate web']);
+assert.equal((await db.query('select name from public.product_variants where id=$1',[variant])).rows[0].name,'Chocolate web');
+await assert.rejects(createOrder(),/OUT_OF_STOCK/);
+await db.exec(sql('supabase/sql-editor/web-only/02_archive_mobile.sql')); // harmless repeat, no deleted history
+await db.exec(sql('supabase/sql-editor/web-only/03_verify.sql'));
+await db.close();console.log('PASS web-only SQL: broken helper repaired, stock/history preserved, APK archived, web order/payment/loyalty/catalog still work');
+
+

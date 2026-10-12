@@ -1,5 +1,12 @@
 # Donas Racha / Donas Control
 
+Latest scope, chosen by the user on 2026-10-12: retire Android/APK integration
+from the deployed web and Supabase API. The website operates independently on
+Supabase. Do not restore mobile auth, push dispatch, provisioning or background
+mobile workflows. Preserve business records and local Android/Room data. Read
+docs/WEB_INDEPENDIENTE_2026-10-12.md for the current SQL plan; earlier gradual
+Firebase transition notes below are historical, superseded for web integration.
+
 For Firebase tasks, always locate and read the appropriate Firebase agent skills
 before implementing changes. Use firebase-basics for CLI/project/app configuration,
 firebase-auth-basics for identity, firebase-firestore for database setup and queries,
