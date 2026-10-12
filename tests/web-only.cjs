@@ -12,6 +12,10 @@ async function request(handler,route,method){const res={setHeader(){},end(body){
   await assert.rejects(auth.requireStaff({headers:{authorization:'Bearer drd.old-mobile-token'}}),e=>e.status===401);
   assert.equal(calls,0);
   assert.equal((await auth.requireStaff({headers:{authorization:'Bearer web-session'}})).role,'ADMIN');
+  const {readResponse}=require('../api/_lib/supabase');
+  for(const message of ['INVALID_QUANTITY','FOUR_FLAVORS_REQUIRED','INVENTORY_REVISION_REQUIRED'])
+    await assert.rejects(readResponse({ok:false,status:400,text:async()=>JSON.stringify({code:'22023',message})}),error=>error.code===message&&error.status===400);
+  await assert.rejects(readResponse({ok:false,status:409,text:async()=>JSON.stringify({code:'23505',message:'product_variants_product_name_unique'})}),error=>error.code==='FLAVOR_NAME_EXISTS');
   const html=fs.readFileSync('index.html','utf8');assert.ok(!html.includes('staffDevicesPanel'));assert.ok(!html.includes('staff-devices.js'));assert.ok(!html.includes('Donas Control'));
   assert.equal(fs.existsSync('.github/workflows/order-push-retry.yml'),false);
   assert.equal(fs.existsSync('api/_lib/order-push.js'),false);
