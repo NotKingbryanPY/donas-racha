@@ -11,6 +11,14 @@ global.fetch = async (raw, options = {}) => {
   if (path === '/auth/v1/user') return json({ id: admin });
   if (path === '/rest/v1/app_user_roles') return json([{ role: 'ADMIN' }]);
   if (path === '/rest/v1/rpc/consume_api_rate_limit') return json({ allowed: true });
+  if (path === '/rest/v1/rpc/api_inventory_snapshot') return json({revision:12,flavors:[
+    {variant_id:'saved-zero',opening_quantity:0,reserved_quantity:2,counted:false},
+    {variant_id:'never-counted',opening_quantity:0,reserved_quantity:0,counted:false}
+  ]});
+  if (path === '/rest/v1/inventory_manual_counts') {
+    assert.equal(new URL(raw).searchParams.get('select'),'variant_id');
+    return json([{variant_id:'saved-zero'}]);
+  }
   if (path === '/rest/v1/rpc/api_set_shared_inventory') {
     writes++;
     assert.equal(JSON.parse(options.body).p_expected_revision, 12);
@@ -26,6 +34,10 @@ const call = async body => {
   return res;
 };
 (async () => {
+  const res={setHeader(){},end(value){this.body=JSON.parse(value)}};
+  await handler({method:'GET',url:'/api/admin/customers/inventory',headers:{authorization:'Bearer test-admin'}},res);
+  assert.equal(res.body.data.flavors[0].has_count,true,'zero with reservation shortage is still a recorded count');
+  assert.equal(res.body.data.flavors[1].has_count,false,'missing counts must not be fabricated');
   for (const invalid of [undefined, null, -1, 1.5, '12']) {
     const response = await call({ counts, expectedRevision: invalid });
     assert.equal(response.statusCode, 400);

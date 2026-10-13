@@ -4,7 +4,25 @@ let adminOrders = [];
 let adminOrdersLoading = false;
 let adminInventoryLoading = false;
 let adminInventorySaving = false;
+const adminInventoryDraft = new Map();
+let adminInventoryDraftRevision;
+let adminInventoryReviewRevision;
 const inventorySkus = ['DR-CHOCOLATE','DR-VAINILLA','DR-CHOCOLATE-CHISPAS','DR-VAINILLA-CHISPAS'];
+document.getElementById('adminFlavorInventory').addEventListener('input',event=>{
+  const sku=event.target.id?.replace(/^count-/,'');
+  if(!inventorySkus.includes(sku))return;
+  if(!adminInventoryDraft.size)adminInventoryDraftRevision=adminInventoryRevision;
+  adminInventoryDraft.set(sku,event.target.value);
+});
+function reviewAdminInventory() {
+  if(adminInventoryLoading || adminInventorySaving || !Number.isSafeInteger(adminInventoryReviewRevision))return;
+  adminInventoryRevision=adminInventoryReviewRevision;
+  adminInventoryDraftRevision=adminInventoryReviewRevision;
+  adminInventoryReviewRevision=undefined;
+  document.getElementById('reviewInventoryButton').hidden=true;
+  document.getElementById('saveInventoryButton').disabled=false;
+  document.getElementById('adminInventoryNotice').textContent='Conteo revisado. Puedes guardar las cantidades que escribiste.';
+}
 
 async function adminRequest(path, method='GET', body, retried=false) {
   const controller = new AbortController();
@@ -46,23 +64,33 @@ async function loadAdminInventory(afterSave=false) {
   const root = document.getElementById('adminFlavorInventory');
   const notice = document.getElementById('adminInventoryNotice');
   const save = document.getElementById('saveInventoryButton');
+  const review = document.getElementById('reviewInventoryButton');
   save.disabled = true; notice.textContent = 'Consultando inventario…';
   try {
     const {flavors,revision} = await adminRequest('/api/admin/customers/inventory');
     if (!Array.isArray(flavors) || !Number.isSafeInteger(revision) || revision<0) throw new Error('No recibimos una revisión válida del inventario. Vuelve a consultar antes de guardar.');
-    adminInventoryRevision = revision;
+    const needsReview=adminInventoryDraft.size>0 && adminInventoryDraftRevision!==revision;
+    adminInventoryRevision = needsReview ? undefined : revision;
+    adminInventoryReviewRevision = needsReview ? revision : undefined;
+    review.hidden=!needsReview;
     root.innerHTML = inventorySkus.map(sku => {
       const row = flavors.find(item => item.sku === sku);
       if (!row) throw new Error('Falta un sabor en el catálogo.');
       const physical = Math.max(0, Number(row.opening_quantity) + Number(row.purchased_quantity) - Number(row.sold_quantity));
-      return `<label class="inventory-count-card"><span class="cart-donut ${flavorTone(row.name)}" aria-hidden="true"><span class="mini-donut"></span></span><b>${safe(row.name)}</b><small>${row.counted ? `<span class="stock-value" data-stock-key="${sku}-available" data-stock-value="${Math.max(0,Number(row.available_quantity))}">${Math.max(0,Number(row.available_quantity))}</span> disponibles · <span class="stock-value" data-stock-key="${sku}-reserved" data-stock-value="${Number(row.reserved_quantity)}">${Number(row.reserved_quantity)}</span> apartadas` : 'Primer conteo pendiente'}</small><input class="field" id="count-${sku}" type="number" min="0" max="100000" step="1" inputmode="numeric" value="${row.counted ? physical : ''}" placeholder="0" aria-label="Conteo físico de ${safe(row.name)}"></label>`;
+      const hasCount=row.has_count===true || row.counted;
+      const reserved=Number(row.reserved_quantity),shortage=Math.max(0,reserved-physical);
+      const value=adminInventoryDraft.has(sku) ? adminInventoryDraft.get(sku) : hasCount ? String(physical) : '';
+      const status=hasCount ? `${physical} físicas · ${reserved} apartadas · ${Math.max(0,Number(row.available_quantity))} disponibles${shortage ? ' · Faltan '+shortage+' para las reservas' : !row.counted ? ' · Conteo pendiente de revisión' : ''}` : 'Sin conteo registrado';
+      return `<label class="inventory-count-card"><span class="cart-donut ${flavorTone(row.name)}" aria-hidden="true"><span class="mini-donut"></span></span><b>${safe(row.name)}</b><small>${safe(status)}</small><input class="field" id="count-${sku}" type="number" min="0" max="100000" step="1" inputmode="numeric" value="${safe(value)}" placeholder="Sin conteo" aria-label="Conteo físico de ${safe(row.name)}"></label>`;
     }).join('');
     window.DonasMotion?.stock(root, 'admin');
     const pending=flavors.filter(row=>!row.counted).map(row=>row.name);
     notice.textContent='Cuenta las donas que tienes físicamente, incluidas las apartadas. Escribe 0 cuando no queden.'+(pending.length ? ' Confirma el conteo de: '+pending.join(', ')+'.' : '');
-    save.disabled = false;
+    if(adminInventoryDraft.size)notice.textContent+=' Tus cambios sin guardar se conservaron.';
+    if(needsReview)notice.textContent+=' El inventario cambió: revisa las cifras del servidor y pulsa He revisado el conteo antes de guardar.';
+    save.disabled = needsReview;
     return true;
-  } catch(error) { adminInventoryRevision=undefined; notice.textContent=inventoryError(error); return false; }
+  } catch(error) { adminInventoryRevision=undefined; adminInventoryReviewRevision=undefined; review.hidden=true; notice.textContent=inventoryError(error); return false; }
   finally { adminInventoryLoading = false; }
 }
 
@@ -78,14 +106,16 @@ async function saveAdminInventory() {
     counts[sku] = Number(value);
   }
   adminInventorySaving=true; button.disabled = true; button.classList.add('is-busy');
+  document.querySelectorAll('#adminFlavorInventory input').forEach(input=>input.disabled=true);
   try {
     await adminRequest('/api/admin/customers/inventory','POST',{counts,expectedRevision:adminInventoryRevision});
+    adminInventoryDraft.clear();adminInventoryDraftRevision=undefined;adminInventoryReviewRevision=undefined;
     adminInventoryRevision=undefined;
     const refreshed=await loadAdminInventory(true);
     document.getElementById('adminInventoryNotice').textContent = refreshed ? '✓ Inventario guardado. Los clientes ya pueden consultar estas cantidades.' : '✓ El servidor guardó el inventario. No pudimos volver a consultarlo; pulsa Volver a consultar antes de guardar otro conteo.';
     showToast('Inventario actualizado');
-  } catch(error) { document.getElementById('adminInventoryNotice').textContent = inventoryError(error); }
-  finally { adminInventorySaving=false; button.disabled = !Number.isSafeInteger(adminInventoryRevision); button.classList.remove('is-busy'); }
+  } catch(error) { if(error.code==='INVENTORY_CONFLICT')adminInventoryRevision=undefined; document.getElementById('adminInventoryNotice').textContent = inventoryError(error); }
+  finally { adminInventorySaving=false; button.disabled = !Number.isSafeInteger(adminInventoryRevision); button.classList.remove('is-busy'); document.querySelectorAll('#adminFlavorInventory input').forEach(input=>input.disabled=false); }
 }
 
 let adminCatalog=[];
@@ -137,7 +167,7 @@ function renderAdminOrder(order) {
   let actions = '';
   if (order.status === 'PENDING') actions = action('Aceptar pedido','ACCEPTED',true) + action('Cancelar','CANCELLED');
   if (order.status === 'ACCEPTED') actions = action('Voy en camino','OUT_FOR_DELIVERY',true) + action('Cancelar','CANCELLED');
-  if (order.status === 'OUT_FOR_DELIVERY') actions = `<label class="field-label">Cobrado por<select class="field" id="payment-${safe(order.id)}" ${paid?'disabled':''}><option value="CASH" ${order.payment_method==='CASH'?'selected':''}>Efectivo</option><option value="YAPPY" ${order.payment_method==='YAPPY'?'selected':''}>Yappy</option></select></label>` + action('Cobrado y entregado','COMPLETED',true);
+  if (order.status === 'OUT_FOR_DELIVERY') actions = `<label class="field-label">Cobrado por<select class="field" id="payment-${safe(order.id)}" ${paid?'disabled':''}><option value="CASH" ${order.payment_method==='CASH'?'selected':''}>Efectivo</option><option value="YAPPY" ${order.payment_method==='YAPPY'?'selected':''}>Yappy</option></select></label>` + action('Cobrado y entregado','COMPLETED',true) + action('Cancelar pedido','CANCELLED');
   return `<article class="delivery-card"><div class="operations-heading"><span class="order-status status-${safe(order.status)}">${safe(clientOrderStatus(order.status))}</span><small>${safe(order.public_code)}</small></div><h3>${safe(order.customer_name_snapshot)}</h3><p class="muted">${safe(order.customer_phone_snapshot)} · ${safe(new Date(order.created_at).toLocaleString('es-PA',{dateStyle:'short',timeStyle:'short'}))}</p><ul class="delivery-items">${items}</ul><p class="delivery-location">📍 ${safe(order.delivery_location)}</p>${order.customer_notes ? `<p class="muted">${safe(order.customer_notes)}</p>` : ''}<div class="order-total"><strong>${formatMoney(order.total_cents)}</strong><span>${paid?'Cobrado':(order.payment_method==='YAPPY'?'Yappy al recibir':'Efectivo al recibir')}</span></div><div class="order-actions">${actions}</div></article>`;
 }
 
@@ -168,7 +198,7 @@ document.getElementById('adminOrdersList').addEventListener('click',async event 
       body.paymentReceived = true;
       body.paymentMethod = document.getElementById('payment-'+order.id).value;
       if (!await confirmDeliveryAction('¿Ya cobraste y entregaste?',`${order.customer_name_snapshot} · ${formatMoney(order.total_cents)} en ${body.paymentMethod==='YAPPY'?'Yappy':'efectivo'}. Se cerrará el pedido; los puntos se aplican si el cliente aún no llegó a 3 compras con puntos hoy.`, 'Sí, finalizar')) return;
-    } else if(status === 'CANCELLED' && !await confirmDeliveryAction('Cancelar pedido','Las donas reservadas volverán a estar disponibles.','Cancelar pedido')) return;
+    } else if(status === 'CANCELLED' && !await confirmDeliveryAction('Cancelar pedido','Se liberará la reserva y la disponibilidad se recalculará con las existencias actuales.'+(order.payment_status==='CONFIRMED' ? ' Este pedido ya tiene un pago confirmado; cancelarlo no reembolsa ni borra ese pago.' : ''),'Cancelar pedido')) return;
     button.classList.add('is-busy');
     await adminRequest(`/api/admin/orders/${order.id}/status`,'POST',body);
     showToast(status==='COMPLETED'?'✓ Entrega finalizada':'Pedido actualizado');

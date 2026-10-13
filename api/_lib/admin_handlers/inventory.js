@@ -6,7 +6,13 @@ const { serviceRequest, rpc } = require('../supabase');
 module.exports = withApi(['GET','POST'], async (req, context) => {
   const admin = await (req.method === 'GET' ? requireStaff(req) : requireAdmin(req));
   await enforceRateLimit(req, 'admin_inventory', 60, 60, admin.id);
-  if (req.method === 'GET') return rpc('api_inventory_snapshot', {});
+  if (req.method === 'GET') {
+    const snapshot = await rpc('api_inventory_snapshot', {});
+    // counted also depends on reservations/gaps; it is not proof that no count exists.
+    const counts = await serviceRequest('inventory_manual_counts', {query:'select=variant_id'});
+    const recorded = new Set(counts.map(row=>row.variant_id));
+    return {...snapshot,flavors:snapshot.flavors.map(row=>({...row,has_count:row.counted || recorded.has(row.variant_id)}))};
+  }
   const body = context.parseJsonBody(req);
   const skus = ['DR-CHOCOLATE','DR-VAINILLA','DR-CHOCOLATE-CHISPAS','DR-VAINILLA-CHISPAS'];
   const counts = body.counts;
