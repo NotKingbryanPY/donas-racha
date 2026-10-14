@@ -35,6 +35,7 @@ jobs:
           node tests/notification-order-api.cjs
           node tests/staff-notification-api.cjs
           node tests/staff-notification-provider.cjs
+          node tests/staff-notification-dispatch.cjs
       - name: Install pinned PostgreSQL test runtime
         run: |
           npm install --prefix "$RUNNER_TEMP/donas-pg" --no-audit --no-fund @electric-sql/pglite@0.5.8

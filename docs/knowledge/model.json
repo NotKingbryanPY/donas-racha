@@ -281,6 +281,26 @@
           "line": 1
         }
       ]
+    },
+    {
+      "id": "feature:notification-diagnostics",
+      "type": "componente",
+      "label": "Resultado de reintento y diagnóstico privado sin tokens",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "api/_lib/admin_handlers/order-notifications.js",
+          "line": 1
+        },
+        {
+          "path": "supabase/sql-editor/orders-v2/05_delivery_diagnosis.sql",
+          "line": 1
+        },
+        {
+          "path": "tests/staff-notification-dispatch.cjs",
+          "line": 1
+        }
+      ]
     }
   ],
   "edges": [
@@ -508,6 +528,18 @@
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "source": "system:fcm-emitter",
+      "target": "feature:notification-diagnostics",
+      "type": "IMPLEMENTA",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "api/_lib/order-notification-push.js",
           "line": 1
         }
       ]

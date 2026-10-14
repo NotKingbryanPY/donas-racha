@@ -1,7 +1,9 @@
 flowchart TD
   web["Pedido web"] --> tx["SQL confirma pedido + reserva + job"]
   tx --> api["Respuesta de éxito + waitUntil"] --> send["FCM alta prioridad"]
-  cron["Cron privado Supabase + Vault"] --> lease["Lease/backoff de pendientes"] --> send
+  cron["Cron privado Supabase + Vault"] --> retry["Endpoint espera envío + ACK"] --> lease["Lease/backoff de pendientes"] --> send
+  retry --> receipt["Respuesta: aceptación FCM, no visualización"]
+  send --> logs["Códigos y contadores sin datos privados"]
   send --> service["Servicio valida owner/device/UUID"]
   service --> alert["Aviso genérico, canal/sonido, dedupe"] --> tap["Tap: pedido nativo autenticado"]
   service --> work["WorkManager refresca Room7"]

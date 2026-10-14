@@ -15,6 +15,7 @@
 | Web | panel diario de lectura, stock compartido, pedidos/puntos/perfiles/canjes/tutorial existentes |
 | Pedidos nativos | entrada principal; aceptar/en camino/cobrar-entregar/cancelar; API existente online, copia por propietario y tap a UUID incluso fuera de página reciente |
 | Avisos externos | FCM alta prioridad, canal/sonido/permisos, dedupe duradero, token renovable/revocable y prueba real al propio teléfono; requiere SQL/emisor/reintento |
+| Diagnóstico servidor | recuperación protegida espera envío/ACK; logs con códigos/contadores; SELECT seguro05 para correlacionar pedido y cola, sin certificar entrega |
 | Comprobación de avisos | UUID real de WorkManager observado con lifecycle; espera/red/reintento/finalización explícitos, botón sin doble pulsación y diagnóstico persistente |
 | Android anterior | datos/tablas/source preservados; capital/socios/widgets/sync contable/provisión/push antiguos fuera del runtime; avisos2.1 autorizados se reconstruyen |
 | Firebase | proyecto/configuración existente preservada; no datos de negocio nuevos; FCM nuevo; auth antiguo no rehabilitado |
