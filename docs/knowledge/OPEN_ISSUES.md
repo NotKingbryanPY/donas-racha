@@ -4,7 +4,7 @@
 
 | Tema | Estado / límite |
 |---|---|
-| Activación SQL v2 | PENDIENTE_VERIFICACION: navegador falla antes de abrir Studio; preflight/apply/verify necesitan ejecución real. Código local/SQL aislado no la certifican |
+| Activación SQL v2 | PENDIENTE_VERIFICACION: usuario reportó instalación01 sin error y stock39; falta resultado completo02 con permisos/jornada/trigger. El agente no accedió a Studio. Código local/SQL aislado no certifican producción |
 | Stock/costo inicial | Se preservan cantidades. Un sabor tenía reservas superiores al conteo en evidencia histórica; comprobar físico. El costo del stock anterior es desconocido hasta evidencia válida |
 | Datos viejos | Room preservado; pendientes históricos no se reenvían. Necesitan conciliación de compras/ventas ya reflejadas en conteos centrales |
 | Conflicto offline | No se garantiza disponibilidad global offline. El servidor puede rechazar stock/jornada; revisar, no generar otro UUID por timeout |

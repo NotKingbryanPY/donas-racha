@@ -1,5 +1,5 @@
 {
-  "source_commit": "e2a7ff16a51cd72d19a44c752869deba011c0743",
+  "source_commit": "db600bda78c10758834fee93d416f41de3c35e22",
   "scope": "working tree; lexical extraction, production unverified",
   "schema_version": 1,
   "extractor_version": 4,
@@ -7363,8 +7363,8 @@
     },
     {
       "path": "docs/DONAS_CONTROL_2_ACTIVACION.md",
-      "sha256": "5b402fcebf96cbd7d834de9d7ae8340c362c616d8b677cab7588d00c3466654d",
-      "bytes": 5758,
+      "sha256": "dc52073e6462a556bc806438451162251bec08f1c214fb2beb80bdaab56d96dd",
+      "bytes": 6132,
       "symbols": [],
       "imports": [],
       "rpc_calls": [],
@@ -7391,8 +7391,8 @@
     },
     {
       "path": "docs/DONAS_CONTROL_2_RESULTADOS.md",
-      "sha256": "b392ea2d80c3e147472c06108dffc11228b22ca77463e08a7579790d0b0a0636",
-      "bytes": 7393,
+      "sha256": "170e39299a7fbcc3dde57c763f81e61613e4f3a6af70b52b94be8b3884aad2c4",
+      "bytes": 8115,
       "symbols": [],
       "imports": [],
       "rpc_calls": [],
@@ -7401,7 +7401,7 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 58
+      "lines": 60
     },
     {
       "path": "docs/FIRESTORE_RULES_REVIEW.md",
@@ -15612,8 +15612,8 @@
     },
     {
       "path": "supabase/sql-editor/daily-v2/02_verify.sql",
-      "sha256": "b0a9031a3c22b74db482c7deab5e9c3e41226d6aeca2f0956986026130d54611",
-      "bytes": 1276,
+      "sha256": "298137b7dd0fe57aa6e1e4d8ae19ff6429c429c48faabffd55283d1865d311e9",
+      "bytes": 2498,
       "symbols": [],
       "imports": [],
       "rpc_calls": [],
@@ -15622,7 +15622,7 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 15
+      "lines": 34
     },
     {
       "path": "supabase/sql-editor/daily-v2/03_suspend.sql",

@@ -2,7 +2,7 @@
 
 Generado por `python scripts/knowledge.py generate`. Nombres extraídos, sin contenido de credenciales ni datos.
 
-Commit fuente: `e2a7ff16a51cd72d19a44c752869deba011c0743`; 419 archivos. El inventario incluye metadatos de recursos binarios, esquemas Room y SDK vendorizado; no interpreta su código generado.
+Commit fuente: `db600bda78c10758834fee93d416f41de3c35e22`; 419 archivos. El inventario incluye metadatos de recursos binarios, esquemas Room y SDK vendorizado; no interpreta su código generado.
 
 [Volver al mapa](../PROJECT_MAP.md)
 
@@ -1648,7 +1648,7 @@ Commit fuente: `e2a7ff16a51cd72d19a44c752869deba011c0743`; 419 archivos. El inve
 
 ## docs/DONAS_CONTROL_2_ACTIVACION.md
 
-[docs/DONAS_CONTROL_2_ACTIVACION.md:L1](../../../docs/DONAS_CONTROL_2_ACTIVACION.md#L1) · 41 líneas · SHA-256 `5b402fcebf96`
+[docs/DONAS_CONTROL_2_ACTIVACION.md:L1](../../../docs/DONAS_CONTROL_2_ACTIVACION.md#L1) · 41 líneas · SHA-256 `dc52073e6462`
 
 ## docs/DONAS_CONTROL_2_AUDITORIA.md
 
@@ -1656,7 +1656,7 @@ Commit fuente: `e2a7ff16a51cd72d19a44c752869deba011c0743`; 419 archivos. El inve
 
 ## docs/DONAS_CONTROL_2_RESULTADOS.md
 
-[docs/DONAS_CONTROL_2_RESULTADOS.md:L1](../../../docs/DONAS_CONTROL_2_RESULTADOS.md#L1) · 58 líneas · SHA-256 `b392ea2d80c3`
+[docs/DONAS_CONTROL_2_RESULTADOS.md:L1](../../../docs/DONAS_CONTROL_2_RESULTADOS.md#L1) · 60 líneas · SHA-256 `170e39299a7f`
 
 ## docs/FIRESTORE_RULES_REVIEW.md
 
@@ -2495,7 +2495,7 @@ Commit fuente: `e2a7ff16a51cd72d19a44c752869deba011c0743`; 419 archivos. El inve
 
 ## supabase/sql-editor/daily-v2/02_verify.sql
 
-[supabase/sql-editor/daily-v2/02_verify.sql:L1](../../../supabase/sql-editor/daily-v2/02_verify.sql#L1) · 15 líneas · SHA-256 `b0a9031a3c22`
+[supabase/sql-editor/daily-v2/02_verify.sql:L1](../../../supabase/sql-editor/daily-v2/02_verify.sql#L1) · 34 líneas · SHA-256 `298137b7dd0f`
 
 ## supabase/sql-editor/daily-v2/03_suspend.sql
 
