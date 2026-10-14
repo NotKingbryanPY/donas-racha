@@ -2,7 +2,7 @@
 
 Generado por `python scripts/knowledge.py generate`. Nombres extraídos, sin contenido de credenciales ni datos.
 
-Commit fuente: `6f40f611a8e99e48c84d8ca99c0ae0f3b96c5e4a`; 440 archivos. El inventario incluye metadatos de recursos binarios, esquemas Room y SDK vendorizado; no interpreta su código generado.
+Commit fuente: `db552f34744ae5369c5a8d9d7bf46d89ca1b3f38`; 440 archivos. El inventario incluye metadatos de recursos binarios, esquemas Room y SDK vendorizado; no interpreta su código generado.
 
 [Volver al mapa](../PROJECT_MAP.md)
 
@@ -1746,7 +1746,7 @@ Commit fuente: `6f40f611a8e99e48c84d8ca99c0ae0f3b96c5e4a`; 440 archivos. El inve
 
 ## docs/DONAS_CONTROL_2_1_PEDIDOS.md
 
-[docs/DONAS_CONTROL_2_1_PEDIDOS.md:L1](../../../docs/DONAS_CONTROL_2_1_PEDIDOS.md#L1) · 71 líneas · SHA-256 `22131fca81dc`
+[docs/DONAS_CONTROL_2_1_PEDIDOS.md:L1](../../../docs/DONAS_CONTROL_2_1_PEDIDOS.md#L1) · 75 líneas · SHA-256 `0158e6776ba4`
 
 ## docs/DONAS_CONTROL_2_ACTIVACION.md
 
@@ -2635,7 +2635,7 @@ Commit fuente: `6f40f611a8e99e48c84d8ca99c0ae0f3b96c5e4a`; 440 archivos. El inve
 
 ## supabase/sql-editor/orders-v2/00_preflight.sql
 
-[supabase/sql-editor/orders-v2/00_preflight.sql:L1](../../../supabase/sql-editor/orders-v2/00_preflight.sql#L1) · 13 líneas · SHA-256 `11bf87860419`
+[supabase/sql-editor/orders-v2/00_preflight.sql:L1](../../../supabase/sql-editor/orders-v2/00_preflight.sql#L1) · 16 líneas · SHA-256 `de4bc7774749`
 
 ## supabase/sql-editor/orders-v2/01_apply.sql
 
@@ -3155,7 +3155,7 @@ Commit fuente: `6f40f611a8e99e48c84d8ca99c0ae0f3b96c5e4a`; 440 archivos. El inve
 
 ## tests/staff-notification-postgres.mjs
 
-[tests/staff-notification-postgres.mjs:L1](../../../tests/staff-notification-postgres.mjs#L1) · 77 líneas · SHA-256 `2b3a4362f622`
+[tests/staff-notification-postgres.mjs:L1](../../../tests/staff-notification-postgres.mjs#L1) · 85 líneas · SHA-256 `87c59d59aea3`
 
 - `function scenario` — [tests/staff-notification-postgres.mjs:L6](../../../tests/staff-notification-postgres.mjs#L6)
 

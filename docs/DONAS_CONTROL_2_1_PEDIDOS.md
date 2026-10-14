@@ -28,7 +28,9 @@ La recepción con app cerrada o pantalla bloqueada en Honor requiere prueba fís
 
 Paquete `com.bryan.donas.control`, versión 2.1.0/código16, mínimo Android6/API23, objetivo Android15/API35. Archivo final: 5,381,996 bytes. SHA-256 `1007e30dacdf1614dee5acd25f9acb0eaa333644d9f19f77cca749ab5d441af6`. Firma oficial v1/v2 verificada; certificado SHA-256 `5681a1329740c46b2c7a718e3e8a431951c7b6486fc625196dc3dd7ecadb249d`, coincidente con Firebase y la versión oficial anterior. Alineación de16KB válida. Escaneo de992 entradas sin claves privadas, cuentas de servicio, JWT service_role, keystores o bases locales empaquetadas; este escaneo no sustituye una auditoría completa.
 
-Instalar sobre la versión oficial anterior sin desinstalar ni borrar datos. Room migra hasta7 conservando registros anteriores. Conectar una vez con la cuenta ADMIN/SELLER del Dashboard; la sesión se conserva. Pedidos abre primero y permite gestionar órdenes antes de activar FCM. Hoy, Stock e Historial mantienen compras, ventas, consumo y cierre. Para avisos externos completar la activación siguiente y comprobar el teléfono real. La publicación y descarga del dominio se verificarán tras integrar el PR.
+Instalar sobre la versión oficial anterior sin desinstalar ni borrar datos. Room migra hasta7 conservando registros anteriores. Conectar una vez con la cuenta ADMIN/SELLER del Dashboard; la sesión se conserva. Pedidos abre primero y permite gestionar órdenes antes de activar FCM. Hoy, Stock e Historial mantienen compras, ventas, consumo y cierre. Para avisos externos completar la activación siguiente y comprobar el teléfono real.
+
+[PR42](https://github.com/NotKingbryanPY/donas-racha/pull/42) integrado en main/db552f3. [Vercel Production](https://vercel.com/king-entertainment/donas-racha/8kL2SeJMZgPZwczfyubwpSpLFTaf) informó success. Verificación real del 14 octubre2026, 19:21UTC: página/panel diario, catálogo e inventario público HTTP200; pedidos, inventario administrativo, diario y registro de avisos anónimos HTTP401; despacho anónimo rechazado401; endpoints móviles retirados410. APK descargado del dominio con tamaño/hash idénticos; SHA, guía y SQL01 publicado completos y coincidentes. Es evidencia de despliegue/lectura pública, sin escritura privada ni aviso físico afirmados.
 
 Fuentes: [recepción Android](https://firebase.google.com/docs/cloud-messaging/android/receive-messages), [prioridad FCM](https://firebase.google.com/docs/cloud-messaging/android-message-priority), [emisor HTTPv1](https://firebase.google.com/docs/cloud-messaging/send/v1-api), [tareas posteriores a respuesta Vercel](https://vercel.com/docs/functions/functions-api-reference/vercel-functions-package).
 
@@ -45,6 +47,8 @@ El SQL diario ya dio DAILY_V2_READY según el usuario; no se repite. No se ejecu
 | suspensión | 04_suspend.sql | Inactiva avisos nuevos y cron propio; conserva historia/negocio. | No revierte cobros ni stock. Reaplicar01 y registrar explícitamente teléfonos para reanudar; no bajar APK/Room7 a6. |
 
 Ejecutar cada archivo completo en consulta nueva de Supabase SQL Editor. No seeds ni paquete02antiguo. No pegar claves FCM en SQL. Las tablas viejas pueden permanecer públicas protegidas o archivadas; ambos escenarios se probaron sin restaurar provisión/Firebase/sync contable.
+
+El preflight muestra nombres, funciones y eventos de triggers, sin sus argumentos: un webhook puede guardar encabezados privados en ellos. No compartir definiciones completas ni resultados con credenciales. La prueba aislada verifica que un encabezado ficticio no aparece en el export.
 
 ## Configurar emisor protegido
 

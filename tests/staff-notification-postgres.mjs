@@ -16,6 +16,14 @@ async function scenario(archive){
   await db.query("insert into public.push_devices(device_public_id,auth_user_id,platform,token,app_version) values($1,$2,'ANDROID',$3,'1.4.1')",[legacy,admin,'legacy-token'.repeat(8)]);
   if(archive)await db.exec(sql('supabase/sql-editor/web-only/02_archive_mobile.sql'));
   await db.exec(sql('supabase/migrations/202610140001_staff_order_notifications.sql'));
+  // Dashboard webhook arguments can include credentials; never export them to chat.
+  await db.exec(`create function public.preflight_webhook_test() returns trigger language plpgsql as $$ begin return new;end $$;
+    create trigger preflight_webhook_test after insert on public.orders for each row execute function public.preflight_webhook_test('PRIVATE_TEST_HEADER_NEVER_EXPORT');`);
+  const preflight=(await db.query(sql('supabase/sql-editor/orders-v2/00_preflight.sql'))).rows[0].notification_preflight;
+  assert.equal(preflight.alreadyInstalled,true);
+  assert.equal(preflight.orderTriggers.find(t=>t.name==='preflight_webhook_test').function,'public.preflight_webhook_test');
+  assert.equal(JSON.stringify(preflight).includes('PRIVATE_TEST_HEADER_NEVER_EXPORT'),false);
+  await db.exec('drop trigger preflight_webhook_test on public.orders');
   const register=(who,id,token='new-token'.repeat(8))=>db.query('select public.api_staff_register_order_notifications($1,$2,$3,$4)',[who,id,token,'2.1.0']);
   await assert.rejects(register(outsider,device),/STAFF_REQUIRED/);
   await register(seller,device);

@@ -1,6 +1,6 @@
 {
-  "date": "2026-10-14T14:10:09-05:00",
-  "commit": "6f40f611a8e99e48c84d8ca99c0ae0f3b96c5e4a",
+  "date": "2026-10-14T14:25:23-05:00",
+  "commit": "db552f34744ae5369c5a8d9d7bf46d89ca1b3f38",
   "scope": "working tree, hashes de texto normalizados LF; binarios/vendor literales; sin verificación de producción",
   "areas": [
     "android",
@@ -10,7 +10,7 @@
     "operations",
     "web"
   ],
-  "note": "Entrega2.1: APK oficial final,117 tests,lint/build,firma/hash/alineacion/escaneo aprobados; CI de codigo6f40f61 web/concurrencia y emuladores23/35 success; docs de activacion y limites revisadas; no SQL/emisor/FCM fisico real afirmados.",
+  "note": "Seguimiento de entrega: despliegue y APK descargado verificados; preflight protegido sin argumentos de webhooks, prueba de encabezado privado excluido aprobada. Runtime Android/API sin cambios; SQL/emisor/recepcion real pendientes.",
   "sources": {
     ".env.example": "371ff612d8993b57f436b4184eabb3eee9b2481de5aba7ae650f9f963a518958",
     ".firebaserc": "faad828777632be811ebfb2800358e7c0fb6ce6f6491e3139c2bcb2f3f92a842",
@@ -238,7 +238,7 @@
     "docs/DESPLIEGUE_PRODUCCION_1_4_1.md": "1b97e47e6c434540f53b3544a28c4f0131156c0959f943cf8b2c41efd817e4e1",
     "docs/DESPLIEGUE_WEB_1_4_1.md": "b26141ccd646ddfda3e478749f6a2ad622a44551b172c7d3acf93a9c27027120",
     "docs/DONAS_CONTROL_1.3.0_ANALISIS_Y_ACTIVACION.md": "099f3ccf99d1caa9b9324eb802b645346da79d29263fc031f7bdf1ace52c5bb2",
-    "docs/DONAS_CONTROL_2_1_PEDIDOS.md": "22131fca81dc87559754159f260493834b11b221b427c6f3a035fe25e0a38867",
+    "docs/DONAS_CONTROL_2_1_PEDIDOS.md": "0158e6776ba49309e03800150f688590af39a407d8f41d74d4053b665f15b4f5",
     "docs/DONAS_CONTROL_2_ACTIVACION.md": "dc52073e6462a556bc806438451162251bec08f1c214fb2beb80bdaab56d96dd",
     "docs/DONAS_CONTROL_2_AUDITORIA.md": "23a7c997b10af64e6e6161ed2007296cba1d4f2f5726cf2f2156e07a20d601b1",
     "docs/DONAS_CONTROL_2_RESULTADOS.md": "46abb0b91661058f72983799d2a9be497097e45f9983e82c40a8e02affca4f81",
@@ -357,7 +357,7 @@
     "supabase/sql-editor/daily-v2/01_apply.sql": "759123d54164537f913f3de82853a9e35c9d87fee5513f5582f18b4b746324e7",
     "supabase/sql-editor/daily-v2/02_verify.sql": "298137b7dd0fe57aa6e1e4d8ae19ff6429c429c48faabffd55283d1865d311e9",
     "supabase/sql-editor/daily-v2/03_suspend.sql": "1c2fa23a2079856117633d75b2d885cc489891731234a3870f80703439fc941d",
-    "supabase/sql-editor/orders-v2/00_preflight.sql": "11bf878604196e7bc1f6e1092c17d76290d691b0d0c36ebbdacffaf981e56122",
+    "supabase/sql-editor/orders-v2/00_preflight.sql": "de4bc77747490aae5e455b4226b76db77a8a61dd15f9ce1ca149eb65bc0c1c7c",
     "supabase/sql-editor/orders-v2/01_apply.sql": "044f001010d5dcb55ba33d058f623185708827abe2cf1132a8bd6b7e5fd789fe",
     "supabase/sql-editor/orders-v2/02_verify.sql": "b7b52ce73a4d6e2b9a8eb2c101f5387c76ebc4b8030648f2722e5dd5f7d30201",
     "supabase/sql-editor/orders-v2/03_retry_scheduler.sql": "ec73b6015139c826b1338f767e12a714ae0127f26dfdf39136779217f35f60c4",
@@ -444,7 +444,7 @@
     "tests/shared-inventory-refresh.cjs": "733a69f0bfd331b38e03dc2ce272171bdf601c9ae3ac64fb62e3730a7d325379",
     "tests/staff-device-list.cjs": "a6c04291692c20373f73a3a16ca80d8038140501bd4850ca1ee118ede7a180dd",
     "tests/staff-notification-api.cjs": "a7745501d8df0b91ee7bf38b497601453baed913a40d8952776b7bd65103c0af",
-    "tests/staff-notification-postgres.mjs": "2b3a4362f6222499940815b3b60679ee5a31e68aff14aeda4ff3aeefd1f05186",
+    "tests/staff-notification-postgres.mjs": "87c59d59aea3084c52ac99b538fbbe12c4af4113e6e92a2fcc518407ef88e430",
     "tests/staff-notification-provider.cjs": "e17411993547952166a6d748d0161da28b3de54e0fa86913f3e097ee868097af",
     "tests/three-daily-purchases-postgres.mjs": "513d78aeedb9f0c1990d0e13bd4a66151e2fd3547623cc885d289d76ca16d268",
     "tests/three-daily-purchases-ui.cjs": "9024128c7dd3672493f8a26a0c137d190fef21ca7d63f1663f94e55916f7d36d",
@@ -456,7 +456,7 @@
   "documents": {
     "docs/knowledge/AI_CONTEXT.md": "36f1d4f165eb14767ab557b93dfef8ed6a3968a41388b36a9c7523011571b448",
     "docs/knowledge/ARCHITECTURE.md": "ef149285464096d577cbd2779254dfdb93d9252e1af428282665b5b462d820f3",
-    "docs/knowledge/CHANGELOG.md": "f797a3dbcf5a32190cb426f010cff9e574d0c22f23fed7241796c4c23ec287c4",
+    "docs/knowledge/CHANGELOG.md": "fa0b8bad7905038278e0e1d7d595d2f3a976e6fe8cfaea2a1f46e2cf652145f3",
     "docs/knowledge/DATABASE.md": "fd995782192eb37e2d3b4372aca4da73fc0dfe50a20dd3ee41ac9fe5d19edb7e",
     "docs/knowledge/DATA_FLOWS.md": "04187b0ecd5140f945fa91d4d280fa3f9390de5887d88dd1f58cd336afbf3e8c",
     "docs/knowledge/DEPENDENCIES.md": "4e551e72212105439df1128f0501d2bc3b273cc463a6124b8bef2467a30d813b",
@@ -467,7 +467,7 @@
     "docs/knowledge/PROJECT_MAP.md": "e832c0f5179a01b3028c62240e895e6e3ef76ecdf81759de63966fcb65dbe303",
     "docs/knowledge/RUNBOOK.md": "fc7979c0431df7cee0d7b6843d365ae8c60f2fa9bbb9f96f1565c6332c188cd8",
     "docs/knowledge/UI_ANIMATIONS.md": "13ee5bbbb1e29faa13d335a5238a6bc2e8180397c2fdc68d5837239f5ab81e6a",
-    "docs/knowledge/VALIDATION.md": "f3a0d0e355c7d983b56ef854428a3b1a5130a788b2ded1e00f1872ca11936baf",
+    "docs/knowledge/VALIDATION.md": "ad7726d9e15dab5a491be9b50d55939a619a96959082cfef3d64cd87f2ade540",
     "docs/knowledge/diagrams/01-system.md": "8ce3d69f5447d1e30fa457a937c69b22836dc591d9a65602c75a6c4e6b80e558",
     "docs/knowledge/diagrams/01-system.mmd": "999dbd47ec4ec702d0a9f5ebd7a77cb8fa68885ccf35db10a666df1b67990f5b",
     "docs/knowledge/diagrams/02-orders.md": "afbccaa007d1e371236259979e94d117907d0e7ed6aafa54cb5536a3745574d2",

@@ -785,5 +785,23 @@
       "downloads/Donas-Control-2.1.0-oficial.apk.sha256"
     ],
     "note": "Entrega2.1: APK oficial final,117 tests,lint/build,firma/hash/alineacion/escaneo aprobados; CI de codigo6f40f61 web/concurrencia y emuladores23/35 success; docs de activacion y limites revisadas; no SQL/emisor/FCM fisico real afirmados."
+  },
+  {
+    "date": "2026-10-14T14:25:23-05:00",
+    "commit": "db552f34744ae5369c5a8d9d7bf46d89ca1b3f38",
+    "areas": [
+      "android",
+      "api",
+      "database",
+      "firebase",
+      "operations",
+      "web"
+    ],
+    "changed_files": [
+      "docs/DONAS_CONTROL_2_1_PEDIDOS.md",
+      "supabase/sql-editor/orders-v2/00_preflight.sql",
+      "tests/staff-notification-postgres.mjs"
+    ],
+    "note": "Seguimiento de entrega: despliegue y APK descargado verificados; preflight protegido sin argumentos de webhooks, prueba de encabezado privado excluido aprobada. Runtime Android/API sin cambios; SQL/emisor/recepcion real pendientes."
   }
 ]

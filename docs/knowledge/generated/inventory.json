@@ -1,5 +1,5 @@
 {
-  "source_commit": "6f40f611a8e99e48c84d8ca99c0ae0f3b96c5e4a",
+  "source_commit": "db552f34744ae5369c5a8d9d7bf46d89ca1b3f38",
   "scope": "working tree; lexical extraction, production unverified",
   "schema_version": 1,
   "extractor_version": 4,
@@ -7849,8 +7849,8 @@
     },
     {
       "path": "docs/DONAS_CONTROL_2_1_PEDIDOS.md",
-      "sha256": "22131fca81dc87559754159f260493834b11b221b427c6f3a035fe25e0a38867",
-      "bytes": 10775,
+      "sha256": "0158e6776ba49309e03800150f688590af39a407d8f41d74d4053b665f15b4f5",
+      "bytes": 11660,
       "symbols": [],
       "imports": [],
       "rpc_calls": [],
@@ -7859,7 +7859,7 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 71
+      "lines": 75
     },
     {
       "path": "docs/DONAS_CONTROL_2_ACTIVACION.md",
@@ -16425,8 +16425,8 @@
     },
     {
       "path": "supabase/sql-editor/orders-v2/00_preflight.sql",
-      "sha256": "11bf878604196e7bc1f6e1092c17d76290d691b0d0c36ebbdacffaf981e56122",
-      "bytes": 951,
+      "sha256": "de4bc77747490aae5e455b4226b76db77a8a61dd15f9ce1ca149eb65bc0c1c7c",
+      "bytes": 1153,
       "symbols": [],
       "imports": [],
       "rpc_calls": [],
@@ -16435,7 +16435,7 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 13
+      "lines": 16
     },
     {
       "path": "supabase/sql-editor/orders-v2/01_apply.sql",
@@ -19851,8 +19851,8 @@
     },
     {
       "path": "tests/staff-notification-postgres.mjs",
-      "sha256": "2b3a4362f6222499940815b3b60679ee5a31e68aff14aeda4ff3aeefd1f05186",
-      "bytes": 9157,
+      "sha256": "87c59d59aea3084c52ac99b538fbbe12c4af4113e6e92a2fcc518407ef88e430",
+      "bytes": 10006,
       "symbols": [
         {
           "name": "scenario",
@@ -19865,15 +19865,20 @@
       "tables": [],
       "sql_objects": [
         {
+          "kind": "trigger",
+          "name": "preflight_webhook_test",
+          "line": 21
+        },
+        {
           "kind": "view",
           "name": "vault",
-          "line": 50
+          "line": 58
         }
       ],
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 77
+      "lines": 85
     },
     {
       "path": "tests/staff-notification-provider.cjs",
