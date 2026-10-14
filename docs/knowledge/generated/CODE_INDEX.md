@@ -2,7 +2,7 @@
 
 Generado por `python scripts/knowledge.py generate`. Nombres extraídos, sin contenido de credenciales ni datos.
 
-Commit fuente: `db552f34744ae5369c5a8d9d7bf46d89ca1b3f38`; 440 archivos. El inventario incluye metadatos de recursos binarios, esquemas Room y SDK vendorizado; no interpreta su código generado.
+Commit fuente: `306ff9665cc5ffa74323e196209e8cc31a1e5b7f`; 440 archivos. El inventario incluye metadatos de recursos binarios, esquemas Room y SDK vendorizado; no interpreta su código generado.
 
 [Volver al mapa](../PROJECT_MAP.md)
 
@@ -1746,7 +1746,7 @@ Commit fuente: `db552f34744ae5369c5a8d9d7bf46d89ca1b3f38`; 440 archivos. El inve
 
 ## docs/DONAS_CONTROL_2_1_PEDIDOS.md
 
-[docs/DONAS_CONTROL_2_1_PEDIDOS.md:L1](../../../docs/DONAS_CONTROL_2_1_PEDIDOS.md#L1) · 75 líneas · SHA-256 `0158e6776ba4`
+[docs/DONAS_CONTROL_2_1_PEDIDOS.md:L1](../../../docs/DONAS_CONTROL_2_1_PEDIDOS.md#L1) · 79 líneas · SHA-256 `07f0652ee888`
 
 ## docs/DONAS_CONTROL_2_ACTIVACION.md
 
