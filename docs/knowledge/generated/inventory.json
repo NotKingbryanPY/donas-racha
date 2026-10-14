@@ -1,10 +1,10 @@
 {
-  "source_commit": "1b40d1a33007a8ad3380a1958b24395ea58d2c12",
+  "source_commit": "9d48f05dcfde4c547d92fe5dea7e98e32076aa71",
   "scope": "working tree; lexical extraction, production unverified",
   "schema_version": 1,
   "extractor_version": 4,
   "hash_algorithm": "sha256; text CRLF normalized to LF; vendor/binary literal",
-  "model_sha256": "02360dd2c226e527df3f8da9eaec64d0d9ce2183383842289a25e988a61f3f70",
+  "model_sha256": "f743c075f9688b6ad0647050ab5ece20394f5ae358624ace2a51a6ba218d1364",
   "files": [
     {
       "path": ".env.example",
@@ -6151,8 +6151,8 @@
     },
     {
       "path": "api/auth/session.js",
-      "sha256": "a8193f3202aeb2b95b4c6283ffa32ea034bf38c6426874003b19303780ec43d7",
-      "bytes": 2345,
+      "sha256": "c9c1aa9ab42abca024a617d62d4e2bbb2949a1fb0e14dc1a0cc0dd3f74e74ed0",
+      "bytes": 2624,
       "symbols": [],
       "imports": [
         {
@@ -6178,7 +6178,7 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 45
+      "lines": 48
     },
     {
       "path": "api/backend.js",
@@ -7944,8 +7944,8 @@
     },
     {
       "path": "docs/DONAS_CONTROL_2_1_1_AVISOS.md",
-      "sha256": "c5a8a28aff57b196669d445bde29c28c84ca1808a5f3d1d2de20002768e15ac8",
-      "bytes": 3890,
+      "sha256": "fc2104c2f16121643902ea1727d2feee8df3ba41834143aeb89180fe2b57fc1c",
+      "bytes": 5783,
       "symbols": [],
       "imports": [],
       "rpc_calls": [],
@@ -7954,7 +7954,7 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 34
+      "lines": 40
     },
     {
       "path": "docs/DONAS_CONTROL_2_1_PEDIDOS.md",
@@ -19846,19 +19846,19 @@
     },
     {
       "path": "tests/session-resilience.cjs",
-      "sha256": "c3f39318fc85595bd957bccd08a82050a60e56fe94b53a9c357efff56d30e70f",
-      "bytes": 2153,
+      "sha256": "ba2aec14859a07a1e13ff258ca1ead16722ba23ef81a9cca7fc663882d8d83e4",
+      "bytes": 3350,
       "symbols": [
         {
           "name": "request",
           "kind": "function",
-          "line": 17
+          "line": 20
         }
       ],
       "imports": [
         {
           "target": "api/auth/session.js",
-          "line": 16
+          "line": 19
         }
       ],
       "rpc_calls": [],
@@ -19868,11 +19868,11 @@
       "endpoints": [
         {
           "value": "/api/auth/session",
-          "line": 19
+          "line": 23
         }
       ],
       "animations": [],
-      "lines": 31
+      "lines": 45
     },
     {
       "path": "tests/shared-inventory-postgres.mjs",

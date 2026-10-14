@@ -1,10 +1,10 @@
 {
-  "source_commit": "1b40d1a33007a8ad3380a1958b24395ea58d2c12",
+  "source_commit": "9d48f05dcfde4c547d92fe5dea7e98e32076aa71",
   "scope": "working tree; lexical extraction, production unverified",
   "schema_version": 1,
   "extractor_version": 4,
   "hash_algorithm": "sha256; text CRLF normalized to LF; vendor/binary literal",
-  "model_sha256": "02360dd2c226e527df3f8da9eaec64d0d9ce2183383842289a25e988a61f3f70",
+  "model_sha256": "f743c075f9688b6ad0647050ab5ece20394f5ae358624ace2a51a6ba218d1364",
   "limitations": [
     "No AST ni call graph exhaustivo",
     "No resuelve funciones renombradas ni overloads SQL",
@@ -127,6 +127,22 @@
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/orders/StaffInbox.kt",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "feature:staff-session",
+      "type": "componente",
+      "label": "Sesión Supabase: renovación opaca y roles",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "api/auth/session.js",
+          "line": 1
+        },
+        {
+          "path": "tests/session-resilience.cjs",
           "line": 1
         }
       ]
@@ -21670,14 +21686,14 @@
       ]
     },
     {
-      "id": "file:tests/session-resilience.cjs:function:request:17",
+      "id": "file:tests/session-resilience.cjs:function:request:20",
       "type": "function",
       "label": "request",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "tests/session-resilience.cjs",
-          "line": 17,
+          "line": 20,
           "symbol": "request"
         }
       ]
@@ -25105,6 +25121,30 @@
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/orders/StaffOrderNotifications.kt",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "source": "system:api",
+      "target": "feature:staff-session",
+      "type": "IMPLEMENTA",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "api/auth/session.js",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "source": "feature:staff-fcm",
+      "target": "feature:staff-session",
+      "type": "DEPENDE_DE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt",
           "line": 1
         }
       ]
@@ -45608,13 +45648,13 @@
     },
     {
       "source": "file:tests/session-resilience.cjs",
-      "target": "file:tests/session-resilience.cjs:function:request:17",
+      "target": "file:tests/session-resilience.cjs:function:request:20",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "tests/session-resilience.cjs",
-          "line": 17,
+          "line": 20,
           "symbol": "request"
         }
       ]
@@ -45627,7 +45667,7 @@
       "refs": [
         {
           "path": "tests/session-resilience.cjs",
-          "line": 16
+          "line": 19
         }
       ]
     },

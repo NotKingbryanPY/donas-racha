@@ -843,5 +843,19 @@
       "downloads/Donas-Control-2.1.1-oficial.apk.sha256"
     ],
     "note": "Correccion comprobacion Android 2.1.1 con WorkInfo/lifecycle: 120 pruebas, lint y build oficial; firma, alineacion, paquete y escaneo APK aprobados. A23 prueba y cron reportados por usuario; CI/publicacion y bloqueo pendientes."
+  },
+  {
+    "date": "2026-10-14T16:11:37-05:00",
+    "commit": "9d48f05dcfde4c547d92fe5dea7e98e32076aa71",
+    "areas": [
+      "api",
+      "operations"
+    ],
+    "changed_files": [
+      "api/auth/session.js",
+      "docs/DONAS_CONTROL_2_1_1_AVISOS.md",
+      "tests/session-resilience.cjs"
+    ],
+    "note": "Revisada renovación opaca Supabase, roles/rate limit y dependencia de avisos; repro antes/después y evidencia A23/CI con límites documentados"
   }
 ]

@@ -12,9 +12,12 @@ module.exports = withApi(['POST'], async (req, context) => {
     throw new ApiError(400, 'VALIDATION_ERROR', 'Tipo de sesión no válido.');
   }
   const credentials = refresh
-    ? { refresh_token: String(body.refreshToken || '') }
+    ? { refresh_token: body.refreshToken }
     : { email: String(body.email || '').trim(), password: String(body.password || '') };
-  if (refresh ? credentials.refresh_token.length < 20 :
+  // Supabase refresh tokens are opaque, including valid 12-character tokens.
+  // Bound malformed input here; only the auth provider can validate the secret.
+  if (refresh ? typeof credentials.refresh_token !== 'string' ||
+      !credentials.refresh_token.length || credentials.refresh_token.length > 4096 || /\s/.test(credentials.refresh_token) :
     !/^[^@\s]{1,100}@[^@\s]{1,200}$/.test(credentials.email) ||
       credentials.password.length < 6 || credentials.password.length > 200) {
     throw new ApiError(400, 'VALIDATION_ERROR', 'Credenciales incompletas.');

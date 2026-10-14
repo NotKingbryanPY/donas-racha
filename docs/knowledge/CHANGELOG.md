@@ -1,5 +1,9 @@
 # Historial de decisiones y documentación
 
+## 2026-10-14 — renovación de sesión rechazada antes de FCM
+
+Usuario informó FAILED visible en APK2.1.1. Logs Vercel sanitizados mostraron20 renovaciones400/VALIDATION_ERROR; api/auth/session imponía mínimo20 aunque Supabase Auth emite tokens opacos de12. Repro local falló400 antes del cambio y pasó después; prueba pública previa con token ficticio confirmó400. Se corrige solo validación de input, sin coerción/longitud mínima arbitraria, conservando rate limit, autenticidad/rotación Supabase y ADMIN/SELLER. Regresiones cubren token corto/largo/rotado, malformados, roles y errores definitivos/temporales. Pasaron nueve suites locales pertinentes. CI9d48f05 del APK aprobado en API23/35; actualización del servidor/CI nuevo y recorrido físico posterior pendientes. Sin APK/SQL adicional ni cambios de secretos; diagnóstico exacto del A23 solicitado sin claves.
+
 ## 2026-10-14 — comprobación de avisos2.1.1
 
 Usuario desde Samsung A23 confirmó notificación Android de la prueba y confirmación de recuperación programada; informó texto Comprobando persistente. Causa: mensaje literal guardado en orderFeedback no se cerraba con el resultado de registro. Versión2.1.1/código17 separa feedback, devuelve UUID de WorkManager y observa sus estados con lifecycle, impide doble pulsación durante seguimiento y rehabilita el botón en estados terminales; conserva UUID/propietario al recrear. Diagnóstico de fallo de configuración también persiste desde el worker. Tres regresiones cubren éxito, fallo/reintento y resultado recibido al volver a pantalla. PASS120 pruebas/lintDebug/lintOfficial/build optimizado; APK oficial firmado/hash/alineación16KB/escaneo992 entradas aprobados. Informe2.1.1 registra archivo y límites; CI/publicación aún pendientes. Sin SQL ni emisor/secretos nuevos; datos/certificado/Room7 conservados. Fuera de app y rotación de clave siguen pendientes.

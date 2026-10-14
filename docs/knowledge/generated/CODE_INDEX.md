@@ -2,7 +2,7 @@
 
 Generado por `python scripts/knowledge.py generate`. Nombres extraídos, sin contenido de credenciales ni datos.
 
-Commit fuente: `1b40d1a33007a8ad3380a1958b24395ea58d2c12`; 443 archivos. El inventario incluye metadatos de recursos binarios, esquemas Room y SDK vendorizado; no interpreta su código generado.
+Commit fuente: `9d48f05dcfde4c547d92fe5dea7e98e32076aa71`; 443 archivos. El inventario incluye metadatos de recursos binarios, esquemas Room y SDK vendorizado; no interpreta su código generado.
 
 [Volver al mapa](../PROJECT_MAP.md)
 
@@ -1399,7 +1399,7 @@ Commit fuente: `1b40d1a33007a8ad3380a1958b24395ea58d2c12`; 443 archivos. El inve
 
 ## api/auth/session.js
 
-[api/auth/session.js:L1](../../../api/auth/session.js#L1) · 45 líneas · SHA-256 `a8193f3202ae`
+[api/auth/session.js:L1](../../../api/auth/session.js#L1) · 48 líneas · SHA-256 `c9c1aa9ab42a`
 
 ## api/backend.js
 
@@ -1767,7 +1767,7 @@ Commit fuente: `1b40d1a33007a8ad3380a1958b24395ea58d2c12`; 443 archivos. El inve
 
 ## docs/DONAS_CONTROL_2_1_1_AVISOS.md
 
-[docs/DONAS_CONTROL_2_1_1_AVISOS.md:L1](../../../docs/DONAS_CONTROL_2_1_1_AVISOS.md#L1) · 34 líneas · SHA-256 `c5a8a28aff57`
+[docs/DONAS_CONTROL_2_1_1_AVISOS.md:L1](../../../docs/DONAS_CONTROL_2_1_1_AVISOS.md#L1) · 40 líneas · SHA-256 `fc2104c2f161`
 
 ## docs/DONAS_CONTROL_2_1_PEDIDOS.md
 
@@ -3157,9 +3157,9 @@ Commit fuente: `1b40d1a33007a8ad3380a1958b24395ea58d2c12`; 443 archivos. El inve
 
 ## tests/session-resilience.cjs
 
-[tests/session-resilience.cjs:L1](../../../tests/session-resilience.cjs#L1) · 31 líneas · SHA-256 `c3f39318fc85`
+[tests/session-resilience.cjs:L1](../../../tests/session-resilience.cjs#L1) · 45 líneas · SHA-256 `ba2aec14859a`
 
-- `function request` — [tests/session-resilience.cjs:L17](../../../tests/session-resilience.cjs#L17)
+- `function request` — [tests/session-resilience.cjs:L20](../../../tests/session-resilience.cjs#L20)
 
 ## tests/shared-inventory-postgres.mjs
 

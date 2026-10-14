@@ -4,11 +4,15 @@
 
 El usuario, desde Samsung A23, recibió una notificación Android real al enviar la prueba, pero Activar/comprobar avisos conservaba el texto Comprobando teléfono y emisor. DailyActivity guardaba ese literal en orderFeedback; las actualizaciones de PushHealth repintaban la pantalla sin finalizar ese mensaje. La recepción de la prueba no demuestra todavía recepción de un pedido con pantalla bloqueada.
 
+Después de instalar2.1.1 el usuario informó el estado terminal No se completó la comprobación. La lectura sanitizada de Vercel encontró20 errores recientes400/VALIDATION_ERROR en POST /api/auth/session. La API exigía20 caracteres al refresh token; [Supabase Auth genera también tokens opacos de12](https://github.com/supabase/auth/blob/master/internal/models/refresh_token.go). La regresión reprodujo400 para ese caso y la prueba pública con un token ficticio de12 confirmó el rechazo previo a Supabase. No se leyeron tokens reales ni registros de clientes. La asociación exacta con el fallo del A23 queda pendiente de su diagnóstico/prueba posterior; este error comprobado bloqueaba toda renovación válida corta, incluidos registro FCM, pedidos y datos diarios.
+
 ## Corrección
 
 El registro devuelve su UUID real de WorkManager. La comprobación manual tiene feedback separado de los pedidos y observa WorkInfo con el ciclo de vida: pendiente/red, ejecución, espera de trabajo anterior, reintento y finalización. SUCCEEDED/FAILED/CANCELLED rehabilitan el botón; no se confunde terminar una consulta con que Android haya mostrado un aviso. Durante el seguimiento se impide otra pulsación. UUID/propietario se conservan al recrear la pantalla y se descartan al cambiar cuenta. El worker persiste también el fallo de configuración pública Firebase.
 
 Room sigue en7, sin otra migración ni SQL. Se mantienen la cola duradera, los reintentos, la renovación de token, el emisor configurado y los registros comerciales existentes.
+
+POST /api/auth/session acepta ahora una cadena opaca no vacía, acotada y sin espacios, sin imponer una longitud mínima arbitraria ni convertir objetos/números en tokens. Supabase verifica su validez y la API vuelve a comprobar ADMIN/SELLER; se mantienen rate limit, rotación y respuestas401/403 para credenciales/roles inválidos. La corrección es del servidor y sirve al APK2.1.1 ya instalado; no requiere otra versión ni borrar sesión/Room. Pruebas de renovación cubren12 caracteres, formato largo, token rotado, input malformado, permisos y fallos temporales.
 
 ## APK y verificaciones
 
@@ -17,7 +21,9 @@ Room sigue en7, sin otra migración ni SQL. Se mantienen la cola duradera, los r
 - Certificado SHA-256 `5681a1329740c46b2c7a718e3e8a431951c7b6486fc625196dc3dd7ecadb249d`, igual al anterior; firma v1/v2 válida y alineación16KB comprobada.
 - PASS120 pruebas Android sin fallos/errores, lintDebug/lintOfficial y build optimizado R8. Las tres regresiones nuevas ejercitan WorkManager/lifecycle: éxito, fallo/reintento y finalización mientras la pantalla está detenida.
 - Escaneo de992 entradas sin PEM privado, JSON de cuenta de servicio, JWT service_role, keystore o base local empaquetados. Este escaneo no sustituye una auditoría completa.
-- CI, publicación de descarga y recepción física con esta versión se registrarán después de verificarlas; no se deducen del build local.
+- CI del APK9d48f05: build/lint/pruebas y emuladores API23/35 aprobados, además de conocimiento. La corrección posterior de sesión necesita su propia validación/despliegue; no se deduce del build anterior.
+- PASS local de renovación/regresión y contraseña de6, backend completo, seguridad, sesión de cliente, lookup de notificación, API/proveedor FCM y sintaxis web. Prueba previa al cambio de servidor: token ficticio de12 devuelve400/VALIDATION_ERROR en producción.
+- El APK se publicó y verificó en GitHub mediante URL inmutable9d48f05 con tamaño/hash idénticos; el usuario lo instaló. Publicación en dracha.store y comprobación física exitosa todavía pendientes.
 
 [Descarga prevista de distribución](https://www.dracha.store/downloads/Donas-Control-2.1.1-oficial.apk) · [SHA-256](https://www.dracha.store/downloads/Donas-Control-2.1.1-oficial.apk.sha256). Confirmar publicación antes de usar el enlace.
 

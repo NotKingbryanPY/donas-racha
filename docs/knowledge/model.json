@@ -265,6 +265,22 @@
           "line": 1
         }
       ]
+    },
+    {
+      "id": "feature:staff-session",
+      "type": "componente",
+      "label": "Sesión Supabase: renovación opaca y roles",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "api/auth/session.js",
+          "line": 1
+        },
+        {
+          "path": "tests/session-resilience.cjs",
+          "line": 1
+        }
+      ]
     }
   ],
   "edges": [
@@ -468,6 +484,30 @@
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/orders/StaffOrderNotifications.kt",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "source": "system:api",
+      "target": "feature:staff-session",
+      "type": "IMPLEMENTA",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "api/auth/session.js",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "source": "feature:staff-fcm",
+      "target": "feature:staff-session",
+      "type": "DEPENDE_DE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt",
           "line": 1
         }
       ]
