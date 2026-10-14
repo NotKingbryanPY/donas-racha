@@ -766,5 +766,24 @@
       "tests/web-only.cjs"
     ],
     "note": "Revisados pedidos nativos, propietario de cache y sesiones, Room7 aditivo, FCM inmediato y cola privada, reintento Vault, conservacion de diarios y limites de activacion; contratos API y SQL locales aprobados; final Android y cloud pendientes."
+  },
+  {
+    "date": "2026-10-14T14:10:09-05:00",
+    "commit": "6f40f611a8e99e48c84d8ca99c0ae0f3b96c5e4a",
+    "areas": [
+      "android",
+      "api",
+      "database",
+      "firebase",
+      "operations",
+      "web"
+    ],
+    "changed_files": [
+      "docs/DONAS_CONTROL_2_1_PEDIDOS.md",
+      "docs/previews/donas-control-2-1-pedido.png",
+      "docs/previews/donas-control-2-1-pedidos.png",
+      "downloads/Donas-Control-2.1.0-oficial.apk.sha256"
+    ],
+    "note": "Entrega2.1: APK oficial final,117 tests,lint/build,firma/hash/alineacion/escaneo aprobados; CI de codigo6f40f61 web/concurrencia y emuladores23/35 success; docs de activacion y limites revisadas; no SQL/emisor/FCM fisico real afirmados."
   }
 ]

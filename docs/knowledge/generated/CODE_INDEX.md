@@ -2,7 +2,7 @@
 
 Generado por `python scripts/knowledge.py generate`. Nombres extraídos, sin contenido de credenciales ni datos.
 
-Commit fuente: `525fe8dfe99065595a51a3992897fdf1b2a29ffb`; 437 archivos. El inventario incluye metadatos de recursos binarios, esquemas Room y SDK vendorizado; no interpreta su código generado.
+Commit fuente: `6f40f611a8e99e48c84d8ca99c0ae0f3b96c5e4a`; 440 archivos. El inventario incluye metadatos de recursos binarios, esquemas Room y SDK vendorizado; no interpreta su código generado.
 
 [Volver al mapa](../PROJECT_MAP.md)
 
@@ -1746,7 +1746,7 @@ Commit fuente: `525fe8dfe99065595a51a3992897fdf1b2a29ffb`; 437 archivos. El inve
 
 ## docs/DONAS_CONTROL_2_1_PEDIDOS.md
 
-[docs/DONAS_CONTROL_2_1_PEDIDOS.md:L1](../../../docs/DONAS_CONTROL_2_1_PEDIDOS.md#L1) · 55 líneas · SHA-256 `474db7777bca`
+[docs/DONAS_CONTROL_2_1_PEDIDOS.md:L1](../../../docs/DONAS_CONTROL_2_1_PEDIDOS.md#L1) · 71 líneas · SHA-256 `22131fca81dc`
 
 ## docs/DONAS_CONTROL_2_ACTIVACION.md
 
@@ -1836,6 +1836,14 @@ Commit fuente: `525fe8dfe99065595a51a3992897fdf1b2a29ffb`; 437 archivos. El inve
 - `function seek` — [docs/previews/brand-motion.html:L25](../../../docs/previews/brand-motion.html#L25)
 - `function sync` — [docs/previews/brand-motion.html:L26](../../../docs/previews/brand-motion.html#L26)
 
+## docs/previews/donas-control-2-1-pedido.png
+
+[docs/previews/donas-control-2-1-pedido.png:L1](../../../docs/previews/donas-control-2-1-pedido.png#L1) · binario/generado líneas · SHA-256 `f9f3ab1e43f1`
+
+## docs/previews/donas-control-2-1-pedidos.png
+
+[docs/previews/donas-control-2-1-pedidos.png:L1](../../../docs/previews/donas-control-2-1-pedidos.png#L1) · binario/generado líneas · SHA-256 `87652c60bb2a`
+
 ## docs/previews/donas-control-2-concept.md
 
 [docs/previews/donas-control-2-concept.md:L1](../../../docs/previews/donas-control-2-concept.md#L1) · 9 líneas · SHA-256 `486df987f35c`
@@ -1855,6 +1863,10 @@ Commit fuente: `525fe8dfe99065595a51a3992897fdf1b2a29ffb`; 437 archivos. El inve
 ## downloads/Donas-Control-2.0.0-oficial.apk.sha256
 
 [downloads/Donas-Control-2.0.0-oficial.apk.sha256:L1](../../../downloads/Donas-Control-2.0.0-oficial.apk.sha256#L1) · binario/generado líneas · SHA-256 `12efc831737f`
+
+## downloads/Donas-Control-2.1.0-oficial.apk.sha256
+
+[downloads/Donas-Control-2.1.0-oficial.apk.sha256:L1](../../../downloads/Donas-Control-2.1.0-oficial.apk.sha256#L1) · binario/generado líneas · SHA-256 `ae60b501286d`
 
 ## firebase.json
 

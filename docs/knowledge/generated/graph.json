@@ -1,5 +1,5 @@
 {
-  "source_commit": "525fe8dfe99065595a51a3992897fdf1b2a29ffb",
+  "source_commit": "6f40f611a8e99e48c84d8ca99c0ae0f3b96c5e4a",
   "scope": "working tree; lexical extraction, production unverified",
   "schema_version": 1,
   "extractor_version": 4,
@@ -12740,6 +12740,30 @@
       ]
     },
     {
+      "id": "file:docs/previews/donas-control-2-1-pedido.png",
+      "type": "archivo",
+      "label": "docs/previews/donas-control-2-1-pedido.png",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "docs/previews/donas-control-2-1-pedido.png",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "file:docs/previews/donas-control-2-1-pedidos.png",
+      "type": "archivo",
+      "label": "docs/previews/donas-control-2-1-pedidos.png",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "docs/previews/donas-control-2-1-pedidos.png",
+          "line": 1
+        }
+      ]
+    },
+    {
       "id": "file:docs/previews/donas-control-2-concept.md",
       "type": "archivo",
       "label": "docs/previews/donas-control-2-concept.md",
@@ -12795,6 +12819,18 @@
       "refs": [
         {
           "path": "downloads/Donas-Control-2.0.0-oficial.apk.sha256",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "file:downloads/Donas-Control-2.1.0-oficial.apk.sha256",
+      "type": "archivo",
+      "label": "downloads/Donas-Control-2.1.0-oficial.apk.sha256",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "downloads/Donas-Control-2.1.0-oficial.apk.sha256",
           "line": 1
         }
       ]

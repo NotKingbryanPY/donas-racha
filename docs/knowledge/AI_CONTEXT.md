@@ -38,4 +38,6 @@ Entrega 2.0.0/código15: APK oficial firmado y descarga pública verificados; 11
 
 Antes de SQL real leer [ACTIVACION](../ACTIVACION_2026-10-08.md) y [activación v2](../DONAS_CONTROL_2_ACTIVACION.md). Preservar filas/stock; no repetir seeds ni paquete 02 de octubre 8. No ejecutar el archivo móvil de retirada como parte de v2. FCM alta prioridad entrega un aviso genérico en background, con sonido, dedupe por usuario/pedido y tap autenticado al detalle. Requiere emisor protegido en Vercel y SQL orders-v2; aceptación FCM no prueba pantalla física ni garantiza instante de entrega. No sincronizar pedidos nuevos sin red. iOS se pospone.
 
+Entrega2.1: 117 pruebas locales, lint/build firmado, contratos API/SQL, firma/alineación y escaneo del APK aprobados. CI6f40f61 pasó web/concurrencia y emuladores API23/35. El [informe actual](../DONAS_CONTROL_2_1_PEDIDOS.md) contiene APK, hash, instrucciones y SQL de avisos. Faltan activación privada del emisor/SQL y recepción física; el resultado DAILY_V2_READY anterior no certifica notificaciones.
+
 Historia recuperable: 1.4.2 d304e46; retirada fe8bcbb; web 1.5.1 70164c4. Los informes fechados anteriores conservan decisiones de esas versiones. No deducir de ellos el estado privado actual ni el costo de stock antiguo.

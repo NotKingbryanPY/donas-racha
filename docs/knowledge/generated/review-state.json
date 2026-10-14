@@ -1,6 +1,6 @@
 {
-  "date": "2026-10-14T13:45:06-05:00",
-  "commit": "525fe8dfe99065595a51a3992897fdf1b2a29ffb",
+  "date": "2026-10-14T14:10:09-05:00",
+  "commit": "6f40f611a8e99e48c84d8ca99c0ae0f3b96c5e4a",
   "scope": "working tree, hashes de texto normalizados LF; binarios/vendor literales; sin verificación de producción",
   "areas": [
     "android",
@@ -10,7 +10,7 @@
     "operations",
     "web"
   ],
-  "note": "Revisados pedidos nativos, propietario de cache y sesiones, Room7 aditivo, FCM inmediato y cola privada, reintento Vault, conservacion de diarios y limites de activacion; contratos API y SQL locales aprobados; final Android y cloud pendientes.",
+  "note": "Entrega2.1: APK oficial final,117 tests,lint/build,firma/hash/alineacion/escaneo aprobados; CI de codigo6f40f61 web/concurrencia y emuladores23/35 success; docs de activacion y limites revisadas; no SQL/emisor/FCM fisico real afirmados.",
   "sources": {
     ".env.example": "371ff612d8993b57f436b4184eabb3eee9b2481de5aba7ae650f9f963a518958",
     ".firebaserc": "faad828777632be811ebfb2800358e7c0fb6ce6f6491e3139c2bcb2f3f92a842",
@@ -238,7 +238,7 @@
     "docs/DESPLIEGUE_PRODUCCION_1_4_1.md": "1b97e47e6c434540f53b3544a28c4f0131156c0959f943cf8b2c41efd817e4e1",
     "docs/DESPLIEGUE_WEB_1_4_1.md": "b26141ccd646ddfda3e478749f6a2ad622a44551b172c7d3acf93a9c27027120",
     "docs/DONAS_CONTROL_1.3.0_ANALISIS_Y_ACTIVACION.md": "099f3ccf99d1caa9b9324eb802b645346da79d29263fc031f7bdf1ace52c5bb2",
-    "docs/DONAS_CONTROL_2_1_PEDIDOS.md": "474db7777bca207a8b44654cc9020a74a0b30275ee1f5a5552bd69880b87f35b",
+    "docs/DONAS_CONTROL_2_1_PEDIDOS.md": "22131fca81dc87559754159f260493834b11b221b427c6f3a035fe25e0a38867",
     "docs/DONAS_CONTROL_2_ACTIVACION.md": "dc52073e6462a556bc806438451162251bec08f1c214fb2beb80bdaab56d96dd",
     "docs/DONAS_CONTROL_2_AUDITORIA.md": "23a7c997b10af64e6e6161ed2007296cba1d4f2f5726cf2f2156e07a20d601b1",
     "docs/DONAS_CONTROL_2_RESULTADOS.md": "46abb0b91661058f72983799d2a9be497097e45f9983e82c40a8e02affca4f81",
@@ -260,11 +260,14 @@
     "docs/VALIDACION_INTEGRACION_2026-10-07.md": "19ba8b0c1ff77ddbcb85003c804eeb3fef0f46061742eaadde962fa34f58245e",
     "docs/WEB_INDEPENDIENTE_2026-10-12.md": "67f3e2cf5b1b3149d00ac0fb8e0c0554b764725af7fa4e6b3800b41412936f94",
     "docs/previews/brand-motion.html": "abd03be5f0dbc2eb439fb329b61dfe5f319a020716aa3f06c9429a54670766df",
+    "docs/previews/donas-control-2-1-pedido.png": "f9f3ab1e43f11c5da976382670cf4979f1ebf615cf4ae1305ccaf435f4a440d1",
+    "docs/previews/donas-control-2-1-pedidos.png": "87652c60bb2a00bb0e724c4fc6628838eded3c5f5068bf5c56b867a7258ef06b",
     "docs/previews/donas-control-2-concept.md": "486df987f35c6fdfdad6299970d9276e499b872231a8de93cd92bf6358eed0dc",
     "docs/previews/donas-control-2-concept.png": "54454d7d8549f63f1f2ff23709ff30490ea33589847b7e29357ee684d83fd24b",
     "docs/previews/landing-1440.webp": "b20e3850c59e2548ac4ab28ac4796f77f64c0c873a523ff428f1a02fa0803401",
     "docs/previews/landing-390.webp": "f7f12e3de6462c843c0dcc17dc11bcd78ee154164b29c0f64d6131b222ca8819",
     "downloads/Donas-Control-2.0.0-oficial.apk.sha256": "12efc831737faed54577260f197abae41e059ba458346a0448fffd153337aeb7",
+    "downloads/Donas-Control-2.1.0-oficial.apk.sha256": "ae60b501286da62ba1b9953378b7133ff3996292fa6ab5c8bb2cd68cc8450034",
     "firebase.json": "7e59251d14a062bea98e10d760be690349c8a3e21605dc3a83bc58ead53a5c5c",
     "firestore.indexes.json": "4c0b2a463a52aa28ec77497bf89e227f296dabe757bc4c0f2c8da5b23749b1aa",
     "firestore.rules": "102b2923505a9f5898f70edf510915818295e5128917d6d7aeac782b6d344f9d",
@@ -451,9 +454,9 @@
     "tests/web-script-syntax.cjs": "d4b6794fc2bf1ef85c0b6bbd6ec541e23e78b266a86303c10e254f86324c7219"
   },
   "documents": {
-    "docs/knowledge/AI_CONTEXT.md": "7d9b90d6dc5b75367a07f826867862873969a73aeab75a6d2a5bf0181459f81e",
+    "docs/knowledge/AI_CONTEXT.md": "36f1d4f165eb14767ab557b93dfef8ed6a3968a41388b36a9c7523011571b448",
     "docs/knowledge/ARCHITECTURE.md": "ef149285464096d577cbd2779254dfdb93d9252e1af428282665b5b462d820f3",
-    "docs/knowledge/CHANGELOG.md": "6dad6baf394760c32fa7e482ca7b168fb0b423557156c38a5b55ef96a87f59cc",
+    "docs/knowledge/CHANGELOG.md": "f797a3dbcf5a32190cb426f010cff9e574d0c22f23fed7241796c4c23ec287c4",
     "docs/knowledge/DATABASE.md": "fd995782192eb37e2d3b4372aca4da73fc0dfe50a20dd3ee41ac9fe5d19edb7e",
     "docs/knowledge/DATA_FLOWS.md": "04187b0ecd5140f945fa91d4d280fa3f9390de5887d88dd1f58cd336afbf3e8c",
     "docs/knowledge/DEPENDENCIES.md": "4e551e72212105439df1128f0501d2bc3b273cc463a6124b8bef2467a30d813b",
@@ -464,7 +467,7 @@
     "docs/knowledge/PROJECT_MAP.md": "e832c0f5179a01b3028c62240e895e6e3ef76ecdf81759de63966fcb65dbe303",
     "docs/knowledge/RUNBOOK.md": "fc7979c0431df7cee0d7b6843d365ae8c60f2fa9bbb9f96f1565c6332c188cd8",
     "docs/knowledge/UI_ANIMATIONS.md": "13ee5bbbb1e29faa13d335a5238a6bc2e8180397c2fdc68d5837239f5ab81e6a",
-    "docs/knowledge/VALIDATION.md": "6a28af47fbb1e611a4e0fb0963cc28b866e557c52dda405b5694b3ff758a0538",
+    "docs/knowledge/VALIDATION.md": "f3a0d0e355c7d983b56ef854428a3b1a5130a788b2ded1e00f1872ca11936baf",
     "docs/knowledge/diagrams/01-system.md": "8ce3d69f5447d1e30fa457a937c69b22836dc591d9a65602c75a6c4e6b80e558",
     "docs/knowledge/diagrams/01-system.mmd": "999dbd47ec4ec702d0a9f5ebd7a77cb8fa68885ccf35db10a666df1b67990f5b",
     "docs/knowledge/diagrams/02-orders.md": "afbccaa007d1e371236259979e94d117907d0e7ed6aafa54cb5536a3745574d2",
