@@ -1,5 +1,5 @@
 {
-  "source_commit": "b7c3ac1c3d06f8680ba64022da1f3dc6ff3b11b0",
+  "source_commit": "2dadec5bc9e7a0394c21f7ee7e9370d2fdde9704",
   "scope": "working tree; lexical extraction, production unverified",
   "schema_version": 1,
   "extractor_version": 4,
@@ -588,198 +588,198 @@
     },
     {
       "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-      "sha256": "ede4873892663b0b6172014dc5562b60d4f085a494327f2b59b638b126877634",
-      "bytes": 34576,
+      "sha256": "1192a880b9b41b16b27efe1bfa925d331e998aabb0be53b4ad27708217233872",
+      "bytes": 34797,
       "symbols": [
         {
           "name": "DailyActivity",
           "kind": "class",
-          "line": 41
+          "line": 42
         },
         {
           "name": "onCreate",
           "kind": "function",
-          "line": 63
+          "line": 64
         },
         {
           "name": "onResume",
           "kind": "function",
-          "line": 73
+          "line": 75
         },
         {
           "name": "onSaveInstanceState",
           "kind": "function",
-          "line": 81
+          "line": 83
         },
         {
           "name": "dp",
           "kind": "function",
-          "line": 85
+          "line": 87
         },
         {
           "name": "column",
           "kind": "function",
-          "line": 86
+          "line": 88
         },
         {
           "name": "shape",
           "kind": "function",
-          "line": 87
+          "line": 89
         },
         {
           "name": "label",
           "kind": "function",
-          "line": 90
+          "line": 92
         },
         {
           "name": "button",
           "kind": "function",
-          "line": 94
+          "line": 96
         },
         {
           "name": "card",
           "kind": "function",
-          "line": 100
+          "line": 102
         },
         {
           "name": "createLayout",
           "kind": "function",
-          "line": 104
+          "line": 106
         },
         {
           "name": "observe",
           "kind": "function",
-          "line": 130
+          "line": 132
         },
         {
           "name": "updateStatus",
           "kind": "function",
-          "line": 147
+          "line": 151
         },
         {
           "name": "cash",
           "kind": "function",
-          "line": 161
+          "line": 165
         },
         {
           "name": "render",
           "kind": "function",
-          "line": 162
+          "line": 166
         },
         {
           "name": "login",
           "kind": "function",
-          "line": 184
+          "line": 188
         },
         {
           "name": "today",
           "kind": "function",
-          "line": 205
+          "line": 209
         },
         {
           "name": "inventory",
           "kind": "function",
-          "line": 246
+          "line": 250
         },
         {
           "name": "title",
           "kind": "function",
-          "line": 264
+          "line": 268
         },
         {
           "name": "history",
           "kind": "function",
-          "line": 267
+          "line": 271
         },
         {
           "name": "showDetails",
           "kind": "function",
-          "line": 311
+          "line": 315
         },
         {
           "name": "startForm",
           "kind": "function",
-          "line": 335
+          "line": 339
         },
         {
           "name": "persistDraft",
           "kind": "function",
-          "line": 341
+          "line": 345
         },
         {
           "name": "field",
           "kind": "function",
-          "line": 342
+          "line": 346
         },
         {
           "name": "beforeTextChanged",
           "kind": "function",
-          "line": 350
+          "line": 354
         },
         {
           "name": "onTextChanged",
           "kind": "function",
-          "line": 351
+          "line": 355
         },
         {
           "name": "afterTextChanged",
-          "kind": "function",
-          "line": 352
-        },
-        {
-          "name": "draftField",
           "kind": "function",
           "line": 356
         },
         {
+          "name": "draftField",
+          "kind": "function",
+          "line": 360
+        },
+        {
           "name": "form",
           "kind": "function",
-          "line": 364
+          "line": 368
         },
         {
           "name": "watch",
           "kind": "function",
-          "line": 401
+          "line": 405
         },
         {
           "name": "beforeTextChanged",
           "kind": "function",
-          "line": 403
+          "line": 407
         },
         {
           "name": "onTextChanged",
           "kind": "function",
-          "line": 404
+          "line": 408
         },
         {
           "name": "afterTextChanged",
           "kind": "function",
-          "line": 405
+          "line": 409
         },
         {
           "name": "refresh",
           "kind": "function",
-          "line": 468
+          "line": 472
         },
         {
           "name": "closeDay",
           "kind": "function",
-          "line": 481
+          "line": 485
         },
         {
           "name": "logout",
           "kind": "function",
-          "line": 496
+          "line": 500
         },
         {
           "name": "openWeb",
           "kind": "function",
-          "line": 503
+          "line": 507
         },
         {
           "name": "message",
           "kind": "function",
-          "line": 504
+          "line": 508
         }
       ],
       "imports": [],
@@ -789,7 +789,7 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 505
+      "lines": 509
     },
     {
       "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyEntities.kt",
@@ -3639,8 +3639,8 @@
     },
     {
       "path": "android/donas-control/app/src/main/res/values/strings.xml",
-      "sha256": "0be938599cd8898929340f89c9786d69eae812454acccf958e1a3b1ab1523588",
-      "bytes": 2970,
+      "sha256": "6c9f3619453c14ff23a0ab53b0f10acd2ead6c2afa09ece337deb7607f77cc1c",
+      "bytes": 2876,
       "symbols": [],
       "imports": [],
       "rpc_calls": [],
@@ -3649,7 +3649,7 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 49
+      "lines": 48
     },
     {
       "path": "android/donas-control/app/src/main/res/values/themes.xml",
@@ -3692,20 +3692,6 @@
       "endpoints": [],
       "animations": [],
       "lines": 16
-    },
-    {
-      "path": "android/donas-control/app/src/main/res/xml/donas_widget_info.xml",
-      "sha256": "a01d385bac099fc639ac37a2f997397363d34b2e0ce13dd0995674cc94d19e26",
-      "bytes": 435,
-      "symbols": [],
-      "imports": [],
-      "rpc_calls": [],
-      "tables": [],
-      "sql_objects": [],
-      "sql_changes": [],
-      "endpoints": [],
-      "animations": [],
-      "lines": 10
     },
     {
       "path": "android/donas-control/app/src/test/java/com/bryan/donas/daily/DailyActivityTest.kt",
@@ -4334,6 +4320,20 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": []
+    },
+    {
+      "path": "android/donas-control/legacy-res/xml/donas_widget_info.xml",
+      "sha256": "0c6528ab7bd65444085fb1c13dc50973c2abd3ea8f87e80ac83d7b3a8acb3eca",
+      "bytes": 505,
+      "symbols": [],
+      "imports": [],
+      "rpc_calls": [],
+      "tables": [],
+      "sql_objects": [],
+      "sql_changes": [],
+      "endpoints": [],
+      "animations": [],
+      "lines": 11
     },
     {
       "path": "android/donas-control/settings.gradle.kts",

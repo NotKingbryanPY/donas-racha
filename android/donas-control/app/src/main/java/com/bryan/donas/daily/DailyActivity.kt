@@ -6,7 +6,6 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
-import android.net.Uri
 import android.os.Bundle
 import android.text.InputType
 import android.text.TextWatcher
@@ -18,6 +17,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.edit
+import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -30,7 +30,8 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import org.json.JSONArray
@@ -54,7 +55,7 @@ class DailyActivity : AppCompatActivity() {
     private var rows: List<DailyOperation> = emptyList()
     private var draft = JSONObject()
     private var busy = false
-    private var collection: Job? = null
+    private val owners = MutableStateFlow<String?>(null)
     private var owner: String? = null
     private var legacyPending = 0
     private var historyOlder = JSONArray()
@@ -66,6 +67,7 @@ class DailyActivity : AppCompatActivity() {
         page = savedInstanceState?.getString("page") ?: "Hoy"
         draft = savedInstanceState?.getString("draft")?.let { JSONObject(it) } ?: JSONObject()
         owner = app.backendClient.dailyOwner
+        owners.value = owner
         createLayout()
         observe()
         if (owner != null) DailySync.schedule(this)
@@ -73,8 +75,8 @@ class DailyActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         if (owner != app.backendClient.dailyOwner) {
-            collection?.cancel(); owner = app.backendClient.dailyOwner
-            snapshot = null; rows = emptyList(); page = "Hoy"; observe(); render()
+            owner = app.backendClient.dailyOwner
+            snapshot = null; rows = emptyList(); page = "Hoy"; owners.value = owner; render()
         }
         if (owner != null) DailySync.request(this)
     }
@@ -128,19 +130,21 @@ class DailyActivity : AppCompatActivity() {
         root.addView(nav); render()
     }
     private fun observe() {
-        collection?.cancel()
-        val current = owner ?: return
-        collection = lifecycleScope.launch {
-            legacyPending = app.daily.dao.legacyPending()
+        lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
+                owners.collectLatest { current ->
+                    if (current == null) return@collectLatest
+                    legacyPending = app.daily.dao.legacyPending()
                 combine(app.daily.dao.observeCache(current), app.daily.dao.observe(current)) { cache, items -> Pair(cache, items) }
                     .collect { (cache, items) ->
+                        if (owner != current) return@collect
                         val updated = cache?.json?.let { JSONObject(it) }
                         if (updated != null && snapshot != null && DailyRules.watermark(updated) != DailyRules.watermark(snapshot!!)) historyOlder = JSONArray()
                         snapshot = updated; rows = items
                         updateStatus()
                         if (page in listOf("Hoy", "Inventario", "Historial")) render()
                     }
+                }
             }
         }
     }
@@ -195,7 +199,7 @@ class DailyActivity : AppCompatActivity() {
                 try {
                     app.backendClient.login(email.text.toString(), password.text.toString())
                     owner = app.backendClient.dailyOwner; snapshot = null; rows = emptyList(); page = "Hoy"
-                    observe(); DailySync.schedule(this@DailyActivity); render(); refresh()
+                    owners.value = owner; DailySync.schedule(this@DailyActivity); render(); refresh()
                 } catch (e: Exception) { feedback.text = e.message ?: "No se pudo conectar. Revisa la cuenta y la conexión." }
                 finally { busy = false; login.isEnabled = true }
             }
@@ -474,7 +478,7 @@ class DailyActivity : AppCompatActivity() {
         finally {
             busy = false
             if (owner != app.backendClient.dailyOwner) {
-                collection?.cancel(); owner = app.backendClient.dailyOwner; snapshot = null; rows = emptyList(); page = "Hoy"; observe(); render()
+                owner = app.backendClient.dailyOwner; snapshot = null; rows = emptyList(); page = "Hoy"; owners.value = owner; render()
             } else updateStatus()
         }
     }
@@ -497,9 +501,9 @@ class DailyActivity : AppCompatActivity() {
         MaterialAlertDialogBuilder(this).setTitle("Cerrar sesión")
             .setMessage("Los registros locales se conservan para esta cuenta. Los pendientes necesitan que vuelvas a entrar con la misma cuenta.")
             .setNegativeButton("Volver", null).setPositiveButton("Cerrar sesión") { _, _ ->
-                DailySync.stop(this); app.backendClient.logout(); collection?.cancel(); owner = null; snapshot = null; rows = emptyList(); draft = JSONObject(); page = "Hoy"; render()
+                DailySync.stop(this); app.backendClient.logout(); owner = null; owners.value = null; snapshot = null; rows = emptyList(); draft = JSONObject(); page = "Hoy"; render()
             }.show()
     }
-    private fun openWeb() { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.dracha.store/?staff=dashboard"))) }
+    private fun openWeb() { startActivity(Intent(Intent.ACTION_VIEW, "https://www.dracha.store/?staff=dashboard".toUri())) }
     private fun message(text: String) { MaterialAlertDialogBuilder(this).setMessage(text).setPositiveButton("Listo", null).show() }
 }

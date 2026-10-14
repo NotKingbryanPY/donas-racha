@@ -630,5 +630,24 @@
       "docs/BUSINESS_MODEL.md"
     ],
     "note": "Transporte vinculado al propietario y README operativo actualizado, pruebas finales en curso"
+  },
+  {
+    "date": "2026-10-14T00:57:03-05:00",
+    "commit": "2dadec5bc9e7a0394c21f7ee7e9370d2fdde9704",
+    "areas": [
+      "android",
+      "api",
+      "database",
+      "firebase",
+      "operations",
+      "web"
+    ],
+    "changed_files": [
+      "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
+      "android/donas-control/app/src/main/res/values/strings.xml",
+      "android/donas-control/app/src/main/res/xml/donas_widget_info.xml",
+      "android/donas-control/legacy-res/xml/donas_widget_info.xml"
+    ],
+    "note": "Ciclo de vida único, retirada de recursos obsoletos y transporte por propietario revisados"
   }
 ]

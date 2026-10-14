@@ -1,5 +1,7 @@
 # Arquitectura nueva y fronteras
 
+La observación de Room se crea una sola vez en onCreate y cambia de propietario mediante StateFlow/collectLatest; no se acumulan observadores en onResume. La metadata del widget retirado se conserva fuera del recurso activo (legacy-res) y se elimina su descripción sin uso. Lint permanece estricto, sin baseline ni supresión global añadida.
+
 La sincronización procesa lotes de hasta 50. Las consultas de proyección solo leen pendientes/conflictos y ACK posteriores al snapshot, con índice propietario/estado/secuencia. La interfaz limita el histórico local confirmado/descartado a 200 entradas y pagina el remoto; conservar historia no obliga a cargarla completa en RAM.
 
 [Contexto](AI_CONTEXT.md) · [Diagrama](diagrams/01-system.md)

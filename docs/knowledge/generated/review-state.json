@@ -1,6 +1,6 @@
 {
-  "date": "2026-10-14T00:33:48-05:00",
-  "commit": "b7c3ac1c3d06f8680ba64022da1f3dc6ff3b11b0",
+  "date": "2026-10-14T00:57:03-05:00",
+  "commit": "2dadec5bc9e7a0394c21f7ee7e9370d2fdde9704",
   "scope": "working tree, hashes de texto normalizados LF; binarios/vendor literales; sin verificación de producción",
   "areas": [
     "android",
@@ -10,7 +10,7 @@
     "operations",
     "web"
   ],
-  "note": "Transporte vinculado al propietario y README operativo actualizado, pruebas finales en curso",
+  "note": "Ciclo de vida único, retirada de recursos obsoletos y transporte por propietario revisados",
   "sources": {
     ".env.example": "371ff612d8993b57f436b4184eabb3eee9b2481de5aba7ae650f9f963a518958",
     ".firebaserc": "faad828777632be811ebfb2800358e7c0fb6ce6f6491e3139c2bcb2f3f92a842",
@@ -51,7 +51,7 @@
     "android/donas-control/app/src/androidTest/java/com/bryan/donas/DatabaseDeviceTest.kt": "952a03f17196f4a329de5c2aaa04c87541b23db1ada7f211929e476d54685114",
     "android/donas-control/app/src/main/AndroidManifest.xml": "ae9d814fc46efd9a14d6e36e1418e1590bb61bd89e7d1184140c7b1ef69640e4",
     "android/donas-control/app/src/main/java/com/bryan/donas/DonasApp.kt": "60002fdb3403221881ee1e878726e8b378e26301a61dd6fe803f4fdae6c5a557",
-    "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt": "ede4873892663b0b6172014dc5562b60d4f085a494327f2b59b638b126877634",
+    "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt": "1192a880b9b41b16b27efe1bfa925d331e998aabb0be53b4ad27708217233872",
     "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyEntities.kt": "a24d795f63722f5773632bf241fcc40519a58883ae473492feb0563a444a71ae",
     "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyRepository.kt": "7284edbd6efc26975f0f9fdb388aabcf0d43dba914c74be2a781b2468fab89f7",
     "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailySync.kt": "3a958b4a8930621a1539e7c093c03e902b96d7b6213ad65de7cf90e0575c0827",
@@ -116,11 +116,10 @@
     "android/donas-control/app/src/main/res/menu/navigation.xml": "908e4fd5bf1b10fd5a132034d6dc305bd95340e7b420c26e141a79eb6bd33e90",
     "android/donas-control/app/src/main/res/values-night/colors.xml": "ebeaaa490355f89c5b62f689fb83aca8b0de7b0721166fbcbb26884e19793f74",
     "android/donas-control/app/src/main/res/values/colors.xml": "d1c2ba3bb0606920210abd29e5864faeba1822b39139bb47ddd0e8cec0373cfe",
-    "android/donas-control/app/src/main/res/values/strings.xml": "0be938599cd8898929340f89c9786d69eae812454acccf958e1a3b1ab1523588",
+    "android/donas-control/app/src/main/res/values/strings.xml": "6c9f3619453c14ff23a0ab53b0f10acd2ead6c2afa09ece337deb7607f77cc1c",
     "android/donas-control/app/src/main/res/values/themes.xml": "719c7422a81fbb9aa051fd5f5609ec8b5133a44da4e9245d65ce64a479242992",
     "android/donas-control/app/src/main/res/xml/backup_rules.xml": "7741b2a109f5b31a9ef50f22887eab7eb424874f9bdc6e0bff96778986332b79",
     "android/donas-control/app/src/main/res/xml/data_extraction_rules.xml": "d5a7f8826c6ebaa8e16c15039b32ba75e2e61d2d0a26ce3022c70a3dbf567894",
-    "android/donas-control/app/src/main/res/xml/donas_widget_info.xml": "a01d385bac099fc639ac37a2f997397363d34b2e0ce13dd0995674cc94d19e26",
     "android/donas-control/app/src/test/java/com/bryan/donas/daily/DailyActivityTest.kt": "f7ea268a102b86393483144382f436bbd051526364f75582965e66c1e6b837bd",
     "android/donas-control/app/src/test/java/com/bryan/donas/daily/DailyOperationsTest.kt": "3cff05740de17959d2d2dc534b668dd46f1714187aa25867f9998a8a8f3fcf17",
     "android/donas-control/app/src/test/java/com/bryan/donas/data/BackendRedirectTest.kt": "71b3d049a6e2846d4f95748182443d01d27eea72fcb36856680dd8281ebef4f8",
@@ -143,6 +142,7 @@
     "android/donas-control/gradle/wrapper/gradle-wrapper.properties": "3256e6a4bacbb04787b346d74b418734b03246092a15703cf2acd926c4b00e90",
     "android/donas-control/gradlew": "a3648413b47ef77af21d5ebc36c687c7d103aaef3e17f33de7d4f080a6f300a3",
     "android/donas-control/gradlew.bat": "2209f919a22528af59a2af2ad97e8d056cca18e39f7d87aa3fd549a73b180150",
+    "android/donas-control/legacy-res/xml/donas_widget_info.xml": "0c6528ab7bd65444085fb1c13dc50973c2abd3ea8f87e80ac83d7b3a8acb3eca",
     "android/donas-control/settings.gradle.kts": "56212fbce34d1d526bcef2e77a83e91a7bd407eb9393eaa4d586b8c08903abc6",
     "android/donas-control/tools/export-legacy-debug-db.ps1": "f95a3bc424aa6ab366eec63dd9c58df0949cefe3acad49a5345eeec15d0a4fcd",
     "android/phase9-overlay/INTEGRATION.md": "73cff2c21e62b558a809461e53fa1f48dcf1142060f29530d2b19f9272aaa2c7",
@@ -432,7 +432,7 @@
   },
   "documents": {
     "docs/knowledge/AI_CONTEXT.md": "2ebabcd83f9d4c31cd88cb236aa28b4d4c8859d723df91685985dded0c30b5e1",
-    "docs/knowledge/ARCHITECTURE.md": "7057b348f8e9b473595ab6a7f0a5781c7008b2842d30251a4928cd5b6faae7fd",
+    "docs/knowledge/ARCHITECTURE.md": "c3679618399bd763c4b7e950f7ee1627dd5326702ce8858fcb68ed0899d8c0d6",
     "docs/knowledge/CHANGELOG.md": "4ebc3ea62465e11cf00ef85358e24ae22fe23d18247c5195dd4dcaf27fec231b",
     "docs/knowledge/DATABASE.md": "f6e1ac7141f7fa91799d6c154d538dcea23aff35dcd278f6523dbaf34ebd4bda",
     "docs/knowledge/DATA_FLOWS.md": "004cb9c0a2f410906a50e8b645c755aae46eb216f83334fb0a0fe03025efd074",
