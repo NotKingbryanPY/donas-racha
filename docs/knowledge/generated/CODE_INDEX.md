@@ -2,7 +2,7 @@
 
 Generado por `python scripts/knowledge.py generate`. Nombres extraídos, sin contenido de credenciales ni datos.
 
-Commit fuente: `70164c404b295750fb71f801fd1bedf4d22c1a82`; 416 archivos. El inventario incluye metadatos de recursos binarios, esquemas Room y SDK vendorizado; no interpreta su código generado.
+Commit fuente: `56b398b798246af3a79463de80f2c1f1011814aa`; 416 archivos. El inventario incluye metadatos de recursos binarios, esquemas Room y SDK vendorizado; no interpreta su código generado.
 
 [Volver al mapa](../PROJECT_MAP.md)
 
@@ -20,7 +20,7 @@ Commit fuente: `70164c404b295750fb71f801fd1bedf4d22c1a82`; 416 archivos. El inve
 
 ## .github/workflows/android-daily-build.yml
 
-[.github/workflows/android-daily-build.yml:L1](../../../.github/workflows/android-daily-build.yml#L1) · 110 líneas · SHA-256 `51d684aa1f3a`
+[.github/workflows/android-daily-build.yml:L1](../../../.github/workflows/android-daily-build.yml#L1) · 109 líneas · SHA-256 `b2c14d147557`
 
 ## .github/workflows/knowledge.yml
 
@@ -173,7 +173,7 @@ Commit fuente: `70164c404b295750fb71f801fd1bedf4d22c1a82`; 416 archivos. El inve
 
 ## android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt
 
-[android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L1](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L1) · 492 líneas · SHA-256 `d415c4d36089`
+[android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L1](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L1) · 494 líneas · SHA-256 `b82f6c1a24b1`
 
 - `class DailyActivity` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L41](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L41)
 - `function onCreate` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L62](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L62)
@@ -187,32 +187,32 @@ Commit fuente: `70164c404b295750fb71f801fd1bedf4d22c1a82`; 416 archivos. El inve
 - `function card` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L98](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L98)
 - `function createLayout` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L102](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L102)
 - `function observe` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L126](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L126)
-- `function updateStatus` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L141](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L141)
-- `function cash` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L155](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L155)
-- `function render` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L156](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L156)
-- `function login` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L173](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L173)
-- `function today` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L194](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L194)
-- `function inventory` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L235](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L235)
-- `function title` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L253](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L253)
-- `function history` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L256](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L256)
-- `function showDetails` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L298](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L298)
-- `function startForm` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L322](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L322)
-- `function persistDraft` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L328](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L328)
-- `function field` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L329](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L329)
-- `function beforeTextChanged` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L337](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L337)
-- `function onTextChanged` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L338](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L338)
-- `function afterTextChanged` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L339](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L339)
-- `function draftField` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L343](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L343)
-- `function form` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L351](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L351)
-- `function watch` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L388](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L388)
-- `function beforeTextChanged` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L390](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L390)
-- `function onTextChanged` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L391](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L391)
-- `function afterTextChanged` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L392](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L392)
-- `function refresh` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L455](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L455)
-- `function closeDay` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L468](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L468)
-- `function logout` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L483](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L483)
-- `function openWeb` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L490](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L490)
-- `function message` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L491](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L491)
+- `function updateStatus` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L143](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L143)
+- `function cash` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L157](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L157)
+- `function render` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L158](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L158)
+- `function login` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L175](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L175)
+- `function today` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L196](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L196)
+- `function inventory` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L237](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L237)
+- `function title` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L255](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L255)
+- `function history` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L258](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L258)
+- `function showDetails` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L300](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L300)
+- `function startForm` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L324](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L324)
+- `function persistDraft` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L330](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L330)
+- `function field` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L331](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L331)
+- `function beforeTextChanged` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L339](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L339)
+- `function onTextChanged` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L340](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L340)
+- `function afterTextChanged` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L341](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L341)
+- `function draftField` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L345](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L345)
+- `function form` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L353](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L353)
+- `function watch` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L390](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L390)
+- `function beforeTextChanged` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L392](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L392)
+- `function onTextChanged` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L393](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L393)
+- `function afterTextChanged` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L394](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L394)
+- `function refresh` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L457](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L457)
+- `function closeDay` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L470](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L470)
+- `function logout` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L485](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L485)
+- `function openWeb` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L492](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L492)
+- `function message` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:L493](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt#L493)
 
 ## android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyEntities.kt
 
@@ -901,7 +901,7 @@ Commit fuente: `70164c404b295750fb71f801fd1bedf4d22c1a82`; 416 archivos. El inve
 
 ## android/donas-control/app/src/test/java/com/bryan/donas/daily/DailyActivityTest.kt
 
-[android/donas-control/app/src/test/java/com/bryan/donas/daily/DailyActivityTest.kt:L1](../../../android/donas-control/app/src/test/java/com/bryan/donas/daily/DailyActivityTest.kt#L1) · 82 líneas · SHA-256 `42e51e68e35d`
+[android/donas-control/app/src/test/java/com/bryan/donas/daily/DailyActivityTest.kt:L1](../../../android/donas-control/app/src/test/java/com/bryan/donas/daily/DailyActivityTest.kt#L1) · 82 líneas · SHA-256 `bb43637a170d`
 
 - `class DailyActivityTest` — [android/donas-control/app/src/test/java/com/bryan/donas/daily/DailyActivityTest.kt:L31](../../../android/donas-control/app/src/test/java/com/bryan/donas/daily/DailyActivityTest.kt#L31)
 - `function children` — [android/donas-control/app/src/test/java/com/bryan/donas/daily/DailyActivityTest.kt:L36](../../../android/donas-control/app/src/test/java/com/bryan/donas/daily/DailyActivityTest.kt#L36)
@@ -2111,7 +2111,7 @@ Commit fuente: `70164c404b295750fb71f801fd1bedf4d22c1a82`; 416 archivos. El inve
 
 ## scripts/knowledge.py
 
-[scripts/knowledge.py:L1](../../../scripts/knowledge.py#L1) · 346 líneas · SHA-256 `3d38c3356084`
+[scripts/knowledge.py:L1](../../../scripts/knowledge.py#L1) · 346 líneas · SHA-256 `c3948ee26a53`
 
 - `function git` — [scripts/knowledge.py:L26](../../../scripts/knowledge.py#L26)
 - `function stamp` — [scripts/knowledge.py:L29](../../../scripts/knowledge.py#L29)
@@ -2996,4 +2996,3 @@ Commit fuente: `70164c404b295750fb71f801fd1bedf4d22c1a82`; 416 archivos. El inve
 ## tests/web-script-syntax.cjs
 
 [tests/web-script-syntax.cjs:L1](../../../tests/web-script-syntax.cjs#L1) · 11 líneas · SHA-256 `d4b6794fc2bf`
-

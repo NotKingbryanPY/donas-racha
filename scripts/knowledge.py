@@ -203,7 +203,7 @@ def generate():
             lines.append(f'- `{s["kind"]} {s["name"]}` — {link(item["path"], s["line"])}')
         if item['symbols']: lines.append('')
     GENERATED.mkdir(parents=True, exist_ok=True)
-    (GENERATED / 'CODE_INDEX.md').write_text('\n'.join(lines)+'\n', encoding='utf-8')
+    (GENERATED / 'CODE_INDEX.md').write_text('\n'.join(lines).rstrip()+'\n', encoding='utf-8')
     lines = ['# Catálogo SQL local', '', 'Declaraciones en migraciones ordenadas por nombre. **No es un esquema materializado ni una inspección de producción.** ALTER/rename/drop pueden cambiar estos objetos; consultar el historial completo y DATABASE.md.', '', '[Modelo explicado](../DATABASE.md)', '']
     for item in inventory:
         if not item['path'].startswith('supabase/migrations/'): continue
@@ -219,7 +219,7 @@ def generate():
         for change in item.get('sql_changes',[]):
             lines.append(f'- cambio/permisos `{change["kind"]}` (`{change["target"]}`; abrir SQL para objeto completo) — {link(item["path"],change['line'])}')
         lines.append('')
-    (GENERATED / 'SQL_CATALOG.md').write_text('\n'.join(lines)+'\n', encoding='utf-8')
+    (GENERATED / 'SQL_CATALOG.md').write_text('\n'.join(lines).rstrip()+'\n', encoding='utf-8')
     print(f'Índices regenerados: {len(inventory)} archivos; {reparsed} analizados; {len(nodes)} nodos; {len(edges)} relaciones. La revisión humana no se certifica automáticamente.')
 
 def changes(base=None):

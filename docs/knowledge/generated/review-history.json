@@ -525,5 +525,24 @@
       "tests/web-only.cjs"
     ],
     "note": "Donas Control 2: alcance nuevo, guía consolidada, SQL aislado y build oficial en verificación"
+  },
+  {
+    "date": "2026-10-13T23:54:50-05:00",
+    "commit": "56b398b798246af3a79463de80f2c1f1011814aa",
+    "areas": [
+      "android",
+      "api",
+      "database",
+      "firebase",
+      "operations",
+      "web"
+    ],
+    "changed_files": [
+      ".github/workflows/android-daily-build.yml",
+      "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
+      "android/donas-control/app/src/test/java/com/bryan/donas/daily/DailyActivityTest.kt",
+      "scripts/knowledge.py"
+    ],
+    "note": "Revisión de límites de autorización, paginación, pruebas y formato de índices"
   }
 ]

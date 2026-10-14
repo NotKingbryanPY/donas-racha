@@ -1,5 +1,5 @@
 {
-  "source_commit": "70164c404b295750fb71f801fd1bedf4d22c1a82",
+  "source_commit": "56b398b798246af3a79463de80f2c1f1011814aa",
   "scope": "working tree; lexical extraction, production unverified",
   "schema_version": 1,
   "extractor_version": 4,
@@ -48,8 +48,8 @@
     },
     {
       "path": ".github/workflows/android-daily-build.yml",
-      "sha256": "51d684aa1f3a65dd4a6033b5407cab5e4f6ac32a8dd8c2f1057d00ed69530825",
-      "bytes": 4725,
+      "sha256": "b2c14d147557040594ad7ef3068bdac472adee13c2fd25cf4dfc91310d2e9c46",
+      "bytes": 4724,
       "symbols": [],
       "imports": [],
       "rpc_calls": [],
@@ -58,7 +58,7 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 110
+      "lines": 109
     },
     {
       "path": ".github/workflows/knowledge.yml",
@@ -588,8 +588,8 @@
     },
     {
       "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-      "sha256": "d415c4d36089883bcd88a8e749967082e7b540275ddac99559c34cf5a55fe334",
-      "bytes": 33332,
+      "sha256": "b82f6c1a24b1d5b692bd5d77f8da01403c70ce693626573efd7800f3f1e70da0",
+      "bytes": 33539,
       "symbols": [
         {
           "name": "DailyActivity",
@@ -654,132 +654,132 @@
         {
           "name": "updateStatus",
           "kind": "function",
-          "line": 141
+          "line": 143
         },
         {
           "name": "cash",
           "kind": "function",
-          "line": 155
+          "line": 157
         },
         {
           "name": "render",
           "kind": "function",
-          "line": 156
+          "line": 158
         },
         {
           "name": "login",
           "kind": "function",
-          "line": 173
+          "line": 175
         },
         {
           "name": "today",
           "kind": "function",
-          "line": 194
+          "line": 196
         },
         {
           "name": "inventory",
           "kind": "function",
-          "line": 235
+          "line": 237
         },
         {
           "name": "title",
           "kind": "function",
-          "line": 253
+          "line": 255
         },
         {
           "name": "history",
           "kind": "function",
-          "line": 256
+          "line": 258
         },
         {
           "name": "showDetails",
           "kind": "function",
-          "line": 298
+          "line": 300
         },
         {
           "name": "startForm",
           "kind": "function",
-          "line": 322
+          "line": 324
         },
         {
           "name": "persistDraft",
           "kind": "function",
-          "line": 328
+          "line": 330
         },
         {
           "name": "field",
           "kind": "function",
-          "line": 329
+          "line": 331
         },
         {
           "name": "beforeTextChanged",
-          "kind": "function",
-          "line": 337
-        },
-        {
-          "name": "onTextChanged",
-          "kind": "function",
-          "line": 338
-        },
-        {
-          "name": "afterTextChanged",
           "kind": "function",
           "line": 339
         },
         {
-          "name": "draftField",
-          "kind": "function",
-          "line": 343
-        },
-        {
-          "name": "form",
-          "kind": "function",
-          "line": 351
-        },
-        {
-          "name": "watch",
-          "kind": "function",
-          "line": 388
-        },
-        {
-          "name": "beforeTextChanged",
-          "kind": "function",
-          "line": 390
-        },
-        {
           "name": "onTextChanged",
           "kind": "function",
-          "line": 391
+          "line": 340
         },
         {
           "name": "afterTextChanged",
           "kind": "function",
+          "line": 341
+        },
+        {
+          "name": "draftField",
+          "kind": "function",
+          "line": 345
+        },
+        {
+          "name": "form",
+          "kind": "function",
+          "line": 353
+        },
+        {
+          "name": "watch",
+          "kind": "function",
+          "line": 390
+        },
+        {
+          "name": "beforeTextChanged",
+          "kind": "function",
           "line": 392
+        },
+        {
+          "name": "onTextChanged",
+          "kind": "function",
+          "line": 393
+        },
+        {
+          "name": "afterTextChanged",
+          "kind": "function",
+          "line": 394
         },
         {
           "name": "refresh",
           "kind": "function",
-          "line": 455
+          "line": 457
         },
         {
           "name": "closeDay",
           "kind": "function",
-          "line": 468
+          "line": 470
         },
         {
           "name": "logout",
           "kind": "function",
-          "line": 483
+          "line": 485
         },
         {
           "name": "openWeb",
           "kind": "function",
-          "line": 490
+          "line": 492
         },
         {
           "name": "message",
           "kind": "function",
-          "line": 491
+          "line": 493
         }
       ],
       "imports": [],
@@ -789,7 +789,7 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 492
+      "lines": 494
     },
     {
       "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyEntities.kt",
@@ -3709,7 +3709,7 @@
     },
     {
       "path": "android/donas-control/app/src/test/java/com/bryan/donas/daily/DailyActivityTest.kt",
-      "sha256": "42e51e68e35d2902ab56d5f107c14b3e98734db5fb3e34b566cd8476f4ba47b0",
+      "sha256": "bb43637a170dfbd539928570261c66946a2181af68a5de97b11016d0ceb6a1b0",
       "bytes": 5609,
       "symbols": [
         {
@@ -9381,8 +9381,8 @@
     },
     {
       "path": "scripts/knowledge.py",
-      "sha256": "3d38c335608441cba461cea44625c79f8aa1968a5f7e212a7a28d8c7d79d7be2",
-      "bytes": 23774,
+      "sha256": "c3948ee26a53ff5026c0df249d3568e5b737fe87441fa5e0a31223ca593732f8",
+      "bytes": 23792,
       "symbols": [
         {
           "name": "git",

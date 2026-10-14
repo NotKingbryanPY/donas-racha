@@ -1,5 +1,5 @@
 {
-  "source_commit": "70164c404b295750fb71f801fd1bedf4d22c1a82",
+  "source_commit": "56b398b798246af3a79463de80f2c1f1011814aa",
   "scope": "working tree; lexical extraction, production unverified",
   "schema_version": 1,
   "extractor_version": 4,
@@ -691,53 +691,53 @@
       ]
     },
     {
-      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:afterTextChanged:339",
+      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:afterTextChanged:341",
       "type": "function",
       "label": "afterTextChanged",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
+          "line": 341,
+          "symbol": "afterTextChanged"
+        }
+      ]
+    },
+    {
+      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:afterTextChanged:394",
+      "type": "function",
+      "label": "afterTextChanged",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
+          "line": 394,
+          "symbol": "afterTextChanged"
+        }
+      ]
+    },
+    {
+      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:beforeTextChanged:339",
+      "type": "function",
+      "label": "beforeTextChanged",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
           "line": 339,
-          "symbol": "afterTextChanged"
-        }
-      ]
-    },
-    {
-      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:afterTextChanged:392",
-      "type": "function",
-      "label": "afterTextChanged",
-      "status": "CONFIRMADO_CODIGO",
-      "refs": [
-        {
-          "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 392,
-          "symbol": "afterTextChanged"
-        }
-      ]
-    },
-    {
-      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:beforeTextChanged:337",
-      "type": "function",
-      "label": "beforeTextChanged",
-      "status": "CONFIRMADO_CODIGO",
-      "refs": [
-        {
-          "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 337,
           "symbol": "beforeTextChanged"
         }
       ]
     },
     {
-      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:beforeTextChanged:390",
+      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:beforeTextChanged:392",
       "type": "function",
       "label": "beforeTextChanged",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 390,
+          "line": 392,
           "symbol": "beforeTextChanged"
         }
       ]
@@ -769,27 +769,27 @@
       ]
     },
     {
-      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:cash:155",
+      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:cash:157",
       "type": "function",
       "label": "cash",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 155,
+          "line": 157,
           "symbol": "cash"
         }
       ]
     },
     {
-      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:closeDay:468",
+      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:closeDay:470",
       "type": "function",
       "label": "closeDay",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 468,
+          "line": 470,
           "symbol": "closeDay"
         }
       ]
@@ -834,66 +834,66 @@
       ]
     },
     {
-      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:draftField:343",
+      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:draftField:345",
       "type": "function",
       "label": "draftField",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 343,
+          "line": 345,
           "symbol": "draftField"
         }
       ]
     },
     {
-      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:field:329",
+      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:field:331",
       "type": "function",
       "label": "field",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 329,
+          "line": 331,
           "symbol": "field"
         }
       ]
     },
     {
-      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:form:351",
+      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:form:353",
       "type": "function",
       "label": "form",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 351,
+          "line": 353,
           "symbol": "form"
         }
       ]
     },
     {
-      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:history:256",
+      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:history:258",
       "type": "function",
       "label": "history",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 256,
+          "line": 258,
           "symbol": "history"
         }
       ]
     },
     {
-      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:inventory:235",
+      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:inventory:237",
       "type": "function",
       "label": "inventory",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 235,
+          "line": 237,
           "symbol": "inventory"
         }
       ]
@@ -912,40 +912,40 @@
       ]
     },
     {
-      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:login:173",
+      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:login:175",
       "type": "function",
       "label": "login",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 173,
+          "line": 175,
           "symbol": "login"
         }
       ]
     },
     {
-      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:logout:483",
+      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:logout:485",
       "type": "function",
       "label": "logout",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 483,
+          "line": 485,
           "symbol": "logout"
         }
       ]
     },
     {
-      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:message:491",
+      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:message:493",
       "type": "function",
       "label": "message",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 491,
+          "line": 493,
           "symbol": "message"
         }
       ]
@@ -1003,79 +1003,79 @@
       ]
     },
     {
-      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:onTextChanged:338",
+      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:onTextChanged:340",
       "type": "function",
       "label": "onTextChanged",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 338,
+          "line": 340,
           "symbol": "onTextChanged"
         }
       ]
     },
     {
-      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:onTextChanged:391",
+      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:onTextChanged:393",
       "type": "function",
       "label": "onTextChanged",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 391,
+          "line": 393,
           "symbol": "onTextChanged"
         }
       ]
     },
     {
-      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:openWeb:490",
+      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:openWeb:492",
       "type": "function",
       "label": "openWeb",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 490,
+          "line": 492,
           "symbol": "openWeb"
         }
       ]
     },
     {
-      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:persistDraft:328",
+      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:persistDraft:330",
       "type": "function",
       "label": "persistDraft",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 328,
+          "line": 330,
           "symbol": "persistDraft"
         }
       ]
     },
     {
-      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:refresh:455",
+      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:refresh:457",
       "type": "function",
       "label": "refresh",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 455,
+          "line": 457,
           "symbol": "refresh"
         }
       ]
     },
     {
-      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:render:156",
+      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:render:158",
       "type": "function",
       "label": "render",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 156,
+          "line": 158,
           "symbol": "render"
         }
       ]
@@ -1094,79 +1094,79 @@
       ]
     },
     {
-      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:showDetails:298",
+      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:showDetails:300",
       "type": "function",
       "label": "showDetails",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 298,
+          "line": 300,
           "symbol": "showDetails"
         }
       ]
     },
     {
-      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:startForm:322",
+      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:startForm:324",
       "type": "function",
       "label": "startForm",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 322,
+          "line": 324,
           "symbol": "startForm"
         }
       ]
     },
     {
-      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:title:253",
+      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:title:255",
       "type": "function",
       "label": "title",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 253,
+          "line": 255,
           "symbol": "title"
         }
       ]
     },
     {
-      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:today:194",
+      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:today:196",
       "type": "function",
       "label": "today",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 194,
+          "line": 196,
           "symbol": "today"
         }
       ]
     },
     {
-      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:updateStatus:141",
+      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:updateStatus:143",
       "type": "function",
       "label": "updateStatus",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 141,
+          "line": 143,
           "symbol": "updateStatus"
         }
       ]
     },
     {
-      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:watch:388",
+      "id": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:watch:390",
       "type": "function",
       "label": "watch",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 388,
+          "line": 390,
           "symbol": "watch"
         }
       ]
@@ -23470,338 +23470,338 @@
     },
     {
       "source": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:updateStatus:141",
+      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:updateStatus:143",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 141,
+          "line": 143,
           "symbol": "updateStatus"
         }
       ]
     },
     {
       "source": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:cash:155",
+      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:cash:157",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 155,
+          "line": 157,
           "symbol": "cash"
         }
       ]
     },
     {
       "source": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:render:156",
+      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:render:158",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 156,
+          "line": 158,
           "symbol": "render"
         }
       ]
     },
     {
       "source": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:login:173",
+      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:login:175",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 173,
+          "line": 175,
           "symbol": "login"
         }
       ]
     },
     {
       "source": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:today:194",
+      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:today:196",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 194,
+          "line": 196,
           "symbol": "today"
         }
       ]
     },
     {
       "source": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:inventory:235",
+      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:inventory:237",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 235,
+          "line": 237,
           "symbol": "inventory"
         }
       ]
     },
     {
       "source": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:title:253",
+      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:title:255",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 253,
+          "line": 255,
           "symbol": "title"
         }
       ]
     },
     {
       "source": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:history:256",
+      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:history:258",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 256,
+          "line": 258,
           "symbol": "history"
         }
       ]
     },
     {
       "source": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:showDetails:298",
+      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:showDetails:300",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 298,
+          "line": 300,
           "symbol": "showDetails"
         }
       ]
     },
     {
       "source": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:startForm:322",
+      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:startForm:324",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 322,
+          "line": 324,
           "symbol": "startForm"
         }
       ]
     },
     {
       "source": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:persistDraft:328",
+      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:persistDraft:330",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 328,
+          "line": 330,
           "symbol": "persistDraft"
         }
       ]
     },
     {
       "source": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:field:329",
+      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:field:331",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 329,
+          "line": 331,
           "symbol": "field"
         }
       ]
     },
     {
       "source": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:beforeTextChanged:337",
-      "type": "CONTIENE",
-      "status": "CONFIRMADO_CODIGO",
-      "refs": [
-        {
-          "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 337,
-          "symbol": "beforeTextChanged"
-        }
-      ]
-    },
-    {
-      "source": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:onTextChanged:338",
-      "type": "CONTIENE",
-      "status": "CONFIRMADO_CODIGO",
-      "refs": [
-        {
-          "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 338,
-          "symbol": "onTextChanged"
-        }
-      ]
-    },
-    {
-      "source": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:afterTextChanged:339",
+      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:beforeTextChanged:339",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
           "line": 339,
-          "symbol": "afterTextChanged"
-        }
-      ]
-    },
-    {
-      "source": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:draftField:343",
-      "type": "CONTIENE",
-      "status": "CONFIRMADO_CODIGO",
-      "refs": [
-        {
-          "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 343,
-          "symbol": "draftField"
-        }
-      ]
-    },
-    {
-      "source": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:form:351",
-      "type": "CONTIENE",
-      "status": "CONFIRMADO_CODIGO",
-      "refs": [
-        {
-          "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 351,
-          "symbol": "form"
-        }
-      ]
-    },
-    {
-      "source": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:watch:388",
-      "type": "CONTIENE",
-      "status": "CONFIRMADO_CODIGO",
-      "refs": [
-        {
-          "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 388,
-          "symbol": "watch"
-        }
-      ]
-    },
-    {
-      "source": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:beforeTextChanged:390",
-      "type": "CONTIENE",
-      "status": "CONFIRMADO_CODIGO",
-      "refs": [
-        {
-          "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 390,
           "symbol": "beforeTextChanged"
         }
       ]
     },
     {
       "source": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:onTextChanged:391",
+      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:onTextChanged:340",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 391,
+          "line": 340,
           "symbol": "onTextChanged"
         }
       ]
     },
     {
       "source": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:afterTextChanged:392",
+      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:afterTextChanged:341",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 392,
+          "line": 341,
           "symbol": "afterTextChanged"
         }
       ]
     },
     {
       "source": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:refresh:455",
+      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:draftField:345",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 455,
+          "line": 345,
+          "symbol": "draftField"
+        }
+      ]
+    },
+    {
+      "source": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
+      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:form:353",
+      "type": "CONTIENE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
+          "line": 353,
+          "symbol": "form"
+        }
+      ]
+    },
+    {
+      "source": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
+      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:watch:390",
+      "type": "CONTIENE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
+          "line": 390,
+          "symbol": "watch"
+        }
+      ]
+    },
+    {
+      "source": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
+      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:beforeTextChanged:392",
+      "type": "CONTIENE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
+          "line": 392,
+          "symbol": "beforeTextChanged"
+        }
+      ]
+    },
+    {
+      "source": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
+      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:onTextChanged:393",
+      "type": "CONTIENE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
+          "line": 393,
+          "symbol": "onTextChanged"
+        }
+      ]
+    },
+    {
+      "source": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
+      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:afterTextChanged:394",
+      "type": "CONTIENE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
+          "line": 394,
+          "symbol": "afterTextChanged"
+        }
+      ]
+    },
+    {
+      "source": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
+      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:refresh:457",
+      "type": "CONTIENE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
+          "line": 457,
           "symbol": "refresh"
         }
       ]
     },
     {
       "source": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:closeDay:468",
+      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:closeDay:470",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 468,
+          "line": 470,
           "symbol": "closeDay"
         }
       ]
     },
     {
       "source": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:logout:483",
+      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:logout:485",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 483,
+          "line": 485,
           "symbol": "logout"
         }
       ]
     },
     {
       "source": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:openWeb:490",
+      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:openWeb:492",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 490,
+          "line": 492,
           "symbol": "openWeb"
         }
       ]
     },
     {
       "source": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:message:491",
+      "target": "file:android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt:function:message:493",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-          "line": 491,
+          "line": 493,
           "symbol": "message"
         }
       ]

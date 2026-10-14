@@ -26,7 +26,7 @@ import org.robolectric.annotation.GraphicsMode
 import java.io.File
 
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [28], qualifiers = "w360dp-h800dp-xxhdpi-night")
+@Config(sdk = [28], qualifiers = "w360dp-h800dp-night-xxhdpi")
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class DailyActivityTest {
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)

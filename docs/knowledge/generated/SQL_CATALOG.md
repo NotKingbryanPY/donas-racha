@@ -1172,4 +1172,3 @@ Declaraciones en migraciones ordenadas por nombre. **No es un esquema materializ
 - cambio/permisos `revoke execute` (`on`; abrir SQL para objeto completo) — [supabase/migrations/202610130001_daily_operations.sql:L282](../../../supabase/migrations/202610130001_daily_operations.sql#L282)
 - cambio/permisos `revoke execute` (`on`; abrir SQL para objeto completo) — [supabase/migrations/202610130001_daily_operations.sql:L283](../../../supabase/migrations/202610130001_daily_operations.sql#L283)
 - cambio/permisos `grant execute` (`on`; abrir SQL para objeto completo) — [supabase/migrations/202610130001_daily_operations.sql:L284](../../../supabase/migrations/202610130001_daily_operations.sql#L284)
-

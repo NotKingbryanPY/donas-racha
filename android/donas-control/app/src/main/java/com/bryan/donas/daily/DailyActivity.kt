@@ -131,7 +131,9 @@ class DailyActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 combine(app.daily.dao.observeCache(current), app.daily.dao.observe(current)) { cache, items -> Pair(cache, items) }
                     .collect { (cache, items) ->
-                        snapshot = cache?.json?.let { JSONObject(it) }; rows = items
+                        val updated = cache?.json?.let { JSONObject(it) }
+                        if (updated != null && snapshot != null && DailyRules.watermark(updated) != DailyRules.watermark(snapshot!!)) historyOlder = JSONArray()
+                        snapshot = updated; rows = items
                         updateStatus()
                         if (page in listOf("Hoy", "Inventario", "Historial")) render()
                     }

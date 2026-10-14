@@ -107,4 +107,3 @@ jobs:
         with:
           name: official-device-tests-api-${{ matrix.api }}
           path: android/donas-control/app/build/reports/androidTests/connected/**
-
