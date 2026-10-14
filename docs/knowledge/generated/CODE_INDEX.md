@@ -2,7 +2,7 @@
 
 Generado por `python scripts/knowledge.py generate`. Nombres extraídos, sin contenido de credenciales ni datos.
 
-Commit fuente: `ef54035d73a413078f43a605924aeb757c86b332`; 419 archivos. El inventario incluye metadatos de recursos binarios, esquemas Room y SDK vendorizado; no interpreta su código generado.
+Commit fuente: `e2a7ff16a51cd72d19a44c752869deba011c0743`; 419 archivos. El inventario incluye metadatos de recursos binarios, esquemas Room y SDK vendorizado; no interpreta su código generado.
 
 [Volver al mapa](../PROJECT_MAP.md)
 
@@ -1656,7 +1656,7 @@ Commit fuente: `ef54035d73a413078f43a605924aeb757c86b332`; 419 archivos. El inve
 
 ## docs/DONAS_CONTROL_2_RESULTADOS.md
 
-[docs/DONAS_CONTROL_2_RESULTADOS.md:L1](../../../docs/DONAS_CONTROL_2_RESULTADOS.md#L1) · 54 líneas · SHA-256 `738ef648db0d`
+[docs/DONAS_CONTROL_2_RESULTADOS.md:L1](../../../docs/DONAS_CONTROL_2_RESULTADOS.md#L1) · 58 líneas · SHA-256 `b392ea2d80c3`
 
 ## docs/FIRESTORE_RULES_REVIEW.md
 

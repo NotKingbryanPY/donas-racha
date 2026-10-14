@@ -1,6 +1,6 @@
 {
-  "date": "2026-10-14T01:13:08-05:00",
-  "commit": "ef54035d73a413078f43a605924aeb757c86b332",
+  "date": "2026-10-14T01:26:09-05:00",
+  "commit": "e2a7ff16a51cd72d19a44c752869deba011c0743",
   "scope": "working tree, hashes de texto normalizados LF; binarios/vendor literales; sin verificación de producción",
   "areas": [
     "android",
@@ -10,7 +10,7 @@
     "operations",
     "web"
   ],
-  "note": "113 pruebas y APK oficial verificados; distribución y limitaciones de activación documentadas",
+  "note": "CI Android API23/35 y producción HTTP/APK verificadas; SQL y recorrido físico pendientes documentados",
   "sources": {
     ".env.example": "371ff612d8993b57f436b4184eabb3eee9b2481de5aba7ae650f9f963a518958",
     ".firebaserc": "faad828777632be811ebfb2800358e7c0fb6ce6f6491e3139c2bcb2f3f92a842",
@@ -233,7 +233,7 @@
     "docs/DONAS_CONTROL_1.3.0_ANALISIS_Y_ACTIVACION.md": "099f3ccf99d1caa9b9324eb802b645346da79d29263fc031f7bdf1ace52c5bb2",
     "docs/DONAS_CONTROL_2_ACTIVACION.md": "5b402fcebf96cbd7d834de9d7ae8340c362c616d8b677cab7588d00c3466654d",
     "docs/DONAS_CONTROL_2_AUDITORIA.md": "23a7c997b10af64e6e6161ed2007296cba1d4f2f5726cf2f2156e07a20d601b1",
-    "docs/DONAS_CONTROL_2_RESULTADOS.md": "738ef648db0d12a7d48d0564714a54205f50042d69bf57ec0d091b7543bb2638",
+    "docs/DONAS_CONTROL_2_RESULTADOS.md": "b392ea2d80c3e147472c06108dffc11228b22ca77463e08a7579790d0b0a0636",
     "docs/FIRESTORE_RULES_REVIEW.md": "55236467a32d01d32187542c8a05422fec156d115f72eadd6de2150633fc43ab",
     "docs/INTEGRACION_1_4_0.md": "d284820d3508c9d2755418754dfdf890b377ccff5afb960a747aea451fb77e2d",
     "docs/INTEGRACION_1_4_1.md": "49b74fd8d4b411af5adaae355cbfce430b82c45a975360e6584c16dde74c4727",
@@ -433,9 +433,9 @@
     "tests/web-script-syntax.cjs": "d4b6794fc2bf1ef85c0b6bbd6ec541e23e78b266a86303c10e254f86324c7219"
   },
   "documents": {
-    "docs/knowledge/AI_CONTEXT.md": "2ebabcd83f9d4c31cd88cb236aa28b4d4c8859d723df91685985dded0c30b5e1",
+    "docs/knowledge/AI_CONTEXT.md": "cf69eb280c56f4e07f94e50a67511dc76ace8adfd3585459b9c3340318d13af5",
     "docs/knowledge/ARCHITECTURE.md": "c3679618399bd763c4b7e950f7ee1627dd5326702ce8858fcb68ed0899d8c0d6",
-    "docs/knowledge/CHANGELOG.md": "a8e61450aea34aa58eaade18d5f2df60e6c38d847ef26722ecde99a024730ada",
+    "docs/knowledge/CHANGELOG.md": "d3fd2d115680eeeb98afc941242f49e1335329ebcbc2dd3a72f17eefe19febea",
     "docs/knowledge/DATABASE.md": "f6e1ac7141f7fa91799d6c154d538dcea23aff35dcd278f6523dbaf34ebd4bda",
     "docs/knowledge/DATA_FLOWS.md": "004cb9c0a2f410906a50e8b645c755aae46eb216f83334fb0a0fe03025efd074",
     "docs/knowledge/DEPENDENCIES.md": "ac1132c9e61b9a2ad847c7483e01fab642751e28f3eb417c7403d59f41039827",
@@ -444,9 +444,9 @@
     "docs/knowledge/model.json": "ad79ad83b33298bdd70eb41da2f7b556f8111d89771ccfb6f3c35d120296dc98",
     "docs/knowledge/OPEN_ISSUES.md": "a603a3db12be25bf70b92ea21c319ab8e65cc97ee2103c054d84362614c5e2a1",
     "docs/knowledge/PROJECT_MAP.md": "3841c73a949435672370b98dc181bd5554d2e93f1c044d6fad92d93a1a033d30",
-    "docs/knowledge/RUNBOOK.md": "a07e625461c23e84275d49f8f6bfeb4399604f604de990eae3dde4a5def057f9",
+    "docs/knowledge/RUNBOOK.md": "4fdc54450d0ae51b2f893eb628091e3b6a7a8f4be74a04356e0e953e57abc67f",
     "docs/knowledge/UI_ANIMATIONS.md": "64981b58c11d1c62e3338928c980813888bd827ebd836c7b7dcd371c0d0d23e8",
-    "docs/knowledge/VALIDATION.md": "a8dc05487a91a2c3c626bd971d92ebb0446a3d27368af2bb64f2c9831e491de5",
+    "docs/knowledge/VALIDATION.md": "c7cfa36eb5e4426544aec2c382ea4e837c19da84f320d2d35614039622123382",
     "docs/knowledge/diagrams/01-system.md": "5928016d81c244dd4a382ccfe307ef102eb38f53de0942f78686684f1c3dc553",
     "docs/knowledge/diagrams/01-system.mmd": "f5104878b1864da5bce36cabff8b8de22e29c21c533cd6f643f30276cadb696e",
     "docs/knowledge/diagrams/02-orders.md": "afbccaa007d1e371236259979e94d117907d0e7ed6aafa54cb5536a3745574d2",

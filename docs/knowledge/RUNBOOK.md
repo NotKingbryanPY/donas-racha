@@ -1,6 +1,6 @@
 # Compilar, activar e instalar
 
-[APK e informe verificados](../DONAS_CONTROL_2_RESULTADOS.md). Se publica una copia firmada en downloads para instalar desde el teléfono después del despliegue; CI de validación utiliza otra firma temporal y no es una actualización de distribución.
+[APK e informe verificados](../DONAS_CONTROL_2_RESULTADOS.md). [Descarga oficial 2.0.0](https://www.dracha.store/downloads/Donas-Control-2.0.0-oficial.apk), publicada y comprobada por hash. CI de validación utiliza otra firma temporal y no es una actualización de distribución.
 
 [Contexto](AI_CONTEXT.md) · [Activación detallada](../DONAS_CONTROL_2_ACTIVACION.md)
 

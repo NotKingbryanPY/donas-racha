@@ -1,6 +1,6 @@
 # Donas Racha / Donas Control: guía para IA
 
-Revisión: 13 octubre 2026. Leer primero [AGENTS](../../AGENTS.md), esta guía y el [diagnóstico previo](../DONAS_CONTROL_2_AUDITORIA.md). La solicitud actual reconstruye Android para la operación diaria y sustituye la retirada total del 12 de octubre. La web permanece operativa. No restaurar automáticamente la integración móvil antigua.
+Revisión: 14 octubre 2026. Leer primero [AGENTS](../../AGENTS.md), esta guía y el [diagnóstico previo](../DONAS_CONTROL_2_AUDITORIA.md). La solicitud actual reconstruye Android para la operación diaria y sustituye la retirada total del 12 de octubre. La web permanece operativa. No restaurar automáticamente la integración móvil antigua.
 
 ## Arquitectura vigente
 
@@ -32,6 +32,8 @@ Cada cambio funcional debe actualizar esta documentación en la misma entrega: f
 ## Evidencia y seguridad
 
 CONFIRMADO_CODIGO = implementación local; INFERIDO = análisis pendiente; PENDIENTE_VERIFICACION = falta recorrido cloud/dispositivo. Prueba SQL aislada no certifica producción. Esta sesión confirmó solo metadatos Firebase y no pudo acceder al navegador por fallo del kernel. No copiar tokens, cuentas de servicio, exports ni clientes al grafo/guías. Nunca imprimir login:list JSON o almacenes de credenciales.
+
+Entrega 2.0.0/código15: APK oficial firmado y descarga pública verificados; 113 pruebas locales, lint/build y CI de emuladores API23/35 aprobados. Web desplegada desde PR41/main y acceso anónimo al RPC rechazado. [Informe de resultados](../DONAS_CONTROL_2_RESULTADOS.md). Activación SQL nueva y recorrido autenticado físico siguen pendientes; la publicación del código no equivale a instalar la migración.
 
 Antes de SQL real leer [ACTIVACION](../ACTIVACION_2026-10-08.md) y [activación v2](../DONAS_CONTROL_2_ACTIVACION.md). Preservar filas/stock; no repetir seeds ni paquete 02 de octubre 8. No ejecutar el archivo móvil de retirada como parte de v2. No prometer entrega FCM, ni sincronización de pedidos nuevos sin red. iOS se pospone.
 

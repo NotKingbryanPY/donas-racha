@@ -2,9 +2,9 @@
 
 ## 2026-10-14 — verificación continuada
 
-El conjunto final local pasó113 pruebas, lint estricto debug/official y build/R8. APK oficial2.0.0/código15,5,398,339bytes, misma firma anterior; SHA256 y análisis de secretos en DONAS_CONTROL_2_RESULTADOS. La copia de distribución/sha se añade a downloads para acceso desde teléfono. Fuente Androidef54035; web/conocimiento CI verdes, emuladores pendientes en ese momento. Producción SQL sigue sin ejecución real por fallo del kernel Browser/Computer.
+El conjunto final local pasó 113 pruebas, lint estricto debug/official y build/R8. APK oficial 2.0.0/código15, 5,398,339 bytes, misma firma anterior; SHA256 y análisis de secretos en DONAS_CONTROL_2_RESULTADOS. La copia de distribución/sha se publica en downloads. CI e0d0d14 aprobó Android API23/35, web/concurrencia y conocimiento. PR41 integrado en main/e2a7ff1, Vercel Production success; HTTP y descarga/hash comprobados a las06:24UTC. Producción SQL sigue sin ejecución real por fallo del kernel Browser/Computer. Activación y recorrido físico permanecen pendientes.
 
-109 de111 pruebas Android pasaron en el primer conjunto completo. Se corrigieron dos fixtures: orden de qualifiers para captura y WorkManager inicializado dos veces en la prueba histórica. Las pruebas de negocio/Room/reintentos ya habían pasado. CI de documentación detectó diferencia CRLF en README/licencia vendor; se corrigió normalización preservando bytes del bundle JS. Validación final/build firmado continúan; no confundir estos resultados parciales con APK entregado o SQL real activado.
+109 de111 pruebas Android pasaron en el primer conjunto completo. Se corrigieron dos fixtures: orden de qualifiers para captura y WorkManager inicializado dos veces en la prueba histórica. Las pruebas de negocio/Room/reintentos ya habían pasado. CI de documentación detectó diferencia CRLF en README/licencia vendor; se corrigió normalización preservando bytes del bundle JS. Ese resultado parcial fue reemplazado por la validación final anterior; no equivale a SQL real activado.
 
 ## 2026-10-13 — Donas Control 2
 

@@ -667,5 +667,21 @@
       "downloads/Donas-Control-2.0.0-oficial.apk.sha256"
     ],
     "note": "113 pruebas y APK oficial verificados; distribución y limitaciones de activación documentadas"
+  },
+  {
+    "date": "2026-10-14T01:26:09-05:00",
+    "commit": "e2a7ff16a51cd72d19a44c752869deba011c0743",
+    "areas": [
+      "android",
+      "api",
+      "database",
+      "firebase",
+      "operations",
+      "web"
+    ],
+    "changed_files": [
+      "docs/DONAS_CONTROL_2_RESULTADOS.md"
+    ],
+    "note": "CI Android API23/35 y producción HTTP/APK verificadas; SQL y recorrido físico pendientes documentados"
   }
 ]

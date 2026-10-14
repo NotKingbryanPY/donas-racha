@@ -25,7 +25,7 @@ Archivo `downloads/Donas-Control-2.0.0-oficial.apk`, copia del resultado de `scr
 | alineación | zipalign4/16KiB verificada |
 | análisis de contenido | cero claves PEM privadas, JWTservice_role, credenciales/keystores/bases locales |
 
-Distribución privada firmada, no aprobación Google Play. Instalar como actualización sobre el paquete oficial; no desinstalar ni borrar datos. CI usa firma temporal y sus APK no sustituyen éste. La descarga web se habilita cuando Vercel publique el commit correspondiente: https://www.dracha.store/downloads/Donas-Control-2.0.0-oficial.apk . Checksum junto al archivo.
+Distribución privada firmada, no aprobación Google Play. Instalar como actualización sobre el paquete oficial; no desinstalar ni borrar datos. CI usa firma temporal y sus APK no sustituyen éste. [Descargar APK oficial](https://www.dracha.store/downloads/Donas-Control-2.0.0-oficial.apk); [checksum](https://www.dracha.store/downloads/Donas-Control-2.0.0-oficial.apk.sha256). La descarga real se verificó contra el hash y tamaño de esta tabla.
 
 ## Validación realizada
 
@@ -35,7 +35,11 @@ Distribución privada firmada, no aprobación Google Play. Instalar como actuali
 - **PASS API simulado:** roles/actor servidor, cantidades/pago, hash estable, SQL faltante explícito. Suites existentes de auth/pedidos/seguridad también pasaron.
 - **PASS navegador 360/768/1440:** panel diario, responsive/error de activación aislado, conteo cero/borrador/revisión/cancelación, perfil/puntos, confirmación/WhatsApp/reduced-motion y recuperación sin doble envío.
 - **PASS ocho pruebas de documentación** e índices/refs/hashes. CI detectó y se corrigió CRLFvendor README/licencia sin modificar el bundle. Guía/modelo/siete diagramas y README actuales reescritos; cada cambio debe acompañar su documentación.
-- **CI ef54035:** web/contratos/browser/concurrencia y conocimiento en success. Android/emuladores aún en curso al redactar este párrafo; actualizar con resultado final antes de asumir éxito.
+- **PASS CI e0d0d14:** [compilación/lint y emuladores API 23/35](https://github.com/NotKingbryanPY/donas-racha/actions/runs/38521093399), [web/contratos/browser/concurrencia](https://github.com/NotKingbryanPY/donas-racha/actions/runs/38521093465) y [vigencia de documentación](https://github.com/NotKingbryanPY/donas-racha/actions/runs/38521093460). Las pruebas instrumentadas verifican migraciones Room y el inicio de la app optimizada; no certifican un pedido cloud ni restricciones físicas del Honor.
+
+## Publicación comprobada
+
+[PR 41](https://github.com/NotKingbryanPY/donas-racha/pull/41) integrado en main, commit e2a7ff16a51cd72d19a44c752869deba011c0743. [Vercel Production](https://vercel.com/king-entertainment/donas-racha/4KQHErDjdu7ZiMPSQ2Nrtz6kh4PS) informó success. Verificación HTTP real del 14 octubre 2026, 06:24 UTC: página con adminDailyPanel y script 2.0.0; script diario, productos e inventario públicos con HTTP 200; consulta anónima diaria con HTTP 401; descarga APK con HTTP 200, 5,398,339 bytes y SHA256 idéntico. El SQL publicado también coincide con el archivo fuente y contiene el marcador final completo. Estas comprobaciones son de despliegue y acceso público, no de escritura autenticada en Supabase.
 
 Los fallos iniciales de fixtures/qualifiers y WorkManager duplicado, y los problemas de lifecycle/recursos sin uso detectados por lint se corrigieron y el conjunto local final pasó. No se ocultaron mediante baseline o desactivación global de lint.
 
@@ -47,7 +51,7 @@ Entradas: daily/DailyActivity, DailyRepository, DailyEntities, DailySync, AppDat
 
 ## Pendiente real y uso
 
-**No se ejecutó SQL de producción:** Browser/Computer no pudo iniciar kernel para Studio. Aplicar 00_preflight/01_apply/02_verify en Supabase siguiendo la guía; conservar cifras y no repetir seed/paquete02antiguo. El script01 termina en END_DONAS_DAILY_V2_COMPLETE. Hasta activarlo, la API diaria informa DAILY_SETUP_REQUIRED; la web existente sigue operativa. Las credenciales protegidas Supabase de Vercel no se cambian ni se publican.
+**No se ejecutó SQL de producción:** Browser/Computer no pudo iniciar kernel para Studio, incluido el último reintento. Aplicar [00_preflight](https://www.dracha.store/supabase/sql-editor/daily-v2/00_preflight.sql), [01_apply](https://www.dracha.store/supabase/sql-editor/daily-v2/01_apply.sql) y [02_verify](https://www.dracha.store/supabase/sql-editor/daily-v2/02_verify.sql) en ese orden, siguiendo la guía; conservar cifras y no repetir seeds ni el paquete antiguo. El script 01 termina en END_DONAS_DAILY_V2_COMPLETE. Si falta activación, la API diaria informa DAILY_SETUP_REQUIRED; la web existente sigue operativa. Las credenciales protegidas Supabase de Vercel no se cambian ni se publican.
 
 Una vez activado: entrar con cuenta ADMIN/SELLER del Dashboard, actualizar online, registrar compra real, venta/consumo y comprobar el mismo saldo en web. Cerrar con cola vacía; historia e inventario permanecen. Si falla red, el registro queda pendiente y reintenta el mismo UUID. Jornada/revisión cerradas requieren revisar/descarte explícito, no otro cobro.
 
