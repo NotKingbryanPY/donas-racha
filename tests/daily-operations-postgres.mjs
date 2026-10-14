@@ -1,0 +1,85 @@
+import {readFileSync,readdirSync} from 'node:fs';
+import {randomUUID,createHash} from 'node:crypto';
+import assert from 'node:assert/strict';
+const {PGlite}=await import(process.env.PGLITE_MODULE||'@electric-sql/pglite');
+const db=new PGlite(),sql=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
+process.on('uncaughtException',e=>{console.error(e.code||'',e.message,e.where||'');process.exit(1);});
+await db.exec(`create role anon;create role authenticated;create role service_role;create schema auth;create table auth.users(id uuid primary key);create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid $$;create schema extensions;create function extensions.gen_random_bytes(integer) returns bytea language sql as $$ select decode(substr(replace(gen_random_uuid()::text,'-','')||replace(gen_random_uuid()::text,'-',''),1,$1*2),'hex') $$;create function extensions.digest(text,text) returns bytea language sql as $$ select convert_to($1,'UTF8') $$;create publication supabase_realtime;`);
+for(const f of readdirSync(new URL('../supabase/migrations/',import.meta.url)).filter(f=>f.endsWith('.sql')&&f<'202610130001').sort()) await db.exec(sql('supabase/migrations/'+f).replace('create extension if not exists pgcrypto with schema extensions;',''));
+await db.exec(sql('supabase/manual/seed_donut_flavors.sql'));
+await db.exec(sql('supabase/sql-editor/web-only/01_repair_inventory.sql'));
+// Exercise the new ledger with mobile archive present. No restoration is required.
+await db.exec(sql('supabase/sql-editor/web-only/02_archive_mobile.sql'));
+const admin=randomUUID(),seller=randomUUID(),outsider=randomUUID();
+await db.query('insert into auth.users values($1),($2),($3)',[admin,seller,outsider]);
+await db.query("insert into public.app_user_roles(auth_user_id,role) values($1,'ADMIN'),($2,'SELLER')",[admin,seller]);
+const oldSnapshot=async()=>(await db.query('select public.api_inventory_snapshot() d')).rows[0].d;
+const counts={'DR-CHOCOLATE':0,'DR-VAINILLA':0,'DR-CHOCOLATE-CHISPAS':0,'DR-VAINILLA-CHISPAS':0};
+await db.query('select public.api_set_shared_inventory($1,$2,$3)',[admin,JSON.stringify(counts),(await oldSnapshot()).revision]);
+const before=await oldSnapshot();
+await db.exec(sql('supabase/migrations/202610130001_daily_operations.sql'));
+assert.deepEqual((await oldSnapshot()).flavors,before.flavors,'install preserves existing stock');
+const snapshot=async(user=admin)=>(await db.query('select public.api_daily_snapshot($1,null) d',[user])).rows[0].d;
+let state=await snapshot();
+const flavor=sku=>state.flavors.find(f=>f.sku===sku).id;
+const c=flavor('DR-CHOCOLATE'),v=flavor('DR-VAINILLA'),cc=flavor('DR-CHOCOLATE-CHISPAS'),vc=flavor('DR-VAINILLA-CHISPAS');
+const apply=async(payload,id=randomUUID(),actor=admin)=>{
+  const full={sessionId:state.session.id,occurredAt:new Date().toISOString(),...payload};
+  const hash=createHash('sha256').update(JSON.stringify(full)).digest('hex');
+  const result=(await db.query('select public.api_daily_apply($1,$2,$3,$4) d',[actor,id,hash,JSON.stringify(full)])).rows[0].d;
+  return {id,full,hash,result};
+};
+const purchase=await apply({kind:'PURCHASE',boxes:2,totalCostCents:1200,items:[{variantId:c,quantity:4},{variantId:v,quantity:4},{variantId:cc,quantity:2},{variantId:vc,quantity:2}]});
+await db.query('select public.api_daily_apply($1,$2,$3,$4)',[admin,purchase.id,purchase.hash,JSON.stringify(purchase.full)]);
+state=await snapshot();assert.equal(state.summary.purchasedUnits,24);assert.equal(state.summary.investmentCents,1200);
+assert.equal(state.inventory.flavors.find(f=>f.variant_id===c).available_quantity,8);
+const sale=await apply({kind:'SALE',items:[{variantId:c,quantity:3,unitPriceCents:100},{variantId:v,quantity:2,unitPriceCents:100}],payment:{cashCents:200,yappyCents:300}},randomUUID(),seller);
+await db.query('select public.api_daily_apply($1,$2,$3,$4)',[seller,sale.id,sale.hash,JSON.stringify(sale.full)]);
+await assert.rejects(db.query('select public.api_daily_apply($1,$2,$3,$4)',[seller,sale.id,'a'.repeat(64),JSON.stringify(sale.full)]),/IDEMPOTENCY_CONFLICT/);
+await apply({kind:'CONSUMPTION',items:[{variantId:c,quantity:1}],note:'Consumo del vendedor'});
+state=await snapshot();assert.equal(state.summary.revenueCents,500);assert.equal(state.summary.cashCents,200);assert.equal(state.summary.yappyCents,300);
+assert.equal(state.summary.costOfSalesCents,250);assert.equal(state.summary.profitCents,250);assert.equal(state.summary.consumptionCostCents,50);
+assert.equal(state.summary.soldUnits,5);assert.equal(state.summary.consumedUnits,1);assert.equal(state.summary.netCashCents,-700);
+const sumStock=s=>s.inventory.flavors.reduce((n,f)=>n+Number(f.available_quantity)+Number(f.reserved_quantity),0);
+assert.equal(sumStock(state),18,'unsold inventory persists, not an automatic loss');
+await apply({kind:'PURCHASE',boxes:1,totalCostCents:400,items:[{variantId:c,quantity:1},{variantId:v,quantity:3}]});
+assert.equal((await snapshot()).summary.purchasedUnits,28,'custom 4-unit box accepted');
+const unchanged=await snapshot();
+await assert.rejects(apply({kind:'SALE',items:[{variantId:c,quantity:100,unitPriceCents:100}],payment:{cashCents:10000,yappyCents:0}}),/OUT_OF_STOCK/);
+await assert.rejects(apply({kind:'SALE',items:[{variantId:c,quantity:1,unitPriceCents:100}],payment:{cashCents:50,yappyCents:0}}),/PAYMENT_SPLIT_MISMATCH/);
+assert.deepEqual((await snapshot()).summary,unchanged.summary,'failed operations roll back money and cost');
+await assert.rejects(snapshot(outsider),/STAFF_REQUIRED/);
+await assert.rejects(apply({kind:'CORRECTION',expectedRevision:(await snapshot()).inventory.revision,note:'Conteo verificado',items:[{variantId:c,quantity:1}]},randomUUID(),seller),/ADMIN_REQUIRED/);
+// A web order reserves stock. Fulfillment records one sale and only the existing stock movement.
+const customer=(await db.query("select * from public.api_register_customer('CDAILYTEST123','Ana','+50760001111',$1)",[randomUUID()])).rows[0];
+const order=(await db.query("select * from public.api_create_order_by_customer_id($1,$2,$3,'Edificio 4','YAPPY',null,$4)",[customer.id,randomUUID(),'c'.repeat(64),JSON.stringify([{product_variant_id:c,quantity:2}])])).rows[0];
+const reserve=await snapshot();
+await db.query("select * from public.api_transition_order($1,'ACCEPTED',$2,null)",[order.id,admin]);
+await db.query("select * from public.api_transition_order($1,'OUT_FOR_DELIVERY',$2,null)",[order.id,admin]);
+await db.query("select public.api_complete_paid_order($1,$2,'YAPPY')",[order.id,admin]);
+await db.query("select public.api_complete_paid_order($1,$2,'YAPPY')",[order.id,admin]);
+state=await snapshot();assert.equal(state.summary.soldUnits,7);assert.equal(state.summary.revenueCents,700);assert.equal(state.summary.costOfSalesCents,350);
+assert.equal(Number((await db.query('select count(*) n from public.daily_operations where order_id=$1',[order.id])).rows[0].n),1);
+assert.equal(state.inventory.flavors.find(f=>f.variant_id===c).available_quantity,reserve.inventory.flavors.find(f=>f.variant_id===c).available_quantity,'no second stock deduction at web completion');
+const beforeClose=state,oldSession=state.session.id;
+await assert.rejects(apply({kind:'CLOSE',expectedRevision:state.inventory.revision-1,expectedSequence:state.summary.lastSequence,nextSessionId:randomUUID()}),/INVENTORY_CONFLICT/);
+const close=await apply({kind:'CLOSE',expectedRevision:state.inventory.revision,expectedSequence:state.summary.lastSequence,nextSessionId:randomUUID()});
+await db.query('select public.api_daily_apply($1,$2,$3,$4)',[admin,close.id,close.hash,JSON.stringify(close.full)]);
+state=await snapshot();assert.notEqual(state.session.id,oldSession);assert.equal(state.summary.revenueCents,0);assert.equal(state.summary.profitCents,0);
+assert.equal(sumStock(state),sumStock(beforeClose),'closing preserves inventory');
+assert.equal(state.sessions.find(s=>s.id===oldSession).closing_summary.revenueCents,700,'closed summary retains history');
+await assert.rejects(apply({sessionId:oldSession,kind:'CONSUMPTION',items:[{variantId:c,quantity:1}]}),/SESSION_CLOSED/);
+// Existing stock without purchase costs must never become fictitious profit.
+await apply({kind:'CORRECTION',expectedRevision:state.inventory.revision,note:'Conteo físico corregido',items:[{variantId:vc,quantity:2}]});
+await apply({kind:'SALE',items:[{variantId:vc,quantity:5,unitPriceCents:100}],payment:{cashCents:500,yappyCents:0}});
+state=await snapshot();assert.equal(state.summary.unknownCostUnits,1);assert.equal(state.summary.profitCents,null);
+await db.query('delete from public.inventory_manual_counts where variant_id=$1',[cc]); // disposable fixture only
+await assert.rejects(apply({kind:'PURCHASE',boxes:1,totalCostCents:50,items:[{variantId:cc,quantity:1}]}),/INVENTORY_COUNT_REQUIRED/);
+assert.equal(Number((await db.query('select count(*) n from public.inventory_manual_counts where variant_id=$1',[cc])).rows[0].n),0,'purchase must not invent a zero baseline');
+for(const name of ['daily_sessions','daily_operations','daily_operation_items','daily_cost_lots']) {
+  const r=(await db.query("select relrowsecurity rls,has_table_privilege('anon',$1,'SELECT') a,has_table_privilege('authenticated',$1,'SELECT') u from pg_class where oid=$1::regclass",['public.'+name])).rows[0];
+  assert.equal(r.rls,true);assert.equal(r.a,false);assert.equal(r.u,false);
+}
+await db.exec(sql('supabase/migrations/202610130001_daily_operations.sql'));
+assert.equal((await snapshot()).summary.revenueCents,500,'safe repeat never resets records');
+await db.close();console.log('PASS daily SQL: configurable boxes, split payments, consumption, FIFO, unknown costs, web sale once, stock reservations, rollback, closing/replay, stale offline conflicts, RLS and preserved archive');

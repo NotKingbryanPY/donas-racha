@@ -36,7 +36,7 @@ class BackendRedirectTest {
     }
     @After fun teardown() { server.shutdown() }
     private fun session() = MockResponse().setHeader("Content-Type", "application/json").setBody(
-        """{"ok":true,"data":{"accessToken":"access","refreshToken":"refresh","role":"ADMIN","expiresAt":"2099-01-01T00:00:00.000Z"}}""")
+        """{"ok":true,"data":{"userId":"aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa","accessToken":"access","refreshToken":"refresh","role":"ADMIN","expiresAt":"2099-01-01T00:00:00.000Z"}}""")
     private fun redirect(status: Int, location: String) = MockResponse().setResponseCode(status).setHeader("Location", location)
 
     @Test fun permanentRedirectKeepsLoginPostAndCredentials() = runBlocking {

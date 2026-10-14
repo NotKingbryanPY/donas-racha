@@ -1,5 +1,4 @@
 <resources>
-    <string name="widget_description">Ventas rápidas y registro de compras de donas</string>
     <string name="app_name">Donas Control</string>
     <string name="home">Inicio</string>
     <string name="business">Negocio</string>

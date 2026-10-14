@@ -116,5 +116,23 @@ if(process.env.POSTGRES_TEST_URL) {
   assert.equal(Number((await db.query('select count(*) quantity from public.flavor_sales where order_id=$1',[winner.id])).rows[0].quantity),1);
   assert.equal(Number((await stock())[0].available_quantity),0);
   console.log('PASS concurrent PostgreSQL connections: one count wins, one last-unit reservation wins, concurrent payment/delivery applies once without deadlock');
+  // New daily operations share the exact same inventory lock as web orders.
+  await db.query('select public.api_set_shared_inventory($1,$2,$3)',[admin,JSON.stringify({...counts,'DR-CHOCOLATE':1}),(await snapshot()).revision]);
+  const daily=async()=>(await db.query('select public.api_daily_snapshot($1,null) data',[admin])).rows[0].data;
+  let dailyState=await daily();
+  const saleBody={kind:'SALE',sessionId:dailyState.session.id,occurredAt:new Date().toISOString(),items:[{variantId:variant,quantity:1,unitPriceCents:100}],payment:{cashCents:50,yappyCents:50}};
+  const dailySales=await Promise.allSettled([1,2].map(()=>db.query('select public.api_daily_apply($1,$2,$3,$4)',[admin,randomUUID(),'d'.repeat(64),JSON.stringify(saleBody)])));
+  assert.equal(dailySales.filter(r=>r.status==='fulfilled').length,1);
+  assert.match(dailySales.find(r=>r.status==='rejected').reason.message,/OUT_OF_STOCK/);
+  const replayId=randomUUID(),purchaseBody={kind:'PURCHASE',sessionId:dailyState.session.id,occurredAt:new Date().toISOString(),boxes:1,totalCostCents:50,items:[{variantId:variant,quantity:1}]};
+  const receipts=await Promise.all([1,2].map(()=>db.query('select public.api_daily_apply($1,$2,$3,$4) data',[admin,replayId,'e'.repeat(64),JSON.stringify(purchaseBody)])));
+  assert.equal(receipts.filter(r=>r.rows[0].data.replayed===false).length,1);
+  assert.equal(Number((await stock())[0].available_quantity),1,'concurrent retry must not add another box');
+  dailyState=await daily();
+  const closeBody={kind:'CLOSE',sessionId:dailyState.session.id,occurredAt:new Date().toISOString(),expectedRevision:dailyState.inventory.revision,expectedSequence:dailyState.summary.lastSequence};
+  const closes=await Promise.allSettled([1,2].map(()=>db.query('select public.api_daily_apply($1,$2,$3,$4)',[admin,randomUUID(),'f'.repeat(64),JSON.stringify({...closeBody,nextSessionId:randomUUID()})])));
+  assert.equal(closes.filter(r=>r.status==='fulfilled').length,1);assert.match(closes.find(r=>r.status==='rejected').reason.message,/SESSION_CLOSED/);
+  assert.equal(Number((await stock())[0].available_quantity),1);
+  console.log('PASS daily concurrent connections: one last-unit sale, one purchase receipt and one closing without stock loss');
 }
 await db.close();console.log('PASS shared inventory: boxes, retry/reversal, delivery, two-device IDs/count conflicts, last-unit reservations, offline oversale reconciliation and lock order');

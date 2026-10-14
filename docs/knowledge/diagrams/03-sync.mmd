@@ -1,0 +1,10 @@
+flowchart TD
+  ui["Formulario con UUID estable"] --> local["Transacción Room: daily_outbox PENDING"]
+  local --> work["WorkManager conectado / backoff"]
+  work --> refresh["Consulta jornada/stock confirmados"]
+  refresh --> api["POST daily: mismo UUID y payload"]
+  api --> sql["Lock inventario + recibo + unidades + costo"]
+  sql --> ack["ACK validado / replay"] --> cache["Refrescar daily_cache"]
+  api --> conflict["409 / CONFLICT; detener dependientes"]
+  conflict --> review["Revisar; reintentar igual o descartar rechazo"]
+  api --> retry["Timeout: conservar PENDING y UUID"] --> work

@@ -1,41 +1,13 @@
-# Donas Racha — modelo operativo
+# Donas Racha — modelo operativo actualizado
 
-## Producto
+Donas preparadas para reventa por sabor. Catálogo central con cuatro SKUs existentes de chocolate/vainilla y sus versiones con chispas. Precio de catálogo inicial B/.1 por unidad; ventas presenciales pueden registrar el precio efectivamente cobrado. La composición inicial de compra es4/4/2/2=12, modificable por compra; el costo total se reparte por unidad y el recibo conserva el mix.
 
-Donas Racha revende en la UTP donas surtidas ya preparadas de PriceSmart. La referencia comercial indicada por el propietario es [Member's Selection Donas Surtidas, 12 unidades](https://www.pricesmart.com/es-pa/producto/members-selection-donas-surtidas-recien-preparadas-12-unidades-227994/227994).
+Supabase mantiene existencias físicas, reservas y disponibilidad comercial separadas. Desactivar un sabor no cambia las unidades. Compras agregan, ventas/consumos descuentan, correcciones tienen motivo. Disponible = físico − reservas, con déficit detectado; no se fabrican unidades para cubrir reservas. Las columnas históricas purchased_quantity/sold_quantity de la vista agrupan movimientos positivos/negativos: no son por sí solas inversión o ventas del resumen financiero.
 
-Sabores confirmados hasta ahora:
+Estados web: PENDING → ACCEPTED → OUT_FOR_DELIVERY → COMPLETED, con cancelación desde cualquiera de los tres abiertos. COMPLETED confirma pago y entrega en transacción existente, salida por sabor/fidelidad una sola vez. El bloqueo histórico ACCOUNTING_NOT_READY ya no describe el código vigente. Cancelar en camino libera reserva; un pago confirmado no se borra ni se considera reembolsado automáticamente.
 
-- glaseado de chocolate;
-- glaseado de vainilla;
-- glaseado de vainilla con chispas;
-- glaseado de chocolate con chispas.
+Pago web: efectivo o Yappy recibido por el operador; no hay cobro bancario automático. Donas Control2 permite efectivo/Yappy dividido en venta presencial. Los pedidos web completados tras activar v2 generan un recibo WEB_SALE sin repetir inventario, cobro ni puntos.
 
-Los cuatro sabores fueron confirmados por el propietario y se venden a B/.1.00 por unidad.
+Inversión = compras; ingresos = ventas; costo vendido = FIFO de unidades vendidas; utilidad = ingresos − costo vendido. Consumo/corrección se muestra separado y su costo reduce el resultado operativo. Inventario restante conserva su valor y no se imputa como pérdida. Sin costo histórico verificable, utilidad correspondiente queda pendiente. Flujo de caja = ingresos − compras y no equivale a utilidad.
 
-## Disponibilidad
-
-La disponibilidad se publica por sabor en tiempo real como `available`. Un sabor agotado sigue existiendo en el catálogo, pero la interfaz debe impedir seleccionarlo y el servidor debe rechazar cualquier intento de pedirlo. El conteo exacto por unidades se añadirá en la fase de inventario.
-
-## Entrega y estados
-
-El cliente escribe la ubicación donde recibirá el pedido. Las donas ya están preparadas, así que el pedido no pasa por estados de preparación.
-
-```text
-PENDING -> ACCEPTED -> OUT_FOR_DELIVERY -> COMPLETED
-    |          |                |
-    +----------+----------------+-> CANCELLED
-```
-
-`COMPLETED` significa que la entrega y el cobro ya ocurrieron. La ubicación exacta no se muestra en el seguimiento público del pedido.
-
-La API administrativa bloquea temporalmente la transición a `COMPLETED` con `ACCOUNTING_NOT_READY` (HTTP 409). Confirmar el cobro no crea por sí solo la venta ni descuenta el inventario. La transición se habilitará cuando una operación idempotente registre venta, existencias y puntos de forma atómica. Los pedidos ya completados antes de este bloqueo requieren conciliación manual; el cambio no reescribe datos históricos.
-
-## Pago
-
-El cliente paga al recibir el pedido mediante:
-
-- efectivo;
-- Yappy al número `6015-0927`.
-
-La página puede mostrar ese número. El QR se incorporará cuando el propietario entregue el recurso oficial; no se genera uno a partir del número porque el QR de Yappy puede contener información adicional. El administrador confirma el pago recibido antes de completar el pedido.
+Cierre explícito de jornada (fecha Panamá): guarda resumen/inventario y abre jornada nueva, sin borrar historia ni existencias. No se cierra automáticamente a medianoche mientras puedan existir pendientes offline. Leer [guía IA](knowledge/AI_CONTEXT.md) y [activación v2](DONAS_CONTROL_2_ACTIVACION.md). No reactivar los flujos móviles antiguos para hacer funcionar el libro nuevo.

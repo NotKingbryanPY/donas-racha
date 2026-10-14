@@ -18,7 +18,7 @@ import java.text.SimpleDateFormat
 
 class BackendClient(context: Context,
     private val baseUrl: String = "https://www.dracha.store",
-    tokenStore: SessionTokens? = null) {
+    tokenStore: SessionTokens? = null) : com.bryan.donas.daily.DailyTransport {
     private val appContext = context.applicationContext
     private val sessions = tokenStore ?: RemoteSessionStore(appContext)
     private val devicePrefs = appContext.getSharedPreferences("remote_device", Context.MODE_PRIVATE)
@@ -26,6 +26,7 @@ class BackendClient(context: Context,
     private var expiresAt = 0L
 
     val signedIn: Boolean get() = sessions.hasSession()
+    override val dailyOwner: String? get() = devicePrefs.getString("dailyOwner", null)?.takeIf { signedIn && !usesFirebaseAccount }
     val usesFirebaseAccount: Boolean get() = sessions.refreshToken()?.startsWith("firebase:") == true
     val role: String get() = devicePrefs.getString("role", "ADMIN") ?: "ADMIN"
     val canUpload: Boolean get() = role == "ADMIN" && !devicePrefs.getBoolean("restoreNeedsIdentity", false)
@@ -120,6 +121,7 @@ class BackendClient(context: Context,
     private fun saveSession(data: JSONObject) {
         sessions.save(data.getString("refreshToken"))
         devicePrefs.edit { putString("role", data.optString("role", "ADMIN")) }
+        devicePrefs.edit { putString("dailyOwner", data.getString("userId")) }
         accessToken = data.getString("accessToken")
         expiresAt = requireNotNull(SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).apply {
             timeZone = TimeZone.getTimeZone("UTC")
@@ -163,6 +165,7 @@ class BackendClient(context: Context,
     @Synchronized fun logout() {
         val wasFirebase = sessions.refreshToken()?.startsWith("firebase:") == true
         sessions.clear()
+        devicePrefs.edit { remove("dailyOwner") }
         if (wasFirebase && PushRegistration.initialize(appContext)) FirebaseCredentialState.signOut(appContext)
         accessToken = null
         expiresAt = 0
@@ -212,6 +215,30 @@ class BackendClient(context: Context,
             com.bryan.donas.data.db.FlavorEntity(row.getString("id"), row.getString("sku"), row.getString("name"),
                 row.getBoolean("available"), row.getBoolean("active"), row.getString("updated_at"))
         } }
+    }
+
+    override suspend fun dailySnapshot(beforeSequence: Long?): JSONObject = withContext(Dispatchers.IO) {
+        check(dailyOwner != null) { "Conecta tu cuenta del Dashboard para usar el registro diario." }
+        request("/api/admin/customers/daily" + (beforeSequence?.let { "?beforeSequence=$it" } ?: ""), bearer = token())
+    }
+    override suspend fun dailyApply(payload: JSONObject, expectedOwner: String): JSONObject = withContext(Dispatchers.IO) {
+        var rejectedToken: String? = null
+        for (attempt in 0..1) {
+            // Capture the token under the same lock used by login/logout/renewal.
+            // Never renew an old owner's queued mutation into the next user's session.
+            val bearer = synchronized(this@BackendClient) {
+                check(dailyOwner == expectedOwner) { "La cuenta cambió; el registro sigue vinculado a su propietario." }
+                val value = token(rejectedToken)
+                check(dailyOwner == expectedOwner) { "La cuenta cambió durante la renovación." }
+                value
+            }
+            try { return@withContext request("/api/admin/customers/daily", "POST", payload, bearer, retryAuth = false) }
+            catch (e: BackendException) {
+                if (e.status != 401 || attempt == 1) throw e
+                rejectedToken = bearer
+            }
+        }
+        error("No se pudo confirmar la sesión para este registro.")
     }
 
     suspend fun updateFlavor(item: com.bryan.donas.data.db.CatalogOperationEntity) = withContext(Dispatchers.IO) {

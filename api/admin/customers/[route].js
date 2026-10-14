@@ -4,6 +4,7 @@ const handlers = Object.freeze({
   lookup: require('../../_lib/admin_handlers/lookup'),
   catalog: require('../../_lib/admin_handlers/catalog'),
   inventory: require('../../_lib/admin_handlers/inventory'),
+  daily: require('../../_lib/admin_handlers/daily'),
   'claim-token': require('../../_lib/admin_handlers/claim-token')
 });
 const retired = require('../../_lib/mobile-retired');

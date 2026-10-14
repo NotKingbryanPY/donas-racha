@@ -533,5 +533,6 @@ html.motion-lite :is(.btn,.shop-buy,.tab,.client-top-link,.quantity button):acti
 
 #clientOrderRetry[hidden],#clientOrderView[hidden]{display:none!important}
 #confirmedOrderWhatsapp{text-decoration:none}
+.daily-metrics{margin:16px 0}.daily-metrics .stat-card{padding:16px;display:flex;flex-direction:column;gap:6px}.daily-metrics .big{font-size:24px;overflow-wrap:anywhere}.daily-history{list-style:none;padding:0}.daily-history li{display:flex;flex-direction:column;gap:4px;padding:12px 0;border-bottom:1px solid var(--line)}.daily-history span{font-size:12px;color:var(--muted)}
 
 .cart-row .grow{min-width:0;overflow-wrap:anywhere}.quantity{grid-template-columns:44px 24px 44px}.quantity button{width:44px;height:44px}.order-confirmation .dialog-close{min-width:44px;min-height:44px}

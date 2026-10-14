@@ -49,7 +49,7 @@ class BackendSessionTest {
                     val body = JSONObject(request.body.readUtf8())
                     val refreshing = body.getString("grantType") == "refresh_token"
                     if (refreshing) { refreshes.incrementAndGet(); status = refreshStatus }
-                    JSONObject().put("accessToken", if (refreshing) "renewed-access" else "first-access")
+                    JSONObject().put("userId", "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa").put("accessToken", if (refreshing) "renewed-access" else "first-access")
                         .put("refreshToken", if (refreshing) "rotated-refresh-token" else "original-refresh-token")
                         .put("role", "ADMIN").put("expiresAt", if (!refreshing && expiredLogin)
                             "2000-01-01T00:00:00.000Z" else "2099-01-01T00:00:00.000Z")
@@ -118,6 +118,16 @@ class BackendSessionTest {
         refreshStatus = 200
         client.recentOrders()
         assertEquals("rotated-refresh-token", tokens.value)
+    }
+    @Test fun oldOwnerQueueCannotSendAfterAccountChanges() = runBlocking {
+        client.login("admin@example.test", "password")
+        val requests = server.requestCount
+        val context = ApplicationProvider.getApplicationContext<android.content.Context>()
+        context.getSharedPreferences("remote_device", android.content.Context.MODE_PRIVATE).edit()
+            .putString("dailyOwner", "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb").commit()
+        try { client.dailyApply(JSONObject().put("kind", "PURCHASE"), "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa"); fail("Old queue must never use another account token") }
+        catch (_: IllegalStateException) { }
+        assertEquals(requests, server.requestCount)
     }
     @Test fun concurrentRequestsRenewOnce() = runBlocking {
         client.login("admin@example.test", "password")

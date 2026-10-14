@@ -1,0 +1,13 @@
+# Identidades vigentes
+
+[Contexto](../AI_CONTEXT.md). Código local revisado; activación real pendiente.
+
+```mermaid
+flowchart TD
+  staff["Cuenta del Dashboard"] --> auth["Supabase Auth"]
+  auth --> role["API consulta app_user_roles"]
+  role --> allowed["ADMIN / SELLER autorizados"] --> daily["RPC diaria solo servidor"]
+  auth --> refresh["Android Keystore: refresh cifrado"]
+  customer["Cliente web: sesión propia"] --> private["Pedido/perfil propio"]
+  old["Firebase/drd anteriores"] -. no concede rol nuevo .-> daily
+```

@@ -2,8 +2,6 @@ package com.bryan.donas.ui
 
 import android.widget.TextView
 import androidx.test.core.app.ApplicationProvider
-import androidx.work.Configuration
-import androidx.work.WorkManager
 import com.bryan.donas.DonasApp
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -18,7 +16,6 @@ class OrdersActivityTest {
     @Test fun ordersScreenStaysOpenAndExplainsWhenNoSessionExists() {
         val app = ApplicationProvider.getApplicationContext<DonasApp>()
         app.backendClient.logout()
-        WorkManager.initialize(app, Configuration.Builder().build())
         val controller = Robolectric.buildActivity(OrdersActivity::class.java).setup().visible()
         val activity = controller.get()
         assertTrue(!activity.isFinishing)

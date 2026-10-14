@@ -16,19 +16,18 @@ class DonasApp : Application() {
         private set
     val themePreferences by lazy { ThemePreferences(this) }
     val backendClient by lazy { BackendClient(this) }
+    val daily by lazy { com.bryan.donas.daily.DailyRepository(database, backendClient) }
 
     override fun onCreate() {
         super.onCreate()
         reopenDatabase()
-        if (backendClient.signedIn) {
-            com.bryan.donas.data.OrderSync.schedule(this)
-            com.bryan.donas.data.PushRegistration.ensureRegistered(this)
+        // Some process/test startup paths do not run the default initializer provider.
+        try { androidx.work.WorkManager.getInstance(this) } catch (_: IllegalStateException) {
+            androidx.work.WorkManager.initialize(this, androidx.work.Configuration.Builder().build())
         }
-        database.invalidationTracker.addObserver(object : androidx.room.InvalidationTracker.Observer("sync_outbox", "catalog_outbox") {
-            override fun onInvalidated(tables: Set<String>) {
-                if (backendClient.signedIn) com.bryan.donas.data.OrderSync.request(this@DonasApp)
-            }
-        })
+        // Preserve legacy data but retire old background writers and token registration.
+        com.bryan.donas.data.OrderSync.stop(this)
+        if (backendClient.dailyOwner != null) com.bryan.donas.daily.DailySync.schedule(this)
     }
 
     fun reopenDatabase() {
