@@ -1,10 +1,10 @@
 {
-  "source_commit": "a6067d89af513e79a502dec557ea1d29a32802c4",
+  "source_commit": "68edad2b13a6fca89e00420f082b564341f20424",
   "scope": "working tree; lexical extraction, production unverified",
   "schema_version": 1,
   "extractor_version": 4,
   "hash_algorithm": "sha256; text CRLF normalized to LF; vendor/binary literal",
-  "model_sha256": "f743c075f9688b6ad0647050ab5ece20394f5ae358624ace2a51a6ba218d1364",
+  "model_sha256": "75b6d95d59418e7c89e5687cb388e4aee2b3f4f9bd1a6eba8979ec1e5aa91b69",
   "limitations": [
     "No AST ni call graph exhaustivo",
     "No resuelve funciones renombradas ni overloads SQL",
@@ -79,6 +79,26 @@
       "refs": [
         {
           "path": "api/backend.js",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "feature:notification-diagnostics",
+      "type": "componente",
+      "label": "Resultado de reintento y diagnóstico privado sin tokens",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "api/_lib/admin_handlers/order-notifications.js",
+          "line": 1
+        },
+        {
+          "path": "supabase/sql-editor/orders-v2/05_delivery_diagnosis.sql",
+          "line": 1
+        },
+        {
+          "path": "tests/staff-notification-dispatch.cjs",
           "line": 1
         }
       ]
@@ -9783,14 +9803,14 @@
       ]
     },
     {
-      "id": "file:api/_lib/order-notification-push.js:function:enqueueDispatch:57",
+      "id": "file:api/_lib/order-notification-push.js:function:enqueueDispatch:61",
       "type": "function",
       "label": "enqueueDispatch",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "api/_lib/order-notification-push.js",
-          "line": 57,
+          "line": 61,
           "symbol": "enqueueDispatch"
         }
       ]
@@ -12728,6 +12748,18 @@
       "refs": [
         {
           "path": "docs/DONAS_CONTROL_2_RESULTADOS.md",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "file:docs/DONAS_CONTROL_AVISOS_SEGUNDO_PLANO.md",
+      "type": "archivo",
+      "label": "docs/DONAS_CONTROL_AVISOS_SEGUNDO_PLANO.md",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "docs/DONAS_CONTROL_AVISOS_SEGUNDO_PLANO.md",
           "line": 1
         }
       ]
@@ -18995,6 +19027,18 @@
       ]
     },
     {
+      "id": "file:supabase/sql-editor/orders-v2/05_delivery_diagnosis.sql",
+      "type": "archivo",
+      "label": "supabase/sql-editor/orders-v2/05_delivery_diagnosis.sql",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "supabase/sql-editor/orders-v2/05_delivery_diagnosis.sql",
+          "line": 1
+        }
+      ]
+    },
+    {
       "id": "file:supabase/sql-editor/phase18/00_preflight.sql",
       "type": "archivo",
       "label": "supabase/sql-editor/phase18/00_preflight.sql",
@@ -21780,6 +21824,31 @@
       "refs": [
         {
           "path": "tests/staff-notification-api.cjs",
+          "line": 6,
+          "symbol": "replace"
+        }
+      ]
+    },
+    {
+      "id": "file:tests/staff-notification-dispatch.cjs",
+      "type": "archivo",
+      "label": "tests/staff-notification-dispatch.cjs",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "tests/staff-notification-dispatch.cjs",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "file:tests/staff-notification-dispatch.cjs:function:replace:6",
+      "type": "function",
+      "label": "replace",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "tests/staff-notification-dispatch.cjs",
           "line": 6,
           "symbol": "replace"
         }
@@ -25145,6 +25214,18 @@
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "source": "system:fcm-emitter",
+      "target": "feature:notification-diagnostics",
+      "type": "IMPLEMENTA",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "api/_lib/order-notification-push.js",
           "line": 1
         }
       ]
@@ -33680,13 +33761,13 @@
     },
     {
       "source": "file:api/_lib/order-notification-push.js",
-      "target": "file:api/_lib/order-notification-push.js:function:enqueueDispatch:57",
+      "target": "file:api/_lib/order-notification-push.js:function:enqueueDispatch:61",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "api/_lib/order-notification-push.js",
-          "line": 57,
+          "line": 61,
           "symbol": "enqueueDispatch"
         }
       ]
@@ -45731,6 +45812,31 @@
         {
           "path": "tests/staff-notification-api.cjs",
           "line": 12
+        }
+      ]
+    },
+    {
+      "source": "file:tests/staff-notification-dispatch.cjs",
+      "target": "file:tests/staff-notification-dispatch.cjs:function:replace:6",
+      "type": "CONTIENE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "tests/staff-notification-dispatch.cjs",
+          "line": 6,
+          "symbol": "replace"
+        }
+      ]
+    },
+    {
+      "source": "file:tests/staff-notification-dispatch.cjs",
+      "target": "file:api/_lib/order-notification-push.js",
+      "type": "DEPENDE_DE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "tests/staff-notification-dispatch.cjs",
+          "line": 17
         }
       ]
     },

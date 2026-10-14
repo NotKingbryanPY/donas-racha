@@ -1,10 +1,10 @@
 {
-  "source_commit": "a6067d89af513e79a502dec557ea1d29a32802c4",
+  "source_commit": "68edad2b13a6fca89e00420f082b564341f20424",
   "scope": "working tree; lexical extraction, production unverified",
   "schema_version": 1,
   "extractor_version": 4,
   "hash_algorithm": "sha256; text CRLF normalized to LF; vendor/binary literal",
-  "model_sha256": "f743c075f9688b6ad0647050ab5ece20394f5ae358624ace2a51a6ba218d1364",
+  "model_sha256": "75b6d95d59418e7c89e5687cb388e4aee2b3f4f9bd1a6eba8979ec1e5aa91b69",
   "files": [
     {
       "path": ".env.example",
@@ -76,8 +76,8 @@
     },
     {
       "path": ".github/workflows/mobile-contracts.yml",
-      "sha256": "977c0e596ad2b360953f380d8597cc82df9761d9134296c97715965564cf06ad",
-      "bytes": 4402,
+      "sha256": "a526181ee7c72d071e6fcbc666073a899cc762c49536443fe57d8f6cdb9b1f1c",
+      "bytes": 4455,
       "symbols": [],
       "imports": [],
       "rpc_calls": [],
@@ -86,7 +86,7 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 104
+      "lines": 105
     },
     {
       "path": ".gitignore",
@@ -5252,8 +5252,8 @@
     },
     {
       "path": "api/_lib/admin_handlers/order-notifications.js",
-      "sha256": "dd83d923eb3c300b2800574d0ca22e2a5d25d02aec485bb4742f5b39c47170a6",
-      "bytes": 4693,
+      "sha256": "1e5c9a1d6e51c5db7714e29439ca2a68af2e78dc24685198eb5d22be8d7c6a9b",
+      "bytes": 4895,
       "symbols": [
         {
           "name": "cronAuthorized",
@@ -5303,7 +5303,7 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 76
+      "lines": 79
     },
     {
       "path": "api/_lib/auth.js",
@@ -5743,8 +5743,8 @@
     },
     {
       "path": "api/_lib/order-notification-push.js",
-      "sha256": "abfe6768c90d75cb3b7cd71f4a4bb4bb052b14db89fcb67d970efe757a7b962d",
-      "bytes": 4135,
+      "sha256": "c2e3f8a4a6cedda8bcff1aceba4b2a5ec8dbe98de833eb65a7eedfd298e71a7c",
+      "bytes": 4623,
       "symbols": [
         {
           "name": "configured",
@@ -5774,7 +5774,7 @@
         {
           "name": "enqueueDispatch",
           "kind": "function",
-          "line": 57
+          "line": 61
         }
       ],
       "imports": [
@@ -5798,7 +5798,7 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 63
+      "lines": 69
     },
     {
       "path": "api/_lib/order-transition-policy.js",
@@ -8011,6 +8011,20 @@
       "endpoints": [],
       "animations": [],
       "lines": 60
+    },
+    {
+      "path": "docs/DONAS_CONTROL_AVISOS_SEGUNDO_PLANO.md",
+      "sha256": "dc8f3fd4f5a8d65141061a2e4124af488cbdf9b429b602d14710dc7d2d9689c7",
+      "bytes": 4263,
+      "symbols": [],
+      "imports": [],
+      "rpc_calls": [],
+      "tables": [],
+      "sql_objects": [],
+      "sql_changes": [],
+      "endpoints": [],
+      "animations": [],
+      "lines": 27
     },
     {
       "path": "docs/FIRESTORE_RULES_REVIEW.md",
@@ -16865,6 +16879,20 @@
       "lines": 12
     },
     {
+      "path": "supabase/sql-editor/orders-v2/05_delivery_diagnosis.sql",
+      "sha256": "0dfb929a0cb3a8cbd71ccc9a7c76535d206186fbaabb24e8fe41b4fde6a62047",
+      "bytes": 762,
+      "symbols": [],
+      "imports": [],
+      "rpc_calls": [],
+      "tables": [],
+      "sql_objects": [],
+      "sql_changes": [],
+      "endpoints": [],
+      "animations": [],
+      "lines": 14
+    },
+    {
       "path": "supabase/sql-editor/phase18/00_preflight.sql",
       "sha256": "d81e264758fc6acc69798405025a98d72a6a47b97170362d28b8d9244278bba3",
       "bytes": 2598,
@@ -19934,8 +19962,8 @@
     },
     {
       "path": "tests/staff-notification-api.cjs",
-      "sha256": "a7745501d8df0b91ee7bf38b497601453baed913a40d8952776b7bd65103c0af",
-      "bytes": 3088,
+      "sha256": "9498e93b95e8be298e1680866dc43ce080772c26d406b2ba59bb4ca1130dcee0",
+      "bytes": 3635,
       "symbols": [
         {
           "name": "replace",
@@ -19969,12 +19997,37 @@
         }
       ],
       "animations": [],
-      "lines": 26
+      "lines": 30
+    },
+    {
+      "path": "tests/staff-notification-dispatch.cjs",
+      "sha256": "4928a1a256de5427a29c910c1b677f5fc91e3c4796c40256dec986148e5e178f",
+      "bytes": 3353,
+      "symbols": [
+        {
+          "name": "replace",
+          "kind": "function",
+          "line": 6
+        }
+      ],
+      "imports": [
+        {
+          "target": "api/_lib/order-notification-push.js",
+          "line": 17
+        }
+      ],
+      "rpc_calls": [],
+      "tables": [],
+      "sql_objects": [],
+      "sql_changes": [],
+      "endpoints": [],
+      "animations": [],
+      "lines": 34
     },
     {
       "path": "tests/staff-notification-postgres.mjs",
-      "sha256": "87c59d59aea3084c52ac99b538fbbe12c4af4113e6e92a2fcc518407ef88e430",
-      "bytes": 10006,
+      "sha256": "ffff7fd5f178f73b6c16dcc618f96a92e4f54f2f5bf94ae6e3833d4907527f57",
+      "bytes": 10764,
       "symbols": [
         {
           "name": "scenario",
@@ -20000,7 +20053,7 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 85
+      "lines": 93
     },
     {
       "path": "tests/staff-notification-provider.cjs",

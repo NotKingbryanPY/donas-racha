@@ -868,5 +868,26 @@
       "docs/DONAS_CONTROL_2_1_1_AVISOS.md"
     ],
     "note": "Revisados CI86b0971, merge PR44, Production Ready, prueba sintética de renovación y hash APK público; pendientes físicos preservados"
+  },
+  {
+    "date": "2026-10-14T16:38:11-05:00",
+    "commit": "68edad2b13a6fca89e00420f082b564341f20424",
+    "areas": [
+      "api",
+      "database",
+      "operations",
+      "web"
+    ],
+    "changed_files": [
+      ".github/workflows/mobile-contracts.yml",
+      "api/_lib/admin_handlers/order-notifications.js",
+      "api/_lib/order-notification-push.js",
+      "docs/DONAS_CONTROL_AVISOS_SEGUNDO_PLANO.md",
+      "supabase/sql-editor/orders-v2/05_delivery_diagnosis.sql",
+      "tests/staff-notification-api.cjs",
+      "tests/staff-notification-dispatch.cjs",
+      "tests/staff-notification-postgres.mjs"
+    ],
+    "note": "Revisados envío inicial, recuperación protegida aguardada, leases/errores seguros, SELECT diagnóstico en transacción read only y límites de evidencia física"
   }
 ]

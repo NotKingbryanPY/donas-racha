@@ -42,22 +42,28 @@ async function send(job,{validateOnly=false,test=false}={}){
 async function dispatch(){
   if(!configured())return {configured:false,processed:0,accepted:0,retryable:0,invalidTokens:0};
   const jobs=await rpc('api_claim_staff_order_push',{});
-  let accepted=0,retryable=0,invalidTokens=0;
+  let accepted=0,retryable=0,invalidTokens=0;const errors=new Map();
   // Bound concurrency; each persisted lease is recoverable if the runtime stops.
   for(let offset=0;offset<jobs.length;offset+=5){
     await Promise.all(jobs.slice(offset,offset+5).map(async job=>{
       const result=await send(job);
       await rpc('api_finish_staff_order_push',{p_id:job.id,p_lease_id:job.leaseId,p_accepted:result.accepted,
         p_invalid_token:result.invalidToken,p_error:result.error,p_token:job.token});
-      if(result.accepted)accepted++;else if(result.invalidToken)invalidTokens++;else retryable++;
+      if(result.accepted)accepted++;else{
+        if(result.invalidToken)invalidTokens++;else retryable++;
+        const code=result.error||'PROVIDER_UNAVAILABLE';errors.set(code,(errors.get(code)||0)+1);
+      }
     }));
   }
-  return {configured:true,processed:jobs.length,accepted,retryable,invalidTokens};
+  return {configured:true,processed:jobs.length,accepted,retryable,invalidTokens,
+    errors:Array.from(errors,([code,count])=>({code,count}))};
 }
 function enqueueDispatch(){
-  if(!configured())return;
+  if(!configured()){console.error(JSON.stringify({event:'order_notification_dispatch_pending',code:'FCM_NOT_CONFIGURED'}));return;}
   // Failure never changes the confirmed order response. The SQL queue keeps its jobs.
-  const task=dispatch().catch(()=>console.error(JSON.stringify({event:'order_notification_dispatch_pending'})));
+  const task=dispatch().then(result=>console.info(JSON.stringify({event:'order_notification_dispatch',...result})))
+    .catch(error=>console.error(JSON.stringify({event:'order_notification_dispatch_pending',
+      code:/^[A-Z0-9_]{1,60}$/.test(error?.code||'')?error.code:'DISPATCH_FAILED'})));
   require('@vercel/functions').waitUntil(task);
 }
 module.exports={configured,send,dispatch,enqueueDispatch};

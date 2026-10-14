@@ -2,7 +2,7 @@
 
 Generado por `python scripts/knowledge.py generate`. Nombres extraídos, sin contenido de credenciales ni datos.
 
-Commit fuente: `a6067d89af513e79a502dec557ea1d29a32802c4`; 443 archivos. El inventario incluye metadatos de recursos binarios, esquemas Room y SDK vendorizado; no interpreta su código generado.
+Commit fuente: `68edad2b13a6fca89e00420f082b564341f20424`; 446 archivos. El inventario incluye metadatos de recursos binarios, esquemas Room y SDK vendorizado; no interpreta su código generado.
 
 [Volver al mapa](../PROJECT_MAP.md)
 
@@ -28,7 +28,7 @@ Commit fuente: `a6067d89af513e79a502dec557ea1d29a32802c4`; 443 archivos. El inve
 
 ## .github/workflows/mobile-contracts.yml
 
-[.github/workflows/mobile-contracts.yml:L1](../../../.github/workflows/mobile-contracts.yml#L1) · 104 líneas · SHA-256 `977c0e596ad2`
+[.github/workflows/mobile-contracts.yml:L1](../../../.github/workflows/mobile-contracts.yml#L1) · 105 líneas · SHA-256 `a526181ee7c7`
 
 ## .gitignore
 
@@ -1253,7 +1253,7 @@ Commit fuente: `a6067d89af513e79a502dec557ea1d29a32802c4`; 443 archivos. El inve
 
 ## api/_lib/admin_handlers/order-notifications.js
 
-[api/_lib/admin_handlers/order-notifications.js:L1](../../../api/_lib/admin_handlers/order-notifications.js#L1) · 76 líneas · SHA-256 `dd83d923eb3c`
+[api/_lib/admin_handlers/order-notifications.js:L1](../../../api/_lib/admin_handlers/order-notifications.js#L1) · 79 líneas · SHA-256 `1e5c9a1d6e51`
 
 - `function cronAuthorized` — [api/_lib/admin_handlers/order-notifications.js:L9](../../../api/_lib/admin_handlers/order-notifications.js#L9)
 - `function notificationRpc` — [api/_lib/admin_handlers/order-notifications.js:L16](../../../api/_lib/admin_handlers/order-notifications.js#L16)
@@ -1331,14 +1331,14 @@ Commit fuente: `a6067d89af513e79a502dec557ea1d29a32802c4`; 443 archivos. El inve
 
 ## api/_lib/order-notification-push.js
 
-[api/_lib/order-notification-push.js:L1](../../../api/_lib/order-notification-push.js#L1) · 63 líneas · SHA-256 `abfe6768c90d`
+[api/_lib/order-notification-push.js:L1](../../../api/_lib/order-notification-push.js#L1) · 69 líneas · SHA-256 `c2e3f8a4a6ce`
 
 - `function configured` — [api/_lib/order-notification-push.js:L6](../../../api/_lib/order-notification-push.js#L6)
 - `function safeError` — [api/_lib/order-notification-push.js:L7](../../../api/_lib/order-notification-push.js#L7)
 - `function oauthToken` — [api/_lib/order-notification-push.js:L8](../../../api/_lib/order-notification-push.js#L8)
 - `function send` — [api/_lib/order-notification-push.js:L27](../../../api/_lib/order-notification-push.js#L27)
 - `function dispatch` — [api/_lib/order-notification-push.js:L42](../../../api/_lib/order-notification-push.js#L42)
-- `function enqueueDispatch` — [api/_lib/order-notification-push.js:L57](../../../api/_lib/order-notification-push.js#L57)
+- `function enqueueDispatch` — [api/_lib/order-notification-push.js:L61](../../../api/_lib/order-notification-push.js#L61)
 
 ## api/_lib/order-transition-policy.js
 
@@ -1784,6 +1784,10 @@ Commit fuente: `a6067d89af513e79a502dec557ea1d29a32802c4`; 443 archivos. El inve
 ## docs/DONAS_CONTROL_2_RESULTADOS.md
 
 [docs/DONAS_CONTROL_2_RESULTADOS.md:L1](../../../docs/DONAS_CONTROL_2_RESULTADOS.md#L1) · 60 líneas · SHA-256 `46abb0b91661`
+
+## docs/DONAS_CONTROL_AVISOS_SEGUNDO_PLANO.md
+
+[docs/DONAS_CONTROL_AVISOS_SEGUNDO_PLANO.md:L1](../../../docs/DONAS_CONTROL_AVISOS_SEGUNDO_PLANO.md#L1) · 27 líneas · SHA-256 `dc8f3fd4f5a8`
 
 ## docs/FIRESTORE_RULES_REVIEW.md
 
@@ -2693,6 +2697,10 @@ Commit fuente: `a6067d89af513e79a502dec557ea1d29a32802c4`; 443 archivos. El inve
 
 [supabase/sql-editor/orders-v2/04_suspend.sql:L1](../../../supabase/sql-editor/orders-v2/04_suspend.sql#L1) · 12 líneas · SHA-256 `7b40bc9c0cc3`
 
+## supabase/sql-editor/orders-v2/05_delivery_diagnosis.sql
+
+[supabase/sql-editor/orders-v2/05_delivery_diagnosis.sql:L1](../../../supabase/sql-editor/orders-v2/05_delivery_diagnosis.sql#L1) · 14 líneas · SHA-256 `0dfb929a0cb3`
+
 ## supabase/sql-editor/phase18/00_preflight.sql
 
 [supabase/sql-editor/phase18/00_preflight.sql:L1](../../../supabase/sql-editor/phase18/00_preflight.sql#L1) · 29 líneas · SHA-256 `d81e264758fc`
@@ -3177,14 +3185,20 @@ Commit fuente: `a6067d89af513e79a502dec557ea1d29a32802c4`; 443 archivos. El inve
 
 ## tests/staff-notification-api.cjs
 
-[tests/staff-notification-api.cjs:L1](../../../tests/staff-notification-api.cjs#L1) · 26 líneas · SHA-256 `a7745501d8df`
+[tests/staff-notification-api.cjs:L1](../../../tests/staff-notification-api.cjs#L1) · 30 líneas · SHA-256 `9498e93b95e8`
 
 - `function replace` — [tests/staff-notification-api.cjs:L6](../../../tests/staff-notification-api.cjs#L6)
 - `function invoke` — [tests/staff-notification-api.cjs:L13](../../../tests/staff-notification-api.cjs#L13)
 
+## tests/staff-notification-dispatch.cjs
+
+[tests/staff-notification-dispatch.cjs:L1](../../../tests/staff-notification-dispatch.cjs#L1) · 34 líneas · SHA-256 `4928a1a256de`
+
+- `function replace` — [tests/staff-notification-dispatch.cjs:L6](../../../tests/staff-notification-dispatch.cjs#L6)
+
 ## tests/staff-notification-postgres.mjs
 
-[tests/staff-notification-postgres.mjs:L1](../../../tests/staff-notification-postgres.mjs#L1) · 85 líneas · SHA-256 `87c59d59aea3`
+[tests/staff-notification-postgres.mjs:L1](../../../tests/staff-notification-postgres.mjs#L1) · 93 líneas · SHA-256 `ffff7fd5f178`
 
 - `function scenario` — [tests/staff-notification-postgres.mjs:L6](../../../tests/staff-notification-postgres.mjs#L6)
 

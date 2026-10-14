@@ -77,6 +77,14 @@ create function vault.update_secret(uuid,text) returns void language plpgsql as 
   }
   await db.exec(sql('supabase/migrations/202610140001_staff_order_notifications.sql'));
   assert.equal(Number((await db.query('select count(*) n from public.order_push_jobs')).rows[0].n),1,'reapplying never resets jobs');
+  await db.query("select * from public.api_create_order_by_customer_id($1,$2,$3,'Edificio 1','CASH',null,$4)",[customer.id,randomUUID(),'b'.repeat(64),items]);
+  await db.exec('begin read only');
+  const diagnosis=(await db.query(sql('supabase/sql-editor/orders-v2/05_delivery_diagnosis.sql'))).rows;
+  await db.exec('rollback');
+  assert.equal(diagnosis.length,2,'diagnosis includes an order with no push job');
+  assert.ok(diagnosis.some(row=>row.attempts===null));
+  assert.ok(diagnosis.every(row=>Number(row.authorized_devices)===0),'revoked/legacy devices are excluded');
+  assert.ok(!JSON.stringify(diagnosis).match(/new-token|rotated-token|legacy-token|PRIVATE_TEST_HEADER|60001111/),'diagnosis exports no tokens, webhook secrets or customer phone');
   if(archive)assert.equal(Number((await db.query('select count(*) n from donas_mobile_archive.push_devices')).rows[0].n),1,'archived registrations preserved');
   else assert.equal((await db.query('select auth_mode from public.push_devices where device_public_id=$1',[legacy])).rows[0].auth_mode,'LEGACY','legacy devices are not autoauthorized');
  }finally{await db.close();}

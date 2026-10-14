@@ -28,8 +28,11 @@ async function device(owner,id){
 module.exports=withApi(['GET','POST','DELETE'],async(req,context)=>{
   if(req.query?.dispatch==='1'){
     if(req.method!=='POST'||!cronAuthorized(req))throw new ApiError(401,'AUTH_REQUIRED','Despachador protegido.');
-    push.enqueueDispatch();
-    return {scheduled:push.configured(),configured:push.configured()};
+    // Recovery must finish its lease/send/ack before the HTTP invocation ends.
+    // A successful response reports provider acceptance, never Android delivery.
+    const result=await push.dispatch();
+    console.info(JSON.stringify({event:'order_notification_retry',...result}));
+    return result;
   }
   const staff=await requireStaff(req);
   await enforceRateLimit(req,'staff_order_notifications',60,60,staff.id);
