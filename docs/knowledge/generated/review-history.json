@@ -889,5 +889,16 @@
       "tests/staff-notification-postgres.mjs"
     ],
     "note": "Revisados envío inicial, recuperación protegida aguardada, leases/errores seguros, SELECT diagnóstico en transacción read only y límites de evidencia física"
+  },
+  {
+    "date": "2026-10-14T16:43:50-05:00",
+    "commit": "60742525d4bff3ba14c8e5dec74483273c8e2c55",
+    "areas": [
+      "operations"
+    ],
+    "changed_files": [
+      "docs/DONAS_CONTROL_AVISOS_SEGUNDO_PLANO.md"
+    ],
+    "note": "Verificados CI de PR46, Production Ready y HTTP protegido; no eventos correlacionables ni resultado privado/recepción física afirmados"
   }
 ]

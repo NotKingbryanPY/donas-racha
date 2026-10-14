@@ -1,14 +1,11 @@
 {
-  "date": "2026-10-14T16:38:11-05:00",
-  "commit": "68edad2b13a6fca89e00420f082b564341f20424",
+  "date": "2026-10-14T16:43:50-05:00",
+  "commit": "60742525d4bff3ba14c8e5dec74483273c8e2c55",
   "scope": "working tree, hashes de texto normalizados LF; binarios/vendor literales; sin verificación de producción",
   "areas": [
-    "api",
-    "database",
-    "operations",
-    "web"
+    "operations"
   ],
-  "note": "Revisados envío inicial, recuperación protegida aguardada, leases/errores seguros, SELECT diagnóstico en transacción read only y límites de evidencia física",
+  "note": "Verificados CI de PR46, Production Ready y HTTP protegido; no eventos correlacionables ni resultado privado/recepción física afirmados",
   "sources": {
     ".env.example": "371ff612d8993b57f436b4184eabb3eee9b2481de5aba7ae650f9f963a518958",
     ".firebaserc": "faad828777632be811ebfb2800358e7c0fb6ce6f6491e3139c2bcb2f3f92a842",
@@ -242,7 +239,7 @@
     "docs/DONAS_CONTROL_2_ACTIVACION.md": "dc52073e6462a556bc806438451162251bec08f1c214fb2beb80bdaab56d96dd",
     "docs/DONAS_CONTROL_2_AUDITORIA.md": "23a7c997b10af64e6e6161ed2007296cba1d4f2f5726cf2f2156e07a20d601b1",
     "docs/DONAS_CONTROL_2_RESULTADOS.md": "46abb0b91661058f72983799d2a9be497097e45f9983e82c40a8e02affca4f81",
-    "docs/DONAS_CONTROL_AVISOS_SEGUNDO_PLANO.md": "dc8f3fd4f5a8d65141061a2e4124af488cbdf9b429b602d14710dc7d2d9689c7",
+    "docs/DONAS_CONTROL_AVISOS_SEGUNDO_PLANO.md": "e1baf765a576f80073e13648da97678abec9ee51a3803bdfd329c2d99c3275f8",
     "docs/FIRESTORE_RULES_REVIEW.md": "55236467a32d01d32187542c8a05422fec156d115f72eadd6de2150633fc43ab",
     "docs/INTEGRACION_1_4_0.md": "d284820d3508c9d2755418754dfdf890b377ccff5afb960a747aea451fb77e2d",
     "docs/INTEGRACION_1_4_1.md": "49b74fd8d4b411af5adaae355cbfce430b82c45a975360e6584c16dde74c4727",
@@ -458,20 +455,20 @@
     "tests/web-script-syntax.cjs": "d4b6794fc2bf1ef85c0b6bbd6ec541e23e78b266a86303c10e254f86324c7219"
   },
   "documents": {
-    "docs/knowledge/AI_CONTEXT.md": "b8ad649de3d0f3c0bd34f9e257af013ef9284293581f78731c66514dd4203f64",
+    "docs/knowledge/AI_CONTEXT.md": "ead9cdda44f72fe360c9c22d222f093fed4d84d4a89ababb70d8e42845c4ade4",
     "docs/knowledge/ARCHITECTURE.md": "d8976e857489c86da49b53feef44ed43fbadcaf4d9c2bb48c28d7815580756c8",
-    "docs/knowledge/CHANGELOG.md": "aef6aa6afab11c47ea3115e4c6e06636a9ef51007b6b305ff8dc1c249b403656",
+    "docs/knowledge/CHANGELOG.md": "63d76af50e697fbcc8bbb97f02e50521470e2dc25e3d818abf75abbe0560ae66",
     "docs/knowledge/DATABASE.md": "27656e979f83d90761fdd1cec3a7da3cf9ee96b88d2a2b6f02cee55acd53e52c",
     "docs/knowledge/DATA_FLOWS.md": "be086b199c48e526e8f79c8b4f7aec7f26cdf0c7f5f8f7c0ae3f8a8ab5794e13",
     "docs/knowledge/DEPENDENCIES.md": "0f35cedca739367b1b95044e7775d27dfbdd7f0e8afe5312e930fda0823927cd",
     "docs/knowledge/FEATURES.md": "aa9027ca7a983c10a98954b1dffc824ec436ff80afce3291e70c01be149aeed9",
     "docs/knowledge/MAINTENANCE.md": "462e98fad51832db82c515cf2d292937333d022f5a8de93b06d642612cadd615",
     "docs/knowledge/model.json": "75b6d95d59418e7c89e5687cb388e4aee2b3f4f9bd1a6eba8979ec1e5aa91b69",
-    "docs/knowledge/OPEN_ISSUES.md": "f6d6fbafc8c307821a5c06fd47f3f34316f01e7c0627dece8ec437f3dc26122b",
+    "docs/knowledge/OPEN_ISSUES.md": "8fe10185912404524f22a5b9e3362cab39d14173908303f06fd26c2acee5d8da",
     "docs/knowledge/PROJECT_MAP.md": "12617ddac66d278e26d455b70f9f1413d36c1a9e0cabfc5dbdd657ea99d79a30",
-    "docs/knowledge/RUNBOOK.md": "01dce136d7de96cc1fe1392f290e2d56513eb179536e7bf8605c532f7328fdff",
+    "docs/knowledge/RUNBOOK.md": "9b032304c79f492c269936e83658fa2ca86aaa674627a72aef132cde44b555b6",
     "docs/knowledge/UI_ANIMATIONS.md": "1058c9c8e1cf28eb5964b62c8d02b4e236f585e63748a35f81604b466846b301",
-    "docs/knowledge/VALIDATION.md": "21bc00f6659a8b0e7d32e97ede40f4b2f0927b36a9cd0e377a0aec85519e2d35",
+    "docs/knowledge/VALIDATION.md": "c0462877b3db4b175e7e266eb42354a51ccca41ad4c24af87777e09ac7c7252d",
     "docs/knowledge/diagrams/01-system.md": "8ce3d69f5447d1e30fa457a937c69b22836dc591d9a65602c75a6c4e6b80e558",
     "docs/knowledge/diagrams/01-system.mmd": "999dbd47ec4ec702d0a9f5ebd7a77cb8fa68885ccf35db10a666df1b67990f5b",
     "docs/knowledge/diagrams/02-orders.md": "afbccaa007d1e371236259979e94d117907d0e7ed6aafa54cb5536a3745574d2",
