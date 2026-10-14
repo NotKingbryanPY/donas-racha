@@ -1,5 +1,7 @@
 # Interfaz y diseño
 
+La inspección de renders nativos corrigió la acción Consumo que partía una palabra en pantallas pequeñas, eliminó códigos internos de estado como PURCHASE del encabezado y añadió indicador lavanda de navegación activa. Los teclados de cantidades/cajas son enteros; importes permiten decimales. La prueba de captura comprueba texto y el número de líneas de esa acción.
+
 [Contexto](AI_CONTEXT.md) · [Pantallas](diagrams/06-ui.md)
 
 DailyActivity nativa con Views/Material: Hoy, Inventario, Historial. Hoy tiene hero de ingresos y acciones Compra/Venta/Consumo, resumen y cierre. Formularios preservan borrador/UUID, muestran total por caja y permiten pago dividido. Inventario diferencia físico/reservado/disponible/proyección pendiente. Historial muestra conflictos y confirmados/cierres. La sesión inicial usa cuenta del Dashboard y no registra capital.

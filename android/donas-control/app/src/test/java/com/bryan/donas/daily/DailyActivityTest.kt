@@ -68,9 +68,12 @@ class DailyActivityTest {
                 root.draw(android.graphics.Canvas(bitmap)); File(directory, "$name.png").outputStream().use { bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, it) }; bitmap.recycle()
             }
             capture("hoy")
+            val consume = children(root).filterIsInstance<MaterialButton>().single { it.text.toString() == "Consumo" }
+            assertEquals("Quick action must not break a word into two lines", 1, consume.layout.lineCount)
             children(root).filterIsInstance<MaterialButton>().single { it.text.toString() == "Compra" }.performClick()
             shadowOf(Looper.getMainLooper()).idle()
             assertTrue(texts().contains("Registrar compra"))
+            assertFalse(texts().contains("PURCHASE"))
             val inputs = children(root).filterIsInstance<TextInputEditText>()
             assertTrue(inputs.count { it.text.toString() == "4" } == 2); assertTrue(inputs.count { it.text.toString() == "2" } == 2)
             inputs[0].setText("2"); inputs[2].setText("1")

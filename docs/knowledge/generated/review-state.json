@@ -1,6 +1,6 @@
 {
-  "date": "2026-10-14T00:14:13-05:00",
-  "commit": "3e94d8dd07023231e3c02114c6584ccba7ce9b2f",
+  "date": "2026-10-14T00:21:54-05:00",
+  "commit": "0f8592f553e1b25810b3c7bc967dc4b9d1f38650",
   "scope": "working tree, hashes de texto normalizados LF; binarios/vendor literales; sin verificación de producción",
   "areas": [
     "android",
@@ -10,7 +10,7 @@
     "operations",
     "web"
   ],
-  "note": "Revisión final de FIFO compartido, conteo inicial, orden durable de cola y resolución explícita de conflictos",
+  "note": "Revisión visual nativa: acciones sin cortes, encabezados en español y navegación activa",
   "sources": {
     ".env.example": "371ff612d8993b57f436b4184eabb3eee9b2481de5aba7ae650f9f963a518958",
     ".firebaserc": "faad828777632be811ebfb2800358e7c0fb6ce6f6491e3139c2bcb2f3f92a842",
@@ -51,7 +51,7 @@
     "android/donas-control/app/src/androidTest/java/com/bryan/donas/DatabaseDeviceTest.kt": "952a03f17196f4a329de5c2aaa04c87541b23db1ada7f211929e476d54685114",
     "android/donas-control/app/src/main/AndroidManifest.xml": "ae9d814fc46efd9a14d6e36e1418e1590bb61bd89e7d1184140c7b1ef69640e4",
     "android/donas-control/app/src/main/java/com/bryan/donas/DonasApp.kt": "60002fdb3403221881ee1e878726e8b378e26301a61dd6fe803f4fdae6c5a557",
-    "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt": "53df0edaeefe6c01ac8ec7b6d17797a2a920721b9f4ba78007af8e914cecdcd7",
+    "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt": "ede4873892663b0b6172014dc5562b60d4f085a494327f2b59b638b126877634",
     "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyEntities.kt": "a24d795f63722f5773632bf241fcc40519a58883ae473492feb0563a444a71ae",
     "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyRepository.kt": "021f2136be9437ab9b24dad96c10026a2867f1afa69681dd2803eded489559ff",
     "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailySync.kt": "4ddeeb5b232f1e4e971bd90a194b40d16b1a15776af86130192ad23f53f90215",
@@ -121,7 +121,7 @@
     "android/donas-control/app/src/main/res/xml/backup_rules.xml": "7741b2a109f5b31a9ef50f22887eab7eb424874f9bdc6e0bff96778986332b79",
     "android/donas-control/app/src/main/res/xml/data_extraction_rules.xml": "d5a7f8826c6ebaa8e16c15039b32ba75e2e61d2d0a26ce3022c70a3dbf567894",
     "android/donas-control/app/src/main/res/xml/donas_widget_info.xml": "a01d385bac099fc639ac37a2f997397363d34b2e0ce13dd0995674cc94d19e26",
-    "android/donas-control/app/src/test/java/com/bryan/donas/daily/DailyActivityTest.kt": "bb43637a170dfbd539928570261c66946a2181af68a5de97b11016d0ceb6a1b0",
+    "android/donas-control/app/src/test/java/com/bryan/donas/daily/DailyActivityTest.kt": "f7ea268a102b86393483144382f436bbd051526364f75582965e66c1e6b837bd",
     "android/donas-control/app/src/test/java/com/bryan/donas/daily/DailyOperationsTest.kt": "ecfd4d88ea5fd8175e5fd74074c6e172c9134a6418cf548e52a0d0d37b6c3127",
     "android/donas-control/app/src/test/java/com/bryan/donas/data/BackendRedirectTest.kt": "71b3d049a6e2846d4f95748182443d01d27eea72fcb36856680dd8281ebef4f8",
     "android/donas-control/app/src/test/java/com/bryan/donas/data/BackendSessionTest.kt": "c62e516e2eefb517035eb716f8af9c21a9f0657373463da37a8be9f7258b521c",
@@ -443,7 +443,7 @@
     "docs/knowledge/OPEN_ISSUES.md": "a603a3db12be25bf70b92ea21c319ab8e65cc97ee2103c054d84362614c5e2a1",
     "docs/knowledge/PROJECT_MAP.md": "3841c73a949435672370b98dc181bd5554d2e93f1c044d6fad92d93a1a033d30",
     "docs/knowledge/RUNBOOK.md": "12d6f1a68314cfdb88a8d831d742733115f3e36cec6e7aefbf3cfd2793613393",
-    "docs/knowledge/UI_ANIMATIONS.md": "44901f28e6d50921ed2fa05b98a6ac511ac661f606954f11dd0d099571ae8242",
+    "docs/knowledge/UI_ANIMATIONS.md": "64981b58c11d1c62e3338928c980813888bd827ebd836c7b7dcd371c0d0d23e8",
     "docs/knowledge/VALIDATION.md": "b4b2bc85bf5fb3c9779fe2ab5993e38c6c28426fd8695929953cc75dba12d4c6",
     "docs/knowledge/diagrams/01-system.md": "5928016d81c244dd4a382ccfe307ef102eb38f53de0942f78686684f1c3dc553",
     "docs/knowledge/diagrams/01-system.mmd": "f5104878b1864da5bce36cabff8b8de22e29c21c533cd6f643f30276cadb696e",

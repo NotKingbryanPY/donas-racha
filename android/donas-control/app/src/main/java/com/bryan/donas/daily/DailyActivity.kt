@@ -58,6 +58,7 @@ class DailyActivity : AppCompatActivity() {
     private var owner: String? = null
     private var legacyPending = 0
     private var historyOlder = JSONArray()
+    private val navButtons = linkedMapOf<String, MaterialButton>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_YES
@@ -92,6 +93,7 @@ class DailyActivity : AppCompatActivity() {
     }
     private fun button(text: String, primary: Boolean = false, action: () -> Unit) = MaterialButton(this).apply {
         this.text = text; isAllCaps = false; minHeight = dp(52); cornerRadius = dp(14)
+        textSize = 14f; maxLines = 1; setPadding(dp(8), dp(8), dp(8), dp(8))
         backgroundTintList = ColorStateList.valueOf(if (primary) accent else cardColor)
         setTextColor(if (primary) bg else white); setOnClickListener { if (!busy) action() }
     }
@@ -119,7 +121,9 @@ class DailyActivity : AppCompatActivity() {
         scroll.addView(content); root.addView(scroll, LinearLayout.LayoutParams(-1, 0, 1f))
         val nav = LinearLayout(this).apply { gravity = Gravity.CENTER; setPadding(dp(10), 0, dp(10), dp(4)); background = shape(cardColor) }
         for (name in listOf("Hoy", "Inventario", "Historial")) {
-            nav.addView(button(name) { page = name; render() }, LinearLayout.LayoutParams(0, -2, 1f))
+            val item = button(name) { page = name; render() }
+            navButtons[name] = item
+            nav.addView(item, LinearLayout.LayoutParams(0, -2, 1f))
         }
         root.addView(nav); render()
     }
@@ -158,8 +162,13 @@ class DailyActivity : AppCompatActivity() {
     private fun render() {
         if (!::content.isInitialized) return
         content.removeAllViews(); updateStatus()
+        for ((name, item) in navButtons) {
+            val selected = name == page || (name == "Hoy" && page !in listOf("Inventario", "Historial"))
+            item.backgroundTintList = ColorStateList.valueOf(if (selected) accent else cardColor)
+            item.setTextColor(if (selected) bg else white)
+        }
         if (owner == null) { login(); return }
-        content.addView(label(page, 28f, bold = true))
+        if (page in listOf("Hoy", "Inventario", "Historial")) content.addView(label(page, 28f, bold = true))
         if (snapshot == null) {
             content.addView(label("Conecta a Internet y pulsa Actualizar. El registro diario necesita su activación SQL en Supabase y una primera consulta autorizada.", color = muted))
             content.addView(button("Actualizar", true) { refresh() })
@@ -258,7 +267,7 @@ class DailyActivity : AppCompatActivity() {
     private fun history() {
         for (row in rows.filter { it.state != "ACKED" }.asReversed().take(50)) card {
             addView(label("${title(row.kind)} · ${when(row.state) { "PENDING" -> "Pendiente"; "CONFLICT" -> "Revisar"; else -> "Descartado" }}", 18f, bold = true))
-            addView(label(row.error ?: "Guardado en este teléfono. Esperando confirmación del servidor.", 13f, muted))
+            addView(label(row.error?.substringAfter(": ") ?: "Guardado en este teléfono. Esperando confirmación del servidor.", 13f, muted))
             addView(button("Ver registro") { showDetails(JSONObject(row.payload)) })
             if (row.state == "CONFLICT") {
                 val mustReview = row.error?.substringBefore(':') in listOf("SESSION_CLOSED", "INVENTORY_CONFLICT", "DAILY_SUMMARY_CONFLICT", "INVALID_DAILY_OPERATION")
@@ -348,7 +357,7 @@ class DailyActivity : AppCompatActivity() {
                            text: Boolean = false): TextInputEditText {
         if (!draft.has(key)) draft.put(key, initial)
         return field(parent, name, draft.getString(key), if (text) InputType.TYPE_CLASS_TEXT else
-            InputType.TYPE_CLASS_NUMBER or (if (signed) InputType.TYPE_NUMBER_FLAG_SIGNED else InputType.TYPE_NUMBER_FLAG_DECIMAL)) {
+            InputType.TYPE_CLASS_NUMBER or (if (signed) InputType.TYPE_NUMBER_FLAG_SIGNED else if (key == "boxes" || key.startsWith("qty:")) 0 else InputType.TYPE_NUMBER_FLAG_DECIMAL)) {
             draft.put(key, it); persistDraft()
         }
     }
