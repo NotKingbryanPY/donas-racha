@@ -31,12 +31,15 @@ async function request(query) {
   await request({limit: 100});
   assert.equal(queries[1].get('id'), null);
   assert.equal(queries[1].get('limit'), '100');
+  const precision='2026-10-14T01:02:03.123456+00:00';
+  await request({status:'ACTIVE',beforeCreatedAt:precision,beforeId:id});
+  assert.ok(queries[2].get('or').includes(precision),'pagination preserves PostgreSQL microseconds');
   const invalid = await request({orderId: 'invalid-id'});
   assert.equal(invalid.statusCode, 400);
-  assert.equal(queries.length, 2, 'invalid identifiers never reach SQL');
+  assert.equal(queries.length, 3, 'invalid identifiers never reach SQL');
   authorized = false;
   const denied = await request({orderId: id});
   assert.equal(denied.statusCode, 401);
-  assert.equal(queries.length, 2, 'a notification never bypasses staff authorization');
+  assert.equal(queries.length, 3, 'a notification never bypasses staff authorization');
   console.log('PASS notification lookup: exact UUID beyond latest page, stable flavor IDs and unauthorized/invalid requests denied');
 })().catch(error => { console.error(error); process.exitCode = 1; });

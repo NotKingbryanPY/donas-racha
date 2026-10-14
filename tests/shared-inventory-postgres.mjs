@@ -41,13 +41,13 @@ await push([operation('PURCHASE',{localEventId:4,details:{boxes:2,donutsPerBox:1
 await assert.rejects(db.query('select public.api_set_shared_inventory($1,$2,$3)',[admin,JSON.stringify(counts),before.revision]),/INVENTORY_CONFLICT/);
 const customer=(await db.query("select * from public.api_register_customer('CSHAREDTEST','Prueba','+50760001234',$1)",[randomUUID()])).rows[0];
 const variant=(await stock())[0].variant_id;
-await db.query("select public.api_register_push_device($1,$2,'ANDROID',$3,'production','1.3.0')",[admin,device,'test-push-token-'.repeat(4)]);
+await db.query("select public.api_staff_register_order_notifications($1,$2,$3,'2.1.0')",[admin,device,'test-push-token-'.repeat(4)]);
 const order=(await db.query("select * from public.api_create_order_by_customer_id($1,$2,$3,'Edificio 4','CASH',null,$4)",[customer.id,randomUUID(),'a'.repeat(64),JSON.stringify([{product_variant_id:variant,quantity:2}])])).rows[0];
 assert.equal(Number((await stock())[0].available_quantity),10);
-const jobs=(await db.query("select public.api_claim_order_push(array['ANDROID']) jobs")).rows[0].jobs;
+const jobs=(await db.query("select public.api_claim_staff_order_push() jobs")).rows[0].jobs;
 assert.equal(jobs.length,1);assert.equal(jobs[0].orderId,order.id);
-assert.equal((await db.query("select public.api_claim_order_push(array['ANDROID']) jobs")).rows[0].jobs.length,0,'lease prevents simultaneous dispatch');
-await db.query('select public.api_finish_order_push($1,$2,true,false,null)',[jobs[0].id,jobs[0].leaseId]);
+assert.equal((await db.query("select public.api_claim_staff_order_push() jobs")).rows[0].jobs.length,0,'lease prevents simultaneous dispatch');
+await db.query('select public.api_finish_staff_order_push($1,$2,true,false,null,$3)',[jobs[0].id,jobs[0].leaseId,jobs[0].token]);
 await db.query("select * from public.api_transition_order($1,'ACCEPTED',$2,null)",[order.id,admin]);
 await db.query("select * from public.api_transition_order($1,'OUT_FOR_DELIVERY',$2,null)",[order.id,admin]);
 await db.query("select public.api_complete_paid_order($1,$2,'CASH')",[order.id,admin]);

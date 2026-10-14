@@ -10,3 +10,5 @@ erDiagram
   ORDERS ||--o{ ORDER_ITEMS : reserva
   CUSTOMERS o|--o{ ORDERS : solicita
   CUSTOMERS ||--o| LOYALTY_ACCOUNTS : puntos_conservados
+  PUSH_DEVICES ||--o{ ORDER_PUSH_JOBS : destinatario
+  ORDERS ||--o{ ORDER_PUSH_JOBS : evento_confirmado

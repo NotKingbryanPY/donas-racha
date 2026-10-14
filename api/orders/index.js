@@ -32,5 +32,9 @@ module.exports = withApi(['POST'], async (req, context) => {
     p_items: order.items.map(item => ({ product_variant_id: item.productVariantId, quantity: item.quantity }))
   });
   const created = Array.isArray(result) ? result[0] : result;
+  // The confirmed transaction already persisted the notification job.
+  // Provider failure cannot undo or misreport the order.
+  try { require('../_lib/order-notification-push').enqueueDispatch(); } catch (_) {}
   return { ...created, __status: created && created.replayed ? 200 : 201 };
 });
+module.exports.config = { maxDuration: 60 };

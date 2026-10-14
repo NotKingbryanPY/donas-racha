@@ -37,3 +37,11 @@ Dashboard muestra resumen/últimos recibos confirmados del mismo RPC que Android
 ## Costos
 
 FIFO por sabor. El costo total de compra se distribuye uniformemente por unidad, precisión decimal 8, redondeo a centavos al presentar el resumen. La composición queda en payload y per_box_quantity; nombres/SKU/precios son snapshots. Stock anterior sin costo no se fabrica como compra. Utilidad comercial es ingresos − costo vendido; si la venta incluye costo desconocido, profitCents=null. Consumo/corrección no generan venta y su costo se muestra separado.
+
+## Pedido y aviso2.1
+
+Web POST/orders verifica cliente, confirma pedido/reserva/evento+job atómicos, devuelve éxito y programa waitUntil de FCM. Backend reclama lease para tokens nuevos autorizados; envía data de alta prioridad y confirma solo aceptación. Fallo conserva pedido/job; cron protegido recupera pendientes elegibles sin esperar app abierta. Un registro nuevo recupera pendientes de últimas24h; pedidos más antiguos permanecen consultables.
+
+StaffMessagingService valida propietario/dispositivo/UUID, publica aviso inmediatamente sin fetch y después pide WorkManager. El tap pasa owner/UUID a DailyActivity; otra cuenta no muestra sus datos. StaffInbox pagina API existente y actualiza solo su cache, conserva anterior ante error/cambio de propietario. Estados/cobro/cancelación online usan mismas transacciones web; no bookRemoteOrder ni segundo descuento.
+
+Permiso/canal bloqueado desactiva el registro al comprobarlo; reactivar vuelve a registrar. Registro token tiene timeout30s/backoff; falta emisor/SQL no causa bucle infinito. Offline no llegan pedidos; abrir/reconectar recupera activos. No se promete tiempo exacto, ni recepción tras detención forzosa de Android.

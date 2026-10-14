@@ -29,7 +29,7 @@
     {
       "id": "system:android",
       "type": "componente",
-      "label": "Donas Control diario2",
+      "label": "Donas Control2.1 Pedidos y diarios",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
@@ -41,7 +41,7 @@
     {
       "id": "system:room",
       "type": "componente",
-      "label": "Room6 y datos v5 preservados",
+      "label": "Room7 y datos anteriores preservados",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
@@ -217,6 +217,42 @@
           "line": 1
         }
       ]
+    },
+    {
+      "id": "feature:staff-orders",
+      "type": "componente",
+      "label": "Pedidos nativos por cuenta",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "android/donas-control/app/src/main/java/com/bryan/donas/orders/StaffInbox.kt",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "feature:staff-fcm",
+      "type": "componente",
+      "label": "Avisos FCM autorizados",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "android/donas-control/app/src/main/java/com/bryan/donas/orders/StaffNotificationRegistration.kt",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "system:fcm-emitter",
+      "type": "componente",
+      "label": "Emisor FCM Vercel",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "api/_lib/order-notification-push.js",
+          "line": 1
+        }
+      ]
     }
   ],
   "edges": [
@@ -336,6 +372,66 @@
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/data/OperationsRepository.kt",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "source": "system:android",
+      "target": "feature:staff-orders",
+      "type": "IMPLEMENTA",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "source": "feature:staff-orders",
+      "target": "system:room",
+      "type": "ESCRIBE_EN",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "android/donas-control/app/src/main/java/com/bryan/donas/orders/StaffInbox.kt",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "source": "system:api",
+      "target": "system:fcm-emitter",
+      "type": "LLAMA_A",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "api/orders/index.js",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "source": "system:fcm-emitter",
+      "target": "feature:staff-fcm",
+      "type": "NOTIFICA_A",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "api/_lib/order-notification-push.js",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "source": "feature:staff-fcm",
+      "target": "system:android",
+      "type": "NOTIFICA_A",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "android/donas-control/app/src/main/java/com/bryan/donas/orders/StaffOrderNotifications.kt",
           "line": 1
         }
       ]

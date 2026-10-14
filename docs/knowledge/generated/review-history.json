@@ -708,5 +708,82 @@
       "docs/DONAS_CONTROL_2_RESULTADOS.md"
     ],
     "note": "Activación DAILY_V2_READY validada por resultado compartido por usuario; recorrido Android autenticado pendiente"
+  },
+  {
+    "date": "2026-10-14T13:45:06-05:00",
+    "commit": "525fe8dfe99065595a51a3992897fdf1b2a29ffb",
+    "areas": [
+      "android",
+      "api",
+      "database",
+      "firebase",
+      "operations",
+      "web"
+    ],
+    "changed_files": [
+      ".github/workflows/mobile-contracts.yml",
+      "AGENTS.md",
+      "android/README.md",
+      "android/donas-control/README.md",
+      "android/donas-control/app/build.gradle.kts",
+      "android/donas-control/app/schemas/com.bryan.donas.data.db.AppDatabase/7.json",
+      "android/donas-control/app/src/androidTest/java/com/bryan/donas/DatabaseDeviceTest.kt",
+      "android/donas-control/app/src/main/AndroidManifest.xml",
+      "android/donas-control/app/src/main/java/com/bryan/donas/DonasApp.kt",
+      "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
+      "android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt",
+      "android/donas-control/app/src/main/java/com/bryan/donas/data/OrderNotifications.kt",
+      "android/donas-control/app/src/main/java/com/bryan/donas/data/PushHealth.kt",
+      "android/donas-control/app/src/main/java/com/bryan/donas/data/db/AppDatabase.kt",
+      "android/donas-control/app/src/main/java/com/bryan/donas/orders/StaffInbox.kt",
+      "android/donas-control/app/src/main/java/com/bryan/donas/orders/StaffNotificationRegistration.kt",
+      "android/donas-control/app/src/main/java/com/bryan/donas/orders/StaffOrderNotifications.kt",
+      "android/donas-control/app/src/test/java/com/bryan/donas/daily/DailyActivityTest.kt",
+      "android/donas-control/app/src/test/java/com/bryan/donas/daily/DailyOperationsTest.kt",
+      "android/donas-control/app/src/test/java/com/bryan/donas/data/CatalogMigrationTest.kt",
+      "android/donas-control/app/src/test/java/com/bryan/donas/orders/StaffOrdersTest.kt",
+      "api/_lib/admin_handlers/order-notifications.js",
+      "api/_lib/order-notification-push.js",
+      "api/_lib/supabase.js",
+      "api/admin/customers/[route].js",
+      "api/admin/orders/index.js",
+      "api/orders/index.js",
+      "docs/DONAS_CONTROL_2_1_PEDIDOS.md",
+      "package-lock.json",
+      "package.json",
+      "scripts/configure-order-notifications.ps1",
+      "supabase/migrations/202610140001_staff_order_notifications.sql",
+      "supabase/sql-editor/orders-v2/00_preflight.sql",
+      "supabase/sql-editor/orders-v2/01_apply.sql",
+      "supabase/sql-editor/orders-v2/02_verify.sql",
+      "supabase/sql-editor/orders-v2/03_retry_scheduler.sql",
+      "supabase/sql-editor/orders-v2/04_suspend.sql",
+      "tests/notification-order-api.cjs",
+      "tests/shared-inventory-postgres.mjs",
+      "tests/staff-notification-api.cjs",
+      "tests/staff-notification-postgres.mjs",
+      "tests/staff-notification-provider.cjs",
+      "tests/web-only.cjs"
+    ],
+    "note": "Revisados pedidos nativos, propietario de cache y sesiones, Room7 aditivo, FCM inmediato y cola privada, reintento Vault, conservacion de diarios y limites de activacion; contratos API y SQL locales aprobados; final Android y cloud pendientes."
+  },
+  {
+    "date": "2026-10-14T14:10:09-05:00",
+    "commit": "6f40f611a8e99e48c84d8ca99c0ae0f3b96c5e4a",
+    "areas": [
+      "android",
+      "api",
+      "database",
+      "firebase",
+      "operations",
+      "web"
+    ],
+    "changed_files": [
+      "docs/DONAS_CONTROL_2_1_PEDIDOS.md",
+      "docs/previews/donas-control-2-1-pedido.png",
+      "docs/previews/donas-control-2-1-pedidos.png",
+      "downloads/Donas-Control-2.1.0-oficial.apk.sha256"
+    ],
+    "note": "Entrega2.1: APK oficial final,117 tests,lint/build,firma/hash/alineacion/escaneo aprobados; CI de codigo6f40f61 web/concurrencia y emuladores23/35 success; docs de activacion y limites revisadas; no SQL/emisor/FCM fisico real afirmados."
   }
 ]

@@ -1,11 +1,16 @@
 # Donas Racha / Donas Control
 
-Latest scope, chosen by the user on 2026-10-13: rebuild Android Donas Control
-for daily purchases, sales, seller consumption, stock and durable daily closing.
+Latest scope, clarified by the user on 2026-10-14: Android Donas Control must
+prioritize native order management and FCM notifications outside the app,
+alongside daily purchases, sales, consumption, stock and durable closing.
+Use the existing Supabase staff identity and shared order/payment transactions.
+Explicitly rebuild authorized FCM delivery; do not revive old accounting upload,
+pilot provisioning, Firebase identity binding or the retired GitHub retry cron.
 Supabase remains the shared authority; preserve the independent website and
 existing business records/Room data. Do not automatically restore legacy mobile
-auth, push, provisioning, accounting upload or cron workflows. Read
-docs/DONAS_CONTROL_2_AUDITORIA.md and docs/knowledge/AI_CONTEXT.md.
+auth, provisioning, accounting upload or cron workflows. Read
+docs/DONAS_CONTROL_2_AUDITORIA.md, docs/DONAS_CONTROL_2_1_PEDIDOS.md and
+docs/knowledge/AI_CONTEXT.md.
 The 2026-10-12 web retirement and earlier Firebase transition are historical.
 Every functional change must update docs/knowledge in the same delivery; run
 the knowledge report/generate/check/review workflow after reviewing actual code.

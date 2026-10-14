@@ -11,3 +11,5 @@ Paleta del perfil dracha.store: #100d17 fondo, #1d1728 tarjeta, #30213f hero, #c
 Web conserva perfil/pedidos claros, puntos disponibles principales y acumulados secundarios, tutorial por IDs/data-tour, confirmación de pedido después de servidor y WhatsApp, reducción de movimiento. daily-business.js agrega un panel staff aislado; no cambia DOM del tutorial. Los drafts de conteo web 1.5.1 y cancelación en camino se conservan.
 
 La imagen generada es una propuesta, no captura del APK. Los resultados de render/pruebas reales se registran en VALIDATION. No se requiere descargar imágenes pesadas para operar.
+
+2.1 abre Pedidos; conserva Hoy/Stock/Historial y paleta oscura/lavanda. Lista activa/recientes, detalle, acciones y diagnóstico real de avisos. Notification tap abre UUID propietario; reduced motion web/tutorial no se alteran. Renders nativos de Pedidos/detalle son fixtures ilustrativos, no pedidos/recepción física de producción.

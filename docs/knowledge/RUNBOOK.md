@@ -34,8 +34,16 @@ python scripts/knowledge.py check
 
 SQL usa PGLITE_MODULE para módulo aislado; nunca una base producción de tests. Fixture de assets `node tests/serve-fixture.cjs` no sirve API; navegador prueba con proveedores simulados. Gradle testDebugUnitTest/lintDebug/lintOfficial/assembleOfficial, pruebas instrumentadas requieren dispositivo/emulador.
 
-Publicar cambios por PR/CI/GitHub main ligado a Vercel; comprobar Ready y HTTP de dominio. El endpoint diario devuelve DAILY_SETUP_REQUIRED si falta SQL y la web anterior sigue funcionando. Confirmar SQL y recorrido autenticado real antes de declarar integración total. No pedir ni imprimir claves privadas; en esta sesión no hay acceso UI operativo a Studio.
+Publicar cambios por PR/CI/GitHub main ligado a Vercel; comprobar Ready y HTTP de dominio. El endpoint diario devuelve DAILY_SETUP_REQUIRED si falta SQL y la web anterior sigue funcionando. Confirmar SQL y recorrido autenticado real antes de declarar integración total. No pedir ni imprimir claves privadas; en esta sesión no se pudo controlar Studio: timeouts/Debugger unattached.
 
 ## Mantenimiento
 
 Actualizar guías/modelo/diagramas en cada cambio. Ejecutar generate/check, revisar todas las áreas del report, review y check --fresh. CI knowledge verifica vigencia; ningún comando de documentación ejecuta SQL o servicios externos.
+
+## Activar pedidos/avisos2.1
+
+Leer [plan2.1](../DONAS_CONTROL_2_1_PEDIDOS.md). SQL diario ya validado por usuario: no repetir. Para avisos ejecutar orders-v2/00_preflight,01_apply completo,02_verify,03_retry_scheduler;04_suspend conserva datos. Crear/configurar cuenta de servicio FCM solo en servidor; FCM_PROJECT_ID/FCM_CLIENT_EMAIL/FCM_PRIVATE_KEY yCRON_SECRET protegidos en Production. La CLI Vercel está desconectada en esta sesión; no se leyó un almacén de credenciales.
+
+Usar scripts/configure-order-notifications.ps1 -ServiceAccountPath <ruta local privada> después de autorizar Vercel CLI. Script valida proyecto y escribe por stdin(--sensitive); rota CRON_SECRET, no modifica variables Supabase. Redesplegar proyecto existente, conectar APK2.1 con cuenta Supabase, permitir canal/permisos, Activar/comprobar avisos, Activar recuperación(ADMIN), Enviar prueba. Comprobar realmente aviso y tap; luego pedido real con app abierta/segundo plano/bloqueada, duplicados/reconexión/estado/stock/puntos. No compartir archivo cuenta servicio o sus valores por chat/Git.
+
+Pruebas nuevas: node tests/staff-notification-api.cjs,staff-notification-provider.cjs,staff-notification-postgres.mjs; unit/native renders, lint/build firmados y emuladores23/35. Aceptación del proveedor no equivale a entrega al teléfono.

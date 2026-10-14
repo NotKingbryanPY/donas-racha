@@ -7,6 +7,9 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.os.Build
+import android.Manifest
+import android.content.pm.PackageManager
 import android.text.InputType
 import android.text.TextWatcher
 import android.text.Editable
@@ -16,6 +19,7 @@ import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.edit
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
@@ -34,6 +38,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import com.bryan.donas.orders.StaffInboxSync
+import com.bryan.donas.orders.StaffNotificationRegistration
+import com.bryan.donas.orders.StaffOrderNotifications
+import com.bryan.donas.data.OrderNotifications
+import com.bryan.donas.data.PushHealth
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.Locale
@@ -50,7 +59,22 @@ class DailyActivity : AppCompatActivity() {
     private lateinit var root: LinearLayout
     private lateinit var content: LinearLayout
     private lateinit var status: TextView
-    private var page = "Hoy"
+    private var page = "Pedidos"
+    private var inbox: JSONObject? = null
+    private var inboxUpdatedAt = 0L
+    private var orderTargetId: String? = null
+    private var orderTargetOwner: String? = null
+    private var orderDetail: JSONObject? = null
+    private var detailRequested: String? = null
+    private var orderFeedback = ""
+    private var showRecentOrders = false
+    private var visibleOrderCount = 40
+    private val notificationPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+        StaffNotificationRegistration.request(this); if (page == "Pedidos") render()
+    }
+    private val notificationListener = android.content.SharedPreferences.OnSharedPreferenceChangeListener { _, _ ->
+        runOnUiThread { if (page == "Pedidos") render() }
+    }
     private var snapshot: JSONObject? = null
     private var rows: List<DailyOperation> = emptyList()
     private var draft = JSONObject()
@@ -64,24 +88,47 @@ class DailyActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_YES
         super.onCreate(savedInstanceState)
-        page = savedInstanceState?.getString("page") ?: "Hoy"
+        page = savedInstanceState?.getString("page") ?: "Pedidos"
         draft = savedInstanceState?.getString("draft")?.let { JSONObject(it) } ?: JSONObject()
         owner = app.backendClient.dailyOwner
+        orderTargetId = savedInstanceState?.getString("orderId") ?: intent.getStringExtra("orderId")
+        orderTargetOwner = savedInstanceState?.getString("notificationOwner") ?: intent.getStringExtra("notificationOwner")
+        if (intent.getBooleanExtra("openOrders", false)) page = "Pedidos"
         owners.value = owner
         createLayout()
         observe()
+        observeOrders()
         if (owner != null) DailySync.schedule(this)
+    }
+    override fun onStart() {
+        super.onStart()
+        getSharedPreferences("push_health", MODE_PRIVATE).registerOnSharedPreferenceChangeListener(notificationListener)
+        getSharedPreferences("staff_inbox_status", MODE_PRIVATE).registerOnSharedPreferenceChangeListener(notificationListener)
+    }
+    override fun onStop() {
+        getSharedPreferences("push_health", MODE_PRIVATE).unregisterOnSharedPreferenceChangeListener(notificationListener)
+        getSharedPreferences("staff_inbox_status", MODE_PRIVATE).unregisterOnSharedPreferenceChangeListener(notificationListener)
+        super.onStop()
+    }
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent); setIntent(intent)
+        orderTargetId = intent.getStringExtra("orderId"); orderTargetOwner = intent.getStringExtra("notificationOwner")
+        orderDetail = null; detailRequested = null; page = "Pedidos"; render()
+        if (owner != null) StaffInboxSync.request(this)
     }
     override fun onResume() {
         super.onResume()
         if (owner != app.backendClient.dailyOwner) {
             owner = app.backendClient.dailyOwner
-            snapshot = null; rows = emptyList(); page = "Hoy"; owners.value = owner; render()
+            snapshot = null; rows = emptyList(); inbox = null; orderDetail = null; detailRequested = null; page = "Pedidos"; owners.value = owner; render()
         }
-        if (owner != null) DailySync.request(this)
+        if (owner != null) {
+            DailySync.request(this); StaffInboxSync.request(this); StaffNotificationRegistration.ensure(this)
+        }
     }
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putString("page", page); outState.putString("draft", draft.toString())
+        outState.putString("orderId", orderTargetId); outState.putString("notificationOwner", orderTargetOwner)
         super.onSaveInstanceState(outState)
     }
     private fun dp(value: Int) = (value * resources.displayMetrics.density).toInt()
@@ -122,8 +169,8 @@ class DailyActivity : AppCompatActivity() {
         content = column().apply { setPadding(dp(18), dp(8), dp(18), dp(24)) }
         scroll.addView(content); root.addView(scroll, LinearLayout.LayoutParams(-1, 0, 1f))
         val nav = LinearLayout(this).apply { gravity = Gravity.CENTER; setPadding(dp(10), 0, dp(10), dp(4)); background = shape(cardColor) }
-        for (name in listOf("Hoy", "Inventario", "Historial")) {
-            val item = button(name) { page = name; render() }
+        for (name in listOf("Pedidos", "Hoy", "Inventario", "Historial")) {
+            val item = button(if (name == "Inventario") "Stock" else name) { page = name; render() }.apply { textSize = 12f }
             navButtons[name] = item
             nav.addView(item, LinearLayout.LayoutParams(0, -2, 1f))
         }
@@ -149,6 +196,17 @@ class DailyActivity : AppCompatActivity() {
         }
     }
     private fun updateStatus() {
+        if (page == "Pedidos") {
+            val error = getSharedPreferences("staff_inbox_status", MODE_PRIVATE).getString("error:$owner", null)
+            status.text = when {
+                owner == null -> "Conecta tu cuenta del Dashboard"
+                !NetworkConnection.connected(this) -> "Sin conexión · copia de pedidos guardada"
+                error != null -> error
+                inbox == null -> "Consultando pedidos…"
+                else -> "Pedidos consultados ${java.text.DateFormat.getTimeInstance(java.text.DateFormat.SHORT).format(java.util.Date(inboxUpdatedAt))}"
+            }
+            return
+        }
         val pending = rows.count { it.state == "PENDING" }
         val conflicts = rows.count { it.state == "CONFLICT" }
         val error = getSharedPreferences("daily_sync", Context.MODE_PRIVATE).getString("error", null)
@@ -167,11 +225,12 @@ class DailyActivity : AppCompatActivity() {
         if (!::content.isInitialized) return
         content.removeAllViews(); updateStatus()
         for ((name, item) in navButtons) {
-            val selected = name == page || (name == "Hoy" && page !in listOf("Inventario", "Historial"))
+            val selected = name == page || (name == "Hoy" && page !in listOf("Pedidos", "Inventario", "Historial"))
             item.backgroundTintList = ColorStateList.valueOf(if (selected) accent else cardColor)
             item.setTextColor(if (selected) bg else white)
         }
         if (owner == null) { login(); return }
+        if (page == "Pedidos") { orders(); return }
         if (page in listOf("Hoy", "Inventario", "Historial")) content.addView(label(page, 28f, bold = true))
         if (snapshot == null) {
             content.addView(label("Conecta a Internet y pulsa Actualizar. El registro diario necesita su activación SQL en Supabase y una primera consulta autorizada.", color = muted))
@@ -186,8 +245,8 @@ class DailyActivity : AppCompatActivity() {
         }
     }
     private fun login() {
-        content.addView(label("Tu operación, en orden", 27f, bold = true))
-        content.addView(label("Compra por cajas, vende por sabor y cierra el día sin perder tu inventario. Entra con la misma cuenta del Dashboard de dracha.store.", color = muted))
+        content.addView(label("Tus pedidos, a tiempo", 27f, bold = true))
+        content.addView(label("Recibe avisos, gestiona pedidos y registra la operación diaria. Entra una vez con la misma cuenta del Dashboard de dracha.store.", color = muted))
         val email = field(content, "Correo de administrador o vendedor", "", InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS)
         val password = field(content, "Contraseña", "", InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD)
         val feedback = label("La sesión se conserva cifrada. La contraseña no se guarda.", color = muted); content.addView(feedback)
@@ -198,13 +257,190 @@ class DailyActivity : AppCompatActivity() {
             lifecycleScope.launch {
                 try {
                     app.backendClient.login(email.text.toString(), password.text.toString())
-                    owner = app.backendClient.dailyOwner; snapshot = null; rows = emptyList(); page = "Hoy"
-                    owners.value = owner; DailySync.schedule(this@DailyActivity); render(); refresh()
+                    owner = app.backendClient.dailyOwner; snapshot = null; rows = emptyList(); inbox = null; page = "Pedidos"
+                    owners.value = owner; DailySync.schedule(this@DailyActivity); StaffInboxSync.schedule(this@DailyActivity)
+                    PushHealth.clear(this@DailyActivity); StaffNotificationRegistration.request(this@DailyActivity)
+                    render(); refresh()
                 } catch (e: Exception) { feedback.text = e.message ?: "No se pudo conectar. Revisa la cuenta y la conexión." }
                 finally { busy = false; login.isEnabled = true }
             }
         }
         content.addView(login)
+    }
+    private fun observeOrders() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                owners.collectLatest { current ->
+                    if (current == null) return@collectLatest
+                    kotlinx.coroutines.coroutineScope {
+                        launch {
+                            app.database.staffOrderDao().observe(current).collect { cache ->
+                                if (owner == current) {
+                                    inbox = cache?.json?.let { JSONObject(it) }; inboxUpdatedAt = cache?.receivedAt ?: 0L
+                                    if (cache != null && orderFeedback == "Solicitando actualización…") orderFeedback = ""
+                                    if (page == "Pedidos") {
+                                        if (!busy) detailRequested = null
+                                        render()
+                                    }
+                                }
+                            }
+                        }
+                        while (true) {
+                            kotlinx.coroutines.delay(60_000)
+                            if (owner == current && page == "Pedidos" && NetworkConnection.connected(this@DailyActivity)) StaffInboxSync.request(this@DailyActivity)
+                        }
+                    }
+                }
+            }
+        }
+    }
+    private fun orderStatus(value: String) = when (value) {
+        "PENDING" -> "Nuevo"; "ACCEPTED" -> "Aceptado"; "OUT_FOR_DELIVERY" -> "En camino"
+        "COMPLETED" -> "Cobrado y entregado"; "CANCELLED" -> "Cancelado"; else -> "Actualizar estado"
+    }
+    private fun orders() {
+        val current = owner ?: return
+        content.addView(label("Pedidos", 28f, bold = true))
+        card {
+            addView(label("Avisos fuera de la app", 18f, bold = true))
+            addView(label(PushHealth.summary(this@DailyActivity, true), 13f, muted))
+            addView(button("Activar / comprobar avisos", true) {
+                if (Build.VERSION.SDK_INT >= 33 && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED)
+                    notificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
+                else if (!OrderNotifications.enabled(this@DailyActivity)) {
+                    val settings = if (Build.VERSION.SDK_INT >= 26) Intent(android.provider.Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                        .putExtra(android.provider.Settings.EXTRA_APP_PACKAGE, packageName)
+                    else Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS, "package:$packageName".toUri())
+                    startActivity(settings)
+                }
+                else { StaffNotificationRegistration.request(this@DailyActivity); orderFeedback = "Comprobando teléfono y emisor…"; render() }
+            })
+            addView(button("Enviar prueba a este teléfono") {
+                lifecycleScope.launch {
+                    try {
+                        val result = app.backendClient.staffNotificationTest(current)
+                        if (owner == current) message(if (result.optBoolean("accepted"))
+                            "FCM aceptó la prueba. Comprueba que aparezca el aviso del sistema; la aceptación no confirma que Android lo haya mostrado."
+                            else "No se pudo enviar: ${result.optString("status")}. Activa/comprueba los avisos para ver el diagnóstico.")
+                    } catch (e: Exception) { if (owner == current) message(e.message ?: "No se pudo enviar la prueba.") }
+                }
+            })
+            if (app.backendClient.role == "ADMIN") addView(button("Activar recuperación del servidor") {
+                lifecycleScope.launch {
+                    try {
+                        app.backendClient.staffNotificationConfigureRetry(current)
+                        StaffNotificationRegistration.request(this@DailyActivity)
+                        if (owner == current) message("La recuperación de avisos quedó programada en el servidor.")
+                    } catch (e: Exception) { if (owner == current) message(e.message ?: "No se pudo configurar la recuperación.") }
+                }
+            })
+        }
+        content.addView(button("Actualizar pedidos") { detailRequested = null; StaffInboxSync.request(this); orderFeedback = "Solicitando actualización…"; render() })
+        if (orderFeedback.isNotBlank()) content.addView(label(orderFeedback, 13f, muted))
+        val active = inbox?.optJSONArray("active") ?: JSONArray()
+        val recent = inbox?.optJSONArray("recent") ?: JSONArray()
+        if (orderTargetOwner != null && orderTargetOwner != current) {
+            orderTargetId = null; orderTargetOwner = null; orderDetail = null
+            content.addView(label("El aviso pertenece a otra cuenta. Consulta los pedidos con tu acceso actual.", color = muted))
+        }
+        val target = orderTargetId?.takeIf { StaffOrderNotifications.validId(it) }
+        if (target != null) {
+            val cached = (0 until active.length()).map { active.getJSONObject(it) }.plus((0 until recent.length()).map { recent.getJSONObject(it) })
+                .firstOrNull { it.optString("id") == target }
+            val fetched = orderDetail?.takeIf { it.optString("id") == target }
+            val detail = if (cached != null && (fetched == null || cached.optString("updated_at") >= fetched.optString("updated_at"))) cached else fetched
+            if (detail != null) orderDetails(detail, current)
+            else content.addView(label("Consulta los detalles de este pedido con Internet.", color = muted))
+            content.addView(button("← Todos los pedidos") { orderTargetId = null; orderDetail = null; detailRequested = null; render() })
+            if (detailRequested != target && NetworkConnection.connected(this)) {
+                detailRequested = target
+                lifecycleScope.launch {
+                    try {
+                        val data = app.staffInbox.detail(current, target)
+                        if (owner == current && orderTargetId == target) { orderDetail = data; orderFeedback = ""; render() }
+                    } catch (e: Exception) { if (owner == current) { orderFeedback = e.message ?: "No se pudo consultar el pedido."; render() } }
+                }
+            }
+        } else {
+            content.addView(button(if (showRecentOrders) "Ver activos" else "Ver recientes") { showRecentOrders = !showRecentOrders; visibleOrderCount = 40; render() })
+            val source = if (showRecentOrders) recent else active
+            if (inbox == null) content.addView(label("Los pedidos guardados aparecerán después de la primera consulta autorizada.", color = muted))
+            else if (source.length() == 0) content.addView(label(if (showRecentOrders) "No hay pedidos recientes en esta consulta." else "No hay pedidos activos en la última consulta.", color = muted))
+            for (i in 0 until minOf(source.length(), visibleOrderCount)) {
+                val order = source.getJSONObject(i)
+                card {
+                    addView(label(order.optString("public_code"), 20f, accent, true))
+                    addView(label("${orderStatus(order.optString("status"))} · ${cash(order.optLong("total_cents"))}", bold = true))
+                    addView(label(order.optString("customer_name_snapshot"), 14f))
+                    addView(label(order.optString("delivery_location"), 13f, muted))
+                    addView(button("Consultar pedido") {
+                        orderTargetId = order.getString("id"); orderTargetOwner = current
+                        orderDetail = null; detailRequested = null; orderFeedback = ""; render()
+                    })
+                }
+            }
+            if (source.length() > visibleOrderCount) content.addView(button("Mostrar más pedidos") { visibleOrderCount += 40; render() })
+        }
+        content.addView(label("Sin Internet no llegan pedidos nuevos. Los avisos dependen de Android, FCM y la conexión.", 12f, muted))
+        content.addView(button("Abrir Dashboard web") { openWeb() })
+        content.addView(button("Cerrar sesión") { logout() })
+    }
+    private fun orderDetails(order: JSONObject, current: String) {
+        card {
+            addView(label("Pedido ${order.optString("public_code")}", 24f, accent, true))
+            addView(label(orderStatus(order.optString("status")), 18f, bold = true))
+            addView(label(order.optString("customer_name_snapshot")))
+            addView(label(order.optString("customer_phone_snapshot"), color = muted))
+            addView(label(order.optString("delivery_location")))
+            val items = order.optJSONArray("order_items") ?: JSONArray()
+            for (i in 0 until items.length()) {
+                val item = items.getJSONObject(i)
+                addView(label("${item.optLong("quantity")} × ${item.optString("variant_name_snapshot")} · ${cash(item.optLong("line_total_cents"))}"))
+            }
+            addView(label("Total ${cash(order.optLong("total_cents"))}", 26f, accent, true))
+            addView(label("Pago: ${if (order.optString("payment_method") == "YAPPY") "Yappy" else "Efectivo"} · ${if (order.optString("payment_status") == "CONFIRMED") "Confirmado" else "Pendiente"}", color = muted))
+            val notes = order.optString("customer_notes").takeIf { it.isNotBlank() && it != "null" }
+            if (notes != null) addView(label("Nota: $notes"))
+            if (busy) addView(label("Confirmando en el servidor…", color = accent))
+            when (order.optString("status")) {
+                "PENDING" -> addView(button("Aceptar pedido", true) { orderAction(order, current, "ACCEPTED") })
+                "ACCEPTED" -> addView(button("Marcar en camino", true) { orderAction(order, current, "OUT_FOR_DELIVERY") })
+                "OUT_FOR_DELIVERY" -> addView(button("Cobrado y entregado", true) {
+                    if (order.optString("payment_status") == "CONFIRMED") {
+                        MaterialAlertDialogBuilder(this@DailyActivity).setTitle("Confirmar entrega")
+                            .setMessage("El pago ya está confirmado. Esta acción confirma la entrega; no vuelvas a cobrar.")
+                            .setPositiveButton("Entregado") { _, _ -> orderAction(order, current, "COMPLETED", order.getString("payment_method")) }
+                            .setNegativeButton("Volver", null).show()
+                    } else MaterialAlertDialogBuilder(this@DailyActivity).setTitle("Confirma el cobro real")
+                        .setItems(arrayOf("Recibí ${cash(order.optLong("total_cents"))} en efectivo", "Recibí ${cash(order.optLong("total_cents"))} por Yappy")) { _, which ->
+                            orderAction(order, current, "COMPLETED", if (which == 0) "CASH" else "YAPPY")
+                        }.setNegativeButton("Volver", null).show()
+                })
+            }
+            if (order.optString("status") in listOf("PENDING", "ACCEPTED", "OUT_FOR_DELIVERY")) addView(button("Cancelar pedido") {
+                MaterialAlertDialogBuilder(this@DailyActivity).setTitle("Cancelar ${order.optString("public_code")}")
+                    .setMessage(if (order.optString("payment_status") == "CONFIRMED") "El pago está confirmado. Cancelar no devuelve el dinero automáticamente. Coordina la devolución antes de continuar." else "El pedido se cancelará en el servidor y liberará su reserva de inventario.")
+                    .setNegativeButton("Conservar pedido", null).setPositiveButton("Cancelar pedido") { _, _ -> orderAction(order, current, "CANCELLED") }.show()
+            })
+        }
+    }
+    private fun orderAction(order: JSONObject, current: String, next: String, paymentMethod: String? = null) {
+        if (busy) return
+        if (!NetworkConnection.connected(this)) { message("Conecta a Internet para confirmar el cambio de estado o el cobro."); return }
+        busy = true; render()
+        lifecycleScope.launch {
+            try {
+                val response = app.backendClient.staffOrderAction(current, order.getString("id"), next, paymentMethod).getJSONObject("order")
+                require(response.getString("id") == order.getString("id")) { "Confirmación incompleta; actualiza el pedido antes de reintentar." }
+                if (owner == current) {
+                    val updated = JSONObject(order.toString())
+                    for (key in response.keys()) updated.put(key, response.get(key))
+                    orderDetail = updated; orderFeedback = "${orderStatus(response.getString("status"))} · confirmado por el servidor"
+                    StaffInboxSync.request(this@DailyActivity); DailySync.request(this@DailyActivity)
+                }
+            } catch (e: Exception) { if (owner == current) orderFeedback = e.message ?: "No se pudo confirmar. Actualiza para recuperar el estado del servidor." }
+            finally { busy = false; if (owner == current) render() }
+        }
     }
     private fun today() {
         val state = snapshot!!; val summary = state.getJSONObject("summary")
@@ -501,7 +737,21 @@ class DailyActivity : AppCompatActivity() {
         MaterialAlertDialogBuilder(this).setTitle("Cerrar sesión")
             .setMessage("Los registros locales se conservan para esta cuenta. Los pendientes necesitan que vuelvas a entrar con la misma cuenta.")
             .setNegativeButton("Volver", null).setPositiveButton("Cerrar sesión") { _, _ ->
-                DailySync.stop(this); app.backendClient.logout(); owner = null; owners.value = null; snapshot = null; rows = emptyList(); draft = JSONObject(); page = "Hoy"; render()
+                if (busy) return@setPositiveButton
+                busy = true
+                val previousOwner = owner
+                lifecycleScope.launch {
+                    if (previousOwner != null) {
+                        try { app.backendClient.staffNotificationStop(previousOwner) } catch (_: Exception) { /* Locally block all pushes even offline. */ }
+                        StaffInboxSync.stop(this@DailyActivity, previousOwner); StaffNotificationRegistration.stop(this@DailyActivity, previousOwner)
+                    }
+                    if (owner == previousOwner) {
+                        DailySync.stop(this@DailyActivity); app.backendClient.logout(); owner = null; owners.value = null
+                        snapshot = null; inbox = null; orderDetail = null; orderTargetId = null; orderTargetOwner = null
+                        rows = emptyList(); draft = JSONObject(); page = "Pedidos"
+                    }
+                    busy = false; render()
+                }
             }.show()
     }
     private fun openWeb() { startActivity(Intent(Intent.ACTION_VIEW, "https://www.dracha.store/?staff=dashboard".toUri())) }

@@ -1172,3 +1172,53 @@ Declaraciones en migraciones ordenadas por nombre. **No es un esquema materializ
 - cambio/permisos `revoke execute` (`on`; abrir SQL para objeto completo) — [supabase/migrations/202610130001_daily_operations.sql:L280](../../../supabase/migrations/202610130001_daily_operations.sql#L280)
 - cambio/permisos `revoke execute` (`on`; abrir SQL para objeto completo) — [supabase/migrations/202610130001_daily_operations.sql:L281](../../../supabase/migrations/202610130001_daily_operations.sql#L281)
 - cambio/permisos `grant execute` (`on`; abrir SQL para objeto completo) — [supabase/migrations/202610130001_daily_operations.sql:L282](../../../supabase/migrations/202610130001_daily_operations.sql#L282)
+
+## 202610140001_staff_order_notifications.sql
+
+[supabase/migrations/202610140001_staff_order_notifications.sql:L1](../../../supabase/migrations/202610140001_staff_order_notifications.sql#L1)
+
+### Tabla `push_devices`
+
+| Columna inicial | Tipo inicial | Evidencia |
+|---|---|---|
+| `device_public_id` | `uuid` | [supabase/migrations/202610140001_staff_order_notifications.sql:L6](../../../supabase/migrations/202610140001_staff_order_notifications.sql#L6) |
+| `auth_user_id` | `uuid` | [supabase/migrations/202610140001_staff_order_notifications.sql:L6](../../../supabase/migrations/202610140001_staff_order_notifications.sql#L6) |
+| `platform` | `text` | [supabase/migrations/202610140001_staff_order_notifications.sql:L7](../../../supabase/migrations/202610140001_staff_order_notifications.sql#L7) |
+| `token` | `text` | [supabase/migrations/202610140001_staff_order_notifications.sql:L7](../../../supabase/migrations/202610140001_staff_order_notifications.sql#L7) |
+| `environment` | `text` | [supabase/migrations/202610140001_staff_order_notifications.sql:L8](../../../supabase/migrations/202610140001_staff_order_notifications.sql#L8) |
+| `app_version` | `text` | [supabase/migrations/202610140001_staff_order_notifications.sql:L9](../../../supabase/migrations/202610140001_staff_order_notifications.sql#L9) |
+| `active` | `boolean` | [supabase/migrations/202610140001_staff_order_notifications.sql:L9](../../../supabase/migrations/202610140001_staff_order_notifications.sql#L9) |
+| `updated_at` | `timestamptz` | [supabase/migrations/202610140001_staff_order_notifications.sql:L10](../../../supabase/migrations/202610140001_staff_order_notifications.sql#L10) |
+
+### Tabla `order_push_jobs`
+
+| Columna inicial | Tipo inicial | Evidencia |
+|---|---|---|
+| `id` | `uuid` | [supabase/migrations/202610140001_staff_order_notifications.sql:L13](../../../supabase/migrations/202610140001_staff_order_notifications.sql#L13) |
+| `order_id` | `uuid` | [supabase/migrations/202610140001_staff_order_notifications.sql:L13](../../../supabase/migrations/202610140001_staff_order_notifications.sql#L13) |
+| `device_public_id` | `uuid` | [supabase/migrations/202610140001_staff_order_notifications.sql:L14](../../../supabase/migrations/202610140001_staff_order_notifications.sql#L14) |
+| `attempts` | `integer` | [supabase/migrations/202610140001_staff_order_notifications.sql:L15](../../../supabase/migrations/202610140001_staff_order_notifications.sql#L15) |
+| `available_at` | `timestamptz` | [supabase/migrations/202610140001_staff_order_notifications.sql:L15](../../../supabase/migrations/202610140001_staff_order_notifications.sql#L15) |
+| `delivered_at` | `timestamptz` | [supabase/migrations/202610140001_staff_order_notifications.sql:L16](../../../supabase/migrations/202610140001_staff_order_notifications.sql#L16) |
+| `lease_id` | `uuid` | [supabase/migrations/202610140001_staff_order_notifications.sql:L16](../../../supabase/migrations/202610140001_staff_order_notifications.sql#L16) |
+| `last_error` | `text` | [supabase/migrations/202610140001_staff_order_notifications.sql:L16](../../../supabase/migrations/202610140001_staff_order_notifications.sql#L16) |
+
+- index `order_push_pending` — [supabase/migrations/202610140001_staff_order_notifications.sql:L18](../../../supabase/migrations/202610140001_staff_order_notifications.sql#L18)
+- trigger `new_order_push` — [supabase/migrations/202610140001_staff_order_notifications.sql:L83](../../../supabase/migrations/202610140001_staff_order_notifications.sql#L83)
+- función `api_staff_register_order_notifications` — [supabase/migrations/202610140001_staff_order_notifications.sql:L27](../../../supabase/migrations/202610140001_staff_order_notifications.sql#L27)
+- función `api_staff_stop_order_notifications` — [supabase/migrations/202610140001_staff_order_notifications.sql:L56](../../../supabase/migrations/202610140001_staff_order_notifications.sql#L56)
+- función `queue_order_push` — [supabase/migrations/202610140001_staff_order_notifications.sql:L70](../../../supabase/migrations/202610140001_staff_order_notifications.sql#L70)
+- función `api_claim_staff_order_push` — [supabase/migrations/202610140001_staff_order_notifications.sql:L85](../../../supabase/migrations/202610140001_staff_order_notifications.sql#L85)
+- función `api_finish_staff_order_push` — [supabase/migrations/202610140001_staff_order_notifications.sql:L106](../../../supabase/migrations/202610140001_staff_order_notifications.sql#L106)
+- función `api_retry_staff_order_push` — [supabase/migrations/202610140001_staff_order_notifications.sql:L121](../../../supabase/migrations/202610140001_staff_order_notifications.sql#L121)
+- función `api_staff_order_notification_status` — [supabase/migrations/202610140001_staff_order_notifications.sql:L136](../../../supabase/migrations/202610140001_staff_order_notifications.sql#L136)
+- cambio/permisos `alter table` (`push_devices`; abrir SQL para objeto completo) — [supabase/migrations/202610140001_staff_order_notifications.sql:L19](../../../supabase/migrations/202610140001_staff_order_notifications.sql#L19)
+- cambio/permisos `alter table` (`push_devices`; abrir SQL para objeto completo) — [supabase/migrations/202610140001_staff_order_notifications.sql:L20](../../../supabase/migrations/202610140001_staff_order_notifications.sql#L20)
+- cambio/permisos `alter table` (`push_devices`; abrir SQL para objeto completo) — [supabase/migrations/202610140001_staff_order_notifications.sql:L21](../../../supabase/migrations/202610140001_staff_order_notifications.sql#L21)
+- cambio/permisos `alter table` (`push_devices`; abrir SQL para objeto completo) — [supabase/migrations/202610140001_staff_order_notifications.sql:L22](../../../supabase/migrations/202610140001_staff_order_notifications.sql#L22)
+- cambio/permisos `alter table` (`order_push_jobs`; abrir SQL para objeto completo) — [supabase/migrations/202610140001_staff_order_notifications.sql:L23](../../../supabase/migrations/202610140001_staff_order_notifications.sql#L23)
+- cambio/permisos `revoke all` (`on`; abrir SQL para objeto completo) — [supabase/migrations/202610140001_staff_order_notifications.sql:L24](../../../supabase/migrations/202610140001_staff_order_notifications.sql#L24)
+- cambio/permisos `grant select` (`on`; abrir SQL para objeto completo) — [supabase/migrations/202610140001_staff_order_notifications.sql:L25](../../../supabase/migrations/202610140001_staff_order_notifications.sql#L25)
+- cambio/permisos `drop trigger` (`if`; abrir SQL para objeto completo) — [supabase/migrations/202610140001_staff_order_notifications.sql:L82](../../../supabase/migrations/202610140001_staff_order_notifications.sql#L82)
+- cambio/permisos `revoke execute` (`on`; abrir SQL para objeto completo) — [supabase/migrations/202610140001_staff_order_notifications.sql:L152](../../../supabase/migrations/202610140001_staff_order_notifications.sql#L152)
+- cambio/permisos `grant execute` (`on`; abrir SQL para objeto completo) — [supabase/migrations/202610140001_staff_order_notifications.sql:L156](../../../supabase/migrations/202610140001_staff_order_notifications.sql#L156)

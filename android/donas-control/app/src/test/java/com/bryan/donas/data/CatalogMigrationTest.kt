@@ -43,7 +43,7 @@ class CatalogMigrationTest {
                 VALUES ('operation-1',1,'SALE','2026-10-07T00:00:00Z','{}','PENDING',2,'Sin red',NULL)""")
             raw.version = 4
         } finally { raw.close() }
-        val db = Room.databaseBuilder(context, AppDatabase::class.java, name).addMigrations(AppDatabase.MIGRATION_4_5, AppDatabase.MIGRATION_5_6).build()
+        val db = Room.databaseBuilder(context, AppDatabase::class.java, name).addMigrations(AppDatabase.MIGRATION_4_5, AppDatabase.MIGRATION_5_6, AppDatabase.MIGRATION_6_7).build()
         try {
             assertEquals("DR-1", db.syncDao().order("order-1")!!.publicCode)
             val pending = db.syncDao().pending().single()

@@ -42,3 +42,11 @@ daily_outbox: UUID, ownerId, sessionId, kind, payload, createdAt, state PENDING/
 - Existencias = conteo + movimientos; disponible = físico − reservas, con déficit detectado.
 
 Inventario no vendido conserva unidades/costo y no se imputa como pérdida del día. No se reconstruye una inversión histórica desconocida.
+
+## Pedidos/avisos2.1
+
+Room7 añade solo staff_order_cache(ownerId PK,json,receivedAt); 6→7 no toca tablas previas. Guarda todos los activos consultados (máximo2000) y50 recientes; UI renderiza40 por página. Detalle remoto por UUID permite abrir un pedido viejo. Costo, inventario y pagos siguen exclusivamente en las tablas/RPC comerciales ya activadas.
+
+202610140001 reutiliza/crea push_devices/order_push_jobs sin importar archivo histórico. Añade auth_mode(defaultLEGACY),revoked_at,registered_at; solo SUPABASE_STAFF_V2 se registra/envía en el flujo nuevo. Cola única pedido/dispositivo, lease2min, backoff y10 intentos; delivered_at significa aceptación del proveedor. RPC staff privados, RLS y sin SELECT/EXECUTE anon/authenticated. Tokens rotados no se desactivan por un error tardío del token anterior.
+
+SQL03 habilita cron/pg_net/Vault y helpers privados. CRON_SECRET viaja desde Vercel a Vault por RPC ADMIN/servidor, nunca desde frontend. Net guarda headers descifrados: schema/tablas/funciones quedan cerradas a PUBLIC/anon/authenticated. Otros cron se conservan; una falla de permisos aborta el instalador.

@@ -1,6 +1,6 @@
-# Identidades vigentes
+# 05-identities
 
-[Contexto](../AI_CONTEXT.md). Código local revisado; activación real pendiente.
+[Contexto](../AI_CONTEXT.md)
 
 ```mermaid
 flowchart TD

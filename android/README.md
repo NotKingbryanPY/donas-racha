@@ -1,5 +1,5 @@
-# Android Donas Control 2
+# Donas Control Android2.1
 
-`donas-control/` contiene la app activa: compras configurables, ventas por sabor con pago dividido, consumo, inventario y cierre diario. Supabase es la autoridad compartida con la web; Room v6 conserva datos v5 y añade outbox/caché nuevas.
+La app activa está en donas-control/. Pedidos nativos y avisos FCM son la entrada principal; conserva compras configurables, ventas con pago dividido, consumo, inventario y cierre diario. Supabase es autoridad compartida y Room7 conserva las tablas anteriores.
 
-Leer `donas-control/README.md`, `../AGENTS.md` y `../docs/knowledge/AI_CONTEXT.md`. `phase9-overlay/`, el ledger contable antiguo y los flujos móviles retirados son historia; no aplicar el overlay ni restaurar /api/sync/push/provisión automáticamente. iOS queda para otra etapa.
+Leer [README app](donas-control/README.md), [guía IA](../docs/knowledge/AI_CONTEXT.md) y [activación2.1](../docs/DONAS_CONTROL_2_1_PEDIDOS.md). No aplicar phase9-overlay ni restaurar sync contable/provisión/cronGitHub antiguos. iOS se pospone.
