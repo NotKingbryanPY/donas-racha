@@ -1,5 +1,13 @@
 # Historial de decisiones y documentación
 
+## 2026-10-14 — emisor FCM configurado
+
+Usuario autorizó Vercel CLI desde su navegador remoto. Se validó el archivo de cuenta servicio sin imprimirlo y se guardaron FCM_PROJECT_ID/FCM_CLIENT_EMAIL/FCM_PRIVATE_KEY/CRON_SECRET como variables protegidas Production por stdin. Metadata confirmó proyecto/nombres/entorno; redeploy del mismo código306ff96 quedó Ready (AfrY4noC81swx6pD3pW8qa7Y26Bs) y promovido a www.dracha.store. OAuth/FCM validate_only200, lectura pública/protección y APK exacto comprobados. No avisos físicos ni cron efectivo afirmados. La clave fue adjunta al chat: rotación/revocación pendiente; no se modificaron claves/roles tras la comprobación IAM no concluyente. No cambió código/APK/negocio ni se copiaron credenciales al repositorio. Guías e índices actualizados.
+
+## 2026-10-14 — activación SQL de avisos reportada
+
+Usuario compartió preflight compatible, Success de01, ORDER_NOTIFICATIONS_SQL_READY de02 con cuatro controles=true y0 teléfonos, y ORDER_RETRY_SUPPORT_INSTALLED de03. Se actualizan informe, contexto, runbook, pendientes y evidencia; no se repiten instaladores ni se modifica runtime/APK/negocio. La instalación de helpers no acredita cron activo ni entrega FCM. El agente volvió a verificar Firebase ACTIVE, Vercel CLI Logged out y timeout del control de pestaña Brave. Pendientes: credenciales protegidas del emisor, registro del teléfono, activación ADMIN de recuperación y prueba física. Sin lectura de almacenes/valores privados ni ejecución SQL directa.
+
 ## 2026-10-14 — verificación continuada
 
 El usuario compartió después DAILY_V2_READY con todos los controles de jornada/permisos/RLS/trigger/integridad correctos. Se actualiza el estado de activación a validada por resultado del usuario; sigue pendiente la operación autenticada desde el APK y la lectura coincidente en web. No se ejecutó SQL privado por el agente, no se cambia código/stock/APK y no se pide repetir la instalación.

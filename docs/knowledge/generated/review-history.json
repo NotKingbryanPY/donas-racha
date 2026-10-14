@@ -803,5 +803,27 @@
       "tests/staff-notification-postgres.mjs"
     ],
     "note": "Seguimiento de entrega: despliegue y APK descargado verificados; preflight protegido sin argumentos de webhooks, prueba de encabezado privado excluido aprobada. Runtime Android/API sin cambios; SQL/emisor/recepcion real pendientes."
+  },
+  {
+    "date": "2026-10-14T15:03:30-05:00",
+    "commit": "306ff9665cc5ffa74323e196209e8cc31a1e5b7f",
+    "areas": [
+      "operations"
+    ],
+    "changed_files": [
+      "docs/DONAS_CONTROL_2_1_PEDIDOS.md"
+    ],
+    "note": "Evidencia del usuario: SQL avisos 02 y soporte 03 listos; emisor, cron efectivo y telefono pendientes; sin cambios de runtime."
+  },
+  {
+    "date": "2026-10-14T15:16:56-05:00",
+    "commit": "306ff9665cc5ffa74323e196209e8cc31a1e5b7f",
+    "areas": [
+      "operations"
+    ],
+    "changed_files": [
+      "docs/DONAS_CONTROL_2_1_PEDIDOS.md"
+    ],
+    "note": "Activacion SQL reportada y emisor Production configurado; OAuth/FCM validate_only y smoke verificados. Telefono, cron efectivo y rotacion de clave pendientes."
   }
 ]
