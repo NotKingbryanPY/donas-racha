@@ -13,3 +13,5 @@ Web conserva perfil/pedidos claros, puntos disponibles principales y acumulados 
 La imagen generada es una propuesta, no captura del APK. Los resultados de render/pruebas reales se registran en VALIDATION. No se requiere descargar imágenes pesadas para operar.
 
 2.1 abre Pedidos; conserva Hoy/Stock/Historial y paleta oscura/lavanda. Lista activa/recientes, detalle, acciones y diagnóstico real de avisos. Notification tap abre UUID propietario; reduced motion web/tutorial no se alteran. Renders nativos de Pedidos/detalle son fixtures ilustrativos, no pedidos/recepción física de producción.
+
+2.1.1 elimina el texto de comprobación persistente en orderFeedback. La tarjeta Avisos muestra el diagnóstico y un mensaje específico del WorkInfo manual; botón deshabilitado mientras espera/ejecuta y recuperado al finalizar. Se distingue pendiente de Android, falta de red, reintento y cancelación. Resultado de comprobación no equivale a recepción del aviso en pantalla. No añade animación, polling ni un servicio permanente.

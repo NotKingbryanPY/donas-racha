@@ -1,5 +1,9 @@
 # Historial de decisiones y documentación
 
+## 2026-10-14 — comprobación de avisos2.1.1
+
+Usuario desde Samsung A23 confirmó notificación Android de la prueba y confirmación de recuperación programada; informó texto Comprobando persistente. Causa: mensaje literal guardado en orderFeedback no se cerraba con el resultado de registro. Versión2.1.1/código17 separa feedback, devuelve UUID de WorkManager y observa sus estados con lifecycle, impide doble pulsación durante seguimiento y rehabilita el botón en estados terminales; conserva UUID/propietario al recrear. Diagnóstico de fallo de configuración también persiste desde el worker. Tres regresiones cubren éxito, fallo/reintento y resultado recibido al volver a pantalla. PASS120 pruebas/lintDebug/lintOfficial/build optimizado; APK oficial firmado/hash/alineación16KB/escaneo992 entradas aprobados. Informe2.1.1 registra archivo y límites; CI/publicación aún pendientes. Sin SQL ni emisor/secretos nuevos; datos/certificado/Room7 conservados. Fuera de app y rotación de clave siguen pendientes.
+
 ## 2026-10-14 — emisor FCM configurado
 
 Usuario autorizó Vercel CLI desde su navegador remoto. Se validó el archivo de cuenta servicio sin imprimirlo y se guardaron FCM_PROJECT_ID/FCM_CLIENT_EMAIL/FCM_PRIVATE_KEY/CRON_SECRET como variables protegidas Production por stdin. Metadata confirmó proyecto/nombres/entorno; redeploy del mismo código306ff96 quedó Ready (AfrY4noC81swx6pD3pW8qa7Y26Bs) y promovido a www.dracha.store. OAuth/FCM validate_only200, lectura pública/protección y APK exacto comprobados. No avisos físicos ni cron efectivo afirmados. La clave fue adjunta al chat: rotación/revocación pendiente; no se modificaron claves/roles tras la comprobación IAM no concluyente. No cambió código/APK/negocio ni se copiaron credenciales al repositorio. Guías e índices actualizados.

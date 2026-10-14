@@ -15,8 +15,9 @@
 | Web | panel diario de lectura, stock compartido, pedidos/puntos/perfiles/canjes/tutorial existentes |
 | Pedidos nativos | entrada principal; aceptar/en camino/cobrar-entregar/cancelar; API existente online, copia por propietario y tap a UUID incluso fuera de página reciente |
 | Avisos externos | FCM alta prioridad, canal/sonido/permisos, dedupe duradero, token renovable/revocable y prueba real al propio teléfono; requiere SQL/emisor/reintento |
+| Comprobación de avisos | UUID real de WorkManager observado con lifecycle; espera/red/reintento/finalización explícitos, botón sin doble pulsación y diagnóstico persistente |
 | Android anterior | datos/tablas/source preservados; capital/socios/widgets/sync contable/provisión/push antiguos fuera del runtime; avisos2.1 autorizados se reconstruyen |
 | Firebase | proyecto/configuración existente preservada; no datos de negocio nuevos; FCM nuevo; auth antiguo no rehabilitado |
 | iOS | etapa posterior, sin build/distribución nuevos |
 
-No hay borrado definitivo ni reversión automática de ventas confirmadas en esta versión. Rechazos conservan evidencia; corregir unidades exige motivo. Gestión de pedidos disponible nativa y en Dashboard. La recepción física fuera de app queda pendiente hasta configurar emisor y probar en Honor; no se afirma porque compile.
+No hay borrado definitivo ni reversión automática de ventas confirmadas en esta versión. Rechazos conservan evidencia; corregir unidades exige motivo. Gestión de pedidos disponible nativa y en Dashboard. Emisor configurado; el usuario informó una prueba real recibida en Samsung A23 y recuperación programada. Falta confirmar recepción fuera de app/bloqueado y pedido real completo; compilar no certifica esos recorridos.

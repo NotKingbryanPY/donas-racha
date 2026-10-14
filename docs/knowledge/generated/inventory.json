@@ -1,10 +1,10 @@
 {
-  "source_commit": "306ff9665cc5ffa74323e196209e8cc31a1e5b7f",
+  "source_commit": "1b40d1a33007a8ad3380a1958b24395ea58d2c12",
   "scope": "working tree; lexical extraction, production unverified",
   "schema_version": 1,
   "extractor_version": 4,
   "hash_algorithm": "sha256; text CRLF normalized to LF; vendor/binary literal",
-  "model_sha256": "9a16dcc14c0275273ea1e63e42764d75f4b8d2f88afc23c34a2155edde8781cf",
+  "model_sha256": "02360dd2c226e527df3f8da9eaec64d0d9ce2183383842289a25e988a61f3f70",
   "files": [
     {
       "path": ".env.example",
@@ -414,7 +414,7 @@
     },
     {
       "path": "android/donas-control/app/build.gradle.kts",
-      "sha256": "b561d3e15b063c71bcf5d29e9467b2e91d45d4164b6e104fbe5661defffc1d3a",
+      "sha256": "8adbf80970dea4376354ab372bf97e59759549663952264b2cbce22fbf8ad304",
       "bytes": 5181,
       "symbols": [],
       "imports": [],
@@ -601,238 +601,248 @@
     },
     {
       "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-      "sha256": "1d21328b9016f5afacf4006f009fcaa93d73326f77f64b019568cc85a92144fd",
-      "bytes": 52431,
+      "sha256": "3d03c7b934cb6e24626e8fd5a712bb58afa963b5e7efb6c547c11d4ca876562e",
+      "bytes": 55167,
       "symbols": [
         {
           "name": "DailyActivity",
           "kind": "class",
-          "line": 51
+          "line": 54
         },
         {
           "name": "onCreate",
           "kind": "function",
-          "line": 88
+          "line": 93
         },
         {
           "name": "onStart",
           "kind": "function",
-          "line": 103
+          "line": 113
         },
         {
           "name": "onStop",
           "kind": "function",
-          "line": 108
+          "line": 118
         },
         {
           "name": "onNewIntent",
           "kind": "function",
-          "line": 113
+          "line": 123
         },
         {
           "name": "onResume",
           "kind": "function",
-          "line": 119
+          "line": 129
         },
         {
           "name": "onSaveInstanceState",
           "kind": "function",
-          "line": 129
+          "line": 140
         },
         {
           "name": "dp",
           "kind": "function",
-          "line": 134
+          "line": 147
         },
         {
           "name": "column",
           "kind": "function",
-          "line": 135
+          "line": 148
         },
         {
           "name": "shape",
           "kind": "function",
-          "line": 136
+          "line": 149
         },
         {
           "name": "label",
           "kind": "function",
-          "line": 139
+          "line": 152
         },
         {
           "name": "button",
           "kind": "function",
-          "line": 143
+          "line": 156
         },
         {
           "name": "card",
           "kind": "function",
-          "line": 149
+          "line": 162
         },
         {
           "name": "createLayout",
           "kind": "function",
-          "line": 153
+          "line": 166
         },
         {
           "name": "observe",
           "kind": "function",
-          "line": 179
+          "line": 192
         },
         {
           "name": "updateStatus",
           "kind": "function",
-          "line": 198
+          "line": 211
         },
         {
           "name": "cash",
           "kind": "function",
-          "line": 223
+          "line": 236
         },
         {
           "name": "render",
           "kind": "function",
-          "line": 224
+          "line": 237
         },
         {
           "name": "login",
           "kind": "function",
-          "line": 247
+          "line": 260
         },
         {
           "name": "observeOrders",
           "kind": "function",
-          "line": 270
+          "line": 283
         },
         {
           "name": "orderStatus",
           "kind": "function",
-          "line": 297
+          "line": 310
+        },
+        {
+          "name": "startNotificationCheck",
+          "kind": "function",
+          "line": 314
+        },
+        {
+          "name": "trackNotificationCheck",
+          "kind": "function",
+          "line": 321
         },
         {
           "name": "orders",
           "kind": "function",
-          "line": 301
+          "line": 351
         },
         {
           "name": "orderDetails",
           "kind": "function",
-          "line": 388
+          "line": 439
         },
         {
           "name": "orderAction",
           "kind": "function",
-          "line": 427
+          "line": 478
         },
         {
           "name": "today",
           "kind": "function",
-          "line": 445
+          "line": 496
         },
         {
           "name": "inventory",
           "kind": "function",
-          "line": 486
+          "line": 537
         },
         {
           "name": "title",
           "kind": "function",
-          "line": 504
+          "line": 555
         },
         {
           "name": "history",
           "kind": "function",
-          "line": 507
+          "line": 558
         },
         {
           "name": "showDetails",
           "kind": "function",
-          "line": 551
+          "line": 602
         },
         {
           "name": "startForm",
           "kind": "function",
-          "line": 575
+          "line": 626
         },
         {
           "name": "persistDraft",
           "kind": "function",
-          "line": 581
+          "line": 632
         },
         {
           "name": "field",
           "kind": "function",
-          "line": 582
+          "line": 633
         },
         {
           "name": "beforeTextChanged",
-          "kind": "function",
-          "line": 590
-        },
-        {
-          "name": "onTextChanged",
-          "kind": "function",
-          "line": 591
-        },
-        {
-          "name": "afterTextChanged",
-          "kind": "function",
-          "line": 592
-        },
-        {
-          "name": "draftField",
-          "kind": "function",
-          "line": 596
-        },
-        {
-          "name": "form",
-          "kind": "function",
-          "line": 604
-        },
-        {
-          "name": "watch",
           "kind": "function",
           "line": 641
         },
         {
-          "name": "beforeTextChanged",
-          "kind": "function",
-          "line": 643
-        },
-        {
           "name": "onTextChanged",
           "kind": "function",
-          "line": 644
+          "line": 642
         },
         {
           "name": "afterTextChanged",
           "kind": "function",
-          "line": 645
+          "line": 643
+        },
+        {
+          "name": "draftField",
+          "kind": "function",
+          "line": 647
+        },
+        {
+          "name": "form",
+          "kind": "function",
+          "line": 655
+        },
+        {
+          "name": "watch",
+          "kind": "function",
+          "line": 692
+        },
+        {
+          "name": "beforeTextChanged",
+          "kind": "function",
+          "line": 694
+        },
+        {
+          "name": "onTextChanged",
+          "kind": "function",
+          "line": 695
+        },
+        {
+          "name": "afterTextChanged",
+          "kind": "function",
+          "line": 696
         },
         {
           "name": "refresh",
           "kind": "function",
-          "line": 708
+          "line": 759
         },
         {
           "name": "closeDay",
           "kind": "function",
-          "line": 721
+          "line": 772
         },
         {
           "name": "logout",
           "kind": "function",
-          "line": 736
+          "line": 787
         },
         {
           "name": "openWeb",
           "kind": "function",
-          "line": 757
+          "line": 809
         },
         {
           "name": "message",
           "kind": "function",
-          "line": 758
+          "line": 810
         }
       ],
       "imports": [],
@@ -842,7 +852,7 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 759
+      "lines": 811
     },
     {
       "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyEntities.kt",
@@ -2626,58 +2636,58 @@
     },
     {
       "path": "android/donas-control/app/src/main/java/com/bryan/donas/orders/StaffNotificationRegistration.kt",
-      "sha256": "a8bbf58b76e64d69999dcee015c41a16f30d9f12c4164a7498fb94b9bd9aaef2",
-      "bytes": 5889,
+      "sha256": "03efdd6cc7c888cfa2b8354e6c739629b8050dd3a65bfc1f9161f3f0b04277ac",
+      "bytes": 6057,
       "symbols": [
         {
           "name": "StaffNotificationRegistration",
           "kind": "class",
-          "line": 20
+          "line": 21
         },
         {
           "name": "request",
           "kind": "function",
-          "line": 21
+          "line": 22
         },
         {
           "name": "ensure",
           "kind": "function",
-          "line": 30
+          "line": 33
         },
         {
           "name": "stop",
           "kind": "function",
-          "line": 38
+          "line": 41
         },
         {
           "name": "StaffNotificationRegistrationWorker",
           "kind": "class",
-          "line": 44
+          "line": 47
         },
         {
           "name": "doWork",
           "kind": "function",
-          "line": 45
+          "line": 48
         },
         {
           "name": "StaffMessagingService",
           "kind": "class",
-          "line": 75
+          "line": 81
         },
         {
           "name": "onNewToken",
           "kind": "function",
-          "line": 76
+          "line": 82
         },
         {
           "name": "onMessageReceived",
           "kind": "function",
-          "line": 77
+          "line": 83
         },
         {
           "name": "onDeletedMessages",
           "kind": "function",
-          "line": 97
+          "line": 103
         }
       ],
       "imports": [],
@@ -2687,7 +2697,7 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 98
+      "lines": 104
     },
     {
       "path": "android/donas-control/app/src/main/java/com/bryan/donas/orders/StaffOrderNotifications.kt",
@@ -4086,6 +4096,91 @@
       "endpoints": [],
       "animations": [],
       "lines": 137
+    },
+    {
+      "path": "android/donas-control/app/src/test/java/com/bryan/donas/daily/NotificationCheckActivityTest.kt",
+      "sha256": "3f9bfeb9a1df60749fe952cf199159452e64ab53ca21527078ffab85e3959182",
+      "bytes": 7434,
+      "symbols": [
+        {
+          "name": "NotificationCheckActivityTest",
+          "kind": "class",
+          "line": 43
+        },
+        {
+          "name": "Tokens",
+          "kind": "class",
+          "line": 47
+        },
+        {
+          "name": "save",
+          "kind": "function",
+          "line": 48
+        },
+        {
+          "name": "refreshToken",
+          "kind": "function",
+          "line": 49
+        },
+        {
+          "name": "hasSession",
+          "kind": "function",
+          "line": 50
+        },
+        {
+          "name": "clear",
+          "kind": "function",
+          "line": 51
+        },
+        {
+          "name": "CheckResultWorker",
+          "kind": "class",
+          "line": 53
+        },
+        {
+          "name": "doWork",
+          "kind": "function",
+          "line": 54
+        },
+        {
+          "name": "children",
+          "kind": "function",
+          "line": 78
+        },
+        {
+          "name": "views",
+          "kind": "function",
+          "line": 80
+        },
+        {
+          "name": "checkButton",
+          "kind": "function",
+          "line": 81
+        },
+        {
+          "name": "texts",
+          "kind": "function",
+          "line": 83
+        },
+        {
+          "name": "track",
+          "kind": "function",
+          "line": 84
+        },
+        {
+          "name": "complete",
+          "kind": "function",
+          "line": 96
+        }
+      ],
+      "imports": [],
+      "rpc_calls": [],
+      "tables": [],
+      "sql_objects": [],
+      "sql_changes": [],
+      "endpoints": [],
+      "animations": [],
+      "lines": 143
     },
     {
       "path": "android/donas-control/app/src/test/java/com/bryan/donas/data/BackendRedirectTest.kt",
@@ -7848,9 +7943,9 @@
       "lines": 71
     },
     {
-      "path": "docs/DONAS_CONTROL_2_1_PEDIDOS.md",
-      "sha256": "07f0652ee888b3c3cb006cb81b58f13e4565d3d6eddb34179c50bcbdd9f5e368",
-      "bytes": 13365,
+      "path": "docs/DONAS_CONTROL_2_1_1_AVISOS.md",
+      "sha256": "c5a8a28aff57b196669d445bde29c28c84ca1808a5f3d1d2de20002768e15ac8",
+      "bytes": 3890,
       "symbols": [],
       "imports": [],
       "rpc_calls": [],
@@ -7859,7 +7954,21 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 79
+      "lines": 34
+    },
+    {
+      "path": "docs/DONAS_CONTROL_2_1_PEDIDOS.md",
+      "sha256": "d9fb9630de683910d742b267a046986e0f57a116f6b07ce44a8b40fbb4afdddf",
+      "bytes": 13548,
+      "symbols": [],
+      "imports": [],
+      "rpc_calls": [],
+      "tables": [],
+      "sql_objects": [],
+      "sql_changes": [],
+      "endpoints": [],
+      "animations": [],
+      "lines": 81
     },
     {
       "path": "docs/DONAS_CONTROL_2_ACTIVACION.md",
@@ -8266,6 +8375,19 @@
     {
       "path": "downloads/Donas-Control-2.1.0-oficial.apk.sha256",
       "sha256": "ae60b501286da62ba1b9953378b7133ff3996292fa6ab5c8bb2cd68cc8450034",
+      "bytes": 98,
+      "symbols": [],
+      "imports": [],
+      "rpc_calls": [],
+      "tables": [],
+      "sql_objects": [],
+      "sql_changes": [],
+      "endpoints": [],
+      "animations": []
+    },
+    {
+      "path": "downloads/Donas-Control-2.1.1-oficial.apk.sha256",
+      "sha256": "3650db1e19611d4eca893389580cab46e2cad32b2b158fa1f22c72718c99c7d7",
       "bytes": 98,
       "symbols": [],
       "imports": [],

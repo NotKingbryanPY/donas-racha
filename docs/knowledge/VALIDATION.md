@@ -1,5 +1,7 @@
 # Verificación de Donas Control 2
 
+Mantenimiento2.1.1: PASS120 pruebas Android (19 suites,0 fallos/errores), lintDebug/lintOfficial y build/R8 firmado. Tres regresiones nuevas comprueban finalización, fallo/reintento y lifecycle de la comprobación. Firma anterior, paquete/código17/API23–35, alineación16KB y escaneo992 entradas sin contenido privilegiado aprobados; APK/hash en [informe2.1.1](../DONAS_CONTROL_2_1_1_AVISOS.md). El usuario confirmó recepción de prueba del sistema en A23 y recuperación programada en2.1.0; fuera de app/bloqueado y recepción con2.1.1 pendientes. CI/publicación de mantenimiento todavía no verificados.
+
 [Contexto](AI_CONTEXT.md) · [Pendientes](OPEN_ISSUES.md)
 
 Resultados se actualizan durante la entrega; no equivalen a pruebas en producción.

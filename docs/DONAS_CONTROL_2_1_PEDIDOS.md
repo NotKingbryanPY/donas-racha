@@ -1,5 +1,7 @@
 # Donas Control 2.1 — pedidos y avisos externos
 
+Versión Android de mantenimiento: [2.1.1, estado de comprobación corregido](DONAS_CONTROL_2_1_1_AVISOS.md). Esta guía conserva la arquitectura/activación y la evidencia de2.1.0.
+
 ## Cambio de alcance y diagnóstico previo
 
 El usuario aclaró el 14 de octubre de 2026 que Pedidos y los avisos del sistema con pantalla bloqueada o app cerrada son prioridad, además del registro diario. Esto amplía la versión 2.0 y conserva compras, ventas, consumo, inventario y cierre. Supabase continúa siendo la autoridad comercial. Firebase se usa para FCM, sin inventario paralelo.

@@ -243,6 +243,18 @@
       ]
     },
     {
+      "id": "ui:notification-check",
+      "type": "componente",
+      "label": "Comprobación de avisos según WorkInfo",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
+          "line": 321
+        }
+      ]
+    },
+    {
       "id": "system:fcm-emitter",
       "type": "componente",
       "label": "Emisor FCM Vercel",
@@ -409,6 +421,30 @@
         {
           "path": "api/orders/index.js",
           "line": 1
+        }
+      ]
+    },
+    {
+      "source": "system:android",
+      "target": "ui:notification-check",
+      "type": "IMPLEMENTA",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
+          "line": 321
+        }
+      ]
+    },
+    {
+      "source": "ui:notification-check",
+      "target": "feature:staff-fcm",
+      "type": "DEPENDE_DE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
+          "line": 314
         }
       ]
     },
