@@ -126,6 +126,8 @@ class KnowledgeTest(unittest.TestCase):
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
         self.assertNotEqual(module.canonical_bytes(pathlib.Path('assets/vendor/sdk.js'), b'a\r\n'), b'a\n')
+        self.assertEqual(module.canonical_bytes(pathlib.Path('assets/vendor/README.md'), b'a\r\n'), b'a\n')
+        self.assertEqual(module.canonical_bytes(pathlib.Path('assets/vendor/LICENSE.txt'), b'a\r\n'), b'a\n')
         self.assertEqual(module.canonical_bytes(pathlib.Path('api/core.js'), b'a\r\n'), b'a\n')
         self.assertEqual(module.canonical_bytes(pathlib.Path('assets/image.svg'), b'<svg/>\r\n'), b'<svg/>\n')
         self.assertEqual(module.canonical_bytes(pathlib.Path('file.bin'), b'\x00a\r\n'), b'\x00a\r\n')

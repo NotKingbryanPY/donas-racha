@@ -1,5 +1,5 @@
 {
-  "source_commit": "56b398b798246af3a79463de80f2c1f1011814aa",
+  "source_commit": "0e95cd64f329d7b042ecc2057025c6d0ad9c1061",
   "scope": "working tree; lexical extraction, production unverified",
   "schema_version": 1,
   "extractor_version": 4,
@@ -4224,18 +4224,18 @@
     },
     {
       "path": "android/donas-control/app/src/test/java/com/bryan/donas/ui/OrdersActivityTest.kt",
-      "sha256": "7ba4ae64b699c67c2085145c26f06febeefa9a5ebfa4e7ced232a49173ea314c",
-      "bytes": 1496,
+      "sha256": "8cecbb8e41363c197a272e97638c98933c44cb77dd36545170c71d163d104617",
+      "bytes": 1359,
       "symbols": [
         {
           "name": "OrdersActivityTest",
           "kind": "class",
-          "line": 17
+          "line": 15
         },
         {
           "name": "collect",
           "kind": "function",
-          "line": 26
+          "line": 23
         }
       ],
       "imports": [],
@@ -4245,7 +4245,7 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 35
+      "lines": 32
     },
     {
       "path": "android/donas-control/app/src/test/java/com/bryan/donas/ui/QuickSaleWidgetTest.kt",
@@ -7142,8 +7142,8 @@
     },
     {
       "path": "assets/vendor/README.md",
-      "sha256": "57a1e85c5ead958830f2a06f0d97cb8dfc0d6f507d8d019df2310ec837272824",
-      "bytes": 636,
+      "sha256": "512de9793fd60564047195822a87c7b7830d842c2fed8bd4a3a7225704a8acec",
+      "bytes": 625,
       "symbols": [],
       "imports": [],
       "rpc_calls": [],
@@ -7155,8 +7155,8 @@
     },
     {
       "path": "assets/vendor/SUPABASE-LICENSE.txt",
-      "sha256": "bc704afe85e5e92311e42c5e6b07d5ff082e93639303c92a93d7fa3184ce3eef",
-      "bytes": 1086,
+      "sha256": "334dd6820e2eaeab2064e7c59001b810566728a28a41a7c1dbf69bbee17d0936",
+      "bytes": 1065,
       "symbols": [],
       "imports": [],
       "rpc_calls": [],
@@ -7363,8 +7363,8 @@
     },
     {
       "path": "docs/DONAS_CONTROL_2_ACTIVACION.md",
-      "sha256": "f86ba3a7f498f034901d9e625c67521fd3bc4df173c267c5ce8bdb9bf19d5e45",
-      "bytes": 5487,
+      "sha256": "5b402fcebf96cbd7d834de9d7ae8340c362c616d8b677cab7588d00c3466654d",
+      "bytes": 5758,
       "symbols": [],
       "imports": [],
       "rpc_calls": [],
@@ -7373,7 +7373,7 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 39
+      "lines": 41
     },
     {
       "path": "docs/DONAS_CONTROL_2_AUDITORIA.md",
@@ -7656,6 +7656,20 @@
       "endpoints": [],
       "animations": [],
       "lines": 30
+    },
+    {
+      "path": "docs/previews/donas-control-2-concept.md",
+      "sha256": "486df987f35c6fdfdad6299970d9276e499b872231a8de93cd92bf6358eed0dc",
+      "bytes": 2171,
+      "symbols": [],
+      "imports": [],
+      "rpc_calls": [],
+      "tables": [],
+      "sql_objects": [],
+      "sql_changes": [],
+      "endpoints": [],
+      "animations": [],
+      "lines": 9
     },
     {
       "path": "docs/previews/donas-control-2-concept.png",
@@ -9381,8 +9395,8 @@
     },
     {
       "path": "scripts/knowledge.py",
-      "sha256": "c3948ee26a53ff5026c0df249d3568e5b737fe87441fa5e0a31223ca593732f8",
-      "bytes": 23792,
+      "sha256": "9d34982aa96f31176138dffc72bba1258a7fa0fcbede729e32265c90659254ea",
+      "bytes": 23829,
       "symbols": [
         {
           "name": "git",
@@ -14368,8 +14382,8 @@
     },
     {
       "path": "supabase/migrations/202610130001_daily_operations.sql",
-      "sha256": "134b1b0b1658112f1a7010c307eb8f9a5cc3fca8b74653b819c094ecc140f99f",
-      "bytes": 21575,
+      "sha256": "37154bc85f2d00caad4ac89fd84e061a6f7780e5f29e2022c33c843c9f03a5b9",
+      "bytes": 21606,
       "symbols": [
         {
           "name": "daily_take_cost",
@@ -14706,7 +14720,7 @@
       ],
       "endpoints": [],
       "animations": [],
-      "lines": 286
+      "lines": 287
     },
     {
       "path": "supabase/rollback/202609200001_phase2_down.sql",
@@ -15229,8 +15243,8 @@
     },
     {
       "path": "supabase/sql-editor/daily-v2/01_apply.sql",
-      "sha256": "134b1b0b1658112f1a7010c307eb8f9a5cc3fca8b74653b819c094ecc140f99f",
-      "bytes": 21575,
+      "sha256": "37154bc85f2d00caad4ac89fd84e061a6f7780e5f29e2022c33c843c9f03a5b9",
+      "bytes": 21606,
       "symbols": [
         {
           "name": "daily_take_cost",
@@ -15567,7 +15581,7 @@
       ],
       "endpoints": [],
       "animations": [],
-      "lines": 286
+      "lines": 287
     },
     {
       "path": "supabase/sql-editor/daily-v2/02_verify.sql",
@@ -17875,8 +17889,8 @@
     },
     {
       "path": "tests/knowledge-system.py",
-      "sha256": "e34eabfb76bf80c74aa2052e21fcf4b060a4c48a6d14a4ca143b19e5e08ce045",
-      "bytes": 7818,
+      "sha256": "9ea3e373c4e320425a56697d456a0c312eab4508b60bb38a25ff2dc4529e516b",
+      "bytes": 8036,
       "symbols": [
         {
           "name": "KnowledgeTest",
@@ -17951,7 +17965,7 @@
         {
           "name": "test_unmapped_area_prevents_review",
           "kind": "function",
-          "line": 139
+          "line": 141
         }
       ],
       "imports": [],
@@ -17961,7 +17975,7 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 149
+      "lines": 151
     },
     {
       "path": "tests/manual-inventory-postgres.mjs",

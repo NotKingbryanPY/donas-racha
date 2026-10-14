@@ -50,7 +50,7 @@ def paths():
 def canonical_bytes(path, raw=None):
     raw = path.read_bytes() if raw is None else raw
     # Git text checkout differs on Windows/Linux. Vendored -text assets stay literal.
-    if '/vendor/' in path.as_posix() or b'\x00' in raw:
+    if ('/vendor/' in path.as_posix() and path.suffix in ('.js', '.map')) or b'\x00' in raw:
         return raw
     try:
         raw.decode('utf-8')

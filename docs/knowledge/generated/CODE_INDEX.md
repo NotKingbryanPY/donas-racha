@@ -2,7 +2,7 @@
 
 Generado por `python scripts/knowledge.py generate`. Nombres extraídos, sin contenido de credenciales ni datos.
 
-Commit fuente: `56b398b798246af3a79463de80f2c1f1011814aa`; 416 archivos. El inventario incluye metadatos de recursos binarios, esquemas Room y SDK vendorizado; no interpreta su código generado.
+Commit fuente: `0e95cd64f329d7b042ecc2057025c6d0ad9c1061`; 417 archivos. El inventario incluye metadatos de recursos binarios, esquemas Room y SDK vendorizado; no interpreta su código generado.
 
 [Volver al mapa](../PROJECT_MAP.md)
 
@@ -1028,10 +1028,10 @@ Commit fuente: `56b398b798246af3a79463de80f2c1f1011814aa`; 416 archivos. El inve
 
 ## android/donas-control/app/src/test/java/com/bryan/donas/ui/OrdersActivityTest.kt
 
-[android/donas-control/app/src/test/java/com/bryan/donas/ui/OrdersActivityTest.kt:L1](../../../android/donas-control/app/src/test/java/com/bryan/donas/ui/OrdersActivityTest.kt#L1) · 35 líneas · SHA-256 `7ba4ae64b699`
+[android/donas-control/app/src/test/java/com/bryan/donas/ui/OrdersActivityTest.kt:L1](../../../android/donas-control/app/src/test/java/com/bryan/donas/ui/OrdersActivityTest.kt#L1) · 32 líneas · SHA-256 `8cecbb8e4136`
 
-- `class OrdersActivityTest` — [android/donas-control/app/src/test/java/com/bryan/donas/ui/OrdersActivityTest.kt:L17](../../../android/donas-control/app/src/test/java/com/bryan/donas/ui/OrdersActivityTest.kt#L17)
-- `function collect` — [android/donas-control/app/src/test/java/com/bryan/donas/ui/OrdersActivityTest.kt:L26](../../../android/donas-control/app/src/test/java/com/bryan/donas/ui/OrdersActivityTest.kt#L26)
+- `class OrdersActivityTest` — [android/donas-control/app/src/test/java/com/bryan/donas/ui/OrdersActivityTest.kt:L15](../../../android/donas-control/app/src/test/java/com/bryan/donas/ui/OrdersActivityTest.kt#L15)
+- `function collect` — [android/donas-control/app/src/test/java/com/bryan/donas/ui/OrdersActivityTest.kt:L23](../../../android/donas-control/app/src/test/java/com/bryan/donas/ui/OrdersActivityTest.kt#L23)
 
 ## android/donas-control/app/src/test/java/com/bryan/donas/ui/QuickSaleWidgetTest.kt
 
@@ -1584,11 +1584,11 @@ Commit fuente: `56b398b798246af3a79463de80f2c1f1011814aa`; 416 archivos. El inve
 
 ## assets/vendor/README.md
 
-[assets/vendor/README.md:L1](../../../assets/vendor/README.md#L1) · binario/generado líneas · SHA-256 `57a1e85c5ead`
+[assets/vendor/README.md:L1](../../../assets/vendor/README.md#L1) · binario/generado líneas · SHA-256 `512de9793fd6`
 
 ## assets/vendor/SUPABASE-LICENSE.txt
 
-[assets/vendor/SUPABASE-LICENSE.txt:L1](../../../assets/vendor/SUPABASE-LICENSE.txt#L1) · binario/generado líneas · SHA-256 `bc704afe85e5`
+[assets/vendor/SUPABASE-LICENSE.txt:L1](../../../assets/vendor/SUPABASE-LICENSE.txt#L1) · binario/generado líneas · SHA-256 `334dd6820e2e`
 
 ## assets/vendor/supabase-2.117.3.js
 
@@ -1648,7 +1648,7 @@ Commit fuente: `56b398b798246af3a79463de80f2c1f1011814aa`; 416 archivos. El inve
 
 ## docs/DONAS_CONTROL_2_ACTIVACION.md
 
-[docs/DONAS_CONTROL_2_ACTIVACION.md:L1](../../../docs/DONAS_CONTROL_2_ACTIVACION.md#L1) · 39 líneas · SHA-256 `f86ba3a7f498`
+[docs/DONAS_CONTROL_2_ACTIVACION.md:L1](../../../docs/DONAS_CONTROL_2_ACTIVACION.md#L1) · 41 líneas · SHA-256 `5b402fcebf96`
 
 ## docs/DONAS_CONTROL_2_AUDITORIA.md
 
@@ -1729,6 +1729,10 @@ Commit fuente: `56b398b798246af3a79463de80f2c1f1011814aa`; 416 archivos. El inve
 - `function reset` — [docs/previews/brand-motion.html:L24](../../../docs/previews/brand-motion.html#L24)
 - `function seek` — [docs/previews/brand-motion.html:L25](../../../docs/previews/brand-motion.html#L25)
 - `function sync` — [docs/previews/brand-motion.html:L26](../../../docs/previews/brand-motion.html#L26)
+
+## docs/previews/donas-control-2-concept.md
+
+[docs/previews/donas-control-2-concept.md:L1](../../../docs/previews/donas-control-2-concept.md#L1) · 9 líneas · SHA-256 `486df987f35c`
 
 ## docs/previews/donas-control-2-concept.png
 
@@ -2111,7 +2115,7 @@ Commit fuente: `56b398b798246af3a79463de80f2c1f1011814aa`; 416 archivos. El inve
 
 ## scripts/knowledge.py
 
-[scripts/knowledge.py:L1](../../../scripts/knowledge.py#L1) · 346 líneas · SHA-256 `c3948ee26a53`
+[scripts/knowledge.py:L1](../../../scripts/knowledge.py#L1) · 346 líneas · SHA-256 `9d34982aa96f`
 
 - `function git` — [scripts/knowledge.py:L26](../../../scripts/knowledge.py#L26)
 - `function stamp` — [scripts/knowledge.py:L29](../../../scripts/knowledge.py#L29)
@@ -2427,7 +2431,7 @@ Commit fuente: `56b398b798246af3a79463de80f2c1f1011814aa`; 416 archivos. El inve
 
 ## supabase/migrations/202610130001_daily_operations.sql
 
-[supabase/migrations/202610130001_daily_operations.sql:L1](../../../supabase/migrations/202610130001_daily_operations.sql#L1) · 286 líneas · SHA-256 `134b1b0b1658`
+[supabase/migrations/202610130001_daily_operations.sql:L1](../../../supabase/migrations/202610130001_daily_operations.sql#L1) · 287 líneas · SHA-256 `37154bc85f2d`
 
 - `sql_function daily_take_cost` — [supabase/migrations/202610130001_daily_operations.sql:L73](../../../supabase/migrations/202610130001_daily_operations.sql#L73)
 - `sql_function daily_session_summary` — [supabase/migrations/202610130001_daily_operations.sql:L103](../../../supabase/migrations/202610130001_daily_operations.sql#L103)
@@ -2473,7 +2477,7 @@ Commit fuente: `56b398b798246af3a79463de80f2c1f1011814aa`; 416 archivos. El inve
 
 ## supabase/sql-editor/daily-v2/01_apply.sql
 
-[supabase/sql-editor/daily-v2/01_apply.sql:L1](../../../supabase/sql-editor/daily-v2/01_apply.sql#L1) · 286 líneas · SHA-256 `134b1b0b1658`
+[supabase/sql-editor/daily-v2/01_apply.sql:L1](../../../supabase/sql-editor/daily-v2/01_apply.sql#L1) · 287 líneas · SHA-256 `37154bc85f2d`
 
 - `sql_function daily_take_cost` — [supabase/sql-editor/daily-v2/01_apply.sql:L73](../../../supabase/sql-editor/daily-v2/01_apply.sql#L73)
 - `sql_function daily_session_summary` — [supabase/sql-editor/daily-v2/01_apply.sql:L103](../../../supabase/sql-editor/daily-v2/01_apply.sql#L103)
@@ -2803,7 +2807,7 @@ Commit fuente: `56b398b798246af3a79463de80f2c1f1011814aa`; 416 archivos. El inve
 
 ## tests/knowledge-system.py
 
-[tests/knowledge-system.py:L1](../../../tests/knowledge-system.py#L1) · 149 líneas · SHA-256 `e34eabfb76bf`
+[tests/knowledge-system.py:L1](../../../tests/knowledge-system.py#L1) · 151 líneas · SHA-256 `9ea3e373c4e3`
 
 - `class KnowledgeTest` — [tests/knowledge-system.py:L14](../../../tests/knowledge-system.py#L14)
 - `function setUp` — [tests/knowledge-system.py:L15](../../../tests/knowledge-system.py#L15)
@@ -2819,7 +2823,7 @@ Commit fuente: `56b398b798246af3a79463de80f2c1f1011814aa`; 416 archivos. El inve
 - `function test_cached_import_does_not_create_dangling_edge_after_target_retirement` — [tests/knowledge-system.py:L106](../../../tests/knowledge-system.py#L106)
 - `function test_bad_reference_and_diagram_mismatch` — [tests/knowledge-system.py:L116](../../../tests/knowledge-system.py#L116)
 - `function test_binary_vendor_hashes_and_excluded_private_files` — [tests/knowledge-system.py:L124](../../../tests/knowledge-system.py#L124)
-- `function test_unmapped_area_prevents_review` — [tests/knowledge-system.py:L139](../../../tests/knowledge-system.py#L139)
+- `function test_unmapped_area_prevents_review` — [tests/knowledge-system.py:L141](../../../tests/knowledge-system.py#L141)
 
 ## tests/manual-inventory-postgres.mjs
 

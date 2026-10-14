@@ -48,6 +48,8 @@ La revisión v2 filtra objetivos de imports retirados aun cuando el archivo impo
 
 Los índices Markdown terminan con una sola nueva línea para mantener limpio git diff --check. Ocho pruebas aisladas cubren el tooling, incluida retirada de un import objetivo sin cambiar el importador.
 
+La comprobación CI reveló que README/licencia vendor son texto normalizado por Git, mientras los bundles JS preservan bytes con .gitattributes. El hash normaliza CRLF para README/licencia y conserva JS/map/binarios literales, verificado por fixtures Windows/Linux; no se modifica código ni licencia del proveedor.
+
 `check` verifica IDs, tipos, referencias/líneas/símbolos, enlaces Markdown, bloques, concordancia del modelo con el grafo y equivalencia `.mmd`/bloque Mermaid compañero; `--fresh` también exige concordancia de fuentes, índice y documentos con revisión, incluidas eliminaciones. `report` distingue cambios de fuentes y de documentos. Nuevos archivos, cambios, bajas y desplazamientos de símbolos no se convierten automáticamente en “documentación confirmada”. Diagrama Mermaid se revisa contra código; la validación léxica por script no es render de Mermaid ni prueba de estados reales.
 
 SHA-256 normaliza CRLF a LF en texto; binarios y recursos vendor mantienen bytes literales (coherente con `.gitattributes`). `bytes` del inventario cuenta bytes canónicos. Así, un checkout Windows/Linux no produce deriva por finales de línea. Los hashes no certifican semántica: detectan contenido diferente. `python tests/knowledge-system.py` verifica este contrato y el ciclo incremental en repositorios Git temporales, sin importar la aplicación ni tocar servicios.

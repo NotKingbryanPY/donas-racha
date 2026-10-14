@@ -544,5 +544,29 @@
       "scripts/knowledge.py"
     ],
     "note": "Revisión de límites de autorización, paginación, pruebas y formato de índices"
+  },
+  {
+    "date": "2026-10-14T00:03:32-05:00",
+    "commit": "0e95cd64f329d7b042ecc2057025c6d0ad9c1061",
+    "areas": [
+      "android",
+      "api",
+      "database",
+      "firebase",
+      "operations",
+      "web"
+    ],
+    "changed_files": [
+      "android/donas-control/app/src/test/java/com/bryan/donas/ui/OrdersActivityTest.kt",
+      "assets/vendor/README.md",
+      "assets/vendor/SUPABASE-LICENSE.txt",
+      "docs/DONAS_CONTROL_2_ACTIVACION.md",
+      "docs/previews/donas-control-2-concept.md",
+      "scripts/knowledge.py",
+      "supabase/migrations/202610130001_daily_operations.sql",
+      "supabase/sql-editor/daily-v2/01_apply.sql",
+      "tests/knowledge-system.py"
+    ],
+    "note": "14 octubre: fixtures corregidas, FIFO/roles/reintentos y hashes Windows/Linux revisados"
   }
 ]

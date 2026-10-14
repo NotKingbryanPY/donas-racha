@@ -284,3 +284,4 @@ revoke execute on function public.api_daily_snapshot(uuid,bigint),public.api_dai
 grant execute on function public.api_daily_snapshot(uuid,bigint),public.api_daily_apply(uuid,uuid,text,jsonb) to service_role;
 notify pgrst,'reload schema';
 commit;
+-- END_DONAS_DAILY_V2_COMPLETE

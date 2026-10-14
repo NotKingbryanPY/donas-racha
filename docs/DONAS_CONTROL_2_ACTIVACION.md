@@ -17,6 +17,8 @@ En Supabase SQL Editor abrir una consulta nueva por archivo, pegarlo **completo*
 
 ## Publicar e instalar
 
+Al copiar el instalador en iPad, comprobar que termina con `-- END_DONAS_DAILY_V2_COMPLETE`. Un fragmento no equivale al archivo completo y puede dejar un bloque dollar-quoted sin cerrar. `01_apply.sql` y la migración fuente deben tener exactamente el mismo contenido.
+
 Código/guías/CI en el mismo PR y main ligado al proyecto Vercel existente. No crear hosting alternativo ni cambiar SUPABASE_URL/ANON_KEY/SERVICE_ROLE_KEY. Hasta aplicar SQL, el panel nuevo informa activación pendiente y los flujos web existentes siguen disponibles.
 
 APK oficial: paquete `com.bryan.donas.control`, versión2.0.0/código15, firma de distribución existente. Instalar como actualización; **no desinstalar** para resolver migración. Room6 agrega las dos tablas nuevas y conserva el libro v5. Una app .pilot es otra instalación: no asumir que compartir nombre trae sus datos.

@@ -1,5 +1,5 @@
 {
-  "source_commit": "56b398b798246af3a79463de80f2c1f1011814aa",
+  "source_commit": "0e95cd64f329d7b042ecc2057025c6d0ad9c1061",
   "scope": "working tree; lexical extraction, production unverified",
   "schema_version": 1,
   "extractor_version": 4,
@@ -7665,27 +7665,27 @@
       ]
     },
     {
-      "id": "file:android/donas-control/app/src/test/java/com/bryan/donas/ui/OrdersActivityTest.kt:class:OrdersActivityTest:17",
+      "id": "file:android/donas-control/app/src/test/java/com/bryan/donas/ui/OrdersActivityTest.kt:class:OrdersActivityTest:15",
       "type": "class",
       "label": "OrdersActivityTest",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/test/java/com/bryan/donas/ui/OrdersActivityTest.kt",
-          "line": 17,
+          "line": 15,
           "symbol": "OrdersActivityTest"
         }
       ]
     },
     {
-      "id": "file:android/donas-control/app/src/test/java/com/bryan/donas/ui/OrdersActivityTest.kt:function:collect:26",
+      "id": "file:android/donas-control/app/src/test/java/com/bryan/donas/ui/OrdersActivityTest.kt:function:collect:23",
       "type": "function",
       "label": "collect",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/test/java/com/bryan/donas/ui/OrdersActivityTest.kt",
-          "line": 26,
+          "line": 23,
           "symbol": "collect"
         }
       ]
@@ -11772,6 +11772,18 @@
           "path": "docs/previews/brand-motion.html",
           "line": 26,
           "symbol": "sync"
+        }
+      ]
+    },
+    {
+      "id": "file:docs/previews/donas-control-2-concept.md",
+      "type": "archivo",
+      "label": "docs/previews/donas-control-2-concept.md",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "docs/previews/donas-control-2-concept.md",
+          "line": 1
         }
       ]
     },
@@ -19634,14 +19646,14 @@
       ]
     },
     {
-      "id": "file:tests/knowledge-system.py:function:test_unmapped_area_prevents_review:139",
+      "id": "file:tests/knowledge-system.py:function:test_unmapped_area_prevents_review:141",
       "type": "function",
       "label": "test_unmapped_area_prevents_review",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "tests/knowledge-system.py",
-          "line": 139,
+          "line": 141,
           "symbol": "test_unmapped_area_prevents_review"
         }
       ]
@@ -29281,26 +29293,26 @@
     },
     {
       "source": "file:android/donas-control/app/src/test/java/com/bryan/donas/ui/OrdersActivityTest.kt",
-      "target": "file:android/donas-control/app/src/test/java/com/bryan/donas/ui/OrdersActivityTest.kt:class:OrdersActivityTest:17",
+      "target": "file:android/donas-control/app/src/test/java/com/bryan/donas/ui/OrdersActivityTest.kt:class:OrdersActivityTest:15",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/test/java/com/bryan/donas/ui/OrdersActivityTest.kt",
-          "line": 17,
+          "line": 15,
           "symbol": "OrdersActivityTest"
         }
       ]
     },
     {
       "source": "file:android/donas-control/app/src/test/java/com/bryan/donas/ui/OrdersActivityTest.kt",
-      "target": "file:android/donas-control/app/src/test/java/com/bryan/donas/ui/OrdersActivityTest.kt:function:collect:26",
+      "target": "file:android/donas-control/app/src/test/java/com/bryan/donas/ui/OrdersActivityTest.kt:function:collect:23",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "android/donas-control/app/src/test/java/com/bryan/donas/ui/OrdersActivityTest.kt",
-          "line": 26,
+          "line": 23,
           "symbol": "collect"
         }
       ]
@@ -42075,13 +42087,13 @@
     },
     {
       "source": "file:tests/knowledge-system.py",
-      "target": "file:tests/knowledge-system.py:function:test_unmapped_area_prevents_review:139",
+      "target": "file:tests/knowledge-system.py:function:test_unmapped_area_prevents_review:141",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "tests/knowledge-system.py",
-          "line": 139,
+          "line": 141,
           "symbol": "test_unmapped_area_prevents_review"
         }
       ]

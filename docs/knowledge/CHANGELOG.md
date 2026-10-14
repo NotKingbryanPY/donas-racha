@@ -1,5 +1,9 @@
 # Historial de decisiones y documentación
 
+## 2026-10-14 — verificación continuada
+
+109 de111 pruebas Android pasaron en el primer conjunto completo. Se corrigieron dos fixtures: orden de qualifiers para captura y WorkManager inicializado dos veces en la prueba histórica. Las pruebas de negocio/Room/reintentos ya habían pasado. CI de documentación detectó diferencia CRLF en README/licencia vendor; se corrigió normalización preservando bytes del bundle JS. Validación final/build firmado continúan; no confundir estos resultados parciales con APK entregado o SQL real activado.
+
 ## 2026-10-13 — Donas Control 2
 
 Base web70164c4. Se leyó la guía anterior y se preservó copia local en outputs/knowledge-before-donas-control-2. Se consolidan guías/modelo/diagramas para nueva app diaria: Supabase compartido, Room6 preservado, UUID/outbox, compras configurables, ventas/pago dividido, consumo, costo central y cierre seguro. Cambia explícitamente el alcance retirado el12octubre; no se rehabilitan flujos móviles antiguos.
