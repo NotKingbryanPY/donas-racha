@@ -857,5 +857,16 @@
       "tests/session-resilience.cjs"
     ],
     "note": "Revisada renovación opaca Supabase, roles/rate limit y dependencia de avisos; repro antes/después y evidencia A23/CI con límites documentados"
+  },
+  {
+    "date": "2026-10-14T16:25:42-05:00",
+    "commit": "a6067d89af513e79a502dec557ea1d29a32802c4",
+    "areas": [
+      "operations"
+    ],
+    "changed_files": [
+      "docs/DONAS_CONTROL_2_1_1_AVISOS.md"
+    ],
+    "note": "Revisados CI86b0971, merge PR44, Production Ready, prueba sintética de renovación y hash APK público; pendientes físicos preservados"
   }
 ]

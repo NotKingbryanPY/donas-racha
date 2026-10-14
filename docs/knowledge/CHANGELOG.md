@@ -1,5 +1,9 @@
 # Historial de decisiones y documentación
 
+## 2026-10-14 — publicación verificada de renovación y APK2.1.1
+
+Estado posterior14octubre21:25UTC: CI86b0971 completo PASS (Android/API23/API35, web/API/SQL/browser/concurrencia y conocimiento), PR44 integrado en main a6067d8. Vercel dpl_ZKUMjhaFUVXVKKb5etaNp1DPH6A1 Production Ready y www.dracha.store verificado. Token ficticio de12 ahora alcanza al proveedor (401/INVALID_CREDENTIALS); vacío400, pedidos/avisos/despacho anónimos401, web/catálogo/inventario200 y rutas retiradas410. APK2.1.1 público200, tamaño/hash idénticos. No equivale a renovar la sesión privada del A23 ni entregar pedido bloqueado; se pidió volver a comprobar avisos. Sin nueva SQL ni cambios de secretos.
+
 ## 2026-10-14 — renovación de sesión rechazada antes de FCM
 
 Usuario informó FAILED visible en APK2.1.1. Logs Vercel sanitizados mostraron20 renovaciones400/VALIDATION_ERROR; api/auth/session imponía mínimo20 aunque Supabase Auth emite tokens opacos de12. Repro local falló400 antes del cambio y pasó después; prueba pública previa con token ficticio confirmó400. Se corrige solo validación de input, sin coerción/longitud mínima arbitraria, conservando rate limit, autenticidad/rotación Supabase y ADMIN/SELLER. Regresiones cubren token corto/largo/rotado, malformados, roles y errores definitivos/temporales. Pasaron nueve suites locales pertinentes. CI9d48f05 del APK aprobado en API23/35; actualización del servidor/CI nuevo y recorrido físico posterior pendientes. Sin APK/SQL adicional ni cambios de secretos; diagnóstico exacto del A23 solicitado sin claves.
