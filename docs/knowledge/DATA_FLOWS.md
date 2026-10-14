@@ -1,5 +1,7 @@
 # Flujos y reconciliación
 
+Cada mutación recibe el propietario esperado de la cola. El transporte captura token y propietario bajo el mismo lock de login/logout/refresh y mantiene ese vínculo también al renovar un401. Cambiar de cuenta durante un envío no permite continuar la cola antigua con credenciales de otra persona. Una prueba HTTP verifica que ese cambio no envíe la petición.
+
 Una respuesta de autorización 401/403 en el worker corta la sesión local, conserva las colas y requiere entrar de nuevo; no se sigue registrando offline tras una revocación ya conocida. La UI valida los mismos máximos de precio/importe que la API. Las consultas usan pendientes y recibos todavía no incorporados, sin cargar todo el libro en RAM.
 
 La paginación histórica local de la pantalla se reinicia cuando llegan recibos nuevos, para no mezclar dos ventanas de secuencias ni ocultar registros entre ellas.

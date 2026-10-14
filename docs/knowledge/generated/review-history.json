@@ -607,5 +607,28 @@
       "android/donas-control/app/src/test/java/com/bryan/donas/daily/DailyActivityTest.kt"
     ],
     "note": "Revisión visual nativa: acciones sin cortes, encabezados en español y navegación activa"
+  },
+  {
+    "date": "2026-10-14T00:33:48-05:00",
+    "commit": "b7c3ac1c3d06f8680ba64022da1f3dc6ff3b11b0",
+    "areas": [
+      "android",
+      "api",
+      "database",
+      "firebase",
+      "operations",
+      "web"
+    ],
+    "changed_files": [
+      "android/README.md",
+      "android/donas-control/README.md",
+      "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyRepository.kt",
+      "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailySync.kt",
+      "android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt",
+      "android/donas-control/app/src/test/java/com/bryan/donas/daily/DailyOperationsTest.kt",
+      "android/donas-control/app/src/test/java/com/bryan/donas/data/BackendSessionTest.kt",
+      "docs/BUSINESS_MODEL.md"
+    ],
+    "note": "Transporte vinculado al propietario y README operativo actualizado, pruebas finales en curso"
   }
 ]

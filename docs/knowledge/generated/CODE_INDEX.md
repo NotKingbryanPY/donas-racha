@@ -2,7 +2,7 @@
 
 Generado por `python scripts/knowledge.py generate`. Nombres extraídos, sin contenido de credenciales ni datos.
 
-Commit fuente: `0f8592f553e1b25810b3c7bc967dc4b9d1f38650`; 417 archivos. El inventario incluye metadatos de recursos binarios, esquemas Room y SDK vendorizado; no interpreta su código generado.
+Commit fuente: `b7c3ac1c3d06f8680ba64022da1f3dc6ff3b11b0`; 417 archivos. El inventario incluye metadatos de recursos binarios, esquemas Room y SDK vendorizado; no interpreta su código generado.
 
 [Volver al mapa](../PROJECT_MAP.md)
 
@@ -106,7 +106,7 @@ Commit fuente: `0f8592f553e1b25810b3c7bc967dc4b9d1f38650`; 417 archivos. El inve
 
 ## android/README.md
 
-[android/README.md:L1](../../../android/README.md#L1) · 7 líneas · SHA-256 `2ec8794060e1`
+[android/README.md:L1](../../../android/README.md#L1) · 5 líneas · SHA-256 `bef53e1091e9`
 
 ## android/donas-control/.gitattributes
 
@@ -118,7 +118,7 @@ Commit fuente: `0f8592f553e1b25810b3c7bc967dc4b9d1f38650`; 417 archivos. El inve
 
 ## android/donas-control/README.md
 
-[android/donas-control/README.md:L1](../../../android/donas-control/README.md#L1) · 63 líneas · SHA-256 `473f0fb717c9`
+[android/donas-control/README.md:L1](../../../android/donas-control/README.md#L1) · 32 líneas · SHA-256 `3f7687b1df0d`
 
 ## android/donas-control/app/build.gradle.kts
 
@@ -224,7 +224,7 @@ Commit fuente: `0f8592f553e1b25810b3c7bc967dc4b9d1f38650`; 417 archivos. El inve
 
 ## android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyRepository.kt
 
-[android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyRepository.kt:L1](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyRepository.kt#L1) · 108 líneas · SHA-256 `021f2136be94`
+[android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyRepository.kt:L1](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyRepository.kt#L1) · 108 líneas · SHA-256 `7284edbd6efc`
 
 - `class DailyRules` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyRepository.kt:L13](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyRepository.kt#L13)
 - `function watermark` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyRepository.kt:L14](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyRepository.kt#L14)
@@ -242,7 +242,7 @@ Commit fuente: `0f8592f553e1b25810b3c7bc967dc4b9d1f38650`; 417 archivos. El inve
 
 ## android/donas-control/app/src/main/java/com/bryan/donas/daily/DailySync.kt
 
-[android/donas-control/app/src/main/java/com/bryan/donas/daily/DailySync.kt:L1](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailySync.kt#L1) · 86 líneas · SHA-256 `4ddeeb5b232f`
+[android/donas-control/app/src/main/java/com/bryan/donas/daily/DailySync.kt:L1](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailySync.kt#L1) · 86 líneas · SHA-256 `3a958b4a8930`
 
 - `class DailySynchronizer` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailySync.kt:L24](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailySync.kt#L24)
 - `function synchronize` — [android/donas-control/app/src/main/java/com/bryan/donas/daily/DailySync.kt:L25](../../../android/donas-control/app/src/main/java/com/bryan/donas/daily/DailySync.kt#L25)
@@ -256,7 +256,7 @@ Commit fuente: `0f8592f553e1b25810b3c7bc967dc4b9d1f38650`; 417 archivos. El inve
 
 ## android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt
 
-[android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L1](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L1) · 337 líneas · SHA-256 `411113818795`
+[android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L1](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L1) · 352 líneas · SHA-256 `882122486d1c`
 
 - `class BackendClient` — [android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L19](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L19)
 - `function recoverRestoredDevice` — [android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L36](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L36)
@@ -270,24 +270,24 @@ Commit fuente: `0f8592f553e1b25810b3c7bc967dc4b9d1f38650`; 417 archivos. El inve
 - `function catalog` — [android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L212](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L212)
 - `function dailySnapshot` — [android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L220](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L220)
 - `function dailyApply` — [android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L224](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L224)
-- `function updateFlavor` — [android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L229](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L229)
-- `function inventory` — [android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L235](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L235)
-- `function saveInventory` — [android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L239](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L239)
-- `function pushStatus` — [android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L244](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L244)
-- `function registerPush` — [android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L248](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L248)
-- `function unregisterPush` — [android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L253](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L253)
-- `function push` — [android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L257](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L257)
-- `function pull` — [android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L269](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L269)
-- `function recentOrders` — [android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L274](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L274)
-- `function customerProfile` — [android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L279](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L279)
-- `function registerCustomerPurchase` — [android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L285](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L285)
-- `function transition` — [android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L297](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L297)
-- `function confirmPayment` — [android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L303](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L303)
-- `function completeDelivery` — [android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L308](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L308)
-- `class CustomerPurchaseProfile` — [android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L315](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L315)
-- `function from` — [android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L324](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L324)
-- `class CustomerPurchaseResult` — [android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L335](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L335)
-- `class BackendException` — [android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L337](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L337)
+- `function updateFlavor` — [android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L244](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L244)
+- `function inventory` — [android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L250](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L250)
+- `function saveInventory` — [android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L254](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L254)
+- `function pushStatus` — [android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L259](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L259)
+- `function registerPush` — [android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L263](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L263)
+- `function unregisterPush` — [android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L268](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L268)
+- `function push` — [android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L272](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L272)
+- `function pull` — [android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L284](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L284)
+- `function recentOrders` — [android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L289](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L289)
+- `function customerProfile` — [android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L294](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L294)
+- `function registerCustomerPurchase` — [android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L300](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L300)
+- `function transition` — [android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L312](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L312)
+- `function confirmPayment` — [android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L318](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L318)
+- `function completeDelivery` — [android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L323](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L323)
+- `class CustomerPurchaseProfile` — [android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L330](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L330)
+- `function from` — [android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L339](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L339)
+- `class CustomerPurchaseResult` — [android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L350](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L350)
+- `class BackendException` — [android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt:L352](../../../android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt#L352)
 
 ## android/donas-control/app/src/main/java/com/bryan/donas/data/BusinessRepository.kt
 
@@ -913,7 +913,7 @@ Commit fuente: `0f8592f553e1b25810b3c7bc967dc4b9d1f38650`; 417 archivos. El inve
 
 ## android/donas-control/app/src/test/java/com/bryan/donas/daily/DailyOperationsTest.kt
 
-[android/donas-control/app/src/test/java/com/bryan/donas/daily/DailyOperationsTest.kt:L1](../../../android/donas-control/app/src/test/java/com/bryan/donas/daily/DailyOperationsTest.kt#L1) · 136 líneas · SHA-256 `ecfd4d88ea5f`
+[android/donas-control/app/src/test/java/com/bryan/donas/daily/DailyOperationsTest.kt:L1](../../../android/donas-control/app/src/test/java/com/bryan/donas/daily/DailyOperationsTest.kt#L1) · 137 líneas · SHA-256 `3cff05740de1`
 
 - `class DailyOperationsTest` — [android/donas-control/app/src/test/java/com/bryan/donas/daily/DailyOperationsTest.kt:L21](../../../android/donas-control/app/src/test/java/com/bryan/donas/daily/DailyOperationsTest.kt#L21)
 - `function snapshot` — [android/donas-control/app/src/test/java/com/bryan/donas/daily/DailyOperationsTest.kt:L25](../../../android/donas-control/app/src/test/java/com/bryan/donas/daily/DailyOperationsTest.kt#L25)
@@ -937,7 +937,7 @@ Commit fuente: `0f8592f553e1b25810b3c7bc967dc4b9d1f38650`; 417 archivos. El inve
 
 ## android/donas-control/app/src/test/java/com/bryan/donas/data/BackendSessionTest.kt
 
-[android/donas-control/app/src/test/java/com/bryan/donas/data/BackendSessionTest.kt:L1](../../../android/donas-control/app/src/test/java/com/bryan/donas/data/BackendSessionTest.kt#L1) · 141 líneas · SHA-256 `c62e516e2eef`
+[android/donas-control/app/src/test/java/com/bryan/donas/data/BackendSessionTest.kt:L1](../../../android/donas-control/app/src/test/java/com/bryan/donas/data/BackendSessionTest.kt#L1) · 151 líneas · SHA-256 `471057ac89e1`
 
 - `class BackendSessionTest` — [android/donas-control/app/src/test/java/com/bryan/donas/data/BackendSessionTest.kt:L24](../../../android/donas-control/app/src/test/java/com/bryan/donas/data/BackendSessionTest.kt#L24)
 - `class Tokens` — [android/donas-control/app/src/test/java/com/bryan/donas/data/BackendSessionTest.kt:L25](../../../android/donas-control/app/src/test/java/com/bryan/donas/data/BackendSessionTest.kt#L25)
@@ -1628,7 +1628,7 @@ Commit fuente: `0f8592f553e1b25810b3c7bc967dc4b9d1f38650`; 417 archivos. El inve
 
 ## docs/BUSINESS_MODEL.md
 
-[docs/BUSINESS_MODEL.md:L1](../../../docs/BUSINESS_MODEL.md#L1) · 41 líneas · SHA-256 `aca475690fa9`
+[docs/BUSINESS_MODEL.md:L1](../../../docs/BUSINESS_MODEL.md#L1) · 13 líneas · SHA-256 `942c9e664db4`
 
 ## docs/CUSTOMER_USERNAMES_ACTIVATION_2026-09-29.md
 

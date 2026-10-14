@@ -61,7 +61,7 @@ object DailyRules {
 interface DailyTransport {
     val dailyOwner: String?
     suspend fun dailySnapshot(beforeSequence: Long? = null): JSONObject
-    suspend fun dailyApply(payload: JSONObject): JSONObject
+    suspend fun dailyApply(payload: JSONObject, expectedOwner: String): JSONObject
 }
 class DailyRepository(private val db: AppDatabase, private val client: DailyTransport) {
     val dao get() = db.dailyDao()

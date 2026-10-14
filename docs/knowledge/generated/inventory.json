@@ -1,5 +1,5 @@
 {
-  "source_commit": "0f8592f553e1b25810b3c7bc967dc4b9d1f38650",
+  "source_commit": "b7c3ac1c3d06f8680ba64022da1f3dc6ff3b11b0",
   "scope": "working tree; lexical extraction, production unverified",
   "schema_version": 1,
   "extractor_version": 4,
@@ -360,8 +360,8 @@
     },
     {
       "path": "android/README.md",
-      "sha256": "2ec8794060e115d0d046561e8b967caede17de8de3a4e9423a762dd26f12b579",
-      "bytes": 754,
+      "sha256": "bef53e1091e9a39bf3a3c621e82b0ac788a98832099d3f54d13fed4f6eec6778",
+      "bytes": 552,
       "symbols": [],
       "imports": [],
       "rpc_calls": [],
@@ -370,7 +370,7 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 7
+      "lines": 5
     },
     {
       "path": "android/donas-control/.gitattributes",
@@ -400,8 +400,8 @@
     },
     {
       "path": "android/donas-control/README.md",
-      "sha256": "473f0fb717c941c043f04edb93c96cb0915f43639f914c499849dc2836b7fa6a",
-      "bytes": 7045,
+      "sha256": "3f7687b1df0da5fcf2dc12c5c38b864060f28bc6f6b5b69ba36e0f50cd3c891c",
+      "bytes": 3268,
       "symbols": [],
       "imports": [],
       "rpc_calls": [],
@@ -410,7 +410,7 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 63
+      "lines": 32
     },
     {
       "path": "android/donas-control/app/build.gradle.kts",
@@ -823,8 +823,8 @@
     },
     {
       "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyRepository.kt",
-      "sha256": "021f2136be9437ab9b24dad96c10026a2867f1afa69681dd2803eded489559ff",
-      "bytes": 6042,
+      "sha256": "7284edbd6efc26975f0f9fdb388aabcf0d43dba914c74be2a781b2468fab89f7",
+      "bytes": 6065,
       "symbols": [
         {
           "name": "DailyRules",
@@ -903,8 +903,8 @@
     },
     {
       "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailySync.kt",
-      "sha256": "4ddeeb5b232f1e4e971bd90a194b40d16b1a15776af86130192ad23f53f90215",
-      "bytes": 4408,
+      "sha256": "3a958b4a8930621a1539e7c093c03e902b96d7b6213ad65de7cf90e0575c0827",
+      "bytes": 4415,
       "symbols": [
         {
           "name": "DailySynchronizer",
@@ -963,8 +963,8 @@
     },
     {
       "path": "android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt",
-      "sha256": "411113818795a6d9ca5fb81489b7357414e7737c41789a4dcdd81f6f9c4e332b",
-      "bytes": 19413,
+      "sha256": "882122486d1c32fc17db8dc422375ebd4a8bbe374096b47fd927b600d42d5cc4",
+      "bytes": 20241,
       "symbols": [
         {
           "name": "BackendClient",
@@ -1029,92 +1029,92 @@
         {
           "name": "updateFlavor",
           "kind": "function",
-          "line": 229
+          "line": 244
         },
         {
           "name": "inventory",
           "kind": "function",
-          "line": 235
+          "line": 250
         },
         {
           "name": "saveInventory",
           "kind": "function",
-          "line": 239
+          "line": 254
         },
         {
           "name": "pushStatus",
           "kind": "function",
-          "line": 244
+          "line": 259
         },
         {
           "name": "registerPush",
           "kind": "function",
-          "line": 248
+          "line": 263
         },
         {
           "name": "unregisterPush",
           "kind": "function",
-          "line": 253
+          "line": 268
         },
         {
           "name": "push",
           "kind": "function",
-          "line": 257
+          "line": 272
         },
         {
           "name": "pull",
           "kind": "function",
-          "line": 269
+          "line": 284
         },
         {
           "name": "recentOrders",
           "kind": "function",
-          "line": 274
+          "line": 289
         },
         {
           "name": "customerProfile",
           "kind": "function",
-          "line": 279
+          "line": 294
         },
         {
           "name": "registerCustomerPurchase",
           "kind": "function",
-          "line": 285
+          "line": 300
         },
         {
           "name": "transition",
           "kind": "function",
-          "line": 297
+          "line": 312
         },
         {
           "name": "confirmPayment",
           "kind": "function",
-          "line": 303
+          "line": 318
         },
         {
           "name": "completeDelivery",
           "kind": "function",
-          "line": 308
+          "line": 323
         },
         {
           "name": "CustomerPurchaseProfile",
           "kind": "class",
-          "line": 315
+          "line": 330
         },
         {
           "name": "from",
           "kind": "function",
-          "line": 324
+          "line": 339
         },
         {
           "name": "CustomerPurchaseResult",
           "kind": "class",
-          "line": 335
+          "line": 350
         },
         {
           "name": "BackendException",
           "kind": "class",
-          "line": 337
+          "line": 352
         }
       ],
       "imports": [],
@@ -1157,39 +1157,39 @@
         },
         {
           "value": "/api/admin/customers/daily",
-          "line": 226
+          "line": 235
         },
         {
           "value": "/api/admin/customers/catalog",
-          "line": 230
+          "line": 245
         },
         {
           "value": "/api/admin/customers/inventory",
-          "line": 236
+          "line": 251
         },
         {
           "value": "/api/admin/customers/inventory",
-          "line": 240
+          "line": 255
         },
         {
           "value": "/api/admin/customers/devices",
-          "line": 249
+          "line": 264
         },
         {
           "value": "/api/admin/customers/devices",
-          "line": 254
+          "line": 269
         },
         {
           "value": "/api/sync",
-          "line": 262
+          "line": 277
         },
         {
           "value": "/api/backend",
-          "line": 286
+          "line": 301
         }
       ],
       "animations": [],
-      "lines": 337
+      "lines": 352
     },
     {
       "path": "android/donas-control/app/src/main/java/com/bryan/donas/data/BusinessRepository.kt",
@@ -3759,8 +3759,8 @@
     },
     {
       "path": "android/donas-control/app/src/test/java/com/bryan/donas/daily/DailyOperationsTest.kt",
-      "sha256": "ecfd4d88ea5fd8175e5fd74074c6e172c9134a6418cf548e52a0d0d37b6c3127",
-      "bytes": 9035,
+      "sha256": "3cff05740de17959d2d2dc534b668dd46f1714187aa25867f9998a8a8f3fcf17",
+      "bytes": 9105,
       "symbols": [
         {
           "name": "DailyOperationsTest",
@@ -3800,7 +3800,7 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 136
+      "lines": 137
     },
     {
       "path": "android/donas-control/app/src/test/java/com/bryan/donas/data/BackendRedirectTest.kt",
@@ -3876,8 +3876,8 @@
     },
     {
       "path": "android/donas-control/app/src/test/java/com/bryan/donas/data/BackendSessionTest.kt",
-      "sha256": "c62e516e2eefb517035eb716f8af9c21a9f0657373463da37a8be9f7258b521c",
-      "bytes": 7038,
+      "sha256": "471057ac89e18bf93ef28c1f86819f14bbeadaea242f7aecbd9073a62a3f6bc3",
+      "bytes": 7758,
       "symbols": [
         {
           "name": "BackendSessionTest",
@@ -3940,7 +3940,7 @@
         }
       ],
       "animations": [],
-      "lines": 141
+      "lines": 151
     },
     {
       "path": "android/donas-control/app/src/test/java/com/bryan/donas/data/BusinessRepositoryTest.kt",
@@ -7293,8 +7293,8 @@
     },
     {
       "path": "docs/BUSINESS_MODEL.md",
-      "sha256": "aca475690fa908f2bd1e23f71304cae53f40610bf03badbffbfffcbc827d1c7d",
-      "bytes": 2185,
+      "sha256": "942c9e664db42275f50f8624370b7b93fdf38d2574604b44405e96fc2e997727",
+      "bytes": 2414,
       "symbols": [],
       "imports": [],
       "rpc_calls": [],
@@ -7303,7 +7303,7 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 41
+      "lines": 13
     },
     {
       "path": "docs/CUSTOMER_USERNAMES_ACTIVATION_2026-09-29.md",

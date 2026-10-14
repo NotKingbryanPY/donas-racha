@@ -119,6 +119,16 @@ class BackendSessionTest {
         client.recentOrders()
         assertEquals("rotated-refresh-token", tokens.value)
     }
+    @Test fun oldOwnerQueueCannotSendAfterAccountChanges() = runBlocking {
+        client.login("admin@example.test", "password")
+        val requests = server.requestCount
+        val context = ApplicationProvider.getApplicationContext<android.content.Context>()
+        context.getSharedPreferences("remote_device", android.content.Context.MODE_PRIVATE).edit()
+            .putString("dailyOwner", "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb").commit()
+        try { client.dailyApply(JSONObject().put("kind", "PURCHASE"), "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa"); fail("Old queue must never use another account token") }
+        catch (_: IllegalStateException) { }
+        assertEquals(requests, server.requestCount)
+    }
     @Test fun concurrentRequestsRenewOnce() = runBlocking {
         client.login("admin@example.test", "password")
         (1..12).map { async { client.recentOrders() } }.awaitAll()

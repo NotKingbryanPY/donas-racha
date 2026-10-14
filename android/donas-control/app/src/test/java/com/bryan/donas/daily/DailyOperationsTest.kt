@@ -36,7 +36,8 @@ class DailyOperationsTest {
         var accepted = 0
         val ids = mutableSetOf<String>()
         override suspend fun dailySnapshot(beforeSequence: Long?) = JSONObject(data.toString())
-        override suspend fun dailyApply(payload: JSONObject): JSONObject {
+        override suspend fun dailyApply(payload: JSONObject, expectedOwner: String): JSONObject {
+            check(dailyOwner == expectedOwner)
             if (conflict) throw BackendException(409, "Jornada cerrada", "SESSION_CLOSED")
             val id = payload.getString("operationId")
             if (ids.add(id)) accepted++

@@ -28,7 +28,7 @@ class DailySynchronizer(private val repo: DailyRepository, private val client: D
         for (item in repo.dao.pending(owner)) {
             if (client.dailyOwner != owner) return false
             try {
-                val ack = client.dailyApply(JSONObject(item.payload))
+                val ack = client.dailyApply(JSONObject(item.payload), owner)
                 require(ack.getString("operationId") == item.id && ack.getLong("serverSequence") > 0) { "Confirmación incompleta; conserva el mismo identificador." }
                 repo.dao.acknowledge(item.id, ack.getLong("serverSequence"))
             } catch (e: BackendException) {

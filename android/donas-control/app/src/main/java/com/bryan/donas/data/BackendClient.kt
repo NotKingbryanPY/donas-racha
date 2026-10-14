@@ -221,9 +221,24 @@ class BackendClient(context: Context,
         check(dailyOwner != null) { "Conecta tu cuenta del Dashboard para usar el registro diario." }
         request("/api/admin/customers/daily" + (beforeSequence?.let { "?beforeSequence=$it" } ?: ""), bearer = token())
     }
-    override suspend fun dailyApply(payload: JSONObject): JSONObject = withContext(Dispatchers.IO) {
-        check(dailyOwner != null) { "Conecta tu cuenta del Dashboard para sincronizar." }
-        request("/api/admin/customers/daily", "POST", payload, token())
+    override suspend fun dailyApply(payload: JSONObject, expectedOwner: String): JSONObject = withContext(Dispatchers.IO) {
+        var rejectedToken: String? = null
+        for (attempt in 0..1) {
+            // Capture the token under the same lock used by login/logout/renewal.
+            // Never renew an old owner's queued mutation into the next user's session.
+            val bearer = synchronized(this@BackendClient) {
+                check(dailyOwner == expectedOwner) { "La cuenta cambió; el registro sigue vinculado a su propietario." }
+                val value = token(rejectedToken)
+                check(dailyOwner == expectedOwner) { "La cuenta cambió durante la renovación." }
+                value
+            }
+            try { return@withContext request("/api/admin/customers/daily", "POST", payload, bearer, retryAuth = false) }
+            catch (e: BackendException) {
+                if (e.status != 401 || attempt == 1) throw e
+                rejectedToken = bearer
+            }
+        }
+        error("No se pudo confirmar la sesión para este registro.")
     }
 
     suspend fun updateFlavor(item: com.bryan.donas.data.db.CatalogOperationEntity) = withContext(Dispatchers.IO) {
