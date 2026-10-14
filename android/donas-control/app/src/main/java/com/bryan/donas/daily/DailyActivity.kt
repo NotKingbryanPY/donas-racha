@@ -28,6 +28,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import com.bryan.donas.DonasApp
 import com.bryan.donas.data.NetworkConnection
 import com.google.android.material.button.MaterialButton
@@ -46,6 +48,7 @@ import com.bryan.donas.data.PushHealth
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.Locale
+import java.util.UUID
 
 /** New daily UI. The old ledger and outbox remain preserved, outside this navigation. */
 class DailyActivity : AppCompatActivity() {
@@ -67,10 +70,12 @@ class DailyActivity : AppCompatActivity() {
     private var orderDetail: JSONObject? = null
     private var detailRequested: String? = null
     private var orderFeedback = ""
+    private var notificationCheckId: UUID? = null
+    private var notificationFeedback = ""
     private var showRecentOrders = false
     private var visibleOrderCount = 40
     private val notificationPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
-        StaffNotificationRegistration.request(this); if (page == "Pedidos") render()
+        startNotificationCheck()
     }
     private val notificationListener = android.content.SharedPreferences.OnSharedPreferenceChangeListener { _, _ ->
         runOnUiThread { if (page == "Pedidos") render() }
@@ -99,6 +104,11 @@ class DailyActivity : AppCompatActivity() {
         observe()
         observeOrders()
         if (owner != null) DailySync.schedule(this)
+        if (owner != null && savedInstanceState?.getString("notificationCheckOwner") == owner) {
+            savedInstanceState?.getString("notificationCheckId")?.let { value ->
+                runCatching { UUID.fromString(value) }.getOrNull()?.let { trackNotificationCheck(owner!!, it) }
+            }
+        }
     }
     override fun onStart() {
         super.onStart()
@@ -120,6 +130,7 @@ class DailyActivity : AppCompatActivity() {
         super.onResume()
         if (owner != app.backendClient.dailyOwner) {
             owner = app.backendClient.dailyOwner
+            notificationCheckId = null; notificationFeedback = ""
             snapshot = null; rows = emptyList(); inbox = null; orderDetail = null; detailRequested = null; page = "Pedidos"; owners.value = owner; render()
         }
         if (owner != null) {
@@ -129,6 +140,8 @@ class DailyActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putString("page", page); outState.putString("draft", draft.toString())
         outState.putString("orderId", orderTargetId); outState.putString("notificationOwner", orderTargetOwner)
+        outState.putString("notificationCheckId", notificationCheckId?.toString())
+        outState.putString("notificationCheckOwner", owner)
         super.onSaveInstanceState(outState)
     }
     private fun dp(value: Int) = (value * resources.displayMetrics.density).toInt()
@@ -298,12 +311,50 @@ class DailyActivity : AppCompatActivity() {
         "PENDING" -> "Nuevo"; "ACCEPTED" -> "Aceptado"; "OUT_FOR_DELIVERY" -> "En camino"
         "COMPLETED" -> "Cobrado y entregado"; "CANCELLED" -> "Cancelado"; else -> "Actualizar estado"
     }
+    private fun startNotificationCheck() {
+        val current = owner ?: return
+        if (notificationCheckId != null) return
+        val id = StaffNotificationRegistration.request(this)
+        if (id == null) { notificationFeedback = ""; render(); return }
+        trackNotificationCheck(current, id)
+    }
+    private fun trackNotificationCheck(current: String, id: UUID) {
+        notificationCheckId = id
+        notificationFeedback = "Comprobación pendiente de Android."
+        val work = WorkManager.getInstance(this).getWorkInfoByIdLiveData(id)
+        work.observe(this) { info ->
+            if (owner != current || notificationCheckId != id) {
+                work.removeObservers(this)
+                return@observe
+            }
+            if (info == null) return@observe
+            notificationFeedback = when (info.state) {
+                WorkInfo.State.RUNNING -> "Comprobando teléfono y emisor…"
+                WorkInfo.State.BLOCKED -> "Esperando que termine la comprobación anterior."
+                WorkInfo.State.ENQUEUED -> when {
+                    !NetworkConnection.connected(this) -> "Sin conexión. La comprobación se hará al recuperar Internet."
+                    info.runAttemptCount > 0 -> "Reintento pendiente. Revisa el diagnóstico de avisos."
+                    else -> "Comprobación pendiente de Android."
+                }
+                WorkInfo.State.SUCCEEDED -> "Comprobación finalizada. Revisa el estado de avisos."
+                WorkInfo.State.FAILED -> "No se completó la comprobación. Revisa el diagnóstico y vuelve a intentarlo."
+                WorkInfo.State.CANCELLED -> "Comprobación cancelada. Puedes volver a intentarlo."
+            }
+            if (info.state.isFinished) {
+                notificationCheckId = null
+                work.removeObservers(this)
+            }
+            if (page == "Pedidos") render()
+        }
+        if (page == "Pedidos") render()
+    }
     private fun orders() {
         val current = owner ?: return
         content.addView(label("Pedidos", 28f, bold = true))
         card {
             addView(label("Avisos fuera de la app", 18f, bold = true))
             addView(label(PushHealth.summary(this@DailyActivity, true), 13f, muted))
+            if (notificationFeedback.isNotBlank()) addView(label(notificationFeedback, 13f, muted))
             addView(button("Activar / comprobar avisos", true) {
                 if (Build.VERSION.SDK_INT >= 33 && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED)
                     notificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
@@ -313,8 +364,8 @@ class DailyActivity : AppCompatActivity() {
                     else Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS, "package:$packageName".toUri())
                     startActivity(settings)
                 }
-                else { StaffNotificationRegistration.request(this@DailyActivity); orderFeedback = "Comprobando teléfono y emisor…"; render() }
-            })
+                else startNotificationCheck()
+            }.apply { isEnabled = notificationCheckId == null })
             addView(button("Enviar prueba a este teléfono") {
                 lifecycleScope.launch {
                     try {
@@ -747,6 +798,7 @@ class DailyActivity : AppCompatActivity() {
                     }
                     if (owner == previousOwner) {
                         DailySync.stop(this@DailyActivity); app.backendClient.logout(); owner = null; owners.value = null
+                        notificationCheckId = null; notificationFeedback = ""
                         snapshot = null; inbox = null; orderDetail = null; orderTargetId = null; orderTargetOwner = null
                         rows = emptyList(); draft = JSONObject(); page = "Pedidos"
                     }

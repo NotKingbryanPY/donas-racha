@@ -1,6 +1,6 @@
 # Compilar, activar e instalar
 
-[APK e informe verificados](../DONAS_CONTROL_2_RESULTADOS.md). [Descarga oficial 2.0.0](https://www.dracha.store/downloads/Donas-Control-2.0.0-oficial.apk), publicada y comprobada por hash. CI de validación utiliza otra firma temporal y no es una actualización de distribución.
+[APK e informe de mantenimiento2.1.1](../DONAS_CONTROL_2_1_1_AVISOS.md). [Descarga oficial2.1.1](https://www.dracha.store/downloads/Donas-Control-2.1.1-oficial.apk); confirmar publicación/hash en ese informe. CI de validación utiliza otra firma temporal y no es una actualización de distribución. El [informe de operación diaria2.0](../DONAS_CONTROL_2_RESULTADOS.md) conserva evidencia histórica.
 
 [Contexto](AI_CONTEXT.md) · [Activación detallada](../DONAS_CONTROL_2_ACTIVACION.md)
 
@@ -12,7 +12,7 @@ JDK17, SDK35/build-tools35, Gradle wrapper. Desde raíz PowerShell:
 .\scripts\build-android-official.ps1 -FirebaseConfigPath .\.firebase\android\google-services.json
 ```
 
-Usa firma oficial existente; genera outputs/Donas-Control-2.0.0-oficial.apk y SHA256. Es distribución privada firmada, no aprobación Google Play. Instalar sobre com.bryan.donas.control existente, sin desinstalar; versión15 migra Room5→6 conservando historia/outbox. No instalar debug sobre firma oficial ni regenerar firma. Si la app era .pilot, no es la misma instalación; conservar copia y revisar traslado antes de importar.
+Usa firma oficial existente; genera outputs/Donas-Control-2.1.1-oficial.apk y SHA256. Es distribución privada firmada, no aprobación Google Play. Instalar sobre com.bryan.donas.control existente sin desinstalar; Room7 conserva historia/outbox y2.1.1 no añade migración. No instalar debug sobre firma oficial ni regenerar firma. Si la app era .pilot, no es la misma instalación; conservar copia y revisar traslado antes de importar.
 
 Entrar con correo/password de la cuenta Supabase del Dashboard ADMIN/SELLER; no con cuenta Firebase antigua. Actualizar una vez online, registrar compra/costo/mix, venta/precios y efectivo/Yappy, consumo; comprobar estado confirmado. Cerrar jornada con Internet y pendientes vacíos. El inventario restante permanece. Conflictos: revisar historial y reintentar mismo registro o descartar solo rechazo explícito. La contraseña no se guarda.
 
@@ -46,6 +46,10 @@ Leer [plan2.1](../DONAS_CONTROL_2_1_PEDIDOS.md). SQL diario ya validado por usua
 
 Estado de esta instalación: el usuario ya confirmó02 ORDER_NOTIFICATIONS_SQL_READY con cuatro controles=true y0 teléfonos, y03 ORDER_RETRY_SUPPORT_INSTALLED. No repetir01/03. Emisor configurado, redespliegue Production Ready y FCM validate_only200 comprobados; seguir con registro del teléfono. Soporte instalado no significa cron activado: el botón ADMIN configura el secreto desde Vercel y programa el job después. Brave no permitió adjuntar el control; la autorización CLI la hizo el usuario. Rotar/revocar la clave privada compartida; la nueva credencial debe transferirse directamente al servidor sin pasar por chat/Git.
 
+Actualización posterior: usuario recibió prueba del sistema en Samsung A23 y confirmó recuperación programada desde ADMIN.2.1.1 corrige solo el estado visible de la comprobación. No reejecutar helper de variables/SQL para actualizar APK; cada ejecución del helper rota CRON_SECRET y obligaría a programar recuperación otra vez. Seguir con prueba de pedido real fuera de app/bloqueado.
+
 Usar scripts/configure-order-notifications.ps1 -ServiceAccountPath <ruta local privada> después de autorizar Vercel CLI. Script valida proyecto y escribe por stdin(--sensitive); rota CRON_SECRET, no modifica variables Supabase. Redesplegar proyecto existente, conectar APK2.1 con cuenta Supabase, permitir canal/permisos, Activar/comprobar avisos, Activar recuperación(ADMIN), Enviar prueba. Comprobar realmente aviso y tap; luego pedido real con app abierta/segundo plano/bloqueada, duplicados/reconexión/estado/stock/puntos. No compartir archivo cuenta servicio o sus valores por chat/Git.
 
 Pruebas nuevas: node tests/staff-notification-api.cjs,staff-notification-provider.cjs,staff-notification-postgres.mjs; unit/native renders, lint/build firmados y emuladores23/35. Aceptación del proveedor no equivale a entrega al teléfono.
+
+Si2.1.1 finaliza con No se completó la comprobación, revisar el código en Avisos externos. La API tenía mínimo20 para refresh, incompatible con tokens Supabase de12; corregido en servidor, sin otro APK/SQL ni cambio de secretos. Después de verificar despliegue, volver a pulsar Activar/comprobar avisos con la sesión existente; si continúa, conservar diagnóstico. No borrar datos ni suponer que toda falla es FCM.

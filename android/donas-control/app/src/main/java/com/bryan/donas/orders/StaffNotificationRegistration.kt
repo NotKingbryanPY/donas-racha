@@ -14,18 +14,21 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withTimeoutOrNull
 import java.util.concurrent.TimeUnit
+import java.util.UUID
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 object StaffNotificationRegistration {
-    fun request(context: Context) {
+    fun request(context: Context): UUID? {
         val app = context.applicationContext as DonasApp
-        val owner = app.backendClient.dailyOwner ?: return
-        if (!PushRegistration.initialize(context)) { PushHealth.failed(context, "FIREBASE_APK_NOT_CONFIGURED"); return }
+        val owner = app.backendClient.dailyOwner ?: return null
+        if (!PushRegistration.initialize(context)) { PushHealth.failed(context, "FIREBASE_APK_NOT_CONFIGURED"); return null }
+        val work = OneTimeWorkRequestBuilder<StaffNotificationRegistrationWorker>()
+            .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
+            .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 30, TimeUnit.SECONDS).build()
         WorkManager.getInstance(context).enqueueUniqueWork("staff-fcm-register-$owner", ExistingWorkPolicy.APPEND_OR_REPLACE,
-            OneTimeWorkRequestBuilder<StaffNotificationRegistrationWorker>()
-                .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
-                .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 30, TimeUnit.SECONDS).build())
+            work)
+        return work.id
     }
     fun ensure(context: Context) {
         val owner = (context.applicationContext as DonasApp).backendClient.dailyOwner ?: return
@@ -45,7 +48,10 @@ class StaffNotificationRegistrationWorker(context: Context, params: WorkerParame
     override suspend fun doWork(): Result {
         val app = applicationContext as DonasApp
         val owner = app.backendClient.dailyOwner ?: return Result.success()
-        if (!PushRegistration.initialize(app)) return Result.failure()
+        if (!PushRegistration.initialize(app)) {
+            PushHealth.failed(app, "FIREBASE_APK_NOT_CONFIGURED")
+            return Result.failure()
+        }
         return try {
             if (!OrderNotifications.enabled(app)) {
                 app.backendClient.staffNotificationStop(owner)

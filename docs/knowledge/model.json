@@ -243,6 +243,18 @@
       ]
     },
     {
+      "id": "ui:notification-check",
+      "type": "componente",
+      "label": "Comprobación de avisos según WorkInfo",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
+          "line": 321
+        }
+      ]
+    },
+    {
       "id": "system:fcm-emitter",
       "type": "componente",
       "label": "Emisor FCM Vercel",
@@ -250,6 +262,22 @@
       "refs": [
         {
           "path": "api/_lib/order-notification-push.js",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "feature:staff-session",
+      "type": "componente",
+      "label": "Sesión Supabase: renovación opaca y roles",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "api/auth/session.js",
+          "line": 1
+        },
+        {
+          "path": "tests/session-resilience.cjs",
           "line": 1
         }
       ]
@@ -413,6 +441,30 @@
       ]
     },
     {
+      "source": "system:android",
+      "target": "ui:notification-check",
+      "type": "IMPLEMENTA",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
+          "line": 321
+        }
+      ]
+    },
+    {
+      "source": "ui:notification-check",
+      "target": "feature:staff-fcm",
+      "type": "DEPENDE_DE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
+          "line": 314
+        }
+      ]
+    },
+    {
       "source": "system:fcm-emitter",
       "target": "feature:staff-fcm",
       "type": "NOTIFICA_A",
@@ -432,6 +484,30 @@
       "refs": [
         {
           "path": "android/donas-control/app/src/main/java/com/bryan/donas/orders/StaffOrderNotifications.kt",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "source": "system:api",
+      "target": "feature:staff-session",
+      "type": "IMPLEMENTA",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "api/auth/session.js",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "source": "feature:staff-fcm",
+      "target": "feature:staff-session",
+      "type": "DEPENDE_DE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt",
           "line": 1
         }
       ]
