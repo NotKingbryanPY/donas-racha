@@ -6,7 +6,7 @@ Resultados se actualizan durante la entrega; no equivalen a pruebas en producci�
 
 - PASS SQL PostgreSQL aislado: compra 4/4/2/2 y caja configurable de4, pago dividido, consumo, costo FIFO, costo desconocido/null utilidad, reservas, web fulfillment único sin otra salida, cierre/replay/conflicto de jornada, RLS y preservación del archivo móvil.
 - PASS API simulado: sesión/roles, actor derivado servidor, validación de cantidades/pago, hash estable, falta SQL explícita.
-- PASS compilación inicial compileDebugKotlin. Unit/lint/build oficial y navegador están en curso; consultar informe final antes de asumir resultado.
+- PASS final local: 113 pruebas Android sin fallos, lintDebug/lintOfficial estrictos, assembleOfficial/R8. Firma/paquete/versión/alineación y contenido del APK verificados en [informe de entrega](../DONAS_CONTROL_2_RESULTADOS.md). Native renders revisados; panel diario y regresiones web pasaron a360/768/1440. Ocho tests de tooling pasaron.
 - Metadatos Firebase verificados: proyecto/app/paquete/certificado y Firestore Standard(us-east1) gratuito. No se escribió negocio ni se configuró un emisor nuevo.
 - No SQL privado real ejecutado; Browser/Computer no inicia kernel. Sin teléfono ADB ni emulador local. No prueba física, push ni integración real afirmada.
 

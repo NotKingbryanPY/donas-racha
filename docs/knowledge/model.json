@@ -486,6 +486,7 @@
       "id": "operations",
       "globs": [
         ".github/*",
+        "downloads/*",
         "scripts/*",
         "package*.json",
         ".env.example",

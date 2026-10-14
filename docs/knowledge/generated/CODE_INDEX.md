@@ -2,7 +2,7 @@
 
 Generado por `python scripts/knowledge.py generate`. Nombres extraídos, sin contenido de credenciales ni datos.
 
-Commit fuente: `2dadec5bc9e7a0394c21f7ee7e9370d2fdde9704`; 417 archivos. El inventario incluye metadatos de recursos binarios, esquemas Room y SDK vendorizado; no interpreta su código generado.
+Commit fuente: `ef54035d73a413078f43a605924aeb757c86b332`; 419 archivos. El inventario incluye metadatos de recursos binarios, esquemas Room y SDK vendorizado; no interpreta su código generado.
 
 [Volver al mapa](../PROJECT_MAP.md)
 
@@ -16,7 +16,7 @@ Commit fuente: `2dadec5bc9e7a0394c21f7ee7e9370d2fdde9704`; 417 archivos. El inve
 
 ## .gitattributes
 
-[.gitattributes:L1](../../../.gitattributes#L1) · binario/generado líneas · SHA-256 `ea21fbb7e655`
+[.gitattributes:L1](../../../.gitattributes#L1) · binario/generado líneas · SHA-256 `06754b1118e2`
 
 ## .github/workflows/android-daily-build.yml
 
@@ -1654,6 +1654,10 @@ Commit fuente: `2dadec5bc9e7a0394c21f7ee7e9370d2fdde9704`; 417 archivos. El inve
 
 [docs/DONAS_CONTROL_2_AUDITORIA.md:L1](../../../docs/DONAS_CONTROL_2_AUDITORIA.md#L1) · 39 líneas · SHA-256 `23a7c997b10a`
 
+## docs/DONAS_CONTROL_2_RESULTADOS.md
+
+[docs/DONAS_CONTROL_2_RESULTADOS.md:L1](../../../docs/DONAS_CONTROL_2_RESULTADOS.md#L1) · 54 líneas · SHA-256 `738ef648db0d`
+
 ## docs/FIRESTORE_RULES_REVIEW.md
 
 [docs/FIRESTORE_RULES_REVIEW.md:L1](../../../docs/FIRESTORE_RULES_REVIEW.md#L1) · 34 líneas · SHA-256 `55236467a32d`
@@ -1745,6 +1749,10 @@ Commit fuente: `2dadec5bc9e7a0394c21f7ee7e9370d2fdde9704`; 417 archivos. El inve
 ## docs/previews/landing-390.webp
 
 [docs/previews/landing-390.webp:L1](../../../docs/previews/landing-390.webp#L1) · binario/generado líneas · SHA-256 `f7f12e3de646`
+
+## downloads/Donas-Control-2.0.0-oficial.apk.sha256
+
+[downloads/Donas-Control-2.0.0-oficial.apk.sha256:L1](../../../downloads/Donas-Control-2.0.0-oficial.apk.sha256#L1) · binario/generado líneas · SHA-256 `12efc831737f`
 
 ## firebase.json
 

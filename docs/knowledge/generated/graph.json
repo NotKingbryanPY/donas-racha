@@ -1,10 +1,10 @@
 {
-  "source_commit": "2dadec5bc9e7a0394c21f7ee7e9370d2fdde9704",
+  "source_commit": "ef54035d73a413078f43a605924aeb757c86b332",
   "scope": "working tree; lexical extraction, production unverified",
   "schema_version": 1,
   "extractor_version": 4,
   "hash_algorithm": "sha256; text CRLF normalized to LF; vendor/binary literal",
-  "model_sha256": "ea5d00db6eb81b96920d773b63e2642bb13aba08686b62997a52fefc4e16a94f",
+  "model_sha256": "ad79ad83b33298bdd70eb41da2f7b556f8111d89771ccfb6f3c35d120296dc98",
   "limitations": [
     "No AST ni call graph exhaustivo",
     "No resuelve funciones renombradas ni overloads SQL",
@@ -11521,6 +11521,18 @@
       ]
     },
     {
+      "id": "file:docs/DONAS_CONTROL_2_RESULTADOS.md",
+      "type": "archivo",
+      "label": "docs/DONAS_CONTROL_2_RESULTADOS.md",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "docs/DONAS_CONTROL_2_RESULTADOS.md",
+          "line": 1
+        }
+      ]
+    },
+    {
       "id": "file:docs/FIRESTORE_RULES_REVIEW.md",
       "type": "archivo",
       "label": "docs/FIRESTORE_RULES_REVIEW.md",
@@ -11819,6 +11831,18 @@
       "refs": [
         {
           "path": "docs/previews/landing-390.webp",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "file:downloads/Donas-Control-2.0.0-oficial.apk.sha256",
+      "type": "archivo",
+      "label": "downloads/Donas-Control-2.0.0-oficial.apk.sha256",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "downloads/Donas-Control-2.0.0-oficial.apk.sha256",
           "line": 1
         }
       ]

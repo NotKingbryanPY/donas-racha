@@ -649,5 +649,23 @@
       "android/donas-control/legacy-res/xml/donas_widget_info.xml"
     ],
     "note": "Ciclo de vida único, retirada de recursos obsoletos y transporte por propietario revisados"
+  },
+  {
+    "date": "2026-10-14T01:13:08-05:00",
+    "commit": "ef54035d73a413078f43a605924aeb757c86b332",
+    "areas": [
+      "android",
+      "api",
+      "database",
+      "firebase",
+      "operations",
+      "web"
+    ],
+    "changed_files": [
+      ".gitattributes",
+      "docs/DONAS_CONTROL_2_RESULTADOS.md",
+      "downloads/Donas-Control-2.0.0-oficial.apk.sha256"
+    ],
+    "note": "113 pruebas y APK oficial verificados; distribución y limitaciones de activación documentadas"
   }
 ]

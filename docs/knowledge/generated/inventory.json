@@ -1,10 +1,10 @@
 {
-  "source_commit": "2dadec5bc9e7a0394c21f7ee7e9370d2fdde9704",
+  "source_commit": "ef54035d73a413078f43a605924aeb757c86b332",
   "scope": "working tree; lexical extraction, production unverified",
   "schema_version": 1,
   "extractor_version": 4,
   "hash_algorithm": "sha256; text CRLF normalized to LF; vendor/binary literal",
-  "model_sha256": "ea5d00db6eb81b96920d773b63e2642bb13aba08686b62997a52fefc4e16a94f",
+  "model_sha256": "ad79ad83b33298bdd70eb41da2f7b556f8111d89771ccfb6f3c35d120296dc98",
   "files": [
     {
       "path": ".env.example",
@@ -35,8 +35,8 @@
     },
     {
       "path": ".gitattributes",
-      "sha256": "ea21fbb7e655a69c9b364110cc99e06d43ae567c970755ab3cf6a3d348c9c5ae",
-      "bytes": 154,
+      "sha256": "06754b1118e28cf72f8ca7aa415f0ab67fcff280e1933522ec7f0b7da6739b36",
+      "bytes": 176,
       "symbols": [],
       "imports": [],
       "rpc_calls": [],
@@ -7390,6 +7390,20 @@
       "lines": 39
     },
     {
+      "path": "docs/DONAS_CONTROL_2_RESULTADOS.md",
+      "sha256": "738ef648db0d12a7d48d0564714a54205f50042d69bf57ec0d091b7543bb2638",
+      "bytes": 6005,
+      "symbols": [],
+      "imports": [],
+      "rpc_calls": [],
+      "tables": [],
+      "sql_objects": [],
+      "sql_changes": [],
+      "endpoints": [],
+      "animations": [],
+      "lines": 54
+    },
+    {
       "path": "docs/FIRESTORE_RULES_REVIEW.md",
       "sha256": "55236467a32d01d32187542c8a05422fec156d115f72eadd6de2150633fc43ab",
       "bytes": 3132,
@@ -7701,6 +7715,19 @@
       "path": "docs/previews/landing-390.webp",
       "sha256": "f7f12e3de6462c843c0dcc17dc11bcd78ee154164b29c0f64d6131b222ca8819",
       "bytes": 51594,
+      "symbols": [],
+      "imports": [],
+      "rpc_calls": [],
+      "tables": [],
+      "sql_objects": [],
+      "sql_changes": [],
+      "endpoints": [],
+      "animations": []
+    },
+    {
+      "path": "downloads/Donas-Control-2.0.0-oficial.apk.sha256",
+      "sha256": "12efc831737faed54577260f197abae41e059ba458346a0448fffd153337aeb7",
+      "bytes": 98,
       "symbols": [],
       "imports": [],
       "rpc_calls": [],
