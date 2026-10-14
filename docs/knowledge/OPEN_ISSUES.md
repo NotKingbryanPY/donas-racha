@@ -4,7 +4,7 @@
 
 | Tema | Estado / límite |
 |---|---|
-| Activación SQL v2 | PENDIENTE_VERIFICACION: usuario reportó instalación01 sin error y stock39; falta resultado completo02 con permisos/jornada/trigger. El agente no accedió a Studio. Código local/SQL aislado no certifican producción |
+| Activación SQL v2 | VALIDADA_POR_RESULTADO_USUARIO: DAILY_V2_READY con jornada, ambas RPC restringidas, RLS, trigger e integridad correctos. No repetir instalación. El agente no accedió a Studio; falta operación autenticada desde APK y lectura coincidente en web |
 | Stock/costo inicial | Se preservan cantidades. Un sabor tenía reservas superiores al conteo en evidencia histórica; comprobar físico. El costo del stock anterior es desconocido hasta evidencia válida |
 | Datos viejos | Room preservado; pendientes históricos no se reenvían. Necesitan conciliación de compras/ventas ya reflejadas en conteos centrales |
 | Conflicto offline | No se garantiza disponibilidad global offline. El servidor puede rechazar stock/jornada; revisar, no generar otro UUID por timeout |

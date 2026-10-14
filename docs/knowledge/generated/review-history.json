@@ -697,5 +697,16 @@
       "supabase/sql-editor/daily-v2/02_verify.sql"
     ],
     "note": "Verificador SQL de una fila probado; evidencia de instalación reportada por usuario y stock39 registrada sin asumir permisos o prueba física"
+  },
+  {
+    "date": "2026-10-14T11:37:43-05:00",
+    "commit": "8da29011adb8047aadeaaac4b44fec77b4b0d953",
+    "areas": [
+      "operations"
+    ],
+    "changed_files": [
+      "docs/DONAS_CONTROL_2_RESULTADOS.md"
+    ],
+    "note": "Activación DAILY_V2_READY validada por resultado compartido por usuario; recorrido Android autenticado pendiente"
   }
 ]

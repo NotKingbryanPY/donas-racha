@@ -2,6 +2,8 @@
 
 ## 2026-10-14 — verificación continuada
 
+El usuario compartió después DAILY_V2_READY con todos los controles de jornada/permisos/RLS/trigger/integridad correctos. Se actualiza el estado de activación a validada por resultado del usuario; sigue pendiente la operación autenticada desde el APK y la lectura coincidente en web. No se ejecutó SQL privado por el agente, no se cambia código/stock/APK y no se pide repetir la instalación.
+
 Usuario reporta instalador01 sin error y último resultado de02:39 disponibles contadas, sin reservas. No se declara autenticación/recorrido físico verificados. 02_verify se convierte en un único SELECT con permisos de ambas RPC, RLS, trigger diario, integridad e inventario, evitando que Studio oculte checks anteriores; sin escrituras ni cambios del APK. Conteo de pg_trigger distingue objetos reales de múltiples eventos en information_schema. Se registra push histórico presente sin restaurarlo ni borrar sus datos.
 
 El conjunto final local pasó 113 pruebas, lint estricto debug/official y build/R8. APK oficial 2.0.0/código15, 5,398,339 bytes, misma firma anterior; SHA256 y análisis de secretos en DONAS_CONTROL_2_RESULTADOS. La copia de distribución/sha se publica en downloads. CI e0d0d14 aprobó Android API23/35, web/concurrencia y conocimiento. PR41 integrado en main/e2a7ff1, Vercel Production success; HTTP y descarga/hash comprobados a las06:24UTC. Producción SQL sigue sin ejecución real por fallo del kernel Browser/Computer. Activación y recorrido físico permanecen pendientes.
