@@ -261,7 +261,9 @@ class DailyActivity : AppCompatActivity() {
             addView(label(row.error ?: "Guardado en este teléfono. Esperando confirmación del servidor.", 13f, muted))
             addView(button("Ver registro") { showDetails(JSONObject(row.payload)) })
             if (row.state == "CONFLICT") {
-                addView(button("Reintentar el mismo registro") { lifecycleScope.launch { app.daily.dao.retry(row.id); DailySync.request(this@DailyActivity) } })
+                val mustReview = row.error?.substringBefore(':') in listOf("SESSION_CLOSED", "INVENTORY_CONFLICT", "DAILY_SUMMARY_CONFLICT", "INVALID_DAILY_OPERATION")
+                if (mustReview) addView(label("Actualiza y revisa. Descarta este rechazo explícito y registra de nuevo con la jornada o revisión vigente; repetirlo sin cambios no lo resuelve.", color = muted))
+                else addView(button("Reintentar el mismo registro") { lifecycleScope.launch { app.daily.dao.retry(row.id); DailySync.request(this@DailyActivity) } })
                 addView(button("Descartar registro rechazado") { MaterialAlertDialogBuilder(this@DailyActivity)
                     .setTitle("Descartar el pendiente rechazado").setMessage("El servidor lo rechazó. Se conservará en el historial local como descartado. No se borra una venta confirmada.")
                     .setNegativeButton("Conservar", null).setPositiveButton("Descartar") { _, _ -> lifecycleScope.launch { app.daily.dao.discard(row.id); DailySync.request(this@DailyActivity) } }.show() })

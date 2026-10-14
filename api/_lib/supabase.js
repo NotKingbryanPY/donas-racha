@@ -29,6 +29,7 @@ async function readResponse(response) {
     if(message.includes('CORRECTION_REASON_REQUIRED')) throw new ApiError(400,'CORRECTION_REASON_REQUIRED','Escribe el motivo de la corrección.');
     if(message.includes('INVALID_DAILY_OPERATION')||message.includes('INVALID_OPERATION_TIME')) throw new ApiError(400,'INVALID_DAILY_OPERATION','Los datos o la fecha del registro diario no son válidos.');
     if(message.includes('STAFF_REQUIRED')) throw new ApiError(403,'STAFF_REQUIRED','Esta cuenta necesita rol ADMIN o SELLER.');
+    if(message.includes('INVENTORY_COUNT_REQUIRED')) throw new ApiError(409,'INVENTORY_COUNT_REQUIRED','Falta un conteo físico inicial de este sabor. Regístralo en el Dashboard antes de reintentar; no se presume que las existencias eran cero.');
     if (message.includes('IDEMPOTENCY_CONFLICT')) throw new ApiError(409, 'IDEMPOTENCY_CONFLICT', 'La clave de idempotencia ya fue usada con otros datos.');
     if (message.includes('ADMIN_REQUIRED')) throw new ApiError(403, 'ADMIN_REQUIRED', 'La cuenta no tiene permisos administrativos.');
     if (message.includes('INVALID_OPERATION')) throw new ApiError(400, 'INVALID_OPERATION', 'Los datos de la operación no son válidos.');

@@ -50,6 +50,14 @@ class DailyOperationsTest {
             try { DailyRules.money(value); fail("Must reject $value") } catch (_: IllegalArgumentException) { }
         }
     }
+    @Test fun pendingOrderUsesDurableInsertionEvenWhenPhoneClockMovesBackward() = runBlocking {
+        val db = Room.inMemoryDatabaseBuilder(ApplicationProvider.getApplicationContext(), AppDatabase::class.java).build()
+        try {
+            db.dailyDao().enqueue(DailyOperation("first-purchase", owner, session, "PURCHASE", "{}", 100))
+            db.dailyDao().enqueue(DailyOperation("later-sale", owner, session, "SALE", "{}", 1))
+            assertEquals(listOf("first-purchase", "later-sale"), db.dailyDao().pending(owner).map { it.id })
+        } finally { db.close() }
+    }
     @Test fun pendingProjectionRespectsReservationsAndDoesNotDoubleCountAcknowledgedRows() {
         val state = snapshot()
         val op = DailyOperation("sale-1", owner, session, "SALE", sale().toString(), 1)

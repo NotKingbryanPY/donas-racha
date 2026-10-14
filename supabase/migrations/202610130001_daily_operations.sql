@@ -201,6 +201,8 @@ begin
     select * into v_variant from public.product_variants where id=(v_item->>'variantId')::uuid;
     if not found or not exists(select 1 from public.inventory_by_flavor where variant_id=v_variant.id) or v_variant.id=any(v_seen) then
       raise exception 'INVALID_PRODUCT_VARIANT'; end if;
+    if not exists(select 1 from public.inventory_manual_counts where variant_id=v_variant.id) then
+      raise exception 'INVENTORY_COUNT_REQUIRED'; end if;
     v_seen:=array_append(v_seen,v_variant.id); v_qty:=(v_item->>'quantity')::bigint;
     if v_qty is null or v_qty=0 or abs(v_qty)>100000 or (v_kind<>'CORRECTION' and v_qty<0) then raise exception 'INVALID_QUANTITY'; end if;
     if v_kind='PURCHASE' then v_units:=v_units+v_qty*v_boxes;
@@ -237,11 +239,7 @@ begin
         values(v_variant.id,p_operation_id,v_qty,case when v_kind='PURCHASE' then v_total::numeric/v_units else null end);
       v_cost:=jsonb_build_object('costCents',0,'unknownCostUnits',0);
     end if;
-    -- A purchase establishes a counted zero baseline only if none existed; it never absorbs history.
-    if v_kind='PURCHASE' or (v_kind='CORRECTION' and v_qty>0) then
-      insert into public.inventory_manual_counts(variant_id,quantity,counted_at,counted_by,movement_sequence)
-        values(v_variant.id,0,clock_timestamp(),p_auth_user_id,(select coalesce(max(id),0) from public.inventory_movements)) on conflict(variant_id) do nothing;
-    end if;
+    -- A missing baseline requires a real physical count; never initialize unknown stock to zero.
     insert into public.daily_operation_items(operation_id,variant_id,name_snapshot,sku_snapshot,quantity,per_box_quantity,unit_price_cents,cost_cents,unknown_cost_units)
       values(p_operation_id,v_variant.id,v_variant.name,v_variant.sku,v_qty,
         case when v_kind='PURCHASE' then (v_item->>'quantity')::integer else null end,

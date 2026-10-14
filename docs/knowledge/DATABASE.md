@@ -1,5 +1,7 @@
 # Datos y contratos
 
+Toda variante operada debe tener un conteo físico inicial registrado. Una compra no presume stock cero cuando falta esa referencia: INVENTORY_COUNT_REQUIRED conserva el pendiente hasta registrar el conteo real y reintentar el mismo UUID. El ledger nuevo no inserta ni reescribe conteos para facilitar la activación.
+
 [Contexto](AI_CONTEXT.md) · [Catálogo SQL completo](generated/SQL_CATALOG.md) · [Relaciones](diagrams/07-database.md)
 
 El catálogo generado indexa declaraciones locales, no materializa la evolución ni certifica el esquema remoto. Leer migraciones/wrappers y preflight. No contiene registros reales ni secretos.

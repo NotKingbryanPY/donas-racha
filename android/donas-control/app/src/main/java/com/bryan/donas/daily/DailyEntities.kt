@@ -32,9 +32,9 @@ interface DailyDao {
     @Query("SELECT * FROM daily_outbox WHERE id=:id") suspend fun operation(id: String): DailyOperation?
     @Insert(onConflict = OnConflictStrategy.ABORT) suspend fun enqueue(item: DailyOperation)
     @Query("SELECT * FROM daily_outbox WHERE ownerId=:owner ORDER BY createdAt,id") suspend fun all(owner: String): List<DailyOperation>
-    @Query("SELECT * FROM daily_outbox WHERE ownerId=:owner AND state='PENDING' ORDER BY createdAt,rowid LIMIT 50") suspend fun pending(owner: String): List<DailyOperation>
+    @Query("SELECT * FROM daily_outbox WHERE ownerId=:owner AND state='PENDING' ORDER BY rowid LIMIT 50") suspend fun pending(owner: String): List<DailyOperation>
     @Query("SELECT * FROM daily_outbox WHERE ownerId=:owner AND (state IN ('PENDING','CONFLICT') OR id IN (SELECT id FROM daily_outbox WHERE ownerId=:owner AND state NOT IN ('PENDING','CONFLICT') ORDER BY createdAt DESC LIMIT 200)) ORDER BY createdAt DESC") fun observe(owner: String): Flow<List<DailyOperation>>
-    @Query("SELECT * FROM daily_outbox WHERE ownerId=:owner AND (state IN ('PENDING','CONFLICT') OR (state='ACKED' AND sequence>:afterSequence)) ORDER BY createdAt,rowid") suspend fun projecting(owner: String, afterSequence: Long): List<DailyOperation>
+    @Query("SELECT * FROM daily_outbox WHERE ownerId=:owner AND (state IN ('PENDING','CONFLICT') OR (state='ACKED' AND sequence>:afterSequence)) ORDER BY rowid") suspend fun projecting(owner: String, afterSequence: Long): List<DailyOperation>
     @Query("SELECT COUNT(*) FROM daily_outbox WHERE ownerId=:owner AND state='CONFLICT'") suspend fun conflicts(owner: String): Int
     @Query("UPDATE daily_outbox SET state='ACKED',sequence=:sequence,error=NULL WHERE id=:id") suspend fun acknowledge(id: String, sequence: Long)
     @Query("UPDATE daily_outbox SET state=:state,error=:error,attempts=attempts+1 WHERE id=:id") suspend fun issue(id: String, state: String, error: String)

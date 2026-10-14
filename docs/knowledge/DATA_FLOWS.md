@@ -4,6 +4,10 @@ Una respuesta de autorización 401/403 en el worker corta la sesión local, cons
 
 La paginación histórica local de la pantalla se reinicia cuando llegan recibos nuevos, para no mezclar dos ventanas de secuencias ni ocultar registros entre ellas.
 
+El envío usa el orden de inserción durable de SQLite, no el reloj del teléfono: una corrección de hora no puede enviar una venta antes de la compra pendiente de la que depende. Una prueba específica reproduce timestamps que retroceden.
+
+La UI no ofrece repetir ciegamente un payload de jornada cerrada o revisión antigua: explica que el rechazo debe revisarse/descartarse explícitamente y registrarse de nuevo con la jornada/revisión actual. Para stock temporalmente insuficiente o conteo faltante, se conserva el reintento del mismo UUID después de resolver la causa.
+
 [Contexto](AI_CONTEXT.md) · [Sincronización](diagrams/03-sync.md)
 
 ## Registro Android

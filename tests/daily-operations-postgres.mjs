@@ -73,6 +73,9 @@ await assert.rejects(apply({sessionId:oldSession,kind:'CONSUMPTION',items:[{vari
 await apply({kind:'CORRECTION',expectedRevision:state.inventory.revision,note:'Conteo físico corregido',items:[{variantId:vc,quantity:2}]});
 await apply({kind:'SALE',items:[{variantId:vc,quantity:5,unitPriceCents:100}],payment:{cashCents:500,yappyCents:0}});
 state=await snapshot();assert.equal(state.summary.unknownCostUnits,1);assert.equal(state.summary.profitCents,null);
+await db.query('delete from public.inventory_manual_counts where variant_id=$1',[cc]); // disposable fixture only
+await assert.rejects(apply({kind:'PURCHASE',boxes:1,totalCostCents:50,items:[{variantId:cc,quantity:1}]}),/INVENTORY_COUNT_REQUIRED/);
+assert.equal(Number((await db.query('select count(*) n from public.inventory_manual_counts where variant_id=$1',[cc])).rows[0].n),0,'purchase must not invent a zero baseline');
 for(const name of ['daily_sessions','daily_operations','daily_operation_items','daily_cost_lots']) {
   const r=(await db.query("select relrowsecurity rls,has_table_privilege('anon',$1,'SELECT') a,has_table_privilege('authenticated',$1,'SELECT') u from pg_class where oid=$1::regclass",['public.'+name])).rows[0];
   assert.equal(r.rls,true);assert.equal(r.a,false);assert.equal(r.u,false);

@@ -568,5 +568,27 @@
       "tests/knowledge-system.py"
     ],
     "note": "14 octubre: fixtures corregidas, FIFO/roles/reintentos y hashes Windows/Linux revisados"
+  },
+  {
+    "date": "2026-10-14T00:14:13-05:00",
+    "commit": "3e94d8dd07023231e3c02114c6584ccba7ce9b2f",
+    "areas": [
+      "android",
+      "api",
+      "database",
+      "firebase",
+      "operations",
+      "web"
+    ],
+    "changed_files": [
+      "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
+      "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyEntities.kt",
+      "android/donas-control/app/src/test/java/com/bryan/donas/daily/DailyOperationsTest.kt",
+      "api/_lib/supabase.js",
+      "supabase/migrations/202610130001_daily_operations.sql",
+      "supabase/sql-editor/daily-v2/01_apply.sql",
+      "tests/daily-operations-postgres.mjs"
+    ],
+    "note": "Revisión final de FIFO compartido, conteo inicial, orden durable de cola y resolución explícita de conflictos"
   }
 ]
