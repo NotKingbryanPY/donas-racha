@@ -1,6 +1,6 @@
 # Compilar, activar e instalar
 
-[APK e informe de mantenimiento2.1.1](../DONAS_CONTROL_2_1_1_AVISOS.md). [Descarga oficial2.1.1](https://www.dracha.store/downloads/Donas-Control-2.1.1-oficial.apk); confirmar publicación/hash en ese informe. CI de validación utiliza otra firma temporal y no es una actualización de distribución. El [informe de operación diaria2.0](../DONAS_CONTROL_2_RESULTADOS.md) conserva evidencia histórica.
+[APK e informe de mantenimiento2.1.1](../DONAS_CONTROL_2_1_1_AVISOS.md). [Descarga oficial2.1.1](https://www.dracha.store/downloads/Donas-Control-2.1.1-oficial.apk); publicación/hash verificados en ese informe. CI de validación utiliza otra firma temporal y no es una actualización de distribución. El [informe de operación diaria2.0](../DONAS_CONTROL_2_RESULTADOS.md) conserva evidencia histórica.
 
 [Contexto](AI_CONTEXT.md) · [Activación detallada](../DONAS_CONTROL_2_ACTIVACION.md)
 
@@ -53,3 +53,5 @@ Usar scripts/configure-order-notifications.ps1 -ServiceAccountPath <ruta local p
 Pruebas nuevas: node tests/staff-notification-api.cjs,staff-notification-provider.cjs,staff-notification-postgres.mjs; unit/native renders, lint/build firmados y emuladores23/35. Aceptación del proveedor no equivale a entrega al teléfono.
 
 Si2.1.1 finaliza con No se completó la comprobación, revisar el código en Avisos externos. La API tenía mínimo20 para refresh, incompatible con tokens Supabase de12; corregido en servidor, sin otro APK/SQL ni cambio de secretos. Después de verificar despliegue, volver a pulsar Activar/comprobar avisos con la sesión existente; si continúa, conservar diagnóstico. No borrar datos ni suponer que toda falla es FCM.
+
+Estado posterior14octubre21:25UTC: CI86b0971 completo PASS (Android/API23/API35, web/API/SQL/browser/concurrencia y conocimiento), PR44 integrado en main a6067d8. Vercel dpl_ZKUMjhaFUVXVKKb5etaNp1DPH6A1 Production Ready y www.dracha.store verificado. Token ficticio de12 ahora alcanza al proveedor (401/INVALID_CREDENTIALS); vacío400, pedidos/avisos/despacho anónimos401, web/catálogo/inventario200 y rutas retiradas410. APK2.1.1 público200, tamaño/hash idénticos. No equivale a renovar la sesión privada del A23 ni entregar pedido bloqueado; se pidió volver a comprobar avisos. Sin nueva SQL ni cambios de secretos.

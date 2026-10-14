@@ -21,11 +21,17 @@ POST /api/auth/session acepta ahora una cadena opaca no vacía, acotada y sin es
 - Certificado SHA-256 `5681a1329740c46b2c7a718e3e8a431951c7b6486fc625196dc3dd7ecadb249d`, igual al anterior; firma v1/v2 válida y alineación16KB comprobada.
 - PASS120 pruebas Android sin fallos/errores, lintDebug/lintOfficial y build optimizado R8. Las tres regresiones nuevas ejercitan WorkManager/lifecycle: éxito, fallo/reintento y finalización mientras la pantalla está detenida.
 - Escaneo de992 entradas sin PEM privado, JSON de cuenta de servicio, JWT service_role, keystore o base local empaquetados. Este escaneo no sustituye una auditoría completa.
-- CI del APK9d48f05: build/lint/pruebas y emuladores API23/35 aprobados, además de conocimiento. La corrección posterior de sesión necesita su propia validación/despliegue; no se deduce del build anterior.
+- CI del APK9d48f05 aprobado; CI posterior86b0971 aprobado en las tres workflows: Android (build y emuladores API23/35), web/API/SQL/browser/concurrencia y conocimiento. La corrección de sesión tiene su propia validación.
 - PASS local de renovación/regresión y contraseña de6, backend completo, seguridad, sesión de cliente, lookup de notificación, API/proveedor FCM y sintaxis web. Prueba previa al cambio de servidor: token ficticio de12 devuelve400/VALIDATION_ERROR en producción.
-- El APK se publicó y verificó en GitHub mediante URL inmutable9d48f05 con tamaño/hash idénticos; el usuario lo instaló. Publicación en dracha.store y comprobación física exitosa todavía pendientes.
+- El APK se publicó y verificó en GitHub mediante URL inmutable9d48f05 con tamaño/hash idénticos; el usuario lo instaló. Descarga dracha.store200 con5,381,968 bytes/hash idénticos verificada después del despliegue; comprobación física posterior de avisos pendiente.
 
-[Descarga prevista de distribución](https://www.dracha.store/downloads/Donas-Control-2.1.1-oficial.apk) · [SHA-256](https://www.dracha.store/downloads/Donas-Control-2.1.1-oficial.apk.sha256). Confirmar publicación antes de usar el enlace.
+[Descarga oficial verificada](https://www.dracha.store/downloads/Donas-Control-2.1.1-oficial.apk) · [SHA-256](https://www.dracha.store/downloads/Donas-Control-2.1.1-oficial.apk.sha256).
+
+## Despliegue verificado — 14 octubre2026,21:25UTC
+
+[PR44](https://github.com/NotKingbryanPY/donas-racha/pull/44) integrado tras CI en main a6067d89af513e79a502dec557ea1d29a32802c4. [Vercel Production](https://vercel.com/king-entertainment/donas-racha/ZKUMjhaFUVXVKKb5etaNp1DPH6A1): dpl_ZKUMjhaFUVXVKKb5etaNp1DPH6A1 Ready y alias dracha.store/www.dracha.store comprobados. El mismo token ficticio de12 pasó del rechazo local400/VALIDATION_ERROR a401/INVALID_CREDENTIALS de Supabase; demuestra que alcanza al proveedor, sin validar una sesión privada real. Token vacío continúa400. Web/catálogo/inventario200; pedidos/avisos/despacho anónimos401; rutas móviles retiradas410; descarga oficial2.1.1/hash200 idénticos. La prueba en preview quedó en401 de protección Vercel y no certificó la API; se verificó el dominio Production después. Sin SQL nuevo ni rotación accidental de CRON_SECRET.
+
+El usuario puede volver a Activar/comprobar avisos con el APK2.1.1 instalado. Si falla, conservar el diagnóstico exacto. No se afirma todavía renovación autenticada real en el A23, pedido bloqueado/segundo plano ni tap/gestión tras esta corrección.
 
 ## Instalar y comprobar
 
