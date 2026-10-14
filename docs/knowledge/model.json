@@ -1,0 +1,508 @@
+{
+  "schema_version": 1,
+  "scope": "Código local; sin consulta de datos ni despliegue",
+  "nodes": [
+    {
+      "id": "system:web",
+      "type": "componente",
+      "label": "Web pública y Dashboard",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "index.html",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "system:api",
+      "type": "componente",
+      "label": "API Vercel",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "api/_lib/admin_handlers/daily.js",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "system:android",
+      "type": "componente",
+      "label": "Donas Control diario2",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "system:room",
+      "type": "componente",
+      "label": "Room6 y datos v5 preservados",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "android/donas-control/app/src/main/java/com/bryan/donas/data/db/AppDatabase.kt",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "system:supabase",
+      "type": "componente",
+      "label": "Autoridad PostgreSQL compartida",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "supabase/migrations/202610130001_daily_operations.sql",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "feature:daily",
+      "type": "funcionalidad",
+      "label": "Compras ventas consumo y cierre",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyRepository.kt",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "feature:sync",
+      "type": "funcionalidad",
+      "label": "Cola diaria UUID y conflictos",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailySync.kt",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "feature:orders",
+      "type": "funcionalidad",
+      "label": "Pedidos existentes y recibo web único",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "api/admin/orders/[id]/status.js",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "feature:inventory",
+      "type": "funcionalidad",
+      "label": "Inventario/reservas compartidos",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "supabase/migrations/202610030001_shared_inventory.sql",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "feature:loyalty",
+      "type": "funcionalidad",
+      "label": "Fidelidad existente conservada",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "api/backend.js",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "feature:onboarding",
+      "type": "funcionalidad",
+      "label": "Tutorial existente",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "assets/js/client-tour.js",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "feature:legacy",
+      "type": "funcionalidad",
+      "label": "Libro antiguo preservado e inactivo",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "android/donas-control/app/src/main/java/com/bryan/donas/data/OperationsRepository.kt",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "endpoint:daily",
+      "type": "funcionalidad",
+      "label": "GET/POST /api/admin/customers/daily",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "api/_lib/admin_handlers/daily.js",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "endpoint:sync",
+      "type": "funcionalidad",
+      "label": "Ruta antigua retirada410",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "api/sync/index.js",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "rpc:api_daily_apply",
+      "type": "funcionalidad",
+      "label": "Aplicación atómica idempotente",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "supabase/migrations/202610130001_daily_operations.sql",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "rpc:api_daily_snapshot",
+      "type": "funcionalidad",
+      "label": "Snapshot/jornada/historial",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "supabase/migrations/202610130001_daily_operations.sql",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "local:daily_outbox",
+      "type": "funcionalidad",
+      "label": "Operaciones nuevas persistentes",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyEntities.kt",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "local:daily_cache",
+      "type": "funcionalidad",
+      "label": "Snapshot por propietario",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyEntities.kt",
+          "line": 1
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "system:android",
+      "target": "system:room",
+      "type": "ESCRIBE_EN",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "source": "system:android",
+      "target": "endpoint:daily",
+      "type": "LLAMA_A",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "source": "system:web",
+      "target": "endpoint:daily",
+      "type": "LLAMA_A",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "index.html",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "source": "endpoint:daily",
+      "target": "rpc:api_daily_apply",
+      "type": "LLAMA_A",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "api/_lib/admin_handlers/daily.js",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "source": "endpoint:daily",
+      "target": "rpc:api_daily_snapshot",
+      "type": "LLAMA_A",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "api/_lib/admin_handlers/daily.js",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "source": "feature:sync",
+      "target": "local:daily_outbox",
+      "type": "LEE_DE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailySync.kt",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "source": "feature:daily",
+      "target": "local:daily_outbox",
+      "type": "ESCRIBE_EN",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyRepository.kt",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "source": "rpc:api_daily_apply",
+      "target": "feature:inventory",
+      "type": "AFECTA_A",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "supabase/migrations/202610130001_daily_operations.sql",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "source": "feature:orders",
+      "target": "feature:daily",
+      "type": "AFECTA_A",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "api/admin/orders/[id]/status.js",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "source": "feature:legacy",
+      "target": "system:room",
+      "type": "LEE_DE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "android/donas-control/app/src/main/java/com/bryan/donas/data/OperationsRepository.kt",
+          "line": 1
+        }
+      ]
+    }
+  ],
+  "areas": [
+    {
+      "id": "web",
+      "globs": [
+        "index.html",
+        "customer.html",
+        "admin-claims.html",
+        "assets/*",
+        "tests/*web*",
+        "tests/customer-*",
+        "tests/motion-*",
+        "tests/profile-motion.mjs"
+      ],
+      "documents": [
+        "AI_CONTEXT.md",
+        "CHANGELOG.md",
+        "PROJECT_MAP.md",
+        "FEATURES.md",
+        "UI_ANIMATIONS.md",
+        "DATA_FLOWS.md",
+        "diagrams/06-ui.mmd"
+      ]
+    },
+    {
+      "id": "api",
+      "globs": [
+        "api/*",
+        "tests/*api*",
+        "tests/*auth*",
+        "tests/*backend*",
+        "tests/security-contract.cjs",
+        "tests/order-push.cjs",
+        "tests/phase*.cjs"
+      ],
+      "documents": [
+        "AI_CONTEXT.md",
+        "CHANGELOG.md",
+        "ARCHITECTURE.md",
+        "FEATURES.md",
+        "DATABASE.md",
+        "DATA_FLOWS.md",
+        "OPEN_ISSUES.md",
+        "diagrams/01-system.mmd",
+        "diagrams/02-orders.mmd",
+        "diagrams/04-notifications.mmd",
+        "diagrams/05-identities.mmd"
+      ]
+    },
+    {
+      "id": "database",
+      "globs": [
+        "supabase/*",
+        "tests/*postgres*",
+        "tests/schema-contract.cjs"
+      ],
+      "documents": [
+        "AI_CONTEXT.md",
+        "CHANGELOG.md",
+        "DATABASE.md",
+        "DATA_FLOWS.md",
+        "FEATURES.md",
+        "OPEN_ISSUES.md",
+        "diagrams/02-orders.mmd",
+        "diagrams/03-sync.mmd",
+        "diagrams/07-database.mmd"
+      ]
+    },
+    {
+      "id": "android",
+      "globs": [
+        "android/donas-control/*"
+      ],
+      "documents": [
+        "AI_CONTEXT.md",
+        "CHANGELOG.md",
+        "DEPENDENCIES.md",
+        "FEATURES.md",
+        "DATA_FLOWS.md",
+        "UI_ANIMATIONS.md",
+        "OPEN_ISSUES.md",
+        "diagrams/03-sync.mmd",
+        "diagrams/04-notifications.mmd",
+        "diagrams/06-ui.mmd"
+      ]
+    },
+    {
+      "id": "firebase",
+      "globs": [
+        "firestore.*",
+        "firebase.json",
+        ".firebaserc",
+        "api/_lib/firebase-auth.js",
+        "api/_lib/admin_handlers/firebase-identity.js",
+        "scripts/*Firebase*",
+        "scripts/firebase-*",
+        "tests/firebase-*",
+        "tests/firestore-rules.cjs"
+      ],
+      "documents": [
+        "AI_CONTEXT.md",
+        "CHANGELOG.md",
+        "ARCHITECTURE.md",
+        "DATABASE.md",
+        "DEPENDENCIES.md",
+        "DATA_FLOWS.md",
+        "OPEN_ISSUES.md",
+        "diagrams/05-identities.mmd"
+      ]
+    },
+    {
+      "id": "ios",
+      "globs": [
+        "ios/*",
+        "scripts/package-ios.mjs"
+      ],
+      "documents": [
+        "AI_CONTEXT.md",
+        "CHANGELOG.md",
+        "ARCHITECTURE.md",
+        "FEATURES.md",
+        "DEPENDENCIES.md",
+        "DATA_FLOWS.md",
+        "OPEN_ISSUES.md"
+      ]
+    },
+    {
+      "id": "legacy",
+      "globs": [
+        "apps-script/*",
+        "android/phase9-overlay/*",
+        "scripts/phase*",
+        "tests/fixtures/*"
+      ],
+      "documents": [
+        "AI_CONTEXT.md",
+        "CHANGELOG.md",
+        "ARCHITECTURE.md",
+        "PROJECT_MAP.md",
+        "OPEN_ISSUES.md"
+      ]
+    },
+    {
+      "id": "operations",
+      "globs": [
+        ".github/*",
+        "scripts/*",
+        "package*.json",
+        ".env.example",
+        ".gitignore",
+        ".gitattributes",
+        "tests/*",
+        "*.md",
+        "docs/*"
+      ],
+      "documents": [
+        "AI_CONTEXT.md",
+        "CHANGELOG.md",
+        "DEPENDENCIES.md",
+        "RUNBOOK.md",
+        "MAINTENANCE.md",
+        "OPEN_ISSUES.md"
+      ]
+    }
+  ]
+}

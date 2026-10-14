@@ -25,6 +25,7 @@ jobs:
           node tests/public-realtime-config.cjs
           node tests/catalog-realtime.cjs
           node tests/inventory-revision-api.cjs
+          node tests/daily-operations-api.cjs
           node tests/web-only.cjs
           node tests/full-supabase-backend.cjs
           node tests/security-contract.cjs
@@ -45,6 +46,7 @@ jobs:
           node tests/three-daily-purchases-postgres.mjs
           node tests/preflight-cutover-postgres.mjs
           node tests/web-only-postgres.mjs
+          node tests/daily-operations-postgres.mjs
   browser:
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -70,6 +72,7 @@ jobs:
           node tests/integration-order-web.cjs
           node tests/catalog-realtime-web.cjs
           node tests/admin-inventory-web.cjs
+          node tests/daily-business-web.cjs
   concurrency:
     runs-on: ubuntu-latest
     timeout-minutes: 15

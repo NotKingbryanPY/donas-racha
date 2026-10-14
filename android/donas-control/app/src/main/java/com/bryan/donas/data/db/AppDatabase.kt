@@ -16,13 +16,23 @@ import androidx.sqlite.db.SupportSQLiteDatabase
     SaleLotAllocationEntity::class, ExpenseEntity::class, AccountTransferEntity::class,
     LoanEntity::class, LoanPaymentEntity::class, ProfitAllocationEntity::class,
     PartnerPaymentEntity::class, SyncOutboxEntity::class, RemoteOrderEntity::class,
-    SyncStateEntity::class, FlavorEntity::class, CatalogOperationEntity::class], version = 5, exportSchema = true,
+    SyncStateEntity::class, FlavorEntity::class, CatalogOperationEntity::class,
+    com.bryan.donas.daily.DailyOperation::class, com.bryan.donas.daily.DailyCache::class], version = 6, exportSchema = true,
     autoMigrations = [AutoMigration(from = 1, to = 2)])
 abstract class AppDatabase : RoomDatabase() {
     abstract fun businessDao(): BusinessDao
     abstract fun operationDao(): OperationDao
     abstract fun syncDao(): SyncDao
+    abstract fun dailyDao(): com.bryan.donas.daily.DailyDao
     companion object {
+        val MIGRATION_5_6 = object : Migration(5, 6) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("CREATE TABLE IF NOT EXISTS daily_outbox (id TEXT NOT NULL PRIMARY KEY,ownerId TEXT NOT NULL,sessionId TEXT NOT NULL,kind TEXT NOT NULL,payload TEXT NOT NULL,createdAt INTEGER NOT NULL,state TEXT NOT NULL,sequence INTEGER,error TEXT,attempts INTEGER NOT NULL)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_daily_outbox_ownerId_createdAt ON daily_outbox(ownerId,createdAt)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_daily_outbox_ownerId_state_sequence ON daily_outbox(ownerId,state,sequence)")
+                db.execSQL("CREATE TABLE IF NOT EXISTS daily_cache (ownerId TEXT NOT NULL PRIMARY KEY,json TEXT NOT NULL,receivedAt INTEGER NOT NULL)")
+            }
+        }
         val MIGRATION_2_3 = object : Migration(2, 3) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("""CREATE TABLE IF NOT EXISTS sync_outbox (clientOperationId TEXT NOT NULL PRIMARY KEY, localEventId INTEGER NOT NULL, type TEXT NOT NULL, occurredAt TEXT NOT NULL, payloadJson TEXT NOT NULL, state TEXT NOT NULL, attempts INTEGER NOT NULL, serverSequence INTEGER, lastError TEXT)""")
@@ -45,6 +55,6 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
         fun open(context: Context) = Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "donas.db")
-            .addMigrations(MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5).build()
+            .addMigrations(MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6).build()
     }
 }
