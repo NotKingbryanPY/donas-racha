@@ -24,4 +24,8 @@ Interpretación: authorized_devices=0 señala que falta alta vigente; attempts n
 
 ## Validación y límites
 
-PASS local API/espera real del reintento, proveedor, nueva suite de lease/errores/privacidad, lookup de pedido, renovación y sintaxis web. PostgreSQL aislado prueba la consulta en transacción READ ONLY con registros legacy y archivo histórico, mostrando pedido sin job/dispositivo revocado y sin datos privados. No se ejecutó esa consulta en producción. CI/despliegue se registrarán al verificarlos. Falta la línea Avisos externos actual, resultado de prueba fuera de app y evidencia SQL del pedido real. No hay resolución física declarada.
+PASS local API/espera real del reintento, proveedor, nueva suite de lease/errores/privacidad, lookup de pedido, renovación y sintaxis web. PostgreSQL aislado prueba la consulta en transacción READ ONLY con registros legacy y archivo histórico, mostrando pedido sin job/dispositivo revocado y sin datos privados. No se ejecutó esa consulta en producción. CI/despliegue verificados abajo. Falta la línea Avisos externos actual, resultado de prueba fuera de app y evidencia SQL del pedido real. No hay resolución física declarada.
+
+## Despliegue
+
+Verificación posterior14octubre21:43UTC: CI0b86b8d aprobado (web/API/SQL/browser/concurrencia y conocimiento), PR46 integrado en main6074252. Vercel dpl_HBYZRt4CtzXXeU6q7aTWxeEsN4bw Production Ready y alias www.dracha.store comprobados. Web/productos/inventario200; avisos/despacho/pedidos anónimos401. No se generó un pedido ni se modificó el APK/SQL/secretos. La consulta de logs del nuevo emisor no devolvió eventos correlacionables todavía; no demuestra cola vacía ni entrega. Se pidió SELECT de metadata y diagnóstico/prueba del A23. El fallo físico fuera de app sigue pendiente, no resuelto por esta instrumentación.
