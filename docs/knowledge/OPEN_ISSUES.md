@@ -8,7 +8,7 @@
 | Stock/costo inicial | Se preservan cantidades. Un sabor tenía reservas superiores al conteo en evidencia histórica; comprobar físico. El costo del stock anterior es desconocido hasta evidencia válida |
 | Datos viejos | Room preservado; pendientes históricos no se reenvían. Necesitan conciliación de compras/ventas ya reflejadas en conteos centrales |
 | Conflicto offline | No se garantiza disponibilidad global offline. El servidor puede rechazar stock/jornada; revisar, no generar otro UUID por timeout |
-| Pedidos/notificaciones | Gestión web conservada; app abre Dashboard. Push antiguo retirado, no se promete aviso con app cerrada ni restauración de credenciales faltantes |
+| Pedidos/notificaciones2.1 | Implementado flujo nuevo nativo/FCM; falta validar instalador orders-v2, credenciales privadas Vercel y recepción/tap físico. No asumir acceso a Brave ni copiar secretos al APK |
 | Cierre remoto | No conoce las colas de teléfonos desconectados. Operación en jornada cerrada se conserva como conflicto, no se reasigna automáticamente |
 | Historial/correcciones | No hay eliminación ni devolución monetaria/reversión de venta confirmada automática. Correcciones de unidades tienen motivo; precios/costos históricos no se editan retroactivamente |
 | Seguridad web histórica | Activación inicial de cliente por username/contraseña sin segunda prueba y pago terminal FAILED son riesgos documentados anteriores; esta reconstrucción no los considera resueltos |

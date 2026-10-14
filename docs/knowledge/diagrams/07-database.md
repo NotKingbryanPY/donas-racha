@@ -1,6 +1,6 @@
-# Datos centrales y preservados
+# 07-database
 
-[Contexto](../AI_CONTEXT.md). Código local revisado; activación real pendiente.
+[Contexto](../AI_CONTEXT.md)
 
 ```mermaid
 erDiagram
@@ -15,4 +15,6 @@ erDiagram
   ORDERS ||--o{ ORDER_ITEMS : reserva
   CUSTOMERS o|--o{ ORDERS : solicita
   CUSTOMERS ||--o| LOYALTY_ACCOUNTS : puntos_conservados
+  PUSH_DEVICES ||--o{ ORDER_PUSH_JOBS : destinatario
+  ORDERS ||--o{ ORDER_PUSH_JOBS : evento_confirmado
 ```

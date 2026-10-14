@@ -19,3 +19,9 @@ SQL aditivo probado con el archivo móvil presente; backend reutiliza router sin
 ## Historia recuperada
 
 8octubre: guía de conocimiento inicial sobre web, Room5, contabilidad por instalación, Firebase/preferencias/FCM; fuente93643ed. 1.4.2 d304e46 mejoró recuperación push, pero faltaban credenciales de emisión. 12octubre fe8bcbb retiró integración móvil/cron; web1.5.0 Supabase independiente. 13octubre PR40/main70164c4 publicó web1.5.1, conservando cero/borradores y cancelación en camino. Los informes fechados se mantienen en docs y Git. Esta historia no certifica costo/datos de cada teléfono ni esquema privado actual.
+
+## 2026-10-14 — prioridad Pedidos y notificaciones2.1
+
+Usuario amplía alcance: recepción fuera de app y pedidos nativos son prioridad. Se documentaron causas antes de código: servicio FCM no registrado/dispatcher retirado y credenciales históricamente faltantes. Nueva ruta staff y reutilización de cola, registro individual de sesión Supabase, FCM data alta prioridad/dedupe/tap, caché Room7 por cuenta, gestión central de estados sin segundo cobro/stock; diarios preservados. Cron privado Supabase y SDK waitUntil sustituyen dependencia del cron GitHub retirado. Habilidades Firebase y documentación oficial consultadas.
+
+117 pruebas Android y contratos API/proveedor/SQL con preservación/revocación pasaron inicialmente. Lint detectó ajustes de notificaciones API26 usados sin fallback; se añadió ruta compatible23. Registro respeta permisos y limita espera token. Compilación firmada/lint finales en curso; emisor privado/SQL2.1/recepción Honor no declarados activados.

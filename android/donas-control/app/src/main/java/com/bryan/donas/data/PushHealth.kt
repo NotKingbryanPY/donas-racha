@@ -44,6 +44,9 @@ object PushHealth {
     }
     fun clear(context: Context) = preferences(context).edit(commit = true) { clear() }
     private fun checkDescription(code: String): String = when (code) {
+        "NOTIFICATIONS_SETUP_REQUIRED" -> "falta ejecutar el SQL nuevo de avisos de pedidos."
+        "DEVICE_REVOKED" -> "el administrador revocó este teléfono."
+        "FIREBASE_APK_NOT_CONFIGURED" -> "falta la configuración pública Firebase en este APK."
         "FCM_AUTH_FAILED", "FCM_KEY_INVALID" -> "el servidor no pudo autorizarse en Firebase ($code)."
         "FCM_PERMISSION_DENIED" -> "el emisor no tiene permiso para enviar avisos ($code)."
         "FCM_SENDER_ID_MISMATCH" -> "el emisor y el teléfono usan proyectos Firebase distintos ($code)."

@@ -59,7 +59,7 @@ class DailyActivityTest {
             assertTrue(texts().any { it.contains("Conectar cuenta") })
             fun set(name: String, value: Any) { DailyActivity::class.java.getDeclaredField(name).apply { isAccessible = true }.set(activity, value) }
             fun render() { DailyActivity::class.java.getDeclaredMethod("render").apply { isAccessible = true }.invoke(activity); shadowOf(Looper.getMainLooper()).idle() }
-            set("owner", "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa"); set("snapshot", data()); render()
+            set("owner", "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa"); set("snapshot", data()); set("page", "Hoy"); render()
             assertTrue(texts().contains("Ingresos confirmados")); assertFalse(texts().any { it.contains("Capital") || it == "Reparto" })
             val directory = File("../../../test-output/android-daily").apply { mkdirs() }
             fun capture(name: String) {
@@ -80,6 +80,22 @@ class DailyActivityTest {
             assertTrue(texts().any { it == "9 por caja · 18 unidades" })
             capture("compra")
             set("page", "Inventario"); render(); assertTrue(texts().any { it.contains("reservadas") }); capture("inventario")
+            val order = JSONObject().put("id", "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb").put("public_code", "DR-EJEMPLO")
+                .put("status", "OUT_FOR_DELIVERY").put("customer_name_snapshot", "Cliente de ejemplo")
+                .put("customer_phone_snapshot", "").put("delivery_location", "Punto de entrega de ejemplo")
+                .put("payment_method", "YAPPY").put("payment_status", "PENDING").put("total_cents", 400)
+                .put("order_items", JSONArray().put(JSONObject().put("variant_name_snapshot", "Chocolate")
+                    .put("quantity", 4).put("line_total_cents", 400)))
+            set("inbox", JSONObject().put("active", JSONArray().put(order)).put("recent", JSONArray()))
+            set("page", "Pedidos"); render(); assertTrue(texts().contains("Consultar pedido")); capture("pedidos")
+            set("orderTargetId", order.getString("id")); set("detailRequested", order.getString("id")); render()
+            assertTrue(texts().contains("Cobrado y entregado")); assertTrue(texts().contains("Cancelar pedido")); capture("pedido-detalle")
+            order.put("payment_status", "CONFIRMED"); render()
+            children(root).filterIsInstance<MaterialButton>().single { it.text.toString() == "Cobrado y entregado" }.performClick()
+            val confirmation = org.robolectric.shadows.ShadowDialog.getLatestDialog() as androidx.appcompat.app.AlertDialog
+            assertNull("A paid order must not ask for a new payment method", confirmation.listView)
+            assertTrue(confirmation.findViewById<TextView>(android.R.id.message)!!.text.toString().contains("no vuelvas a cobrar"))
+            confirmation.dismiss()
         } finally { controller.pause().stop().destroy() }
     }
 }

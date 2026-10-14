@@ -13,8 +13,10 @@
 | Offline | copia autorizada + outbox; máximo 24 h sin nueva validación, pendiente no confirmado; conflictos revisables |
 | Historial | recibos centrales paginados de 50, últimos cierres (30), pendientes/rechazados locales |
 | Web | panel diario de lectura, stock compartido, pedidos/puntos/perfiles/canjes/tutorial existentes |
-| Android anterior | datos/tablas/source preservados; capital/socios/widgets/old sync/push fuera de navegación/runtime nuevo |
-| Firebase | proyecto/configuración existente preservada; no datos de negocio nuevos; auth/push antiguo no rehabilitado |
+| Pedidos nativos | entrada principal; aceptar/en camino/cobrar-entregar/cancelar; API existente online, copia por propietario y tap a UUID incluso fuera de página reciente |
+| Avisos externos | FCM alta prioridad, canal/sonido/permisos, dedupe duradero, token renovable/revocable y prueba real al propio teléfono; requiere SQL/emisor/reintento |
+| Android anterior | datos/tablas/source preservados; capital/socios/widgets/sync contable/provisión/push antiguos fuera del runtime; avisos2.1 autorizados se reconstruyen |
+| Firebase | proyecto/configuración existente preservada; no datos de negocio nuevos; FCM nuevo; auth antiguo no rehabilitado |
 | iOS | etapa posterior, sin build/distribución nuevos |
 
-No hay borrado definitivo ni reversión automática de ventas confirmadas en esta versión. Rechazos conservan evidencia; corregir unidades exige motivo. Gestión de pedidos permanece en el Dashboard web abierto desde la app; no se presenta como recepción push Android implementada.
+No hay borrado definitivo ni reversión automática de ventas confirmadas en esta versión. Rechazos conservan evidencia; corregir unidades exige motivo. Gestión de pedidos disponible nativa y en Dashboard. La recepción física fuera de app queda pendiente hasta configurar emisor y probar en Honor; no se afirma porque compile.

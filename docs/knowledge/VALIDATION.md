@@ -14,3 +14,5 @@ Resultados se actualizan durante la entrega; no equivalen a pruebas en producci�
 - PASS verificador de una fila en PostgreSQL aislado: instalación correcta da DAILY_V2_READY y un solo objeto order_inventory_revision; permiso snapshot abierto a authenticated, RLS desactivado o trigger diario deshabilitado dan REVIEW_REQUIRED. No se ejecutaron esas alteraciones en producción ni se cambió el APK.
 
 Las verificaciones antiguas se atribuyen a sus informes/commits, no se renuevan por copiar documentación. Índices/hashes prueban vigencia textual, no exactitud de cada comportamiento remoto. Las capturas de concepto son ilustrativas.
+
+2.1: PASS inicial117 pruebas Android; API/proveedor FCM y SQL aislamiento/leases/rotación/revocación/archivo preservado. Lint detectó y se reparó compatibilidad Settings API23. Build/lint final y emuladores CI en curso. CLI Vercel logged out; navegador conectado no ve Brave y apertura de Vercel terminó en timeout. FCM real/SQL nuevo siguen pendientes.

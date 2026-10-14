@@ -18,7 +18,7 @@ import java.text.SimpleDateFormat
 
 class BackendClient(context: Context,
     private val baseUrl: String = "https://www.dracha.store",
-    tokenStore: SessionTokens? = null) : com.bryan.donas.daily.DailyTransport {
+    tokenStore: SessionTokens? = null) : com.bryan.donas.daily.DailyTransport, com.bryan.donas.orders.StaffOrderTransport {
     private val appContext = context.applicationContext
     private val sessions = tokenStore ?: RemoteSessionStore(appContext)
     private val devicePrefs = appContext.getSharedPreferences("remote_device", Context.MODE_PRIVATE)
@@ -221,7 +221,10 @@ class BackendClient(context: Context,
         check(dailyOwner != null) { "Conecta tu cuenta del Dashboard para usar el registro diario." }
         request("/api/admin/customers/daily" + (beforeSequence?.let { "?beforeSequence=$it" } ?: ""), bearer = token())
     }
-    override suspend fun dailyApply(payload: JSONObject, expectedOwner: String): JSONObject = withContext(Dispatchers.IO) {
+    override suspend fun dailyApply(payload: JSONObject, expectedOwner: String): JSONObject =
+        staffRequest(expectedOwner, "/api/admin/customers/daily", "POST", payload)
+
+    private suspend fun staffRequest(expectedOwner: String, path: String, method: String = "GET", payload: JSONObject? = null): JSONObject = withContext(Dispatchers.IO) {
         var rejectedToken: String? = null
         for (attempt in 0..1) {
             // Capture the token under the same lock used by login/logout/renewal.
@@ -232,7 +235,7 @@ class BackendClient(context: Context,
                 check(dailyOwner == expectedOwner) { "La cuenta cambió durante la renovación." }
                 value
             }
-            try { return@withContext request("/api/admin/customers/daily", "POST", payload, bearer, retryAuth = false) }
+            try { return@withContext request(path, method, payload, bearer, retryAuth = false) }
             catch (e: BackendException) {
                 if (e.status != 401 || attempt == 1) throw e
                 rejectedToken = bearer
@@ -240,6 +243,45 @@ class BackendClient(context: Context,
         }
         error("No se pudo confirmar la sesión para este registro.")
     }
+
+    @android.annotation.SuppressLint("UseKtx") // commit success must be checked before registering the device.
+    @Synchronized fun notificationDeviceId(owner: String): String {
+        val key = "notificationDevice:$owner"
+        return devicePrefs.getString(key, null) ?: UUID.randomUUID().toString().also { id ->
+            check(devicePrefs.edit().putString(key, id).commit()) { "No se pudo guardar la identidad de avisos." }
+        }
+    }
+    override suspend fun staffOrderPage(owner: String, status: String?, cursor: JSONObject?, orderId: String?): JSONObject {
+        val params = mutableListOf("limit" to if (status == "ACTIVE") "100" else "50")
+        if (status != null) params.add("status" to status)
+        if (orderId != null) params.add("orderId" to UUID.fromString(orderId).toString())
+        if (cursor != null) {
+            params.add("beforeCreatedAt" to cursor.getString("createdAt"))
+            params.add("beforeId" to cursor.getString("id"))
+        }
+        val query = params.joinToString("&") { (key, value) -> "$key=${java.net.URLEncoder.encode(value, "UTF-8")}" }
+        return staffRequest(owner, "/api/admin/orders?$query")
+    }
+    suspend fun staffOrderAction(owner: String, id: String, status: String, paymentMethod: String? = null): JSONObject {
+        require(status in listOf("ACCEPTED", "OUT_FOR_DELIVERY", "COMPLETED", "CANCELLED"))
+        val payload = JSONObject().put("status", status)
+        if (status == "COMPLETED") {
+            require(paymentMethod in listOf("CASH", "YAPPY"))
+            payload.put("paymentReceived", true).put("paymentMethod", paymentMethod)
+        }
+        return staffRequest(owner, "/api/admin/orders/${UUID.fromString(id)}/status", "POST", payload)
+    }
+    suspend fun staffNotificationRegister(owner: String, pushToken: String): JSONObject = staffRequest(owner,
+        "/api/admin/customers/order-notifications", "POST", JSONObject().put("deviceId", notificationDeviceId(owner))
+            .put("token", pushToken).put("appVersion", BuildConfig.VERSION_NAME))
+    suspend fun staffNotificationStatus(owner: String, check: Boolean = false): JSONObject = staffRequest(owner,
+        "/api/admin/customers/order-notifications?deviceId=${notificationDeviceId(owner)}" + if (check) "&check=1" else "")
+    suspend fun staffNotificationTest(owner: String): JSONObject = staffRequest(owner,
+        "/api/admin/customers/order-notifications", "POST", JSONObject().put("deviceId", notificationDeviceId(owner)).put("action", "test"))
+    suspend fun staffNotificationStop(owner: String): JSONObject = staffRequest(owner,
+        "/api/admin/customers/order-notifications", "DELETE", JSONObject().put("deviceId", notificationDeviceId(owner)))
+    suspend fun staffNotificationConfigureRetry(owner: String): JSONObject = staffRequest(owner,
+        "/api/admin/customers/order-notifications", "POST", JSONObject().put("deviceId", notificationDeviceId(owner)).put("action", "configure-retry"))
 
     suspend fun updateFlavor(item: com.bryan.donas.data.db.CatalogOperationEntity) = withContext(Dispatchers.IO) {
         request("/api/admin/customers/catalog", "POST", JSONObject().put("operationId", item.operationId)

@@ -1,10 +1,10 @@
 {
-  "source_commit": "8da29011adb8047aadeaaac4b44fec77b4b0d953",
+  "source_commit": "525fe8dfe99065595a51a3992897fdf1b2a29ffb",
   "scope": "working tree; lexical extraction, production unverified",
   "schema_version": 1,
   "extractor_version": 4,
   "hash_algorithm": "sha256; text CRLF normalized to LF; vendor/binary literal",
-  "model_sha256": "ad79ad83b33298bdd70eb41da2f7b556f8111d89771ccfb6f3c35d120296dc98",
+  "model_sha256": "9a16dcc14c0275273ea1e63e42764d75f4b8d2f88afc23c34a2155edde8781cf",
   "files": [
     {
       "path": ".env.example",
@@ -76,8 +76,8 @@
     },
     {
       "path": ".github/workflows/mobile-contracts.yml",
-      "sha256": "d8151eff805d74b531ba1ac67ac0884e55b6e5e6a7d9d9fa10351b1a8c823a18",
-      "bytes": 4248,
+      "sha256": "977c0e596ad2b360953f380d8597cc82df9761d9134296c97715965564cf06ad",
+      "bytes": 4402,
       "symbols": [],
       "imports": [],
       "rpc_calls": [],
@@ -86,7 +86,7 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 101
+      "lines": 104
     },
     {
       "path": ".gitignore",
@@ -103,8 +103,8 @@
     },
     {
       "path": "AGENTS.md",
-      "sha256": "2b043027b215b33df413359a0e4819bc446f89251ef3757f0ededab03eb8af6d",
-      "bytes": 2324,
+      "sha256": "a645f41e13869b179d3e00eea0f379d6f0dbf21224532a429014f51f1f0bb9c7",
+      "bytes": 2661,
       "symbols": [],
       "imports": [],
       "rpc_calls": [],
@@ -113,7 +113,7 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 37
+      "lines": 42
     },
     {
       "path": "ANDROID_RECOVERY.md",
@@ -360,8 +360,8 @@
     },
     {
       "path": "android/README.md",
-      "sha256": "bef53e1091e9a39bf3a3c621e82b0ac788a98832099d3f54d13fed4f6eec6778",
-      "bytes": 552,
+      "sha256": "d1140433d59f6fddaed3b64dd609abe75f136f6093305b89336951b5b090ea3b",
+      "bytes": 538,
       "symbols": [],
       "imports": [],
       "rpc_calls": [],
@@ -400,8 +400,8 @@
     },
     {
       "path": "android/donas-control/README.md",
-      "sha256": "3f7687b1df0da5fcf2dc12c5c38b864060f28bc6f6b5b69ba36e0f50cd3c891c",
-      "bytes": 3268,
+      "sha256": "13be77f4cd76ef94eab81be31989ae07f4c4302f89c2a743744ffee5d98cdd84",
+      "bytes": 2801,
       "symbols": [],
       "imports": [],
       "rpc_calls": [],
@@ -410,11 +410,11 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 32
+      "lines": 27
     },
     {
       "path": "android/donas-control/app/build.gradle.kts",
-      "sha256": "dca9a88c0601cd020429bfd2706f9f2e0e813a7c1a4292d4543343e65b1aa762",
+      "sha256": "b561d3e15b063c71bcf5d29e9467b2e91d45d4164b6e104fbe5661defffc1d3a",
       "bytes": 5181,
       "symbols": [],
       "imports": [],
@@ -518,9 +518,22 @@
       "animations": []
     },
     {
+      "path": "android/donas-control/app/schemas/com.bryan.donas.data.db.AppDatabase/7.json",
+      "sha256": "12937e8bbf0fa9cf1d4d756e88035b2cc084c08694beec99a3b540059e1c005c",
+      "bytes": 75849,
+      "symbols": [],
+      "imports": [],
+      "rpc_calls": [],
+      "tables": [],
+      "sql_objects": [],
+      "sql_changes": [],
+      "endpoints": [],
+      "animations": []
+    },
+    {
       "path": "android/donas-control/app/src/androidTest/java/com/bryan/donas/DatabaseDeviceTest.kt",
-      "sha256": "952a03f17196f4a329de5c2aaa04c87541b23db1ada7f211929e476d54685114",
-      "bytes": 5141,
+      "sha256": "0a652faf99d09aaccb34e9834cebdee9480ef0ee299ff0b2b931d026f2abd356",
+      "bytes": 5195,
       "symbols": [
         {
           "name": "DatabaseDeviceTest",
@@ -544,8 +557,8 @@
     },
     {
       "path": "android/donas-control/app/src/main/AndroidManifest.xml",
-      "sha256": "ae9d814fc46efd9a14d6e36e1418e1590bb61bd89e7d1184140c7b1ef69640e4",
-      "bytes": 1637,
+      "sha256": "6aadbd76a1f5a1cbc1658871a0ea623c6d3ddff48f162fc5267c9ebf5d4cd2e7",
+      "bytes": 2058,
       "symbols": [],
       "imports": [],
       "rpc_calls": [],
@@ -554,27 +567,27 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 18
+      "lines": 22
     },
     {
       "path": "android/donas-control/app/src/main/java/com/bryan/donas/DonasApp.kt",
-      "sha256": "60002fdb3403221881ee1e878726e8b378e26301a61dd6fe803f4fdae6c5a557",
-      "bytes": 1511,
+      "sha256": "8971325a5ad822bed17e5573a99c611f428dc40df79347855d7d092679cf1610",
+      "bytes": 2111,
       "symbols": [
         {
           "name": "DonasApp",
           "kind": "class",
-          "line": 10
+          "line": 11
         },
         {
           "name": "onCreate",
           "kind": "function",
-          "line": 21
+          "line": 23
         },
         {
           "name": "reopenDatabase",
           "kind": "function",
-          "line": 33
+          "line": 44
         }
       ],
       "imports": [],
@@ -584,202 +597,242 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 38
+      "lines": 49
     },
     {
       "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyActivity.kt",
-      "sha256": "1192a880b9b41b16b27efe1bfa925d331e998aabb0be53b4ad27708217233872",
-      "bytes": 34797,
+      "sha256": "1d21328b9016f5afacf4006f009fcaa93d73326f77f64b019568cc85a92144fd",
+      "bytes": 52431,
       "symbols": [
         {
           "name": "DailyActivity",
           "kind": "class",
-          "line": 42
+          "line": 51
         },
         {
           "name": "onCreate",
           "kind": "function",
-          "line": 64
+          "line": 88
+        },
+        {
+          "name": "onStart",
+          "kind": "function",
+          "line": 103
+        },
+        {
+          "name": "onStop",
+          "kind": "function",
+          "line": 108
+        },
+        {
+          "name": "onNewIntent",
+          "kind": "function",
+          "line": 113
         },
         {
           "name": "onResume",
           "kind": "function",
-          "line": 75
+          "line": 119
         },
         {
           "name": "onSaveInstanceState",
           "kind": "function",
-          "line": 83
+          "line": 129
         },
         {
           "name": "dp",
           "kind": "function",
-          "line": 87
+          "line": 134
         },
         {
           "name": "column",
           "kind": "function",
-          "line": 88
+          "line": 135
         },
         {
           "name": "shape",
           "kind": "function",
-          "line": 89
+          "line": 136
         },
         {
           "name": "label",
           "kind": "function",
-          "line": 92
+          "line": 139
         },
         {
           "name": "button",
           "kind": "function",
-          "line": 96
+          "line": 143
         },
         {
           "name": "card",
           "kind": "function",
-          "line": 102
+          "line": 149
         },
         {
           "name": "createLayout",
           "kind": "function",
-          "line": 106
+          "line": 153
         },
         {
           "name": "observe",
           "kind": "function",
-          "line": 132
+          "line": 179
         },
         {
           "name": "updateStatus",
           "kind": "function",
-          "line": 151
+          "line": 198
         },
         {
           "name": "cash",
           "kind": "function",
-          "line": 165
+          "line": 223
         },
         {
           "name": "render",
           "kind": "function",
-          "line": 166
+          "line": 224
         },
         {
           "name": "login",
           "kind": "function",
-          "line": 188
+          "line": 247
+        },
+        {
+          "name": "observeOrders",
+          "kind": "function",
+          "line": 270
+        },
+        {
+          "name": "orderStatus",
+          "kind": "function",
+          "line": 297
+        },
+        {
+          "name": "orders",
+          "kind": "function",
+          "line": 301
+        },
+        {
+          "name": "orderDetails",
+          "kind": "function",
+          "line": 388
+        },
+        {
+          "name": "orderAction",
+          "kind": "function",
+          "line": 427
         },
         {
           "name": "today",
           "kind": "function",
-          "line": 209
+          "line": 445
         },
         {
           "name": "inventory",
           "kind": "function",
-          "line": 250
+          "line": 486
         },
         {
           "name": "title",
           "kind": "function",
-          "line": 268
+          "line": 504
         },
         {
           "name": "history",
           "kind": "function",
-          "line": 271
+          "line": 507
         },
         {
           "name": "showDetails",
           "kind": "function",
-          "line": 315
+          "line": 551
         },
         {
           "name": "startForm",
           "kind": "function",
-          "line": 339
+          "line": 575
         },
         {
           "name": "persistDraft",
           "kind": "function",
-          "line": 345
+          "line": 581
         },
         {
           "name": "field",
           "kind": "function",
-          "line": 346
+          "line": 582
         },
         {
           "name": "beforeTextChanged",
           "kind": "function",
-          "line": 354
+          "line": 590
         },
         {
           "name": "onTextChanged",
           "kind": "function",
-          "line": 355
+          "line": 591
         },
         {
           "name": "afterTextChanged",
           "kind": "function",
-          "line": 356
+          "line": 592
         },
         {
           "name": "draftField",
           "kind": "function",
-          "line": 360
+          "line": 596
         },
         {
           "name": "form",
           "kind": "function",
-          "line": 368
+          "line": 604
         },
         {
           "name": "watch",
           "kind": "function",
-          "line": 405
+          "line": 641
         },
         {
           "name": "beforeTextChanged",
           "kind": "function",
-          "line": 407
+          "line": 643
         },
         {
           "name": "onTextChanged",
           "kind": "function",
-          "line": 408
+          "line": 644
         },
         {
           "name": "afterTextChanged",
           "kind": "function",
-          "line": 409
+          "line": 645
         },
         {
           "name": "refresh",
           "kind": "function",
-          "line": 472
+          "line": 708
         },
         {
           "name": "closeDay",
           "kind": "function",
-          "line": 485
+          "line": 721
         },
         {
           "name": "logout",
           "kind": "function",
-          "line": 500
+          "line": 736
         },
         {
           "name": "openWeb",
           "kind": "function",
-          "line": 507
+          "line": 757
         },
         {
           "name": "message",
           "kind": "function",
-          "line": 508
+          "line": 758
         }
       ],
       "imports": [],
@@ -789,7 +842,7 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 509
+      "lines": 759
     },
     {
       "path": "android/donas-control/app/src/main/java/com/bryan/donas/daily/DailyEntities.kt",
@@ -963,8 +1016,8 @@
     },
     {
       "path": "android/donas-control/app/src/main/java/com/bryan/donas/data/BackendClient.kt",
-      "sha256": "882122486d1c32fc17db8dc422375ebd4a8bbe374096b47fd927b600d42d5cc4",
-      "bytes": 20241,
+      "sha256": "5ad00372678216d0e0faf69c74677627dc9f6c62e90574dc6789ffc25f22cfa9",
+      "bytes": 23466,
       "symbols": [
         {
           "name": "BackendClient",
@@ -1027,94 +1080,134 @@
           "line": 224
         },
         {
-          "name": "updateFlavor",
+          "name": "staffRequest",
           "kind": "function",
-          "line": 244
+          "line": 227
         },
         {
-          "name": "inventory",
-          "kind": "function",
-          "line": 250
-        },
-        {
-          "name": "saveInventory",
+          "name": "staffOrderPage",
           "kind": "function",
           "line": 254
         },
         {
+          "name": "staffOrderAction",
+          "kind": "function",
+          "line": 265
+        },
+        {
+          "name": "staffNotificationRegister",
+          "kind": "function",
+          "line": 274
+        },
+        {
+          "name": "staffNotificationStatus",
+          "kind": "function",
+          "line": 277
+        },
+        {
+          "name": "staffNotificationTest",
+          "kind": "function",
+          "line": 279
+        },
+        {
+          "name": "staffNotificationStop",
+          "kind": "function",
+          "line": 281
+        },
+        {
+          "name": "staffNotificationConfigureRetry",
+          "kind": "function",
+          "line": 283
+        },
+        {
+          "name": "updateFlavor",
+          "kind": "function",
+          "line": 286
+        },
+        {
+          "name": "inventory",
+          "kind": "function",
+          "line": 292
+        },
+        {
+          "name": "saveInventory",
+          "kind": "function",
+          "line": 296
+        },
+        {
           "name": "pushStatus",
           "kind": "function",
-          "line": 259
+          "line": 301
         },
         {
           "name": "registerPush",
           "kind": "function",
-          "line": 263
+          "line": 305
         },
         {
           "name": "unregisterPush",
           "kind": "function",
-          "line": 268
+          "line": 310
         },
         {
           "name": "push",
           "kind": "function",
-          "line": 272
+          "line": 314
         },
         {
           "name": "pull",
           "kind": "function",
-          "line": 284
+          "line": 326
         },
         {
           "name": "recentOrders",
           "kind": "function",
-          "line": 289
+          "line": 331
         },
         {
           "name": "customerProfile",
           "kind": "function",
-          "line": 294
+          "line": 336
         },
         {
           "name": "registerCustomerPurchase",
           "kind": "function",
-          "line": 300
+          "line": 342
         },
         {
           "name": "transition",
           "kind": "function",
-          "line": 312
+          "line": 354
         },
         {
           "name": "confirmPayment",
           "kind": "function",
-          "line": 318
+          "line": 360
         },
         {
           "name": "completeDelivery",
           "kind": "function",
-          "line": 323
+          "line": 365
         },
         {
           "name": "CustomerPurchaseProfile",
           "kind": "class",
-          "line": 330
+          "line": 372
         },
         {
           "name": "from",
           "kind": "function",
-          "line": 339
+          "line": 381
         },
         {
           "name": "CustomerPurchaseResult",
           "kind": "class",
-          "line": 350
+          "line": 392
         },
         {
           "name": "BackendException",
           "kind": "class",
-          "line": 352
+          "line": 394
         }
       ],
       "imports": [],
@@ -1157,39 +1250,55 @@
         },
         {
           "value": "/api/admin/customers/daily",
-          "line": 235
+          "line": 225
+        },
+        {
+          "value": "/api/admin/customers/order-notifications",
+          "line": 275
+        },
+        {
+          "value": "/api/admin/customers/order-notifications",
+          "line": 280
+        },
+        {
+          "value": "/api/admin/customers/order-notifications",
+          "line": 282
+        },
+        {
+          "value": "/api/admin/customers/order-notifications",
+          "line": 284
         },
         {
           "value": "/api/admin/customers/catalog",
-          "line": 245
+          "line": 287
         },
         {
           "value": "/api/admin/customers/inventory",
-          "line": 251
+          "line": 293
         },
         {
           "value": "/api/admin/customers/inventory",
-          "line": 255
+          "line": 297
         },
         {
           "value": "/api/admin/customers/devices",
-          "line": 264
+          "line": 306
         },
         {
           "value": "/api/admin/customers/devices",
-          "line": 269
+          "line": 311
         },
         {
           "value": "/api/sync",
-          "line": 277
+          "line": 319
         },
         {
           "value": "/api/backend",
-          "line": 301
+          "line": 343
         }
       ],
       "animations": [],
-      "lines": 352
+      "lines": 394
     },
     {
       "path": "android/donas-control/app/src/main/java/com/bryan/donas/data/BusinessRepository.kt",
@@ -1617,8 +1726,8 @@
     },
     {
       "path": "android/donas-control/app/src/main/java/com/bryan/donas/data/OrderNotifications.kt",
-      "sha256": "42920fa96417e490f6ee403763cb15093332c77cbe6d04e5dcb3cf203b5b4da2",
-      "bytes": 3538,
+      "sha256": "fde1b20151528c429a4c506cb76ea47aab31938b9080ebefcd33acfe9b3445d8",
+      "bytes": 3831,
       "symbols": [
         {
           "name": "OrderNotifications",
@@ -1626,19 +1735,24 @@
           "line": 20
         },
         {
-          "name": "enabled",
+          "name": "ensureChannel",
           "kind": "function",
           "line": 22
         },
         {
+          "name": "enabled",
+          "kind": "function",
+          "line": 26
+        },
+        {
           "name": "showNew",
           "kind": "function",
-          "line": 32
+          "line": 36
         },
         {
           "name": "show",
           "kind": "function",
-          "line": 36
+          "line": 40
         }
       ],
       "imports": [],
@@ -1648,7 +1762,7 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 69
+      "lines": 73
     },
     {
       "path": "android/donas-control/app/src/main/java/com/bryan/donas/data/OrderSync.kt",
@@ -1712,8 +1826,8 @@
     },
     {
       "path": "android/donas-control/app/src/main/java/com/bryan/donas/data/PushHealth.kt",
-      "sha256": "13c0980a1f43bab140e936a22e09893b555794e21339eab7be04a96c8d1f78ae",
-      "bytes": 4857,
+      "sha256": "244e40a42870c8c0bd593a58970c2e0090226e8b2410f7f0c6ff17fdb0eefb94",
+      "bytes": 5120,
       "symbols": [
         {
           "name": "PushHealth",
@@ -1768,7 +1882,7 @@
         {
           "name": "summary",
           "kind": "function",
-          "line": 55
+          "line": 58
         }
       ],
       "imports": [],
@@ -1778,7 +1892,7 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 77
+      "lines": 80
     },
     {
       "path": "android/donas-control/app/src/main/java/com/bryan/donas/data/PushRegistration.kt",
@@ -1977,33 +2091,38 @@
     },
     {
       "path": "android/donas-control/app/src/main/java/com/bryan/donas/data/db/AppDatabase.kt",
-      "sha256": "a46d559d22931d35679acf80cdb183bef3f08fcc69a5891b12640828df7b1cfd",
-      "bytes": 4771,
+      "sha256": "fdd80b0ae4c9ed041d658725bddb857f3e3dbd979c33dcd06b80737cf48d5717",
+      "bytes": 5207,
       "symbols": [
         {
           "name": "migrate",
           "kind": "function",
-          "line": 29
+          "line": 31
         },
         {
           "name": "migrate",
           "kind": "function",
-          "line": 37
+          "line": 36
         },
         {
           "name": "migrate",
           "kind": "function",
-          "line": 47
+          "line": 44
         },
         {
           "name": "migrate",
           "kind": "function",
-          "line": 52
+          "line": 54
+        },
+        {
+          "name": "migrate",
+          "kind": "function",
+          "line": 59
         },
         {
           "name": "open",
           "kind": "function",
-          "line": 57
+          "line": 64
         }
       ],
       "imports": [],
@@ -2013,7 +2132,7 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 60
+      "lines": 67
     },
     {
       "path": "android/donas-control/app/src/main/java/com/bryan/donas/data/db/BusinessDao.kt",
@@ -2424,6 +2543,186 @@
       "endpoints": [],
       "animations": [],
       "lines": 61
+    },
+    {
+      "path": "android/donas-control/app/src/main/java/com/bryan/donas/orders/StaffInbox.kt",
+      "sha256": "ccc7aae28f4e02950ecea6b80b4e82c11723c9246d47c980df3fad6ea06daa8d",
+      "bytes": 6665,
+      "symbols": [
+        {
+          "name": "StaffOrderCache",
+          "kind": "class",
+          "line": 33
+        },
+        {
+          "name": "StaffOrderDao",
+          "kind": "class",
+          "line": 35
+        },
+        {
+          "name": "StaffOrderTransport",
+          "kind": "class",
+          "line": 40
+        },
+        {
+          "name": "staffOrderPage",
+          "kind": "function",
+          "line": 42
+        },
+        {
+          "name": "StaffInbox",
+          "kind": "class",
+          "line": 44
+        },
+        {
+          "name": "refresh",
+          "kind": "function",
+          "line": 45
+        },
+        {
+          "name": "detail",
+          "kind": "function",
+          "line": 66
+        },
+        {
+          "name": "StaffInboxWorker",
+          "kind": "class",
+          "line": 73
+        },
+        {
+          "name": "doWork",
+          "kind": "function",
+          "line": 75
+        },
+        {
+          "name": "StaffInboxSync",
+          "kind": "class",
+          "line": 96
+        },
+        {
+          "name": "request",
+          "kind": "function",
+          "line": 97
+        },
+        {
+          "name": "schedule",
+          "kind": "function",
+          "line": 106
+        },
+        {
+          "name": "stop",
+          "kind": "function",
+          "line": 114
+        }
+      ],
+      "imports": [],
+      "rpc_calls": [],
+      "tables": [],
+      "sql_objects": [],
+      "sql_changes": [],
+      "endpoints": [],
+      "animations": [],
+      "lines": 118
+    },
+    {
+      "path": "android/donas-control/app/src/main/java/com/bryan/donas/orders/StaffNotificationRegistration.kt",
+      "sha256": "a8bbf58b76e64d69999dcee015c41a16f30d9f12c4164a7498fb94b9bd9aaef2",
+      "bytes": 5889,
+      "symbols": [
+        {
+          "name": "StaffNotificationRegistration",
+          "kind": "class",
+          "line": 20
+        },
+        {
+          "name": "request",
+          "kind": "function",
+          "line": 21
+        },
+        {
+          "name": "ensure",
+          "kind": "function",
+          "line": 30
+        },
+        {
+          "name": "stop",
+          "kind": "function",
+          "line": 38
+        },
+        {
+          "name": "StaffNotificationRegistrationWorker",
+          "kind": "class",
+          "line": 44
+        },
+        {
+          "name": "doWork",
+          "kind": "function",
+          "line": 45
+        },
+        {
+          "name": "StaffMessagingService",
+          "kind": "class",
+          "line": 75
+        },
+        {
+          "name": "onNewToken",
+          "kind": "function",
+          "line": 76
+        },
+        {
+          "name": "onMessageReceived",
+          "kind": "function",
+          "line": 77
+        },
+        {
+          "name": "onDeletedMessages",
+          "kind": "function",
+          "line": 97
+        }
+      ],
+      "imports": [],
+      "rpc_calls": [],
+      "tables": [],
+      "sql_objects": [],
+      "sql_changes": [],
+      "endpoints": [],
+      "animations": [],
+      "lines": 98
+    },
+    {
+      "path": "android/donas-control/app/src/main/java/com/bryan/donas/orders/StaffOrderNotifications.kt",
+      "sha256": "805f16282bbe292921a2bcf980a747d7cb7fca8ce2b8d12c8586f8d70cc340b5",
+      "bytes": 2774,
+      "symbols": [
+        {
+          "name": "StaffOrderNotifications",
+          "kind": "class",
+          "line": 16
+        },
+        {
+          "name": "validId",
+          "kind": "function",
+          "line": 17
+        },
+        {
+          "name": "showOrder",
+          "kind": "function",
+          "line": 18
+        },
+        {
+          "name": "showTest",
+          "kind": "function",
+          "line": 19
+        }
+      ],
+      "imports": [],
+      "rpc_calls": [],
+      "tables": [],
+      "sql_objects": [],
+      "sql_changes": [],
+      "endpoints": [],
+      "animations": [],
+      "lines": 47
     },
     {
       "path": "android/donas-control/app/src/main/java/com/bryan/donas/ui/CatalogActivity.kt",
@@ -3695,8 +3994,8 @@
     },
     {
       "path": "android/donas-control/app/src/test/java/com/bryan/donas/daily/DailyActivityTest.kt",
-      "sha256": "f7ea268a102b86393483144382f436bbd051526364f75582965e66c1e6b837bd",
-      "bytes": 5889,
+      "sha256": "155d1bacb0aefb616ec7e0c672acc7ea27bf5f4cb3ce94f34c3bd08169fefa3a",
+      "bytes": 7581,
       "symbols": [
         {
           "name": "DailyActivityTest",
@@ -3741,12 +4040,12 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 85
+      "lines": 101
     },
     {
       "path": "android/donas-control/app/src/test/java/com/bryan/donas/daily/DailyOperationsTest.kt",
-      "sha256": "3cff05740de17959d2d2dc534b668dd46f1714187aa25867f9998a8a8f3fcf17",
-      "bytes": 9105,
+      "sha256": "5f90f50838f3d682e883631836d527055c6faba9548c7b03d805977ca88db0b7",
+      "bytes": 9132,
       "symbols": [
         {
           "name": "DailyOperationsTest",
@@ -3950,8 +4249,8 @@
     },
     {
       "path": "android/donas-control/app/src/test/java/com/bryan/donas/data/CatalogMigrationTest.kt",
-      "sha256": "69b5b9b7831cc026b46ae1520245f746d8ba78fe46447a343cae9d9ead2cfef7",
-      "bytes": 3195,
+      "sha256": "8d1b49d7103f43b28911457cc0e6650374649efed241f1398d73925dc1cf5464",
+      "bytes": 3222,
       "symbols": [
         {
           "name": "CatalogMigrationTest",
@@ -4167,6 +4466,71 @@
       "endpoints": [],
       "animations": [],
       "lines": 74
+    },
+    {
+      "path": "android/donas-control/app/src/test/java/com/bryan/donas/orders/StaffOrdersTest.kt",
+      "sha256": "983b9c9c0472b5f23dc120a1d33007f6f8f9ef3b04b035f81f3528363495c09b",
+      "bytes": 6061,
+      "symbols": [
+        {
+          "name": "StaffOrdersTest",
+          "kind": "class",
+          "line": 24
+        },
+        {
+          "name": "row",
+          "kind": "function",
+          "line": 28
+        },
+        {
+          "name": "Tokens",
+          "kind": "class",
+          "line": 29
+        },
+        {
+          "name": "save",
+          "kind": "function",
+          "line": 30
+        },
+        {
+          "name": "refreshToken",
+          "kind": "function",
+          "line": 31
+        },
+        {
+          "name": "hasSession",
+          "kind": "function",
+          "line": 32
+        },
+        {
+          "name": "clear",
+          "kind": "function",
+          "line": 33
+        },
+        {
+          "name": "staffOrderPage",
+          "kind": "function",
+          "line": 41
+        },
+        {
+          "name": "staffOrderPage",
+          "kind": "function",
+          "line": 62
+        },
+        {
+          "name": "staffOrderPage",
+          "kind": "function",
+          "line": 100
+        }
+      ],
+      "imports": [],
+      "rpc_calls": [],
+      "tables": [],
+      "sql_objects": [],
+      "sql_changes": [],
+      "endpoints": [],
+      "animations": [],
+      "lines": 106
     },
     {
       "path": "android/donas-control/app/src/test/java/com/bryan/donas/ui/MainActivityTest.kt",
@@ -4792,6 +5156,61 @@
       "lines": 24
     },
     {
+      "path": "api/_lib/admin_handlers/order-notifications.js",
+      "sha256": "dd83d923eb3c300b2800574d0ca22e2a5d25d02aec485bb4742f5b39c47170a6",
+      "bytes": 4693,
+      "symbols": [
+        {
+          "name": "cronAuthorized",
+          "kind": "function",
+          "line": 9
+        },
+        {
+          "name": "notificationRpc",
+          "kind": "function",
+          "line": 16
+        },
+        {
+          "name": "device",
+          "kind": "function",
+          "line": 22
+        }
+      ],
+      "imports": [
+        {
+          "target": "api/_lib/http.js",
+          "line": 3
+        },
+        {
+          "target": "api/_lib/auth.js",
+          "line": 4
+        },
+        {
+          "target": "api/_lib/supabase.js",
+          "line": 5
+        },
+        {
+          "target": "api/_lib/rate-limit.js",
+          "line": 6
+        },
+        {
+          "target": "api/_lib/validation.js",
+          "line": 7
+        },
+        {
+          "target": "api/_lib/order-notification-push.js",
+          "line": 8
+        }
+      ],
+      "rpc_calls": [],
+      "tables": [],
+      "sql_objects": [],
+      "sql_changes": [],
+      "endpoints": [],
+      "animations": [],
+      "lines": 76
+    },
+    {
       "path": "api/_lib/auth.js",
       "sha256": "eca01756cfb5dc1645937c75e653926a5e34b22a2ffe80f9b9013e8794d4eb58",
       "bytes": 2389,
@@ -5228,6 +5647,65 @@
       "lines": 4
     },
     {
+      "path": "api/_lib/order-notification-push.js",
+      "sha256": "abfe6768c90d75cb3b7cd71f4a4bb4bb052b14db89fcb67d970efe757a7b962d",
+      "bytes": 4135,
+      "symbols": [
+        {
+          "name": "configured",
+          "kind": "function",
+          "line": 6
+        },
+        {
+          "name": "safeError",
+          "kind": "function",
+          "line": 7
+        },
+        {
+          "name": "oauthToken",
+          "kind": "function",
+          "line": 8
+        },
+        {
+          "name": "send",
+          "kind": "function",
+          "line": 27
+        },
+        {
+          "name": "dispatch",
+          "kind": "function",
+          "line": 42
+        },
+        {
+          "name": "enqueueDispatch",
+          "kind": "function",
+          "line": 57
+        }
+      ],
+      "imports": [
+        {
+          "target": "api/_lib/supabase.js",
+          "line": 3
+        }
+      ],
+      "rpc_calls": [
+        {
+          "name": "api_claim_staff_order_push",
+          "line": 44
+        },
+        {
+          "name": "api_finish_staff_order_push",
+          "line": 50
+        }
+      ],
+      "tables": [],
+      "sql_objects": [],
+      "sql_changes": [],
+      "endpoints": [],
+      "animations": [],
+      "lines": 63
+    },
+    {
       "path": "api/_lib/order-transition-policy.js",
       "sha256": "48ccb7c362e3daa2a9dc6da153b8891d9ffde1d0f05252ccc719af34a0bc24de",
       "bytes": 261,
@@ -5308,8 +5786,8 @@
     },
     {
       "path": "api/_lib/supabase.js",
-      "sha256": "fad5b34547f06a985992f7b39c53b57f42e8eac4a7229f912cb20f804e595933",
-      "bytes": 8826,
+      "sha256": "f7d4320937ac548a7fc7a48494316146383ff286ee2719380d3619eb141a39ae",
+      "bytes": 9297,
       "symbols": [
         {
           "name": "getConfig",
@@ -5324,17 +5802,17 @@
         {
           "name": "serviceRequest",
           "kind": "function",
-          "line": 73
+          "line": 76
         },
         {
           "name": "rpc",
           "kind": "function",
-          "line": 90
+          "line": 93
         },
         {
           "name": "userRpc",
           "kind": "function",
-          "line": 94
+          "line": 97
         }
       ],
       "imports": [
@@ -5349,7 +5827,7 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 104
+      "lines": 107
     },
     {
       "path": "api/_lib/validation.js",
@@ -5408,8 +5886,8 @@
     },
     {
       "path": "api/admin/customers/[route].js",
-      "sha256": "55eee72cabeb68fdf2719aaa7878dbc5157d07081eaf4435288ce73f3ac41526",
-      "bytes": 861,
+      "sha256": "56c818bf18eddf73638034cf5250efdd9a6ced173cfca87a2de49afd54fda487",
+      "bytes": 989,
       "symbols": [],
       "imports": [
         {
@@ -5433,12 +5911,16 @@
           "line": 7
         },
         {
-          "target": "api/_lib/admin_handlers/claim-token.js",
+          "target": "api/_lib/admin_handlers/order-notifications.js",
           "line": 8
         },
         {
+          "target": "api/_lib/admin_handlers/claim-token.js",
+          "line": 9
+        },
+        {
           "target": "api/_lib/mobile-retired.js",
-          "line": 10
+          "line": 11
         }
       ],
       "rpc_calls": [],
@@ -5447,7 +5929,7 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 19
+      "lines": 21
     },
     {
       "path": "api/admin/orders/[id]/payment.js",
@@ -5539,8 +6021,8 @@
     },
     {
       "path": "api/admin/orders/index.js",
-      "sha256": "daca6e09cf72c666ea37f48bddbc6d26301b8246f1852386dc9069abea6f5f84",
-      "bytes": 1629,
+      "sha256": "c819169c6393de18331bc3637d6875755e6ed406189d790498a5dea6f90dcd12",
+      "bytes": 2406,
       "symbols": [],
       "imports": [
         {
@@ -5570,7 +6052,7 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 25
+      "lines": 36
     },
     {
       "path": "api/auth/session.js",
@@ -5830,8 +6312,8 @@
     },
     {
       "path": "api/orders/index.js",
-      "sha256": "5bc14fe95184830d65f0610a3159c1ee1e82e4d9889f7b8e5aea970d0acb32f7",
-      "bytes": 1633,
+      "sha256": "f0e6a814f2c1b2827c91a13ea64838a70059e24ac069c8037d056c7ba90851f3",
+      "bytes": 1892,
       "symbols": [],
       "imports": [
         {
@@ -5853,6 +6335,10 @@
         {
           "target": "api/_lib/validation.js",
           "line": 5
+        },
+        {
+          "target": "api/_lib/order-notification-push.js",
+          "line": 37
         }
       ],
       "rpc_calls": [
@@ -5866,7 +6352,7 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 36
+      "lines": 40
     },
     {
       "path": "api/products.js",
@@ -7360,6 +7846,20 @@
       "endpoints": [],
       "animations": [],
       "lines": 71
+    },
+    {
+      "path": "docs/DONAS_CONTROL_2_1_PEDIDOS.md",
+      "sha256": "474db7777bca207a8b44654cc9020a74a0b30275ee1f5a5552bd69880b87f35b",
+      "bytes": 8475,
+      "symbols": [],
+      "imports": [],
+      "rpc_calls": [],
+      "tables": [],
+      "sql_objects": [],
+      "sql_changes": [],
+      "endpoints": [],
+      "animations": [],
+      "lines": 55
     },
     {
       "path": "docs/DONAS_CONTROL_2_ACTIVACION.md",
@@ -9313,8 +9813,8 @@
     },
     {
       "path": "package-lock.json",
-      "sha256": "77a2d459ec7dfdb6bfe05e8ce900533b22876d1df2ffc413a826564679e09f61",
-      "bytes": 252,
+      "sha256": "c97cc93a0e95307568c3a9b324d976401958d182bf7555a5822811b647569158",
+      "bytes": 10671,
       "symbols": [],
       "imports": [],
       "rpc_calls": [],
@@ -9326,8 +9826,8 @@
     },
     {
       "path": "package.json",
-      "sha256": "da63686f71e4830932ab18ef4ec2e3168a89847f233c1ef5da2470882acf34bd",
-      "bytes": 138,
+      "sha256": "ec2624eb46378d856ed3ab7cebb821102b297137fcfacd03a746bad5f2178b8b",
+      "bytes": 175,
       "symbols": [],
       "imports": [],
       "rpc_calls": [],
@@ -9336,7 +9836,7 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 9
+      "lines": 11
     },
     {
       "path": "scripts/Get-FirebaseAndroidConfiguration.ps1",
@@ -9399,6 +9899,26 @@
       "endpoints": [],
       "animations": [],
       "lines": 110
+    },
+    {
+      "path": "scripts/configure-order-notifications.ps1",
+      "sha256": "98cff3f9180197770fcf54a0114f35787e8fcd10acbfe5dac5bd80225561484b",
+      "bytes": 3615,
+      "symbols": [
+        {
+          "name": "Invoke",
+          "kind": "function",
+          "line": 10
+        }
+      ],
+      "imports": [],
+      "rpc_calls": [],
+      "tables": [],
+      "sql_objects": [],
+      "sql_changes": [],
+      "endpoints": [],
+      "animations": [],
+      "lines": 59
     },
     {
       "path": "scripts/firebase-connect.ps1",
@@ -14750,6 +15270,221 @@
       "lines": 285
     },
     {
+      "path": "supabase/migrations/202610140001_staff_order_notifications.sql",
+      "sha256": "044f001010d5dcb55ba33d058f623185708827abe2cf1132a8bd6b7e5fd789fe",
+      "bytes": 11187,
+      "symbols": [
+        {
+          "name": "api_staff_register_order_notifications",
+          "kind": "sql_function",
+          "line": 27
+        },
+        {
+          "name": "api_staff_stop_order_notifications",
+          "kind": "sql_function",
+          "line": 56
+        },
+        {
+          "name": "queue_order_push",
+          "kind": "sql_function",
+          "line": 70
+        },
+        {
+          "name": "api_claim_staff_order_push",
+          "kind": "sql_function",
+          "line": 85
+        },
+        {
+          "name": "api_finish_staff_order_push",
+          "kind": "sql_function",
+          "line": 106
+        },
+        {
+          "name": "api_retry_staff_order_push",
+          "kind": "sql_function",
+          "line": 121
+        },
+        {
+          "name": "api_staff_order_notification_status",
+          "kind": "sql_function",
+          "line": 136
+        }
+      ],
+      "imports": [],
+      "rpc_calls": [],
+      "tables": [
+        {
+          "name": "push_devices",
+          "line": 5,
+          "columns": [
+            {
+              "name": "device_public_id",
+              "type": "uuid",
+              "line": 6
+            },
+            {
+              "name": "auth_user_id",
+              "type": "uuid",
+              "line": 6
+            },
+            {
+              "name": "platform",
+              "type": "text",
+              "line": 7
+            },
+            {
+              "name": "token",
+              "type": "text",
+              "line": 7
+            },
+            {
+              "name": "environment",
+              "type": "text",
+              "line": 8
+            },
+            {
+              "name": "app_version",
+              "type": "text",
+              "line": 9
+            },
+            {
+              "name": "active",
+              "type": "boolean",
+              "line": 9
+            },
+            {
+              "name": "updated_at",
+              "type": "timestamptz",
+              "line": 10
+            }
+          ]
+        },
+        {
+          "name": "order_push_jobs",
+          "line": 12,
+          "columns": [
+            {
+              "name": "id",
+              "type": "uuid",
+              "line": 13
+            },
+            {
+              "name": "order_id",
+              "type": "uuid",
+              "line": 13
+            },
+            {
+              "name": "device_public_id",
+              "type": "uuid",
+              "line": 14
+            },
+            {
+              "name": "attempts",
+              "type": "integer",
+              "line": 15
+            },
+            {
+              "name": "available_at",
+              "type": "timestamptz",
+              "line": 15
+            },
+            {
+              "name": "delivered_at",
+              "type": "timestamptz",
+              "line": 16
+            },
+            {
+              "name": "lease_id",
+              "type": "uuid",
+              "line": 16
+            },
+            {
+              "name": "last_error",
+              "type": "text",
+              "line": 16
+            }
+          ]
+        }
+      ],
+      "sql_objects": [
+        {
+          "kind": "table",
+          "name": "push_devices",
+          "line": 5
+        },
+        {
+          "kind": "table",
+          "name": "order_push_jobs",
+          "line": 12
+        },
+        {
+          "kind": "index",
+          "name": "order_push_pending",
+          "line": 18
+        },
+        {
+          "kind": "trigger",
+          "name": "new_order_push",
+          "line": 83
+        }
+      ],
+      "sql_changes": [
+        {
+          "kind": "alter table",
+          "target": "push_devices",
+          "line": 19
+        },
+        {
+          "kind": "alter table",
+          "target": "push_devices",
+          "line": 20
+        },
+        {
+          "kind": "alter table",
+          "target": "push_devices",
+          "line": 21
+        },
+        {
+          "kind": "alter table",
+          "target": "push_devices",
+          "line": 22
+        },
+        {
+          "kind": "alter table",
+          "target": "order_push_jobs",
+          "line": 23
+        },
+        {
+          "kind": "revoke all",
+          "target": "on",
+          "line": 24
+        },
+        {
+          "kind": "grant select",
+          "target": "on",
+          "line": 25
+        },
+        {
+          "kind": "drop trigger",
+          "target": "if",
+          "line": 82
+        },
+        {
+          "kind": "revoke execute",
+          "target": "on",
+          "line": 152
+        },
+        {
+          "kind": "grant execute",
+          "target": "on",
+          "line": 156
+        }
+      ],
+      "endpoints": [],
+      "animations": [],
+      "lines": 161
+    },
+    {
       "path": "supabase/rollback/202609200001_phase2_down.sql",
       "sha256": "665e303129eb0e458a86901ba9360291bbec0863dd5572345c3a0c0333af712b",
       "bytes": 1195,
@@ -15648,6 +16383,325 @@
       "endpoints": [],
       "animations": [],
       "lines": 8
+    },
+    {
+      "path": "supabase/sql-editor/orders-v2/00_preflight.sql",
+      "sha256": "11bf878604196e7bc1f6e1092c17d76290d691b0d0c36ebbdacffaf981e56122",
+      "bytes": 951,
+      "symbols": [],
+      "imports": [],
+      "rpc_calls": [],
+      "tables": [],
+      "sql_objects": [],
+      "sql_changes": [],
+      "endpoints": [],
+      "animations": [],
+      "lines": 13
+    },
+    {
+      "path": "supabase/sql-editor/orders-v2/01_apply.sql",
+      "sha256": "044f001010d5dcb55ba33d058f623185708827abe2cf1132a8bd6b7e5fd789fe",
+      "bytes": 11187,
+      "symbols": [
+        {
+          "name": "api_staff_register_order_notifications",
+          "kind": "sql_function",
+          "line": 27
+        },
+        {
+          "name": "api_staff_stop_order_notifications",
+          "kind": "sql_function",
+          "line": 56
+        },
+        {
+          "name": "queue_order_push",
+          "kind": "sql_function",
+          "line": 70
+        },
+        {
+          "name": "api_claim_staff_order_push",
+          "kind": "sql_function",
+          "line": 85
+        },
+        {
+          "name": "api_finish_staff_order_push",
+          "kind": "sql_function",
+          "line": 106
+        },
+        {
+          "name": "api_retry_staff_order_push",
+          "kind": "sql_function",
+          "line": 121
+        },
+        {
+          "name": "api_staff_order_notification_status",
+          "kind": "sql_function",
+          "line": 136
+        }
+      ],
+      "imports": [],
+      "rpc_calls": [],
+      "tables": [
+        {
+          "name": "push_devices",
+          "line": 5,
+          "columns": [
+            {
+              "name": "device_public_id",
+              "type": "uuid",
+              "line": 6
+            },
+            {
+              "name": "auth_user_id",
+              "type": "uuid",
+              "line": 6
+            },
+            {
+              "name": "platform",
+              "type": "text",
+              "line": 7
+            },
+            {
+              "name": "token",
+              "type": "text",
+              "line": 7
+            },
+            {
+              "name": "environment",
+              "type": "text",
+              "line": 8
+            },
+            {
+              "name": "app_version",
+              "type": "text",
+              "line": 9
+            },
+            {
+              "name": "active",
+              "type": "boolean",
+              "line": 9
+            },
+            {
+              "name": "updated_at",
+              "type": "timestamptz",
+              "line": 10
+            }
+          ]
+        },
+        {
+          "name": "order_push_jobs",
+          "line": 12,
+          "columns": [
+            {
+              "name": "id",
+              "type": "uuid",
+              "line": 13
+            },
+            {
+              "name": "order_id",
+              "type": "uuid",
+              "line": 13
+            },
+            {
+              "name": "device_public_id",
+              "type": "uuid",
+              "line": 14
+            },
+            {
+              "name": "attempts",
+              "type": "integer",
+              "line": 15
+            },
+            {
+              "name": "available_at",
+              "type": "timestamptz",
+              "line": 15
+            },
+            {
+              "name": "delivered_at",
+              "type": "timestamptz",
+              "line": 16
+            },
+            {
+              "name": "lease_id",
+              "type": "uuid",
+              "line": 16
+            },
+            {
+              "name": "last_error",
+              "type": "text",
+              "line": 16
+            }
+          ]
+        }
+      ],
+      "sql_objects": [
+        {
+          "kind": "table",
+          "name": "push_devices",
+          "line": 5
+        },
+        {
+          "kind": "table",
+          "name": "order_push_jobs",
+          "line": 12
+        },
+        {
+          "kind": "index",
+          "name": "order_push_pending",
+          "line": 18
+        },
+        {
+          "kind": "trigger",
+          "name": "new_order_push",
+          "line": 83
+        }
+      ],
+      "sql_changes": [
+        {
+          "kind": "alter table",
+          "target": "push_devices",
+          "line": 19
+        },
+        {
+          "kind": "alter table",
+          "target": "push_devices",
+          "line": 20
+        },
+        {
+          "kind": "alter table",
+          "target": "push_devices",
+          "line": 21
+        },
+        {
+          "kind": "alter table",
+          "target": "push_devices",
+          "line": 22
+        },
+        {
+          "kind": "alter table",
+          "target": "order_push_jobs",
+          "line": 23
+        },
+        {
+          "kind": "revoke all",
+          "target": "on",
+          "line": 24
+        },
+        {
+          "kind": "grant select",
+          "target": "on",
+          "line": 25
+        },
+        {
+          "kind": "drop trigger",
+          "target": "if",
+          "line": 82
+        },
+        {
+          "kind": "revoke execute",
+          "target": "on",
+          "line": 152
+        },
+        {
+          "kind": "grant execute",
+          "target": "on",
+          "line": 156
+        }
+      ],
+      "endpoints": [],
+      "animations": [],
+      "lines": 161
+    },
+    {
+      "path": "supabase/sql-editor/orders-v2/02_verify.sql",
+      "sha256": "b7b52ce73a4d6e2b9a8eb2c101f5387c76ebc4b8030648f2722e5dd5f7d30201",
+      "bytes": 1799,
+      "symbols": [],
+      "imports": [],
+      "rpc_calls": [],
+      "tables": [],
+      "sql_objects": [],
+      "sql_changes": [],
+      "endpoints": [],
+      "animations": [],
+      "lines": 24
+    },
+    {
+      "path": "supabase/sql-editor/orders-v2/03_retry_scheduler.sql",
+      "sha256": "ec73b6015139c826b1338f767e12a714ae0127f26dfdf39136779217f35f60c4",
+      "bytes": 3322,
+      "symbols": [
+        {
+          "name": "staff_order_push_retry_tick",
+          "kind": "sql_function",
+          "line": 13
+        },
+        {
+          "name": "api_staff_configure_notification_retry",
+          "kind": "sql_function",
+          "line": 28
+        }
+      ],
+      "imports": [],
+      "rpc_calls": [],
+      "tables": [],
+      "sql_objects": [],
+      "sql_changes": [
+        {
+          "kind": "revoke usage",
+          "target": "on",
+          "line": 10
+        },
+        {
+          "kind": "revoke all",
+          "target": "on",
+          "line": 11
+        },
+        {
+          "kind": "revoke execute",
+          "target": "on",
+          "line": 12
+        },
+        {
+          "kind": "revoke execute",
+          "target": "on",
+          "line": 42
+        },
+        {
+          "kind": "revoke execute",
+          "target": "on",
+          "line": 43
+        },
+        {
+          "kind": "grant execute",
+          "target": "on",
+          "line": 44
+        }
+      ],
+      "endpoints": [],
+      "animations": [],
+      "lines": 47
+    },
+    {
+      "path": "supabase/sql-editor/orders-v2/04_suspend.sql",
+      "sha256": "7b40bc9c0cc385f9006bc3086c15a277b4cbe72ec2ff5597bd436268c584d9fe",
+      "bytes": 604,
+      "symbols": [],
+      "imports": [],
+      "rpc_calls": [],
+      "tables": [],
+      "sql_objects": [],
+      "sql_changes": [
+        {
+          "kind": "revoke execute",
+          "target": "on",
+          "line": 4
+        }
+      ],
+      "endpoints": [],
+      "animations": [],
+      "lines": 12
     },
     {
       "path": "supabase/sql-editor/phase18/00_preflight.sql",
@@ -18061,8 +19115,8 @@
     },
     {
       "path": "tests/notification-order-api.cjs",
-      "sha256": "2068ee79cee7202dc51bebccbcb7c20b7be896b98a28a7c5b683beb144f1afb2",
-      "bytes": 2171,
+      "sha256": "39a4e32db8796060ac76893ad29492bae9c9ee77efa564c7e669931195e4531c",
+      "bytes": 2401,
       "symbols": [
         {
           "name": "replace",
@@ -18092,7 +19146,7 @@
         }
       ],
       "animations": [],
-      "lines": 42
+      "lines": 45
     },
     {
       "path": "tests/order-push.cjs",
@@ -18661,8 +19715,8 @@
     },
     {
       "path": "tests/shared-inventory-postgres.mjs",
-      "sha256": "ac6737dacd73e0459b67cf7506b4d4e7a1ebed5380c1c80731c8ac0b99482637",
-      "bytes": 14432,
+      "sha256": "02b68b593730eb45e1c29c8f2f25b46d370a0524f96cc135e88c1a96b5c42429",
+      "bytes": 14426,
       "symbols": [],
       "imports": [],
       "rpc_calls": [],
@@ -18716,6 +19770,90 @@
       ],
       "animations": [],
       "lines": 20
+    },
+    {
+      "path": "tests/staff-notification-api.cjs",
+      "sha256": "a7745501d8df0b91ee7bf38b497601453baed913a40d8952776b7bd65103c0af",
+      "bytes": 3088,
+      "symbols": [
+        {
+          "name": "replace",
+          "kind": "function",
+          "line": 6
+        },
+        {
+          "name": "invoke",
+          "kind": "function",
+          "line": 13
+        }
+      ],
+      "imports": [
+        {
+          "target": "api/_lib/http.js",
+          "line": 3
+        },
+        {
+          "target": "api/_lib/admin_handlers/order-notifications.js",
+          "line": 12
+        }
+      ],
+      "rpc_calls": [],
+      "tables": [],
+      "sql_objects": [],
+      "sql_changes": [],
+      "endpoints": [
+        {
+          "value": "/api/admin/customers/order-notifications",
+          "line": 13
+        }
+      ],
+      "animations": [],
+      "lines": 26
+    },
+    {
+      "path": "tests/staff-notification-postgres.mjs",
+      "sha256": "2b3a4362f6222499940815b3b60679ee5a31e68aff14aeda4ff3aeefd1f05186",
+      "bytes": 9157,
+      "symbols": [
+        {
+          "name": "scenario",
+          "kind": "function",
+          "line": 6
+        }
+      ],
+      "imports": [],
+      "rpc_calls": [],
+      "tables": [],
+      "sql_objects": [
+        {
+          "kind": "view",
+          "name": "vault",
+          "line": 50
+        }
+      ],
+      "sql_changes": [],
+      "endpoints": [],
+      "animations": [],
+      "lines": 77
+    },
+    {
+      "path": "tests/staff-notification-provider.cjs",
+      "sha256": "e17411993547952166a6d748d0161da28b3de54e0fa86913f3e097ee868097af",
+      "bytes": 1990,
+      "symbols": [],
+      "imports": [
+        {
+          "target": "api/_lib/order-notification-push.js",
+          "line": 12
+        }
+      ],
+      "rpc_calls": [],
+      "tables": [],
+      "sql_objects": [],
+      "sql_changes": [],
+      "endpoints": [],
+      "animations": [],
+      "lines": 23
     },
     {
       "path": "tests/three-daily-purchases-postgres.mjs",
@@ -18780,8 +19918,8 @@
     },
     {
       "path": "tests/web-only.cjs",
-      "sha256": "b732f4e9b2dfc168338acd9212ca38ba8101f5219cca41173523286e60acdcdf",
-      "bytes": 2420,
+      "sha256": "89ccb6f18179117f8abd2f4f45ba1ec35c3e5fb66caf78806baf595d14b403e7",
+      "bytes": 2452,
       "symbols": [
         {
           "name": "request",

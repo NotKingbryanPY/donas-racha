@@ -17,14 +17,21 @@ import androidx.sqlite.db.SupportSQLiteDatabase
     LoanEntity::class, LoanPaymentEntity::class, ProfitAllocationEntity::class,
     PartnerPaymentEntity::class, SyncOutboxEntity::class, RemoteOrderEntity::class,
     SyncStateEntity::class, FlavorEntity::class, CatalogOperationEntity::class,
-    com.bryan.donas.daily.DailyOperation::class, com.bryan.donas.daily.DailyCache::class], version = 6, exportSchema = true,
+    com.bryan.donas.daily.DailyOperation::class, com.bryan.donas.daily.DailyCache::class,
+    com.bryan.donas.orders.StaffOrderCache::class], version = 7, exportSchema = true,
     autoMigrations = [AutoMigration(from = 1, to = 2)])
 abstract class AppDatabase : RoomDatabase() {
     abstract fun businessDao(): BusinessDao
     abstract fun operationDao(): OperationDao
     abstract fun syncDao(): SyncDao
     abstract fun dailyDao(): com.bryan.donas.daily.DailyDao
+    abstract fun staffOrderDao(): com.bryan.donas.orders.StaffOrderDao
     companion object {
+        val MIGRATION_6_7 = object : Migration(6, 7) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("CREATE TABLE IF NOT EXISTS staff_order_cache (ownerId TEXT NOT NULL PRIMARY KEY,json TEXT NOT NULL,receivedAt INTEGER NOT NULL)")
+            }
+        }
         val MIGRATION_5_6 = object : Migration(5, 6) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("CREATE TABLE IF NOT EXISTS daily_outbox (id TEXT NOT NULL PRIMARY KEY,ownerId TEXT NOT NULL,sessionId TEXT NOT NULL,kind TEXT NOT NULL,payload TEXT NOT NULL,createdAt INTEGER NOT NULL,state TEXT NOT NULL,sequence INTEGER,error TEXT,attempts INTEGER NOT NULL)")
@@ -55,6 +62,6 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
         fun open(context: Context) = Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "donas.db")
-            .addMigrations(MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6).build()
+            .addMigrations(MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7).build()
     }
 }

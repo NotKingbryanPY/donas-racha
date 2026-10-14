@@ -19,6 +19,10 @@ import com.bryan.donas.ui.OrdersActivity
 
 object OrderNotifications {
     private const val CHANNEL = "new_orders"
+    fun ensureChannel(context: Context) {
+        if (Build.VERSION.SDK_INT >= 26) (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
+            .createNotificationChannel(NotificationChannel(CHANNEL, "Pedidos nuevos", NotificationManager.IMPORTANCE_HIGH))
+    }
     fun enabled(context: Context): Boolean {
         if (Build.VERSION.SDK_INT >= 33 && ContextCompat.checkSelfPermission(
                 context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) return false

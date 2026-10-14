@@ -15,11 +15,13 @@ Android lee Room, escribe un payload inmutable con UUID y programa WorkManager. 
 | compra/venta/consumo/corrección | daily_operations + items Supabase | daily_outbox/recibos locales |
 | costos FIFO | daily_cost_lots Supabase | resumen confirmado, sin libro independiente |
 | jornadas/cierres | daily_sessions Supabase | snapshot de las 30 jornadas recientes |
-| pedidos/pagos/puntos | tablas/RPC existentes Supabase | web; apertura del Dashboard desde Android |
+| pedidos/pagos/puntos | tablas/RPC existentes Supabase | web y staff_order_cache por propietario Android; operaciones solo online |
 | libro anterior | Room v5 conservado | no se reenvía ni se fusiona automáticamente |
 
-DonasApp deja de programar OrderSync/PushRegistration y cancela trabajo histórico. El widget antiguo y el servicio FCM dejan de estar registrados en el manifest nuevo. El código histórico conserva pruebas/datos para recuperación; no describe el runtime nuevo. /api/sync y provisionamiento/Firebase/devices siguen retirados con 410.
+DonasApp cancela escritores históricos una sola vez y programa StaffInbox/StaffNotificationRegistration con la identidad Supabase actual. StaffMessagingService se registra en manifest; el widget/servicio antiguos permanecen fuera del runtime. /api/sync, provisioning/firebase-identity/devices siguen410; order-notifications es una ruta nueva del mismo router, sin otro lambda.
 
-Views nativas y Material evitan una WebView o framework nuevo. HTTP usa el cliente existente con redirecciones restringidas, timeouts y refresh cifrado; la API reutiliza el router existente para no añadir funciones Vercel innecesarias. Firebase/Firestore no reciben datos de negocio. Sus proyectos y SDK históricos no se eliminan.
+Views nativas y Material evitan una WebView o framework nuevo. HTTP usa el cliente existente con redirecciones restringidas, timeouts y refresh cifrado; la API reutiliza el router existente para no añadir funciones Vercel innecesarias. Firebase FCM transporta solo tipo/UUID de pedido/propietario/dispositivo, sin cliente/teléfono/dirección. Firestore no recibe copias comerciales; autorización Supabase existente, sin Firebase Auth piloto nuevo.
 
-Diseño inspirado en el perfil web: oscuro/lavanda/rosa, acciones rápidas y cifras claras. Sin servicio permanente, sin permisos de batería adicionales. Actualización web del resumen cada 60 s solo visible/online; inventario/catálogo mantienen sus mecanismos actuales. Trabajo Android de respaldo oportunista cada 30 min, no reloj exacto ni push.
+Diseño inspirado en el perfil web: oscuro/lavanda/rosa, acciones rápidas y cifras claras. Sin servicio permanente, sin permisos de batería adicionales. Actualización web del resumen cada 60 s solo visible/online; inventario/catálogo mantienen sus mecanismos actuales. FCM es principal fuera de app. Respaldo WorkManager oportunista cada30min y refresco de Pedidos cada60s solo visible; ningún bucle permanente. La alta confirma SQL/cola antes de waitUntil del emisor Vercel; fallos mantienen pedido/jobs. Reintento cron Supabase privado solo invoca si hay trabajos elegibles; no se reactiva cron GitHub.
+
+Los componentes antiguos MainActivity/OrdersActivity son alias privados al launcher nuevo, para que intents anteriores no arranquen escritores retirados. El resto de fuentes históricas/datos se conserva; no representa el flujo de pedidos2.1.

@@ -13,7 +13,7 @@ module.exports = withApi(['GET'], async req => {
   const limit = Math.min(100, Math.max(1, Number(req.query.limit || 50)));
   const params = {
     select: 'id,public_code,status,payment_method,payment_status,currency_code,total_cents,customer_name_snapshot,customer_phone_snapshot,customer_notes,delivery_location,created_at,updated_at,order_items(product_variant_id,product_name_snapshot,variant_name_snapshot,sku_snapshot,quantity,unit_price_cents,line_total_cents)',
-    order: 'created_at.desc',
+    order: 'created_at.desc,id.desc',
     limit: String(Number.isFinite(limit) ? Math.trunc(limit) : 50)
   };
   if (req.query.orderId != null) {
@@ -21,5 +21,16 @@ module.exports = withApi(['GET'], async req => {
     params.limit = '1';
   }
   if (status) params.status = status === 'ACTIVE' ? 'in.(PENDING,ACCEPTED,OUT_FOR_DELIVERY)' : `eq.${status}`;
-  return { orders: await serviceRequest('orders', { query: new URLSearchParams(params).toString() }) };
+  if(req.query.beforeCreatedAt!=null||req.query.beforeId!=null){
+    const date=String(req.query.beforeCreatedAt||'');
+    if(date.length>40||!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,6})?(Z|[+-]\d{2}:\d{2})$/.test(date)||!Number.isFinite(Date.parse(date)))
+      throw new ApiError(400,'VALIDATION_ERROR','Cursor de pedidos no válido.');
+    const beforeId=uuid(req.query.beforeId,'beforeId');
+    const timestamp=date; // Preserve PostgreSQL microseconds; Date.toISOString would skip rows.
+    params.or=`(created_at.lt.${timestamp},and(created_at.eq.${timestamp},id.lt.${beforeId}))`;
+  }
+  const orders=await serviceRequest('orders',{query:new URLSearchParams(params).toString()});
+  const last=orders.at(-1);
+  return {orders,hasMore:req.query.orderId==null&&orders.length===Number(params.limit),
+    nextCursor:last?{createdAt:last.created_at,id:last.id}:null};
 });

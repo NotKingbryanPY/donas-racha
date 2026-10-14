@@ -1,12 +1,14 @@
-# Límite actual de actualización
+# 04-notifications
 
-[Contexto](../AI_CONTEXT.md). Código local revisado; activación real pendiente.
+[Contexto](../AI_CONTEXT.md)
 
 ```mermaid
-flowchart LR
-  app["Android2 conectado"] --> worker["DailySyncWorker: cola y snapshot"]
-  backup["Respaldo oportunista 30min"] --> worker
-  worker --> api["API diaria Supabase"]
-  button["Actualizar manual / abrir app"] --> worker
-  retired["FCM, cron y provisión antiguos retirados"] -. no activos .-> app
+flowchart TD
+  web["Pedido web"] --> tx["SQL confirma pedido + reserva + job"]
+  tx --> api["Respuesta de éxito + waitUntil"] --> send["FCM alta prioridad"]
+  cron["Cron privado Supabase + Vault"] --> lease["Lease/backoff de pendientes"] --> send
+  send --> service["Servicio valida owner/device/UUID"]
+  service --> alert["Aviso genérico, canal/sonido, dedupe"] --> tap["Tap: pedido nativo autenticado"]
+  service --> work["WorkManager refresca Room7"]
+  old["Cron GitHub/provisión/sync contable antiguos"] -. retirados .-> api
 ```

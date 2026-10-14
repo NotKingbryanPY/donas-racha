@@ -1,32 +1,27 @@
-# Donas Control 2.0.0
+# Donas Control2.1.0
 
-Android nativo Kotlin/Views/Material. Paquete oficial `com.bryan.donas.control`, código15, Android6/API23+, SDK35, JDK17. Nueva navegación Hoy/Inventario/Historial. El capital/reparto/préstamos y widgets anteriores no forman parte de la operación nueva; sus datos Room permanecen.
+Android nativo Kotlin/Views/Material, paquete oficial com.bryan.donas.control, código16, mínimoAPI23/target35. Pedidos como entrada; Hoy/Stock/Historial conservan operación diaria. Estilo oscuro/lavanda de dracha.store. No capital/reparto/préstamos en navegación; datos viejos conservados.
 
-## Operación
+## Pedidos y notificaciones
 
-- Compra: cajas, costo total, mezcla inicial4/4/2/2 editable, total calculado por suma de sabores. Guarda composición por compra y último mix preferido.
-- Venta: cantidades/precio por sabor, efectivo/Yappy/dividido; suma del pago igual al total.
-- Consumo del vendedor: salida sin ingreso, costo separado.
-- Corrección: ADMIN, motivo, conexión y revisión vigente.
-- Resumen central confirmado: inversión, unidades, ingresos por método, FIFO/costo vendido, utilidad comercial y resultado después del consumo. Costo histórico desconocido queda pendiente, no se inventa.
-- Cierre online: cola local vacía, revisión/secuencia vigentes; conserva inventario e historial y abre otra jornada.
+Lista activa paginada,50 recientes y detalle exacto por UUID. Aceptar, en camino, cobrado-entregado(CASH/YAPPY) y cancelar incluso en camino usan API/transacciones web; no otro cobro/stock/puntos. Cambios requieren conexión. Caché Room7 por propietario,40 tarjetas por página de UI.
 
-Supabase mantiene el único inventario/libro compartido. Room guarda daily_outbox/daily_cache junto al esquema anterior. WorkManager reintenta con conexión/backoff, UUID/payload inmutables y orden de inserción; fallos y conflictos no borran registros. Sin conexión solo se usa una copia previamente autorizada (hasta24h), y los pendientes no son ventas confirmadas. Un conteo físico inicial es obligatorio; comprar no presume existencia previa cero.
+FCM alta prioridad es el mecanismo fuera de app: StaffMessagingService valida owner/device/UUID, avisa inmediatamente con canal/sonido/permisos y PendingIntent nativo; WorkManager recupera datos después. Dedupe persistente por usuario/pedido. El SDK/config público no reemplaza credenciales privadas del emisor Vercel. CloudFirestore no guarda otro inventario. [Activación y pruebas físicas](../../docs/DONAS_CONTROL_2_1_PEDIDOS.md).
 
-La sesión del Dashboard Supabase se conserva cifrada; email/password, no contraseña persistida ni rol automático Firebase. Firebase/FCM/provisión antiguos no se rehabilitan; pedidos se gestionan en el Dashboard web abierto desde la app. No se promete recepción push fuera de la aplicación. iOS se pospone.
+Primera entrada con cuenta Supabase ADMIN/SELLER del Dashboard; sesión cifrada y password no persistida. SDK Firebase anterior no concede rol. Permitir notificaciones; Activar/comprobar avisos, Activar recuperación(ADMIN) y Enviar prueba. FCM aceptado no equivale a Android mostrando aviso. Offline no llegan nuevos pedidos; abrir/reconectar recupera activos. Sin servicios permanentes ni permisos generales de batería.
 
-## Activar, compilar e instalar
+## Diarios preservados
 
-Leer [activación](../../docs/DONAS_CONTROL_2_ACTIVACION.md) y [guía IA](../../docs/knowledge/AI_CONTEXT.md). SQL nuevo en supabase/sql-editor/daily-v2, orden00/01/02. No repetir seed/paquete02antiguo ni reiniciar producción. El backend nuevo devuelve activación pendiente hasta instalar SQL.
+Compras por caja con composición4/4/2/2 editable y snapshot; ventas efectivo/Yappy/dividido; consumo separado; costos FIFO centrales, utilidad desconocida visible. Outbox UUID/payload estable, backoff/conflictos, cierre confirmado conservando historia/stock. Room1..6→7 aditivo, sin fallback destructivo ni reenvío automático del libro anterior.
 
-Desde raíz, PowerShell con JDK17/SDK35 configurados:
+## Compilar e instalar
+
+JDK17, SDK35/build-tools35 y Gradle wrapper. Desde raíz PowerShell:
 
 ```powershell
 .\scripts\build-android-official.ps1 -FirebaseConfigPath .\.firebase\android\google-services.json
 ```
 
-El script conserva firma oficial y valida unit/lint/build. Entrega outputs/Donas-Control-2.0.0-oficial.apk + SHA256. APK oficial de distribución privada; no es aprobación de tienda. CI usa firma temporal y sus APK no sustituyen la actualización oficial.
+Firma oficial existente, unit/lint/build estrictos; outputs/Donas-Control-2.1.0-oficial.apk y checksum. Distribución privada firmada, no aprobación de tienda. Instalar como actualización sin desinstalar/borrar datos; .pilot es otro paquete. No bajar APK/Room7 a6 para suspender avisos: usar SQL04 correspondiente. CI usa otra firma temporal; su APK no sustituye la distribución oficial.
 
-Instalar sobre la app oficial existente sin desinstalar: Room migra a v6 preservando todas las filas. .pilot y com.bryan.donas son paquetes distintos; no asumir traslado de datos por nombre. Pendientes contables antiguos necesitan conciliación, no se reenvían automáticamente. No hay borrado definitivo en la UI nueva.
-
-Para tests desde este proyecto: `./gradlew.bat testDebugUnitTest lintDebug assembleDebugAndroidTest`. Instrumentación necesita dispositivo/emulador; compilar tests no equivale a ejecutarlos. Resultados y límites en docs/knowledge/VALIDATION.md. Historial1.3/1.4 recuperable con Git, por ejemplo `git show d304e46:android/donas-control/README.md`; sus instrucciones ya no describen el runtime2.
+Tests locales: gradlew.bat testDebugUnitTest lintDebug lintOfficial. Instrumentación/emuladores23/35 en workflow Android. [Guía IA](../../docs/knowledge/AI_CONTEXT.md) debe acompañar cada cambio; pruebas y límites en VALIDATION. [Servidor/SQL2.1](../../docs/DONAS_CONTROL_2_1_PEDIDOS.md) se configura aparte de compilar.

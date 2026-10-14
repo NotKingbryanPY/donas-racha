@@ -10,8 +10,8 @@ android {
         applicationId = "com.bryan.donas"
         minSdk = 23
         targetSdk = 35
-        versionCode = 15
-        versionName = "2.0.0"
+        versionCode = 16
+        versionName = "2.1.0"
         listOf("APP_ID", "API_KEY", "PROJECT_ID", "SENDER_ID", "WEB_CLIENT_ID").forEach { name ->
             val value = providers.gradleProperty("FIREBASE_$name").orNull ?: when (name) { "PROJECT_ID" -> "donascontrol-1f5df"; "SENDER_ID" -> "476925718096"; else -> "" }
             buildConfigField("String", "FIREBASE_$name", "\"${value.replace("\\", "\\\\").replace("\"", "\\\"")}\"")

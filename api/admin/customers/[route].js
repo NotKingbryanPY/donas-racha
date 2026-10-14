@@ -5,6 +5,7 @@ const handlers = Object.freeze({
   catalog: require('../../_lib/admin_handlers/catalog'),
   inventory: require('../../_lib/admin_handlers/inventory'),
   daily: require('../../_lib/admin_handlers/daily'),
+  'order-notifications': require('../../_lib/admin_handlers/order-notifications'),
   'claim-token': require('../../_lib/admin_handlers/claim-token')
 });
 const retired = require('../../_lib/mobile-retired');
@@ -17,3 +18,4 @@ module.exports = (req, res) => {
   if (['provisioning','firebase-identity','devices'].includes(route)) return retired(req,res);
   return (Object.hasOwn(handlers, route) ? handlers[route] : unknown)(req, res);
 };
+module.exports.config = { maxDuration: 60 };

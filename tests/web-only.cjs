@@ -19,6 +19,6 @@ async function request(handler,route,method){const res={setHeader(){},end(body){
   const html=fs.readFileSync('index.html','utf8');assert.ok(!html.includes('staffDevicesPanel'));assert.ok(!html.includes('staff-devices.js'));assert.ok(!html.includes('Donas Control'));
   assert.equal(fs.existsSync('.github/workflows/order-push-retry.yml'),false);
   assert.equal(fs.existsSync('api/_lib/order-push.js'),false);
-  assert.deepEqual(require('../package.json').dependencies,{});
+  assert.deepEqual(Object.keys(require('../package.json').dependencies),['@vercel/functions']);
   console.log('PASS web-only access: retired mobile APIs do no work, web ADMIN still works, no push cron/SDK/UI');
 })().catch(e=>{console.error(e);process.exitCode=1});

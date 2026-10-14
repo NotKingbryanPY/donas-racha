@@ -1,9 +1,11 @@
 {
   "name": "donas-racha-backend",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "private": true,
   "engines": {
     "node": "22.x"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@vercel/functions": "3.10.1"
+  }
 }

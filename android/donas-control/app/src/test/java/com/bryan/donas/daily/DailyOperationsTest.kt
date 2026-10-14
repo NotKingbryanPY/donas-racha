@@ -125,7 +125,7 @@ class DailyOperationsTest {
             raw.execSQL("INSERT INTO sync_outbox(clientOperationId,localEventId,type,occurredAt,payloadJson,state,attempts) VALUES('legacy-id',9,'SALE','2026-10-08','legacy-payload','PENDING',3)")
             raw.version = 5
         } finally { raw.close() }
-        val db = Room.databaseBuilder(context, AppDatabase::class.java, name).addMigrations(AppDatabase.MIGRATION_5_6).build()
+        val db = Room.databaseBuilder(context, AppDatabase::class.java, name).addMigrations(AppDatabase.MIGRATION_5_6, AppDatabase.MIGRATION_6_7).build()
         try {
             assertEquals("legacy-payload", db.syncDao().pending().single().payloadJson)
             assertEquals(3, db.syncDao().pending().single().attempts)

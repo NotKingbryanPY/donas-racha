@@ -29,6 +29,8 @@ async function readResponse(response) {
     if(message.includes('CORRECTION_REASON_REQUIRED')) throw new ApiError(400,'CORRECTION_REASON_REQUIRED','Escribe el motivo de la corrección.');
     if(message.includes('INVALID_DAILY_OPERATION')||message.includes('INVALID_OPERATION_TIME')) throw new ApiError(400,'INVALID_DAILY_OPERATION','Los datos o la fecha del registro diario no son válidos.');
     if(message.includes('STAFF_REQUIRED')) throw new ApiError(403,'STAFF_REQUIRED','Esta cuenta necesita rol ADMIN o SELLER.');
+    if(message.includes('DEVICE_REVOKED')) throw new ApiError(403,'DEVICE_REVOKED','El dispositivo perdió autorización para avisos.');
+    if(message.includes('TOKEN_IN_USE')) throw new ApiError(409,'TOKEN_IN_USE','Este registro FCM está vinculado a otra cuenta activa.');
     if(message.includes('INVENTORY_COUNT_REQUIRED')) throw new ApiError(409,'INVENTORY_COUNT_REQUIRED','Falta un conteo físico inicial de este sabor. Regístralo en el Dashboard antes de reintentar; no se presume que las existencias eran cero.');
     if (message.includes('IDEMPOTENCY_CONFLICT')) throw new ApiError(409, 'IDEMPOTENCY_CONFLICT', 'La clave de idempotencia ya fue usada con otros datos.');
     if (message.includes('ADMIN_REQUIRED')) throw new ApiError(403, 'ADMIN_REQUIRED', 'La cuenta no tiene permisos administrativos.');
@@ -42,6 +44,7 @@ async function readResponse(response) {
     if (message.includes('OUT_OF_STOCK')) throw new ApiError(409, 'OUT_OF_STOCK', 'Este sabor no está disponible.');
     if (message.includes('INVENTORY_CONFLICT')) throw new ApiError(409, 'INVENTORY_CONFLICT', 'El inventario cambió en otro dispositivo. Actualiza y revisa el conteo antes de guardar.');
     if (message.includes('PAYMENT_REQUIRED')) throw new ApiError(409, 'PAYMENT_REQUIRED', 'Confirma el pago recibido antes de completar la entrega.');
+    if (message.includes('PAYMENT_METHOD_CONFLICT')) throw new ApiError(409,'PAYMENT_METHOD_CONFLICT','El pedido ya tiene un pago confirmado por otro método. Actualiza y no vuelvas a cobrar.');
     if (message.includes('INVALID_TRANSITION')) throw new ApiError(409, 'INVALID_TRANSITION', 'La transición de estado no está permitida.');
     if (message.includes('ORDER_NOT_FOUND')) throw new ApiError(404, 'ORDER_NOT_FOUND', 'No se encontró el pedido.');
     if (message.includes('REDEMPTION_NOT_FOUND')) throw new ApiError(404, 'REDEMPTION_NOT_FOUND', 'No se encontró el canje.');
