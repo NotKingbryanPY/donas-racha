@@ -10,6 +10,8 @@ Implementado: activos primero, badge/acceso desde Perfil, detalle privado enlaza
 
 Sin migración SQL ni cambio de secretos, Firebase o APK. La sesión cliente dr1 propia continúa detrás de API; no es Supabase Realtime. Son avisos del cliente dentro de la web; no Web Push ni garantía instantánea. FCM físico Android sigue pendiente por separado. Publicado y comprobado en www.dracha.store desde PR48/main23034c8, con CI y Vercel Production Ready. VALIDATION y el informe distinguen pruebas privadas con fixtures de la comprobación pública real.
 
+Ajuste visual posterior del 18 de octubre: `clientOrderView` (Ver confirmación) usa una tarjeta de ancho completo, icono/ayuda y foco visible, separada 14 px de la acción anterior y de altura mínima 76 px. Su nombre y descripción accesibles apuntan al diálogo nativo existente. CSS `customer-orders.css?v=2` renueva la caché. La apertura, visibilidad por pedido confirmado y recuperación de envíos no cambian. Ver UI_ANIMATIONS y VALIDATION.
+
 ## Arquitectura vigente
 
 Web HTML/CSS/JS y API CommonJS en Vercel; Supabase Auth/roles ADMIN y SELLER identifican al personal. Supabase PostgreSQL es la única autoridad comercial. Android2.1.1/código17, Kotlin/Views/Material, Room7 conserva donas.db y los registros anteriores; añade staff_order_cache por usuario a daily_outbox/daily_cache. DailyActivity abre Pedidos y conserva Hoy/Stock/Historial. DailyRepository y DailySyncWorker usan GET/POST /api/admin/customers/daily.

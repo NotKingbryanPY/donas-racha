@@ -1,5 +1,9 @@
 # Historial de decisiones y documentación
 
+## 2026-10-18 — acceso a la confirmación más visible
+
+El usuario mostró el botón Ver confirmación demasiado tenue y pegado a Confirmar pedido en iPad. Se ajustan solo HTML/CSS: tarjeta secundaria de ancho completo, recibo/ayuda, borde y foco visibles, altura mínima 76 px y separación 14 px. Nombre/descripción del control y relación con el diálogo nativo explícitos. `customer-orders.css?v=2` evita conservar el estilo anterior en caché. La recuperación pendiente recibe espacio/ancho propios. Regresión existente de pedidos y sintaxis PASS; inspección de navegador a360/768/1440 comprobó apertura con Enter y foco de3px. Sin cambios API, sesiones, pedidos, SQL o APK.
+
 ## 2026-10-18 — Drachas C y seguimiento del cliente implementados
 
 El usuario eligió C y autorizó aplicar el rebranding y Pedidos. Logo Dr/dona trazado, variantes ligeras, favicon/social y marca visible Drachas. Activos destacados, contador/perfil, detalle propietario enlazable, historial paginado y avisos15s visible/con activos; caché/generación/abort/backoff, dedupe y offline explícitos. customerRequest conserva HTTP status, rechazos conocidos liberan intento y timeout conserva payload/UUID. Recibo solo después de confirmar, contextual, detalles/pago/WhatsApp y animación1s reducida/única. Tutorial1 conserva progreso y solo restaura foco si estaba activo. Sin SQL, secretos, APK o flujos retirados. [Informe y validación](../DRACHAS_WEB_2026-10-18.md); CI/publicación se registran al verificarse.
