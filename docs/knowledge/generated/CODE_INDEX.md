@@ -2,7 +2,7 @@
 
 Generado por `python scripts/knowledge.py generate`. Nombres extraídos, sin contenido de credenciales ni datos.
 
-Commit fuente: `8819943e80a66cdd2fe2b57f18f487c6abe7d35a`; 470 archivos. El inventario incluye metadatos de recursos binarios, esquemas Room y SDK vendorizado; no interpreta su código generado.
+Commit fuente: `23034c88cc32688f99d664475f1361a4cc58d36e`; 470 archivos. El inventario incluye metadatos de recursos binarios, esquemas Room y SDK vendorizado; no interpreta su código generado.
 
 [Volver al mapa](../PROJECT_MAP.md)
 
@@ -1875,7 +1875,7 @@ Commit fuente: `8819943e80a66cdd2fe2b57f18f487c6abe7d35a`; 470 archivos. El inve
 
 ## docs/DRACHAS_WEB_2026-10-18.md
 
-[docs/DRACHAS_WEB_2026-10-18.md:L1](../../../docs/DRACHAS_WEB_2026-10-18.md#L1) · 66 líneas · SHA-256 `ceec2c8502aa`
+[docs/DRACHAS_WEB_2026-10-18.md:L1](../../../docs/DRACHAS_WEB_2026-10-18.md#L1) · 74 líneas · SHA-256 `b8bf31c334f9`
 
 ## docs/FIRESTORE_RULES_REVIEW.md
 

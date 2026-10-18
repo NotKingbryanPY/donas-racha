@@ -63,4 +63,12 @@ Regresiones: integración de pedido360/768/1440, navegación, tutorial320/390/12
 
 Capturas en test-output/drachas son fixtures ilustrativos, no pedidos reales. Las pruebas locales/CI no equivalen a la recepción física de un cliente ni de FCM Android. No se usaron credenciales de cliente ni pedidos artificiales en producción. La comprobación pública del despliegue verificará nombre, recursos, endpoints públicos y rechazo anónimo de privados.
 
-Estado de la última ejecución, CI, PR y Production: pendiente de registrar después de completar los controles de esta entrega. No afirmar publicación o recorrido privado real a partir del build.
+## Publicación comprobada
+
+La [PR 48](https://github.com/NotKingbryanPY/donas-racha/pull/48) quedó integrada en main como `23034c88cc32688f99d664475f1361a4cc58d36e`. El commit probado `db18b9033dd764aa18a79beba8e533492c44a8de` pasó [API, nueve suites SQL aisladas, navegador y concurrencia PostgreSQL](https://github.com/NotKingbryanPY/donas-racha/actions/runs/39101326688), además de [conocimiento y sus ocho pruebas](https://github.com/NotKingbryanPY/donas-racha/actions/runs/39101326675). La regresión 401/reintento también pasó en los tres tamaños nuevos. Los datos SQL de esos controles son aislados; no ejecutaron migraciones en producción.
+
+Vercel CLI confirmó `dpl_7p5YzwzyG9CWXzaaZatKQ9VqkMH4`, target Production, estado Ready y alias www.dracha.store/dracha.store. La vista previa `dpl_2gh26MbGQzDgkssNa4Azzg2DUdov` también estaba Ready, protegida por login Vercel; no se confundió su página de acceso con una prueba de la aplicación.
+
+El 18 de octubre se comprobó [la web pública](https://www.dracha.store/): HTML con título Drachas y seguimiento, 12 recursos nuevos/actualizados con respuesta 200 y SHA-256 idéntico al repositorio (texto normalizado a LF), catálogo e inventario 200. Pedidos del cliente, detalle y pedidos administrativos devolvieron 401 sin credenciales. Navegador real en 390 y 1440 px: logo cargado, sin desbordamiento horizontal, acceso al formulario de perfil y cero errores de página. Capturas públicas y resultado del control de solo lectura en `test-output/drachas`, ignorado por Git.
+
+La portada pública fue comprobada contra Production. El recorrido privado completo, los avisos con datos del cliente real y las notificaciones FCM del teléfono continúan requiriendo validación de sus usuarios; no se afirman a partir del despliegue. El trabajo no creó pedidos, cambió stock, ejecutó SQL ni modificó credenciales en producción.

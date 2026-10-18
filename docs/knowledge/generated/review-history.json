@@ -1003,5 +1003,19 @@
       "scripts/build-brand-assets.cjs"
     ],
     "note": "Drachas C y seguimiento privado revisados: 17 suites API/contratos y 8 browser PASS; 401/reintento y foco tardío comprobados. Maestro SVG y derivados reproducibles sin fuentes; reglas de espacios aplicadas al generador. Auth/FCM dependientes sin cambio funcional. Producción aún pendiente."
+  },
+  {
+    "date": "2026-10-18T00:43:53-05:00",
+    "commit": "23034c88cc32688f99d664475f1361a4cc58d36e",
+    "areas": [
+      "api",
+      "firebase",
+      "operations",
+      "web"
+    ],
+    "changed_files": [
+      "docs/DRACHAS_WEB_2026-10-18.md"
+    ],
+    "note": "Evidencia posterior revisada: PR48/main23034c8, Actions API/9 SQL/browser/concurrencia y conocimiento success; Vercel Production Ready y alias. HTTP público/hash de 12 recursos, catálogo/inventario200 y privados anónimos401; Chromium real390/1440 sin errores. Sin escritura/SQL/secretos ni recorrido privado de producción. Solo documentación actualizada."
   }
 ]

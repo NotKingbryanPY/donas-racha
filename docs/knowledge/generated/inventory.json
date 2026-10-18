@@ -1,5 +1,5 @@
 {
-  "source_commit": "8819943e80a66cdd2fe2b57f18f487c6abe7d35a",
+  "source_commit": "23034c88cc32688f99d664475f1361a4cc58d36e",
   "scope": "working tree; lexical extraction, production unverified",
   "schema_version": 1,
   "extractor_version": 4,
@@ -8361,8 +8361,8 @@
     },
     {
       "path": "docs/DRACHAS_WEB_2026-10-18.md",
-      "sha256": "ceec2c8502aa403f9fceae05a83d5de3bdfe1184172d9f9136ddee1034118f11",
-      "bytes": 8665,
+      "sha256": "b8bf31c334f9b1473fbf0ede2f1a96671508092dba5e34fb18ed9c38c0f2d935",
+      "bytes": 10362,
       "symbols": [],
       "imports": [],
       "rpc_calls": [],
@@ -8371,7 +8371,7 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 66
+      "lines": 74
     },
     {
       "path": "docs/FIRESTORE_RULES_REVIEW.md",
