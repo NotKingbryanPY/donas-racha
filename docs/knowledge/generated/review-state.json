@@ -1,6 +1,6 @@
 {
-  "date": "2026-10-18T00:37:45-05:00",
-  "commit": "8819943e80a66cdd2fe2b57f18f487c6abe7d35a",
+  "date": "2026-10-18T00:43:53-05:00",
+  "commit": "23034c88cc32688f99d664475f1361a4cc58d36e",
   "scope": "working tree, hashes de texto normalizados LF; binarios/vendor literales; sin verificación de producción",
   "areas": [
     "api",
@@ -8,7 +8,7 @@
     "operations",
     "web"
   ],
-  "note": "Drachas C y seguimiento privado revisados: 17 suites API/contratos y 8 browser PASS; 401/reintento y foco tardío comprobados. Maestro SVG y derivados reproducibles sin fuentes; reglas de espacios aplicadas al generador. Auth/FCM dependientes sin cambio funcional. Producción aún pendiente.",
+  "note": "Evidencia posterior revisada: PR48/main23034c8, Actions API/9 SQL/browser/concurrencia y conocimiento success; Vercel Production Ready y alias. HTTP público/hash de 12 recursos, catálogo/inventario200 y privados anónimos401; Chromium real390/1440 sin errores. Sin escritura/SQL/secretos ni recorrido privado de producción. Solo documentación actualizada.",
   "sources": {
     ".env.example": "371ff612d8993b57f436b4184eabb3eee9b2481de5aba7ae650f9f963a518958",
     ".firebaserc": "faad828777632be811ebfb2800358e7c0fb6ce6f6491e3139c2bcb2f3f92a842",
@@ -258,7 +258,7 @@
     "docs/DONAS_CONTROL_2_RESULTADOS.md": "46abb0b91661058f72983799d2a9be497097e45f9983e82c40a8e02affca4f81",
     "docs/DONAS_CONTROL_AVISOS_SEGUNDO_PLANO.md": "e1baf765a576f80073e13648da97678abec9ee51a3803bdfd329c2d99c3275f8",
     "docs/DRACHAS_REBRANDING_PROPUESTA.md": "354c7eb2667aafb6720bb8e8399ae8f3d72c87f4ef73d4d0795152ba03cf6aaa",
-    "docs/DRACHAS_WEB_2026-10-18.md": "ceec2c8502aa403f9fceae05a83d5de3bdfe1184172d9f9136ddee1034118f11",
+    "docs/DRACHAS_WEB_2026-10-18.md": "b8bf31c334f9b1473fbf0ede2f1a96671508092dba5e34fb18ed9c38c0f2d935",
     "docs/FIRESTORE_RULES_REVIEW.md": "55236467a32d01d32187542c8a05422fec156d115f72eadd6de2150633fc43ab",
     "docs/INTEGRACION_1_4_0.md": "d284820d3508c9d2755418754dfdf890b377ccff5afb960a747aea451fb77e2d",
     "docs/INTEGRACION_1_4_1.md": "49b74fd8d4b411af5adaae355cbfce430b82c45a975360e6584c16dde74c4727",
@@ -482,9 +482,9 @@
     "tests/web-script-syntax.cjs": "d4b6794fc2bf1ef85c0b6bbd6ec541e23e78b266a86303c10e254f86324c7219"
   },
   "documents": {
-    "docs/knowledge/AI_CONTEXT.md": "db82dc1ed1453212e0a7b4493987fd84f5f92a631f928e6d6a98055df24f21a4",
+    "docs/knowledge/AI_CONTEXT.md": "dcd8a464c068c9e4a79223b1d3d647cc3b10aac2a945fa0fb9d93a84693094c7",
     "docs/knowledge/ARCHITECTURE.md": "ddb0d6c3a4a4d38f5547c9b35abc52c8b13eeb599caa872e79c6b975f66310f0",
-    "docs/knowledge/CHANGELOG.md": "2d5431df21737797103ae4fe3880244e65dabb9d3c94a355a7d67143335ba159",
+    "docs/knowledge/CHANGELOG.md": "998533fcb1b9cca02f2d8754deaeba05f174429b1c37bb1be656a64d18959698",
     "docs/knowledge/DATABASE.md": "1d89288d71a81150c98552bf79ef4b96c2063e3fe64a282c94c4b864c42f0563",
     "docs/knowledge/DATA_FLOWS.md": "33f67d03911d321eca4fb414674a784475affc71b6e54d5810a8ff8f38467418",
     "docs/knowledge/DEPENDENCIES.md": "eaec661247d103b7285250e406385b1c6b4892aba8cd650d0f1835d75833bd08",
@@ -495,7 +495,7 @@
     "docs/knowledge/PROJECT_MAP.md": "b472730510881e13fe431ebf790a33a1c7b2237603ad0ff7fd45df27414375ab",
     "docs/knowledge/RUNBOOK.md": "516a60c97d624df97847922a4e8b3202de7c03410927e7d422609d7f0afa6f55",
     "docs/knowledge/UI_ANIMATIONS.md": "d65dcf347e91048deaed34f877749854046be8edbe7694fa7af01854fff18adf",
-    "docs/knowledge/VALIDATION.md": "2a83d7c40fdafe0d11c74c9b046000eda324762786909b177956315f57cd66ca",
+    "docs/knowledge/VALIDATION.md": "d42bfdca7d6f98789f88dc64eb02e053c32e2650df6954b39d83e693de2e5e55",
     "docs/knowledge/diagrams/01-system.md": "eebfef0144adf012165822f656479a35d4e49cfb97ec01de4a66939d3fd431c8",
     "docs/knowledge/diagrams/01-system.mmd": "280dce5ca32838a1b5203e19f8648a0f53939fddb585fcef85f105ef1bf8c583",
     "docs/knowledge/diagrams/02-orders.md": "baa07bbaa7779718739035e11db6c579e592ebd7504203668ccbef6b7a7014f1",
