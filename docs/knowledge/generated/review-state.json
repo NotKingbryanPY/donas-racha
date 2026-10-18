@@ -1,14 +1,12 @@
 {
-  "date": "2026-10-18T00:43:53-05:00",
-  "commit": "23034c88cc32688f99d664475f1361a4cc58d36e",
+  "date": "2026-10-18T01:38:15-05:00",
+  "commit": "83d46b25d9fce9cc9088989bfd32f625112d60b5",
   "scope": "working tree, hashes de texto normalizados LF; binarios/vendor literales; sin verificación de producción",
   "areas": [
-    "api",
-    "firebase",
     "operations",
     "web"
   ],
-  "note": "Evidencia posterior revisada: PR48/main23034c8, Actions API/9 SQL/browser/concurrencia y conocimiento success; Vercel Production Ready y alias. HTTP público/hash de 12 recursos, catálogo/inventario200 y privados anónimos401; Chromium real390/1440 sin errores. Sin escritura/SQL/secretos ni recorrido privado de producción. Solo documentación actualizada.",
+  "note": "Revisados HTML/CSS de Ver confirmación: ancho, separación, altura adaptable, nombre/ayuda, relación con diálogo y foco. Regresión existente pedidos y sintaxis PASS; inspección360/768/1440 con Enter/foco de3px y capturas. Contraste medido en los tres estados. Sin JS/API/SQL/credenciales; publicación se verificará en PR.",
   "sources": {
     ".env.example": "371ff612d8993b57f436b4184eabb3eee9b2481de5aba7ae650f9f963a518958",
     ".firebaserc": "faad828777632be811ebfb2800358e7c0fb6ce6f6491e3139c2bcb2f3f92a842",
@@ -198,7 +196,7 @@
     "apps-script/Phase5Migration.gs": "c094bdd02efc33d8372780f42609802516187673f7e9a71ca972b1e953949b4d",
     "apps-script/ReadOnlyCheck.gs": "aed49cc85e5523233cd5da5c7e5bee9da348fd7a24fcbca245b251cb4a20720f",
     "apps-script/appsscript.json": "a843ce78bce70bc84e53da01f558a686c4e87ba48ce07327a9daee644711cb24",
-    "assets/css/customer-orders.css": "a4fbefce49a191cb428325a1495dce77280a20b03a75fe72861c012d4a2ce644",
+    "assets/css/customer-orders.css": "bb17d13643d1b637ff2737aef691820b5b020910f8fee20b943f4ed729343c23",
     "assets/css/drachas-brand.css": "d621c0530021b47fb673adf4f38e431fbbc05088fbcbd4f7a960d796b3c8d5db",
     "assets/css/fonts.css": "6614ea2bb529c389a9f507543f3b369baff97755cb51d1dd82b8fa0b73bb7057",
     "assets/css/redesign.css": "53cf43b4c14e1896a79c6106f205547069dfad4fded4b832337452139cee9500",
@@ -294,7 +292,7 @@
     "firebase.json": "7e59251d14a062bea98e10d760be690349c8a3e21605dc3a83bc58ead53a5c5c",
     "firestore.indexes.json": "4c0b2a463a52aa28ec77497bf89e227f296dabe757bc4c0f2c8da5b23749b1aa",
     "firestore.rules": "102b2923505a9f5898f70edf510915818295e5128917d6d7aeac782b6d344f9d",
-    "index.html": "1521c4550f9b8e78237ea5b5de2bbaca824a78bee1088e2e148a73ce75324952",
+    "index.html": "c7d5a0c5980ce007efc653107c275f18e26624a79dccfad2d19ee80d2b8be353",
     "ios/.gitignore": "f80b29d5b615914d1dd06c8b34cef1046cecc91d3cca2d125acd5dfa7807080f",
     "ios/App/AppModel.swift": "7c437472e53d8ced56d9db45911da476c8f3de3689d86f13c1220caf5b3719f3",
     "ios/App/LocalStore.swift": "c09200ca46e24d82cc282fa2930f80426b7dc983e1af223294e9baba4b9e82ae",
@@ -482,9 +480,9 @@
     "tests/web-script-syntax.cjs": "d4b6794fc2bf1ef85c0b6bbd6ec541e23e78b266a86303c10e254f86324c7219"
   },
   "documents": {
-    "docs/knowledge/AI_CONTEXT.md": "dcd8a464c068c9e4a79223b1d3d647cc3b10aac2a945fa0fb9d93a84693094c7",
+    "docs/knowledge/AI_CONTEXT.md": "e8af0bd5c180043c6870c0037a31fde4677b367923fae329deae96b5f8441ceb",
     "docs/knowledge/ARCHITECTURE.md": "ddb0d6c3a4a4d38f5547c9b35abc52c8b13eeb599caa872e79c6b975f66310f0",
-    "docs/knowledge/CHANGELOG.md": "998533fcb1b9cca02f2d8754deaeba05f174429b1c37bb1be656a64d18959698",
+    "docs/knowledge/CHANGELOG.md": "ebd9af5c29129ca72b669a4ba717e46cf3e6204756f7610a1d418d04752a7957",
     "docs/knowledge/DATABASE.md": "1d89288d71a81150c98552bf79ef4b96c2063e3fe64a282c94c4b864c42f0563",
     "docs/knowledge/DATA_FLOWS.md": "33f67d03911d321eca4fb414674a784475affc71b6e54d5810a8ff8f38467418",
     "docs/knowledge/DEPENDENCIES.md": "eaec661247d103b7285250e406385b1c6b4892aba8cd650d0f1835d75833bd08",
@@ -494,8 +492,8 @@
     "docs/knowledge/OPEN_ISSUES.md": "7b676e7cd269c7ea33383f4340e2536ddac7a065018c747bdc63fc05b6f4a3dc",
     "docs/knowledge/PROJECT_MAP.md": "b472730510881e13fe431ebf790a33a1c7b2237603ad0ff7fd45df27414375ab",
     "docs/knowledge/RUNBOOK.md": "516a60c97d624df97847922a4e8b3202de7c03410927e7d422609d7f0afa6f55",
-    "docs/knowledge/UI_ANIMATIONS.md": "d65dcf347e91048deaed34f877749854046be8edbe7694fa7af01854fff18adf",
-    "docs/knowledge/VALIDATION.md": "d42bfdca7d6f98789f88dc64eb02e053c32e2650df6954b39d83e693de2e5e55",
+    "docs/knowledge/UI_ANIMATIONS.md": "7559f4ca5428e5fc9238368f90ba638671bd7a211238da06481ab576962a7e42",
+    "docs/knowledge/VALIDATION.md": "01a4944343eac79c1af0720c207df1b538c9a08fff890b5dc533ec7f95fe5b9c",
     "docs/knowledge/diagrams/01-system.md": "eebfef0144adf012165822f656479a35d4e49cfb97ec01de4a66939d3fd431c8",
     "docs/knowledge/diagrams/01-system.mmd": "280dce5ca32838a1b5203e19f8648a0f53939fddb585fcef85f105ef1bf8c583",
     "docs/knowledge/diagrams/02-orders.md": "baa07bbaa7779718739035e11db6c579e592ebd7504203668ccbef6b7a7014f1",

@@ -118,7 +118,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
 </style>
 <link rel="stylesheet" href="assets/css/redesign.css?v=2.0.0">
 <link rel="stylesheet" href="assets/css/drachas-brand.css?v=1">
-<link rel="stylesheet" href="assets/css/customer-orders.css?v=1">
+<link rel="stylesheet" href="assets/css/customer-orders.css?v=2">
 </head>
 <body>
 
@@ -350,7 +350,12 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
         <label class="field-label" for="clientDeliveryNotes">Indicaciones (opcional)</label><input id="clientDeliveryNotes" class="field" maxlength="500" placeholder="Salón o referencia">
         <div class="payment-options"><label class="payment-option"><input type="radio" name="clientPayment" value="CASH" checked><span>💵 Efectivo al recibir</span></label><label class="payment-option"><input type="radio" name="clientPayment" value="YAPPY"><span>📱 Yappy al recibir</span></label></div>
         <button id="clientOrderButton" class="btn btn-primary" style="width:100%;margin-top:16px" onclick="submitClientOrder()">Confirmar pedido</button>
-        <button id="clientOrderRetry" class="btn btn-outline" hidden onclick="submitClientOrder()">Recuperar envío pendiente</button><button id="clientOrderView" class="btn btn-outline" hidden>Ver confirmación</button>
+        <button id="clientOrderRetry" class="btn btn-outline" hidden onclick="submitClientOrder()">Recuperar envío pendiente</button>
+        <button id="clientOrderView" type="button" class="customer-receipt-button" hidden aria-haspopup="dialog" aria-controls="clientOrderConfirmation" aria-labelledby="clientOrderViewLabel" aria-describedby="clientOrderViewHint">
+          <span class="customer-receipt-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3Z"/><path d="M9 7h6M9 11h6M9 15h3"/></svg></span>
+          <span class="customer-receipt-copy"><strong id="clientOrderViewLabel">Ver confirmación</strong><small id="clientOrderViewHint">Detalles y estado del último pedido</small></span>
+          <svg class="customer-receipt-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>
+        </button>
         <p id="clientOrderMessage" class="muted" role="status" style="margin-top:12px"></p>
       </div>
     </div>
