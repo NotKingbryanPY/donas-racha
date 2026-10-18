@@ -2,7 +2,7 @@
 
 Generado por `python scripts/knowledge.py generate`. Nombres extraídos, sin contenido de credenciales ni datos.
 
-Commit fuente: `60742525d4bff3ba14c8e5dec74483273c8e2c55`; 446 archivos. El inventario incluye metadatos de recursos binarios, esquemas Room y SDK vendorizado; no interpreta su código generado.
+Commit fuente: `8819943e80a66cdd2fe2b57f18f487c6abe7d35a`; 470 archivos. El inventario incluye metadatos de recursos binarios, esquemas Room y SDK vendorizado; no interpreta su código generado.
 
 [Volver al mapa](../PROJECT_MAP.md)
 
@@ -28,7 +28,7 @@ Commit fuente: `60742525d4bff3ba14c8e5dec74483273c8e2c55`; 446 archivos. El inve
 
 ## .github/workflows/mobile-contracts.yml
 
-[.github/workflows/mobile-contracts.yml:L1](../../../.github/workflows/mobile-contracts.yml#L1) · 105 líneas · SHA-256 `a526181ee7c7`
+[.github/workflows/mobile-contracts.yml:L1](../../../.github/workflows/mobile-contracts.yml#L1) · 111 líneas · SHA-256 `6e358a5de8b6`
 
 ## .gitignore
 
@@ -100,7 +100,7 @@ Commit fuente: `60742525d4bff3ba14c8e5dec74483273c8e2c55`; 446 archivos. El inve
 
 ## admin-claims.html
 
-[admin-claims.html:L1](../../../admin-claims.html#L1) · 48 líneas · SHA-256 `e46c584d0a99`
+[admin-claims.html:L1](../../../admin-claims.html#L1) · 48 líneas · SHA-256 `ac1e06c59ff8`
 
 - `function api` — [admin-claims.html:L16](../../../admin-claims.html#L16)
 
@@ -1300,7 +1300,7 @@ Commit fuente: `60742525d4bff3ba14c8e5dec74483273c8e2c55`; 446 archivos. El inve
 
 ## api/_lib/customer_handlers/orders.js
 
-[api/_lib/customer_handlers/orders.js:L1](../../../api/_lib/customer_handlers/orders.js#L1) · 16 líneas · SHA-256 `3e1c22efd33a`
+[api/_lib/customer_handlers/orders.js:L1](../../../api/_lib/customer_handlers/orders.js#L1) · 31 líneas · SHA-256 `805b7c3285ef`
 
 ## api/_lib/customer_handlers/password.js
 
@@ -1361,13 +1361,13 @@ Commit fuente: `60742525d4bff3ba14c8e5dec74483273c8e2c55`; 446 archivos. El inve
 
 ## api/_lib/supabase.js
 
-[api/_lib/supabase.js:L1](../../../api/_lib/supabase.js#L1) · 107 líneas · SHA-256 `f7d4320937ac`
+[api/_lib/supabase.js:L1](../../../api/_lib/supabase.js#L1) · 109 líneas · SHA-256 `af275e77de74`
 
 - `function getConfig` — [api/_lib/supabase.js:L4](../../../api/_lib/supabase.js#L4)
 - `function readResponse` — [api/_lib/supabase.js:L16](../../../api/_lib/supabase.js#L16)
-- `function serviceRequest` — [api/_lib/supabase.js:L76](../../../api/_lib/supabase.js#L76)
-- `function rpc` — [api/_lib/supabase.js:L93](../../../api/_lib/supabase.js#L93)
-- `function userRpc` — [api/_lib/supabase.js:L97](../../../api/_lib/supabase.js#L97)
+- `function serviceRequest` — [api/_lib/supabase.js:L78](../../../api/_lib/supabase.js#L78)
+- `function rpc` — [api/_lib/supabase.js:L95](../../../api/_lib/supabase.js#L95)
+- `function userRpc` — [api/_lib/supabase.js:L99](../../../api/_lib/supabase.js#L99)
 
 ## api/_lib/validation.js
 
@@ -1426,7 +1426,7 @@ Commit fuente: `60742525d4bff3ba14c8e5dec74483273c8e2c55`; 446 archivos. El inve
 
 ## api/orders/[publicCode].js
 
-[api/orders/[publicCode].js:L1](../../../api/orders/[publicCode].js#L1) · 23 líneas · SHA-256 `f5301847c433`
+[api/orders/[publicCode].js:L1](../../../api/orders/[publicCode].js#L1) · 23 líneas · SHA-256 `f80bd4d29bf6`
 
 ## api/orders/index.js
 
@@ -1545,6 +1545,14 @@ Commit fuente: `60742525d4bff3ba14c8e5dec74483273c8e2c55`; 446 archivos. El inve
 
 [apps-script/appsscript.json:L1](../../../apps-script/appsscript.json#L1) · 10 líneas · SHA-256 `a843ce78bce7`
 
+## assets/css/customer-orders.css
+
+[assets/css/customer-orders.css:L1](../../../assets/css/customer-orders.css#L1) · 25 líneas · SHA-256 `a4fbefce49a1`
+
+## assets/css/drachas-brand.css
+
+[assets/css/drachas-brand.css:L1](../../../assets/css/drachas-brand.css#L1) · 13 líneas · SHA-256 `d621c0530021`
+
 ## assets/css/fonts.css
 
 [assets/css/fonts.css:L1](../../../assets/css/fonts.css#L1) · 8 líneas · SHA-256 `6614ea2bb529`
@@ -1588,6 +1596,50 @@ Commit fuente: `60742525d4bff3ba14c8e5dec74483273c8e2c55`; 446 archivos. El inve
 ## assets/images/donut-stack.webp
 
 [assets/images/donut-stack.webp:L1](../../../assets/images/donut-stack.webp#L1) · binario/generado líneas · SHA-256 `447c5d303aa0`
+
+## assets/images/drachas-icon-180.png
+
+[assets/images/drachas-icon-180.png:L1](../../../assets/images/drachas-icon-180.png#L1) · binario/generado líneas · SHA-256 `8631b52b657e`
+
+## assets/images/drachas-icon-32.png
+
+[assets/images/drachas-icon-32.png:L1](../../../assets/images/drachas-icon-32.png#L1) · binario/generado líneas · SHA-256 `9d0db09557f2`
+
+## assets/images/drachas-icon.svg
+
+[assets/images/drachas-icon.svg:L1](../../../assets/images/drachas-icon.svg#L1) · binario/generado líneas · SHA-256 `510e85f5e94d`
+
+## assets/images/drachas-logo-dark.svg
+
+[assets/images/drachas-logo-dark.svg:L1](../../../assets/images/drachas-logo-dark.svg#L1) · binario/generado líneas · SHA-256 `7f6cdae2d1d5`
+
+## assets/images/drachas-logo-mono.svg
+
+[assets/images/drachas-logo-mono.svg:L1](../../../assets/images/drachas-logo-mono.svg#L1) · binario/generado líneas · SHA-256 `f9c58674ec0c`
+
+## assets/images/drachas-logo.png
+
+[assets/images/drachas-logo.png:L1](../../../assets/images/drachas-logo.png#L1) · binario/generado líneas · SHA-256 `febbdbef3efa`
+
+## assets/images/drachas-logo.svg
+
+[assets/images/drachas-logo.svg:L1](../../../assets/images/drachas-logo.svg#L1) · binario/generado líneas · SHA-256 `7e450debda8e`
+
+## assets/images/drachas-social.png
+
+[assets/images/drachas-social.png:L1](../../../assets/images/drachas-social.png#L1) · binario/generado líneas · SHA-256 `899f9ff5d539`
+
+## assets/images/drachas-symbol.png
+
+[assets/images/drachas-symbol.png:L1](../../../assets/images/drachas-symbol.png#L1) · binario/generado líneas · SHA-256 `03248b1eb2f7`
+
+## assets/images/drachas-symbol.svg
+
+[assets/images/drachas-symbol.svg:L1](../../../assets/images/drachas-symbol.svg#L1) · binario/generado líneas · SHA-256 `ac69ef3f7eaf`
+
+## assets/images/drachas-word.svg
+
+[assets/images/drachas-word.svg:L1](../../../assets/images/drachas-word.svg#L1) · binario/generado líneas · SHA-256 `97f6ca544c77`
 
 ## assets/images/utp-original.png
 
@@ -1645,7 +1697,7 @@ Commit fuente: `60742525d4bff3ba14c8e5dec74483273c8e2c55`; 446 archivos. El inve
 
 ## assets/js/client-tour.js
 
-[assets/js/client-tour.js:L1](../../../assets/js/client-tour.js#L1) · 250 líneas · SHA-256 `8d95b201dbf0`
+[assets/js/client-tour.js:L1](../../../assets/js/client-tour.js#L1) · 253 líneas · SHA-256 `1209ab44dff2`
 
 - `function request` — [assets/js/client-tour.js:L29](../../../assets/js/client-tour.js#L29)
 - `function save` — [assets/js/client-tour.js:L44](../../../assets/js/client-tour.js#L44)
@@ -1663,7 +1715,31 @@ Commit fuente: `60742525d4bff3ba14c8e5dec74483273c8e2c55`; 446 archivos. El inve
 - `function attachListeners` — [assets/js/client-tour.js:L219](../../../assets/js/client-tour.js#L219)
 - `function clearLayer` — [assets/js/client-tour.js:L225](../../../assets/js/client-tour.js#L225)
 - `function stop` — [assets/js/client-tour.js:L234](../../../assets/js/client-tour.js#L234)
-- `function finish` — [assets/js/client-tour.js:L241](../../../assets/js/client-tour.js#L241)
+- `function finish` — [assets/js/client-tour.js:L244](../../../assets/js/client-tour.js#L244)
+
+## assets/js/customer-orders.js
+
+[assets/js/customer-orders.js:L1](../../../assets/js/customer-orders.js#L1) · 174 líneas · SHA-256 `b8bd160ea8c6`
+
+- `function readSeen` — [assets/js/customer-orders.js:L18](../../../assets/js/customer-orders.js#L18)
+- `function recordSeen` — [assets/js/customer-orders.js:L19](../../../assets/js/customer-orders.js#L19)
+- `function money` — [assets/js/customer-orders.js:L24](../../../assets/js/customer-orders.js#L24)
+- `function payment` — [assets/js/customer-orders.js:L25](../../../assets/js/customer-orders.js#L25)
+- `function copy` — [assets/js/customer-orders.js:L33](../../../assets/js/customer-orders.js#L33)
+- `function timeline` — [assets/js/customer-orders.js:L40](../../../assets/js/customer-orders.js#L40)
+- `function whatsapp` — [assets/js/customer-orders.js:L45](../../../assets/js/customer-orders.js#L45)
+- `function card` — [assets/js/customer-orders.js:L46](../../../assets/js/customer-orders.js#L46)
+- `function remember` — [assets/js/customer-orders.js:L55](../../../assets/js/customer-orders.js#L55)
+- `function health` — [assets/js/customer-orders.js:L64](../../../assets/js/customer-orders.js#L64)
+- `function offline` — [assets/js/customer-orders.js:L65](../../../assets/js/customer-orders.js#L65)
+- `function render` — [assets/js/customer-orders.js:L66](../../../assets/js/customer-orders.js#L66)
+- `function announce` — [assets/js/customer-orders.js:L86](../../../assets/js/customer-orders.js#L86)
+- `function schedule` — [assets/js/customer-orders.js:L96](../../../assets/js/customer-orders.js#L96)
+- `function refresh` — [assets/js/customer-orders.js:L102](../../../assets/js/customer-orders.js#L102)
+- `function syncLink` — [assets/js/customer-orders.js:L146](../../../assets/js/customer-orders.js#L146)
+- `function stop` — [assets/js/customer-orders.js:L152](../../../assets/js/customer-orders.js#L152)
+- `function start` — [assets/js/customer-orders.js:L159](../../../assets/js/customer-orders.js#L159)
+- `function onView` — [assets/js/customer-orders.js:L164](../../../assets/js/customer-orders.js#L164)
 
 ## assets/js/daily-business.js
 
@@ -1677,7 +1753,7 @@ Commit fuente: `60742525d4bff3ba14c8e5dec74483273c8e2c55`; 446 archivos. El inve
 
 ## assets/js/motion.js
 
-[assets/js/motion.js:L1](../../../assets/js/motion.js#L1) · 251 líneas · SHA-256 `6f051294a8e3`
+[assets/js/motion.js:L1](../../../assets/js/motion.js#L1) · 251 líneas · SHA-256 `985341dcdbee`
 
 - `function customerWelcome` — [assets/js/motion.js:L17](../../../assets/js/motion.js#L17)
 - `function discover` — [assets/js/motion.js:L107](../../../assets/js/motion.js#L107)
@@ -1686,13 +1762,17 @@ Commit fuente: `60742525d4bff3ba14c8e5dec74483273c8e2c55`; 446 archivos. El inve
 
 ## assets/js/order-confirmation.js
 
-[assets/js/order-confirmation.js:L1](../../../assets/js/order-confirmation.js#L1) · 38 líneas · SHA-256 `75ba52d475bb`
+[assets/js/order-confirmation.js:L1](../../../assets/js/order-confirmation.js#L1) · 86 líneas · SHA-256 `8ffa572bff35`
 
-- `function read` — [assets/js/order-confirmation.js:L4](../../../assets/js/order-confirmation.js#L4)
-- `function write` — [assets/js/order-confirmation.js:L5](../../../assets/js/order-confirmation.js#L5)
-- `function lock` — [assets/js/order-confirmation.js:L6](../../../assets/js/order-confirmation.js#L6)
-- `function show` — [assets/js/order-confirmation.js:L10](../../../assets/js/order-confirmation.js#L10)
-- `function restore` — [assets/js/order-confirmation.js:L19](../../../assets/js/order-confirmation.js#L19)
+- `function read` — [assets/js/order-confirmation.js:L8](../../../assets/js/order-confirmation.js#L8)
+- `function write` — [assets/js/order-confirmation.js:L9](../../../assets/js/order-confirmation.js#L9)
+- `function lock` — [assets/js/order-confirmation.js:L10](../../../assets/js/order-confirmation.js#L10)
+- `function render` — [assets/js/order-confirmation.js:L11](../../../assets/js/order-confirmation.js#L11)
+- `function detail` — [assets/js/order-confirmation.js:L31](../../../assets/js/order-confirmation.js#L31)
+- `function show` — [assets/js/order-confirmation.js:L50](../../../assets/js/order-confirmation.js#L50)
+- `function open` — [assets/js/order-confirmation.js:L58](../../../assets/js/order-confirmation.js#L58)
+- `function restore` — [assets/js/order-confirmation.js:L66](../../../assets/js/order-confirmation.js#L66)
+- `function reset` — [assets/js/order-confirmation.js:L72](../../../assets/js/order-confirmation.js#L72)
 
 ## assets/js/shared-inventory-refresh.js
 
@@ -1715,7 +1795,7 @@ Commit fuente: `60742525d4bff3ba14c8e5dec74483273c8e2c55`; 446 archivos. El inve
 
 ## customer.html
 
-[customer.html:L1](../../../customer.html#L1) · 8 líneas · SHA-256 `44a95f73802f`
+[customer.html:L1](../../../customer.html#L1) · 8 líneas · SHA-256 `2f74383c8d96`
 
 ## docs/ACTIVACION_2026-10-08.md
 
@@ -1789,6 +1869,14 @@ Commit fuente: `60742525d4bff3ba14c8e5dec74483273c8e2c55`; 446 archivos. El inve
 
 [docs/DONAS_CONTROL_AVISOS_SEGUNDO_PLANO.md:L1](../../../docs/DONAS_CONTROL_AVISOS_SEGUNDO_PLANO.md#L1) · 31 líneas · SHA-256 `e1baf765a576`
 
+## docs/DRACHAS_REBRANDING_PROPUESTA.md
+
+[docs/DRACHAS_REBRANDING_PROPUESTA.md:L1](../../../docs/DRACHAS_REBRANDING_PROPUESTA.md#L1) · 84 líneas · SHA-256 `354c7eb2667a`
+
+## docs/DRACHAS_WEB_2026-10-18.md
+
+[docs/DRACHAS_WEB_2026-10-18.md:L1](../../../docs/DRACHAS_WEB_2026-10-18.md#L1) · 66 líneas · SHA-256 `ceec2c8502aa`
+
 ## docs/FIRESTORE_RULES_REVIEW.md
 
 [docs/FIRESTORE_RULES_REVIEW.md:L1](../../../docs/FIRESTORE_RULES_REVIEW.md#L1) · 34 líneas · SHA-256 `55236467a32d`
@@ -1816,6 +1904,10 @@ Commit fuente: `60742525d4bff3ba14c8e5dec74483273c8e2c55`; 446 archivos. El inve
 ## docs/NOTIFICACIONES_1_4_2.md
 
 [docs/NOTIFICACIONES_1_4_2.md:L1](../../../docs/NOTIFICACIONES_1_4_2.md#L1) · 49 líneas · SHA-256 `bdc8e29c3dcc`
+
+## docs/PEDIDOS_WEB_PROPUESTA_2026-10-17.md
+
+[docs/PEDIDOS_WEB_PROPUESTA_2026-10-17.md:L1](../../../docs/PEDIDOS_WEB_PROPUESTA_2026-10-17.md#L1) · 130 líneas · SHA-256 `685269cdb739`
 
 ## docs/PROFILE_MOTION_2026-09-27.md
 
@@ -1881,6 +1973,22 @@ Commit fuente: `60742525d4bff3ba14c8e5dec74483273c8e2c55`; 446 archivos. El inve
 
 [docs/previews/donas-control-2-concept.png:L1](../../../docs/previews/donas-control-2-concept.png#L1) · binario/generado líneas · SHA-256 `54454d7d8549`
 
+## docs/previews/drachas/concepto-a-r-glaseada.png
+
+[docs/previews/drachas/concepto-a-r-glaseada.png:L1](../../../docs/previews/drachas/concepto-a-r-glaseada.png#L1) · binario/generado líneas · SHA-256 `95199a67a24e`
+
+## docs/previews/drachas/concepto-b-monograma-dr.png
+
+[docs/previews/drachas/concepto-b-monograma-dr.png:L1](../../../docs/previews/drachas/concepto-b-monograma-dr.png#L1) · binario/generado líneas · SHA-256 `5c4092dabc7a`
+
+## docs/previews/drachas/concepto-c-dona-tipografica.png
+
+[docs/previews/drachas/concepto-c-dona-tipografica.png:L1](../../../docs/previews/drachas/concepto-c-dona-tipografica.png#L1) · binario/generado líneas · SHA-256 `dfe16cba5a31`
+
+## docs/previews/drachas/prompts.json
+
+[docs/previews/drachas/prompts.json:L1](../../../docs/previews/drachas/prompts.json#L1) · 19 líneas · SHA-256 `a80add793d62`
+
 ## docs/previews/landing-1440.webp
 
 [docs/previews/landing-1440.webp:L1](../../../docs/previews/landing-1440.webp#L1) · binario/generado líneas · SHA-256 `b20e3850c59e`
@@ -1921,99 +2029,100 @@ Commit fuente: `60742525d4bff3ba14c8e5dec74483273c8e2c55`; 446 archivos. El inve
 
 ## index.html
 
-[index.html:L1](../../../index.html#L1) · 1670 líneas · SHA-256 `f42e8171ff64`
+[index.html:L1](../../../index.html#L1) · 1748 líneas · SHA-256 `1521c4550f9b`
 
-- `function customerViewFromUrl` — [index.html:L521](../../../index.html#L521)
-- `function updateCustomerViewUrl` — [index.html:L525](../../../index.html#L525)
-- `function clearCustomerViewUrl` — [index.html:L535](../../../index.html#L535)
-- `function updateStaffViewUrl` — [index.html:L541](../../../index.html#L541)
-- `function clearStaffViewUrl` — [index.html:L550](../../../index.html#L550)
-- `function restoreStaffView` — [index.html:L555](../../../index.html#L555)
-- `function openInfoModal` — [index.html:L628](../../../index.html#L628)
-- `function closeInfoModal` — [index.html:L635](../../../index.html#L635)
-- `function api` — [index.html:L642](../../../index.html#L642)
-- `function backendRequest` — [index.html:L647](../../../index.html#L647)
-- `function vercelApi` — [index.html:L676](../../../index.html#L676)
-- `function vercelPost` — [index.html:L693](../../../index.html#L693)
-- `function progressiveRanking` — [index.html:L704](../../../index.html#L704)
-- `function preloadSupabaseProducts` — [index.html:L710](../../../index.html#L710)
-- `function flattenCatalog` — [index.html:L720](../../../index.html#L720)
-- `function flavorTone` — [index.html:L729](../../../index.html#L729)
-- `function formatMoney` — [index.html:L737](../../../index.html#L737)
-- `function renderPublicCatalog` — [index.html:L743](../../../index.html#L743)
-- `function beginCustomerOrder` — [index.html:L775](../../../index.html#L775)
-- `function customerRequest` — [index.html:L780](../../../index.html#L780)
-- `function apiPost` — [index.html:L795](../../../index.html#L795)
-- `function hideOverlays` — [index.html:L799](../../../index.html#L799)
-- `function goToRoleScreen` — [index.html:L806](../../../index.html#L806)
-- `function goToAdminLogin` — [index.html:L815](../../../index.html#L815)
-- `function goToUserLogin` — [index.html:L823](../../../index.html#L823)
-- `function checkLogin` — [index.html:L834](../../../index.html#L834)
-- `function logout` — [index.html:L859](../../../index.html#L859)
-- `function requireAuth` — [index.html:L870](../../../index.html#L870)
-- `function tryShowAdmin` — [index.html:L871](../../../index.html#L871)
-- `function showScreen` — [index.html:L873](../../../index.html#L873)
-- `function goHome` — [index.html:L887](../../../index.html#L887)
-- `function rankingBack` — [index.html:L894](../../../index.html#L894)
-- `function clientGoBack` — [index.html:L895](../../../index.html#L895)
-- `function loadHomeRanking` — [index.html:L908](../../../index.html#L908)
-- `function doSearch` — [index.html:L916](../../../index.html#L916)
-- `function openUserById` — [index.html:L931](../../../index.html#L931)
-- `function resetCustomerLoginState` — [index.html:L937](../../../index.html#L937)
-- `function cancelCustomerLogin` — [index.html:L945](../../../index.html#L945)
-- `function loginCustomerById` — [index.html:L950](../../../index.html#L950)
-- `function openClient` — [index.html:L1010](../../../index.html#L1010)
-- `function renderClient` — [index.html:L1039](../../../index.html#L1039)
-- `function renderHitos` — [index.html:L1109](../../../index.html#L1109)
-- `function renderBadges` — [index.html:L1113](../../../index.html#L1113)
-- `function openProfilePanel` — [index.html:L1118](../../../index.html#L1118)
-- `function renderProfilePreview` — [index.html:L1123](../../../index.html#L1123)
-- `function renderHistory` — [index.html:L1137](../../../index.html#L1137)
-- `function setClientTab` — [index.html:L1144](../../../index.html#L1144)
-- `function loadClientDelivery` — [index.html:L1170](../../../index.html#L1170)
-- `function clientOrderStatus` — [index.html:L1197](../../../index.html#L1197)
-- `function renderClientFlavors` — [index.html:L1201](../../../index.html#L1201)
-- `function changeClientOrderQty` — [index.html:L1209](../../../index.html#L1209)
-- `function updateClientOrderTotal` — [index.html:L1227](../../../index.html#L1227)
-- `function submitClientOrder` — [index.html:L1234](../../../index.html#L1234)
-- `function saveCustomerPassword` — [index.html:L1267](../../../index.html#L1267)
-- `function showCustomerActivation` — [index.html:L1285](../../../index.html#L1285)
-- `function showCustomerRecovery` — [index.html:L1292](../../../index.html#L1292)
-- `function enterAfterPasswordSetup` — [index.html:L1299](../../../index.html#L1299)
-- `function completeCustomerActivation` — [index.html:L1311](../../../index.html#L1311)
-- `function completeCustomerRecovery` — [index.html:L1335](../../../index.html#L1335)
-- `function setClientRanking` — [index.html:L1354](../../../index.html#L1354)
-- `function loadClientInlineRanking` — [index.html:L1362](../../../index.html#L1362)
-- `function renderPointRules` — [index.html:L1378](../../../index.html#L1378)
-- `function renderShop` — [index.html:L1384](../../../index.html#L1384)
-- `function renderRedemptions` — [index.html:L1393](../../../index.html#L1393)
-- `function redeemItem` — [index.html:L1400](../../../index.html#L1400)
-- `function registerPurchase` — [index.html:L1420](../../../index.html#L1420)
-- `function createClient` — [index.html:L1456](../../../index.html#L1456)
-- `function shareNewUsername` — [index.html:L1479](../../../index.html#L1479)
-- `function sendNewWA` — [index.html:L1489](../../../index.html#L1489)
-- `function showPublicRanking` — [index.html:L1528](../../../index.html#L1528)
-- `function loadRanking` — [index.html:L1529](../../../index.html#L1529)
-- `function renderRankingItems` — [index.html:L1535](../../../index.html#L1535)
-- `function showAdmin` — [index.html:L1544](../../../index.html#L1544)
-- `function loadAdminDashboard` — [index.html:L1556](../../../index.html#L1556)
-- `function renderAdminStats` — [index.html:L1574](../../../index.html#L1574)
-- `function renderAdminConfig` — [index.html:L1586](../../../index.html#L1586)
-- `function renderAdminRanking` — [index.html:L1595](../../../index.html#L1595)
-- `function renderAdminClients` — [index.html:L1599](../../../index.html#L1599)
-- `function filterAdminClients` — [index.html:L1608](../../../index.html#L1608)
-- `function loadAdminStats` — [index.html:L1609](../../../index.html#L1609)
-- `function loadConfig` — [index.html:L1623](../../../index.html#L1623)
-- `function saveQuickConfig` — [index.html:L1626](../../../index.html#L1626)
-- `function loadAdminRanking` — [index.html:L1638](../../../index.html#L1638)
-- `function loadAdminClients` — [index.html:L1643](../../../index.html#L1643)
-- `function showToast` — [index.html:L1651](../../../index.html#L1651)
-- `function confettiBurst` — [index.html:L1652](../../../index.html#L1652)
-- `function fmtDate` — [index.html:L1653](../../../index.html#L1653)
-- `function fmtDateTime` — [index.html:L1654](../../../index.html#L1654)
-- `function initial` — [index.html:L1655](../../../index.html#L1655)
-- `function safe` — [index.html:L1656](../../../index.html#L1656)
-- `function esc` — [index.html:L1657](../../../index.html#L1657)
+- `function resetCustomerOrderForm` — [index.html:L538](../../../index.html#L538)
+- `function customerViewFromUrl` — [index.html:L550](../../../index.html#L550)
+- `function updateCustomerViewUrl` — [index.html:L554](../../../index.html#L554)
+- `function clearCustomerViewUrl` — [index.html:L565](../../../index.html#L565)
+- `function updateStaffViewUrl` — [index.html:L571](../../../index.html#L571)
+- `function clearStaffViewUrl` — [index.html:L580](../../../index.html#L580)
+- `function restoreStaffView` — [index.html:L585](../../../index.html#L585)
+- `function openInfoModal` — [index.html:L658](../../../index.html#L658)
+- `function closeInfoModal` — [index.html:L665](../../../index.html#L665)
+- `function api` — [index.html:L672](../../../index.html#L672)
+- `function backendRequest` — [index.html:L677](../../../index.html#L677)
+- `function vercelApi` — [index.html:L706](../../../index.html#L706)
+- `function vercelPost` — [index.html:L723](../../../index.html#L723)
+- `function progressiveRanking` — [index.html:L734](../../../index.html#L734)
+- `function preloadSupabaseProducts` — [index.html:L740](../../../index.html#L740)
+- `function flattenCatalog` — [index.html:L750](../../../index.html#L750)
+- `function flavorTone` — [index.html:L759](../../../index.html#L759)
+- `function formatMoney` — [index.html:L767](../../../index.html#L767)
+- `function renderPublicCatalog` — [index.html:L773](../../../index.html#L773)
+- `function beginCustomerOrder` — [index.html:L805](../../../index.html#L805)
+- `function customerRequest` — [index.html:L810](../../../index.html#L810)
+- `function apiPost` — [index.html:L846](../../../index.html#L846)
+- `function hideOverlays` — [index.html:L850](../../../index.html#L850)
+- `function goToRoleScreen` — [index.html:L857](../../../index.html#L857)
+- `function goToAdminLogin` — [index.html:L870](../../../index.html#L870)
+- `function goToUserLogin` — [index.html:L878](../../../index.html#L878)
+- `function checkLogin` — [index.html:L892](../../../index.html#L892)
+- `function logout` — [index.html:L917](../../../index.html#L917)
+- `function requireAuth` — [index.html:L928](../../../index.html#L928)
+- `function tryShowAdmin` — [index.html:L929](../../../index.html#L929)
+- `function showScreen` — [index.html:L931](../../../index.html#L931)
+- `function goHome` — [index.html:L946](../../../index.html#L946)
+- `function rankingBack` — [index.html:L953](../../../index.html#L953)
+- `function clientGoBack` — [index.html:L954](../../../index.html#L954)
+- `function loadHomeRanking` — [index.html:L967](../../../index.html#L967)
+- `function doSearch` — [index.html:L975](../../../index.html#L975)
+- `function openUserById` — [index.html:L990](../../../index.html#L990)
+- `function resetCustomerLoginState` — [index.html:L996](../../../index.html#L996)
+- `function cancelCustomerLogin` — [index.html:L1004](../../../index.html#L1004)
+- `function loginCustomerById` — [index.html:L1009](../../../index.html#L1009)
+- `function openClient` — [index.html:L1069](../../../index.html#L1069)
+- `function renderClient` — [index.html:L1100](../../../index.html#L1100)
+- `function renderHitos` — [index.html:L1172](../../../index.html#L1172)
+- `function renderBadges` — [index.html:L1176](../../../index.html#L1176)
+- `function openProfilePanel` — [index.html:L1181](../../../index.html#L1181)
+- `function renderProfilePreview` — [index.html:L1186](../../../index.html#L1186)
+- `function renderHistory` — [index.html:L1200](../../../index.html#L1200)
+- `function setClientTab` — [index.html:L1207](../../../index.html#L1207)
+- `function loadClientDelivery` — [index.html:L1234](../../../index.html#L1234)
+- `function clientOrderStatus` — [index.html:L1263](../../../index.html#L1263)
+- `function renderClientFlavors` — [index.html:L1267](../../../index.html#L1267)
+- `function changeClientOrderQty` — [index.html:L1275](../../../index.html#L1275)
+- `function updateClientOrderTotal` — [index.html:L1293](../../../index.html#L1293)
+- `function submitClientOrder` — [index.html:L1300](../../../index.html#L1300)
+- `function saveCustomerPassword` — [index.html:L1343](../../../index.html#L1343)
+- `function showCustomerActivation` — [index.html:L1362](../../../index.html#L1362)
+- `function showCustomerRecovery` — [index.html:L1369](../../../index.html#L1369)
+- `function enterAfterPasswordSetup` — [index.html:L1376](../../../index.html#L1376)
+- `function completeCustomerActivation` — [index.html:L1388](../../../index.html#L1388)
+- `function completeCustomerRecovery` — [index.html:L1412](../../../index.html#L1412)
+- `function setClientRanking` — [index.html:L1431](../../../index.html#L1431)
+- `function loadClientInlineRanking` — [index.html:L1439](../../../index.html#L1439)
+- `function renderPointRules` — [index.html:L1455](../../../index.html#L1455)
+- `function renderShop` — [index.html:L1461](../../../index.html#L1461)
+- `function renderRedemptions` — [index.html:L1470](../../../index.html#L1470)
+- `function redeemItem` — [index.html:L1477](../../../index.html#L1477)
+- `function registerPurchase` — [index.html:L1497](../../../index.html#L1497)
+- `function createClient` — [index.html:L1533](../../../index.html#L1533)
+- `function shareNewUsername` — [index.html:L1556](../../../index.html#L1556)
+- `function sendNewWA` — [index.html:L1566](../../../index.html#L1566)
+- `function showPublicRanking` — [index.html:L1605](../../../index.html#L1605)
+- `function loadRanking` — [index.html:L1606](../../../index.html#L1606)
+- `function renderRankingItems` — [index.html:L1612](../../../index.html#L1612)
+- `function showAdmin` — [index.html:L1621](../../../index.html#L1621)
+- `function loadAdminDashboard` — [index.html:L1633](../../../index.html#L1633)
+- `function renderAdminStats` — [index.html:L1651](../../../index.html#L1651)
+- `function renderAdminConfig` — [index.html:L1663](../../../index.html#L1663)
+- `function renderAdminRanking` — [index.html:L1672](../../../index.html#L1672)
+- `function renderAdminClients` — [index.html:L1676](../../../index.html#L1676)
+- `function filterAdminClients` — [index.html:L1685](../../../index.html#L1685)
+- `function loadAdminStats` — [index.html:L1686](../../../index.html#L1686)
+- `function loadConfig` — [index.html:L1700](../../../index.html#L1700)
+- `function saveQuickConfig` — [index.html:L1703](../../../index.html#L1703)
+- `function loadAdminRanking` — [index.html:L1715](../../../index.html#L1715)
+- `function loadAdminClients` — [index.html:L1720](../../../index.html#L1720)
+- `function showToast` — [index.html:L1728](../../../index.html#L1728)
+- `function confettiBurst` — [index.html:L1729](../../../index.html#L1729)
+- `function fmtDate` — [index.html:L1730](../../../index.html#L1730)
+- `function fmtDateTime` — [index.html:L1731](../../../index.html#L1731)
+- `function initial` — [index.html:L1732](../../../index.html#L1732)
+- `function safe` — [index.html:L1733](../../../index.html#L1733)
+- `function esc` — [index.html:L1734](../../../index.html#L1734)
 
 ## ios/.gitignore
 
@@ -2253,6 +2362,10 @@ Commit fuente: `60742525d4bff3ba14c8e5dec74483273c8e2c55`; 446 archivos. El inve
 ## scripts/build-android-official.ps1
 
 [scripts/build-android-official.ps1:L1](../../../scripts/build-android-official.ps1#L1) · 45 líneas · SHA-256 `c6e06553125c`
+
+## scripts/build-brand-assets.cjs
+
+[scripts/build-brand-assets.cjs:L1](../../../scripts/build-brand-assets.cjs#L1) · 20 líneas · SHA-256 `6bb3380ace74`
 
 ## scripts/build-catalog-sdk.mjs
 
@@ -2870,6 +2983,17 @@ Commit fuente: `60742525d4bff3ba14c8e5dec74483273c8e2c55`; 446 archivos. El inve
 
 [tests/customer-order-identity.cjs:L1](../../../tests/customer-order-identity.cjs#L1) · 54 líneas · SHA-256 `07f98553ef96`
 
+## tests/customer-order-tracking-api.cjs
+
+[tests/customer-order-tracking-api.cjs:L1](../../../tests/customer-order-tracking-api.cjs#L1) · 45 líneas · SHA-256 `6683020eee36`
+
+- `function response` — [tests/customer-order-tracking-api.cjs:L27](../../../tests/customer-order-tracking-api.cjs#L27)
+- `function invoke` — [tests/customer-order-tracking-api.cjs:L28](../../../tests/customer-order-tracking-api.cjs#L28)
+
+## tests/customer-order-tracking-web.cjs
+
+[tests/customer-order-tracking-web.cjs:L1](../../../tests/customer-order-tracking-web.cjs#L1) · 100 líneas · SHA-256 `bbf4560e7177`
+
 ## tests/customer-tour-motion.cjs
 
 [tests/customer-tour-motion.cjs:L1](../../../tests/customer-tour-motion.cjs#L1) · 80 líneas · SHA-256 `eee39b6fbc98`
@@ -3039,7 +3163,7 @@ Commit fuente: `60742525d4bff3ba14c8e5dec74483273c8e2c55`; 446 archivos. El inve
 
 ## tests/motion-interactions.cjs
 
-[tests/motion-interactions.cjs:L1](../../../tests/motion-interactions.cjs#L1) · 138 líneas · SHA-256 `0060ee8ff042`
+[tests/motion-interactions.cjs:L1](../../../tests/motion-interactions.cjs#L1) · 140 líneas · SHA-256 `32260b993f3f`
 
 ## tests/motion-preference.cjs
 

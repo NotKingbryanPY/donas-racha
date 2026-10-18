@@ -13,3 +13,7 @@ SDK config pública Firebase y firma oficial se verificaron mediante metadatos e
 ## Actualización2.1
 
 Android2.1.1/código17/Room7: mismo SDK/material/workmanager; el seguimiento del registro usa LiveData/WorkInfo existentes, sin añadir dependencias. FCM existente se activa con proyecto/app/certificado ya verificados. No nueva base Firebase ni servicios permanentes. API añade solo @vercel/functions3.10.1 para mantener tareas postrespuesta; continúa Node22/CommonJS y12 rutas, no otra función serverless. Spark se mantiene. Cron/pg_net/Vault son configuración Supabase separada; no Cloud Functions de pago.
+
+## Identidad y seguimiento Drachas
+
+Sin dependencias nuevas del runtime. SVG trazado sin fuentes externas; Nunito local del producto se conserva. build-brand-assets.cjs usa @resvg/resvg-js2.6.2 de desarrollo mediante RESVG_MODULE o módulo instalado, para PNG/favicon/social. No se empaqueta con la API. AbortController propio evita depender de AbortSignal.timeout en el navegador; Web Locks es mejora progresiva para dedupe, con fallback. Sin Firebase/FCM web nuevo.

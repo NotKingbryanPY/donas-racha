@@ -36,7 +36,7 @@
     return new Promise((resolve,reject) => {
       const intro = document.createElement('div');
       intro.className='brand-intro brand-intro--login'; intro.setAttribute('aria-hidden','true');
-      intro.innerHTML='<div class="intro-lockup"><span class="intro-donut"><span class="brand-mark"></span></span><span class="brand-wordmark">DONAS<span>RACHA<span class="brand-dot">.</span></span></span></div>';
+      intro.innerHTML='<div class="intro-lockup"><span class="intro-donut"><span class="brand-mark"></span></span><img class="brand-wordmark" src="assets/images/drachas-word.svg" width="221" height="78" alt=""></div>';
       const login = document.getElementById('userOverlay');
       login.inert = true;
       let revealed = false, done = false, revealTimer, endTimer;

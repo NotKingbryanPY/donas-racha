@@ -11,7 +11,7 @@
     { title: 'Tienda', text: 'En la tienda puedes ver las recompensas, sus costos y tus puntos disponibles para canjear.', tab: 'shop', target: '#client-tab-shop' },
     { title: 'Historial', text: 'Aquí puedes revisar tus compras, puntos y canjes recientes.', tab: 'history', target: '#client-tab-history' },
     { title: 'Ranking', text: 'Compara tu posición por compras, puntos, racha o nivel.', tab: 'ranking', target: '#client-tab-ranking' },
-    { title: 'Pedidos', text: 'En Pedidos puedes elegir sabores disponibles, indicar un punto de entrega en el Edificio 4 y consultar tus pedidos. El pago es al recibir, en efectivo o por Yappy.', tab: 'delivery', target: '[data-tour="orders-tab"]' }
+    { title: 'Pedidos', text: 'Aquí ves primero tus pedidos activos y sus cambios de estado. Más abajo puedes elegir sabores y pedir al Edificio 4. El pago es al recibir, en efectivo o por Yappy.', tab: 'delivery', target: '[data-tour="orders-tab"]' }
   ];
 
   let token = null, customerId = null, progress = null, sequence = 0, stepIndex = 0;
@@ -104,7 +104,7 @@
     returnTab = visibleTab();
     save('NOT_STARTED', 0);
     active = true; baseCard(); layer.classList.add('is-welcome');
-    card.innerHTML = '<span class="client-tour-count">Bienvenida</span><h2 tabindex="-1">¡Bienvenido a Donas Racha! 🍩</h2><p>Te mostramos dónde encontrar tus puntos, recompensas y pedidos.</p>';
+    card.innerHTML = '<span class="client-tour-count">Bienvenida</span><h2 tabindex="-1">¡Bienvenido a Drachas! 🍩</h2><p>Te mostramos dónde encontrar tus puntos, recompensas y pedidos.</p>';
     const actions = document.createElement('div'); actions.className = 'client-tour-actions';
     actions.append(makeButton('Ahora no', () => finish('POSTPONED'), 'secondary'));
     actions.append(makeButton('Conocer mi perfil', () => {
@@ -233,8 +233,11 @@
   }
   function stop(invalidate = true) {
     const focus = lastFocus;
+    const restoreFocus = active || !!layer;
+    lastFocus = null;
     clearLayer();
     if (invalidate) { sequence++; customerId = null; token = null; progress = null; }
+    if (!restoreFocus) return;
     if (focus?.isConnected && !focus.closest('dialog[open]')) focus.focus();
     else if (!invalidate) document.getElementById('clientTourReplay')?.focus();
   }

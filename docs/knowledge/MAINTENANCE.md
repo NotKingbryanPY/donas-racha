@@ -63,3 +63,7 @@ Codex con acceso al repo: “Lee `AGENTS.md` y `docs/knowledge/AI_CONTEXT.md`, e
 ChatGPT sin checkout: adjuntar AI_CONTEXT, el documento del tema y los archivos/diffs relevantes sin datos privados; opcional model/fragmento de graph. Un enlace a repo privado no concede acceso por sí mismo. Las sesiones no actualizan memoria por publicar un Markdown: estos archivos versionados son la fuente durable; indicar commit/hashes y pedir lectura al empezar. No hace falta pegar todo el grafo o el índice en cada conversación.
 
 Consultas típicas: `query api_complete_paid_order`, `query feature:sync`, `query FirebasePreferences`, `query inventory_by_flavor`. La respuesta JSON devuelve nodos coincidentes/aristas incidentes; para una investigación grande filtrar por IDs/tipos/refs. Graph no contiene datos de clientes ni resultados de consultas. Si se necesita estado real remoto, pedir evidencia de solo lectura sanitizada y fecharla separadamente.
+
+## Mantenimiento Drachas
+
+Editar el SVG maestro y regenerar variantes con el script de marca; no usar la lámina de propuesta como asset. Conservar IDs/data-tour/versión1 y claves técnicas/historia. Cambios de seguimiento deben probar cierre de sesión con respuesta tardía, pérdida de red, recuperación idempotente y no duplicación de avisos. No abrir RLS para convertir el catálogo Realtime en pedidos públicos. [Entrega18octubre](../DRACHAS_WEB_2026-10-18.md).

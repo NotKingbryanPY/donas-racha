@@ -3,13 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Donas Racha · Tu antojo tiene recompensas</title>
+<title>Drachas · Tu antojo tiene recompensas</title>
 <meta name="theme-color" content="#100d17">
-<link rel="icon" type="image/svg+xml" href="assets/images/donas-racha-mark.svg">
-<link rel="preload" as="image" href="assets/images/donas-racha-mark.svg">
+<link rel="icon" type="image/svg+xml" href="assets/images/drachas-icon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/images/drachas-icon-32.png">
+<link rel="apple-touch-icon" href="assets/images/drachas-icon-180.png">
+<link rel="preload" as="image" href="assets/images/drachas-logo.svg">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/nunito-latin-variable.woff2">
 <link rel="stylesheet" href="assets/css/fonts.css">
-<meta name="description" content="Tu próxima dona también suma. Consulta tus puntos, mantén tu racha y descubre las recompensas de Donas Racha.">
+<meta name="description" content="Tu próxima dona también suma. Consulta tus puntos, mantén tu racha y descubre las recompensas de Drachas.">
+<meta property="og:title" content="Drachas · Tu antojo tiene recompensas">
+<meta property="og:description" content="Tus donas favoritas, pedidos y recompensas en el campus.">
+<meta property="og:image" content="https://www.dracha.store/assets/images/drachas-social.png">
+<meta property="og:image:alt" content="Drachas, una dona glaseada integrada en el nombre">
+<meta property="og:type" content="website">
 <script>
 // GitHub Pages sirve HTML estático; los endpoints /api viven junto a la página de Vercel.
 if (location.hostname === 'notkingbryanpy.github.io' && location.pathname.startsWith('/donas-racha/')) {
@@ -110,14 +117,16 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
 @media(max-width:420px){.grid2{gap:9px}.feature-grid{grid-template-columns:1fr 1fr}.points-rule-grid{grid-template-columns:1fr}.shop-meta{align-items:stretch}.shop-buy{width:100%}.welcome-title{font-size:31px}.header{padding-left:14px;padding-right:14px}.wrap{padding-left:14px;padding-right:14px}.client-tabs .tab{font-size:11px;padding:10px 7px}}
 </style>
 <link rel="stylesheet" href="assets/css/redesign.css?v=2.0.0">
+<link rel="stylesheet" href="assets/css/drachas-brand.css?v=1">
+<link rel="stylesheet" href="assets/css/customer-orders.css?v=1">
 </head>
 <body>
 
 <div id="roleOverlay" class="overlay">
   <main class="welcome-card" aria-labelledby="welcomeHeading">
     <header class="landing-header">
-      <a class="brand-row" href="#" aria-label="Donas Racha, inicio" onclick="goToRoleScreen();return false">
-        <span class="brand-mark" aria-hidden="true"></span><span class="brand-wordmark">DONAS<span>RACHA<span class="brand-dot">.</span></span></span>
+      <a class="brand-row" href="#" aria-label="Drachas, inicio" onclick="goToRoleScreen();return false">
+        <img class="brand-lockup" src="assets/images/drachas-logo.svg" width="190" height="42" alt="Drachas">
       </a>
       <div class="landing-nav"><a class="nav-link" href="#sabores">Sabores</a><button class="nav-link" onclick="showPublicRanking()">Ranking <span aria-hidden="true">↗</span></button><span class="campus-tag">HECHO PARA TU CAMPUS</span></div>
     </header>
@@ -159,8 +168,8 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
         <div class="feature-card"><span class="feature-number">04</span><span class="feature-icon" aria-hidden="true">🎁</span><b>Elige tu recompensa</b><span>Canjea tus puntos en la tienda de tu perfil.</span></div>
       </div>
     </section>
-    <section class="campus-strip"><div class="campus-identity"><img src="assets/images/utp-original.png" alt="Universidad Tecnológica de Panamá" width="48" height="48" loading="lazy"><div><b>Nos vemos en el campus.</b><p>Un proyecto estudiantil en la UTP · Edificio 4</p></div></div><span class="independent-note">Donas Racha es un emprendimiento independiente.</span></section>
-    <footer class="landing-footer"><span>DONAS RACHA <span aria-hidden="true">✦</span> UN DULCE HÁBITO.</span><button class="admin-text-link" onclick="goToAdminLogin()">Acceso de vendedores <span aria-hidden="true">↗</span></button></footer>
+    <section class="campus-strip"><div class="campus-identity"><img src="assets/images/utp-original.png" alt="Universidad Tecnológica de Panamá" width="48" height="48" loading="lazy"><div><b>Nos vemos en el campus.</b><p>Un proyecto estudiantil en la UTP · Edificio 4</p></div></div><span class="independent-note">Drachas es un emprendimiento independiente.</span></section>
+    <footer class="landing-footer"><span>DRACHAS <span aria-hidden="true">✦</span> UN DULCE HÁBITO.</span><button class="admin-text-link" onclick="goToAdminLogin()">Acceso de vendedores <span aria-hidden="true">↗</span></button></footer>
   </main>
 </div>
 
@@ -170,7 +179,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
   <div class="login-box">
     <div class="logo"><span class="brand-mark" aria-hidden="true"></span></div>
     <h2>Acceso para vendedores</h2>
-    <p>Panel privado para registrar compras y administrar Donas Racha.</p>
+    <p>Panel privado para registrar compras y administrar Drachas.</p>
     <div class="field-group"><label class="field-label" for="loginEmail">Correo de vendedor</label><input id="loginEmail" class="dark-field" type="email" autocomplete="username" placeholder="correo@ejemplo.com" onkeydown="if(event.key==='Enter') checkLogin()"></div>
     <div class="field-group"><label class="field-label" for="loginInput">Contraseña</label><input id="loginInput" class="dark-field" type="password" autocomplete="current-password" placeholder="Contraseña" onkeydown="if(event.key==='Enter') checkLogin()"></div>
     <button id="loginBtn" class="btn btn-primary" style="width:100%" onclick="checkLogin()">Entrar al panel →</button>
@@ -212,7 +221,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
 </div>
 
 <div id="screen-home" class="screen active">
-  <div class="header"><h1>🍩 Donas Racha</h1><p>Workspace privado de vendedores</p></div>
+  <div class="header"><h1>🍩 Drachas</h1><p>Workspace privado de vendedores</p></div>
   <div class="wrap">
     <div class="admin-home-hero">
       <h2>Centro de ventas</h2>
@@ -240,15 +249,16 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
 </div>
 
 <div id="screen-client" class="screen">
-  <div class="header profile-header"><h1><span class="brand-mark" aria-hidden="true"></span><span class="brand-wordmark">DONAS<span>RACHA<span class="brand-dot">.</span></span></span></h1><p id="clientHeaderSub">Tu antojo, más cerca</p></div>
+  <div class="header profile-header"><h1><img class="brand-lockup" src="assets/images/drachas-logo.svg" width="190" height="42" alt="Drachas"></h1><p id="clientHeaderSub">Tu antojo, más cerca</p></div>
   <div class="wrap">
     <div class="profile-tools"><button class="back-btn" onclick="clientGoBack()">← Volver</button><button id="clientTourReplay" class="text-action" hidden onclick="window.DonasTour?.start()">Ver tutorial</button></div>
     <div id="clientUserTabs" class="client-top-nav" data-tour="profile-nav" style="display:none" role="navigation" aria-label="Área del cliente">
       <button id="client-top-profile" class="client-top-link active" onclick="setClientTab('profile')"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M4 22v-3a8 8 0 0 1 16 0v3"/></svg><span><b>Mi perfil</b><small>Puntos y recompensas</small></span></button>
-      <button id="client-top-delivery" data-tour="orders-tab" class="client-top-link" onclick="setClientTab('delivery')"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h3l3 13h12l2-9H6M9 21h.01M19 21h.01"/></svg><span><b>Pedidos</b><small>Pedir y ver mi estado</small></span></button>
+      <button id="client-top-delivery" data-tour="orders-tab" class="client-top-link" onclick="setClientTab('delivery')"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h3l3 13h12l2-9H6M9 21h.01M19 21h.01"/></svg><span><b>Pedidos <span id="customerOrderCount" class="order-count-badge" hidden></span></b><small id="customerOrderTabHint">Pedir y ver mi estado</small></span></button>
     </div>
     <p id="clientName" class="client-name">Cargando...</p>
     <p id="clientLoginSuccess" class="login-success" role="status" hidden>✓ Listo · Entraste a tu perfil</p>
+    <button id="customerActiveOrderBanner" class="customer-active-banner" hidden onclick="setClientTab('delivery')"><span><small>TU PEDIDO</small><b id="customerActiveOrderLabel"></b></span><span aria-hidden="true">→</span></button>
     <div id="clientSummary" data-tour="points" class="client-hero">
       <div class="summary-heading"><h2>Tu constancia suma.</h2><span id="clientLevel" class="level-badge">🥉 Bronce</span></div>
       <div class="spendable-points"><strong><span id="clientSpendable">0</span> puntos</strong><span>Disponibles para canjear</span><small><b id="clientPoints">0</b> puntos acumulados en total</small></div>
@@ -324,7 +334,15 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
       </div>
     </div>
     <div id="clientDeliverySection" class="client-section" data-tour="orders" style="display:none">
-      <div class="card"><div class="delivery-heading"><div class="card-title">🍩 Tu pedido</div><button class="delivery-refresh" onclick="loadClientDelivery()" aria-label="Actualizar disponibilidad y pedidos"><span aria-hidden="true">↻</span> Actualizar</button></div><p class="muted">Disponibilidad por sabor. Pagas al recibir; los puntos se acreditan al completar la entrega, hasta 3 compras con puntos por día.</p>
+      <section class="customer-tracking" aria-labelledby="customerOrdersTitle">
+        <div class="customer-orders-heading"><div><span class="eyebrow" id="customerOrdersEyebrow">SEGUIMIENTO</span><h2 id="customerOrdersTitle">Mis pedidos</h2></div><button class="delivery-refresh" onclick="window.DonasCustomerOrders?.refresh()" aria-label="Actualizar mis pedidos">↻ Actualizar</button></div>
+        <p id="customerOrdersStatus" class="customer-orders-health" role="status">Consultando tus pedidos…</p>
+        <div id="customerOrderNotice" class="customer-order-notice" hidden><span aria-hidden="true">↗</span><p id="customerOrderNoticeText"></p><button type="button" aria-label="Cerrar aviso de pedido" onclick="this.parentElement.hidden=true">×</button></div>
+        <div id="clientActiveOrders" class="customer-active-orders" aria-busy="true"><p class="muted">Cargando pedidos…</p></div>
+        <div id="customerActivePagination" class="customer-order-pagination" hidden><button class="text-action" id="customerActivePrevious" onclick="window.DonasCustomerOrders.page('active',-1)">← Anteriores</button><span>Pedidos activos</span><button class="text-action" id="customerActiveNext" onclick="window.DonasCustomerOrders.page('active',1)">Más pedidos →</button></div>
+        <details id="customerOrderHistory" class="customer-order-history"><summary>Pedidos anteriores</summary><div id="clientOrdersList" class="muted">Consulta el historial desde Pedidos.</div><div id="customerHistoryPagination" class="customer-order-pagination" hidden><button class="text-action" id="customerHistoryPrevious" onclick="window.DonasCustomerOrders.page('history',-1)">← Más recientes</button><button class="text-action" id="customerHistoryNext" onclick="window.DonasCustomerOrders.page('history',1)">Más antiguos →</button></div></details>
+      </section>
+      <div class="card customer-new-order"><div class="delivery-heading"><h2 class="new-order-title">Haz un nuevo pedido</h2><button class="delivery-refresh" onclick="loadClientDelivery()" aria-label="Actualizar disponibilidad y pedidos"><span aria-hidden="true">↻</span> Actualizar</button></div><p class="muted">Elige tus sabores. Pagas al recibir; los puntos se acreditan al completar la entrega, hasta 3 compras con puntos por día.</p>
         <p id="deliveryAreaNotice" class="delivery-area-notice"><span aria-hidden="true">📍</span><span><strong>Entregas solo en el Edificio 4.</strong> Actualmente no realizamos entregas en otros edificios.</span></p><p id="clientInventoryStatus" class="inventory-status" role="status">Consultando existencias...</p>
         <div id="clientFlavorList" class="order-cart"></div>
         <div class="order-summary"><span>Total</span><strong id="clientOrderTotal">B/.0.00</strong></div>
@@ -335,21 +353,23 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
         <button id="clientOrderRetry" class="btn btn-outline" hidden onclick="submitClientOrder()">Recuperar envío pendiente</button><button id="clientOrderView" class="btn btn-outline" hidden>Ver confirmación</button>
         <p id="clientOrderMessage" class="muted" role="status" style="margin-top:12px"></p>
       </div>
-      <div class="card"><div class="card-title">📦 Mis pedidos</div><div id="clientOrdersList" class="muted">Cargando...</div></div>
     </div>
   </div>
 </div>
 
-<dialog id="clientOrderConfirmation" class="profile-dialog order-confirmation" aria-labelledby="confirmedOrderTitle">
+<dialog id="clientOrderConfirmation" class="profile-dialog order-confirmation" aria-labelledby="confirmedOrderTitle" aria-describedby="confirmedOrderState">
   <button class="dialog-close" onclick="this.closest('dialog').close()" aria-label="Cerrar confirmación">✕</button>
-  <div class="confirmation-stage" aria-hidden="true"><span class="confirmation-donut mini-donut"></span><span class="brand-mark"></span><span class="confirmation-check">✓</span></div>
-  <img src="assets/images/donas-racha-logo-light.svg" width="180" height="56" alt="Donas Racha">
-  <h2 id="confirmedOrderTitle">¡Pedido realizado!</h2><strong id="confirmedOrderCode"></strong><p id="confirmedOrderState"></p>
+  <div class="confirmation-stage" aria-hidden="true"><img class="confirmation-donut" src="assets/images/drachas-symbol.svg" width="72" height="56" alt=""><span class="confirmation-check">✓</span></div>
+  <img class="confirmation-brand" src="assets/images/drachas-logo.svg" width="180" height="40" alt="Drachas">
+  <h2 id="confirmedOrderTitle" tabindex="-1">Tu pedido</h2><span class="confirmation-code-label">NÚMERO DE PEDIDO</span><strong id="confirmedOrderCode"></strong><p id="confirmedOrderState" role="status"></p>
+  <div id="confirmedOrderDetails" class="confirmation-details"></div>
+  <p id="confirmedOrderLoading" class="muted" role="status"></p>
+  <button id="confirmedOrderRetry" class="text-action" hidden onclick="window.DonasOrderFeedback.retryDetail()">Volver a consultar el detalle</button>
+  <button id="confirmedOrderFollow" class="btn btn-primary" onclick="window.DonasOrderFeedback.follow()">Ver mi pedido</button>
   <a id="confirmedOrderWhatsapp" class="btn btn-green" target="_blank" rel="noopener noreferrer">Contactar por WhatsApp</a>
-  <button class="btn btn-outline" onclick="this.closest('dialog').close();loadClientDelivery()">Consultar mis pedidos</button>
 </dialog>
 <div id="screen-new" class="screen">
-  <div class="header"><h1>➕ Nuevo cliente</h1><p>Registrar en Donas Racha</p></div>
+  <div class="header"><h1>➕ Nuevo cliente</h1><p>Registrar en Drachas</p></div>
   <div class="wrap">
     <button class="back-btn" onclick="goHome()">← Volver</button>
     <div class="card">
@@ -371,7 +391,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
 </div>
 
 <div id="screen-ranking" class="screen">
-  <div class="header"><h1>🏆 Ranking Donas Racha</h1><p>Competencia universitaria UTP</p></div>
+  <div class="header"><h1>🏆 Ranking Drachas</h1><p>Competencia universitaria UTP</p></div>
   <div class="wrap">
     <button class="back-btn" onclick="rankingBack()">← Volver</button>
     <div class="tabs">
@@ -512,8 +532,17 @@ let customerSelectedFlavor = null;
 let customerOrderQuantities = new Map();
 let customerOrderPendingKey = null;
 let customerOrderSubmitting = false;
-let customerOrderVariants = [];
+let clientOrderVariants = [];
 let clientInventoryEnforced = false;
+let customerOrderFormOwner = null;
+function resetCustomerOrderForm() {
+  customerOrderFormOwner=null;customerOrderQuantities.clear();clientOrderVariants=[];customerOrderPendingKey=null;customerOrderSubmitting=false;
+  ['clientDeliveryLocation','clientDeliveryNotes'].forEach(id=>document.getElementById(id).value='');
+  document.querySelector('input[name="clientPayment"][value="CASH"]').checked=true;
+  document.getElementById('clientOrderMessage').textContent='';document.getElementById('clientFlavorList').replaceChildren();
+  document.getElementById('clientOrderButton').disabled=true;document.getElementById('clientOrderButton').textContent='Confirmar pedido';
+  window.DonasOrderFeedback?.lock(false);
+}
 const pendingPurchaseKeys = new Map();
 const pendingRedeemKeys = new Map();
 let pendingRegistration = null;
@@ -530,18 +559,19 @@ function updateCustomerViewUrl(view, mode = 'push') {
   url.searchParams.delete('staff');
   url.searchParams.delete('id');
   url.searchParams.delete('flavor');
+  if (view !== 'delivery') url.searchParams.delete('order');
   if (url.href !== location.href) window.history[mode === 'replace' ? 'replaceState' : 'pushState'](null,'',url);
 }
 function clearCustomerViewUrl() {
   const url = new URL(location.href);
-  ['profile','view','id','flavor'].forEach(key => url.searchParams.delete(key));
+  ['profile','view','id','flavor','order'].forEach(key => url.searchParams.delete(key));
   if (url.href !== location.href) window.history.replaceState(null,'',url);
 }
 const staffViews = new Set(['home','dashboard','new','client','ranking']);
 function updateStaffViewUrl(view, mode = 'push', clientId = '') {
   if (!requireAuth() || openedAsUser || !staffViews.has(view)) return;
   const url = new URL(location.href);
-  ['profile','view','flavor'].forEach(key => url.searchParams.delete(key));
+  ['profile','view','flavor','order'].forEach(key => url.searchParams.delete(key));
   url.searchParams.set('staff',view);
   if (view === 'client' && clientId) url.searchParams.set('id',clientId);
   else url.searchParams.delete('id');
@@ -779,17 +809,38 @@ function beginCustomerOrder() {
 
 async function customerRequest(path, options = {}) {
   const token = sessionStorage.getItem('donasCustomerToken');
-  const response = await fetch(path, { ...options, headers: {
-    accept: 'application/json', 'content-type': 'application/json',
-    ...(token ? { authorization: `Bearer ${token}` } : {})
-  } });
-  const payload = await response.json().catch(() => null);
-  if (!response.ok || !payload?.ok) {
-    const error = new Error(payload?.error?.message || 'No pudimos conectar con el servidor.');
-    error.code = payload?.error?.code || 'API_ERROR';
+  const owner = currentClient?.id;
+  const {signal, timeoutMs = 20000, ...requestOptions} = options;
+  const controller = new AbortController();
+  const abort = () => controller.abort(signal?.reason);
+  if (signal?.aborted) abort(); else signal?.addEventListener('abort',abort,{once:true});
+  const timer = setTimeout(() => controller.abort(new DOMException('Tiempo de espera agotado','TimeoutError')),timeoutMs);
+  try {
+    const response = await fetch(path, { ...requestOptions, signal:controller.signal, headers: {
+      ...requestOptions.headers, accept: 'application/json', 'content-type': 'application/json',
+      ...(token ? { authorization: `Bearer ${token}` } : {})
+    } });
+    const payload = await response.json().catch(() => null);
+    if (controller.signal.aborted) throw controller.signal.reason || new DOMException('Consulta cancelada','AbortError');
+    if (owner && (owner !== currentClient?.id || token !== sessionStorage.getItem('donasCustomerToken'))) {
+      const error = new Error('La sesión cambió. Vuelve a consultar desde tu cuenta.'); error.code='SESSION_CHANGED'; throw error;
+    }
+    if (!response.ok || !payload?.ok) {
+      const error = new Error(payload?.error?.message || 'No pudimos conectar con el servidor.');
+      error.code = payload?.error?.code || 'API_ERROR';
+      error.status = response.status;
+      throw error;
+    }
+    return payload.data;
+  } catch (error) {
+    if (controller.signal.aborted && controller.signal.reason?.name === 'TimeoutError') {
+      const timeout = new Error(requestOptions.method === 'POST'
+        ? 'La respuesta tardó demasiado. Recupera este mismo envío para comprobar el resultado.'
+        : 'La consulta tardó demasiado. Conservamos la última información disponible.');
+      timeout.code='REQUEST_TIMEOUT'; throw timeout;
+    }
     throw error;
-  }
-  return payload.data;
+  } finally { clearTimeout(timer); signal?.removeEventListener('abort',abort); }
 }
 
 async function apiPost(action, body = {}) {
@@ -804,6 +855,10 @@ function hideOverlays() {
 }
 
 function goToRoleScreen() {
+  window.DonasCustomerOrders?.stop();
+  window.DonasOrderFeedback?.reset();
+  resetCustomerOrderForm();
+  customerOrderSubmitting = false;
   cancelCustomerLogin();
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById('screen-home').classList.add('active');
@@ -821,6 +876,9 @@ function goToAdminLogin() {
 }
 
 function goToUserLogin() {
+  window.DonasCustomerOrders?.stop();
+  window.DonasOrderFeedback?.reset();
+  resetCustomerOrderForm();
   window.DonasTour?.stop();
   cancelCustomerLogin();
   document.getElementById('clientLoginSuccess').hidden = true;
@@ -871,6 +929,7 @@ function requireAuth() { return !!sessionStorage.getItem('donasAdminAccessToken'
 function tryShowAdmin() { requireAuth() ? showAdmin() : goToAdminLogin(); }
 
 function showScreen(id, historyMode = 'push') {
+  if (id !== 'screen-client') window.DonasCustomerOrders?.stop();
   if (id !== 'screen-client') window.DonasTour?.stop();
   clientRequestVersion++;
   hideOverlays();
@@ -1008,6 +1067,8 @@ async function loginCustomerById(id) {
   }
 }
 async function openClient(id, asUser, restoring = false) {
+  window.DonasCustomerOrders?.stop();window.DonasOrderFeedback?.reset();
+  if (customerOrderFormOwner!==id) resetCustomerOrderForm();
   openedAsUser = !!asUser;
   showScreen('screen-client');
   const requestVersion = clientRequestVersion;
@@ -1037,6 +1098,8 @@ async function openClient(id, asUser, restoring = false) {
 }
 
 function renderClient(c, asUser) {
+  if (asUser && customerOrderFormOwner!==c.id) {resetCustomerOrderForm();customerOrderFormOwner=c.id;}
+  if (asUser) window.DonasCustomerOrders?.start(); else window.DonasCustomerOrders?.stop();
   document.getElementById('clientHeaderSub').textContent = asUser ? 'Tu antojo, más cerca' : 'Modo vendedor/admin';
   document.getElementById('clientName').textContent = asUser ? `Hola, ${c.name || 'Cliente'}` : (c.name || 'Cliente');
   document.getElementById('clientSince').textContent = c.registrationDate ? 'Cliente desde ' + fmtDate(c.registrationDate) : '';
@@ -1163,18 +1226,22 @@ function setClientTab(tab, historyMode = 'push') {
   });
   window.DonasMotion?.panel(sections[tab]);
   if (historyMode !== 'none') updateCustomerViewUrl(tab,historyMode);
+  window.DonasCustomerOrders?.onView(tab);
   if (tab === 'ranking') loadClientInlineRanking('racha');
   if (tab === 'delivery' && openedAsUser) loadClientDelivery();
 }
 
 async function loadClientDelivery() {
   if (customerOrderSubmitting) return;
+  const owner = currentClient?.id;
   const list = document.getElementById('clientFlavorList');
-  list.innerHTML = '<div class="empty">Cargando sabores...</div>';
+  if (!list.children.length) list.innerHTML = '<div class="empty">Cargando sabores...</div>';
+  const orders = window.DonasCustomerOrders?.refresh({includeHistory:true});
   try {
     const [catalog, inventory] = await Promise.all([
       vercelApi('/api/products'), vercelApi('/api/products', {view:'inventory'})
     ]);
+    if (owner !== currentClient?.id || !openedAsUser) return;
     const byId = new Map((inventory.flavors || []).map(row => [String(row.variant_id), row]));
     clientInventoryEnforced = !!inventory.enforced;
     clientOrderVariants = flattenCatalog(catalog.products || [])
@@ -1183,19 +1250,18 @@ async function loadClientDelivery() {
       ? 'Inventario compartido · actualización automática mientras estás aquí'
       : 'Inventario por sabor en preparación. Puedes pedir; confirmaremos la disponibilidad antes de aceptar.';
     renderClientFlavors();
-  } catch (error) { list.textContent = error.message; document.getElementById('clientInventoryStatus').textContent = 'No se pudo comprobar el inventario.'; }
-  try {
-    const result = await customerRequest('/api/customer/orders');
-    const orders = result.orders || [];
-    document.getElementById('clientOrdersList').innerHTML = orders.length
-      ? orders.map(order => `<div class="history-item"><div class="grow"><b>${safe(order.public_code)}</b><div class="sub">${safe(clientOrderStatus(order.status))} · ${formatMoney(order.total_cents,order.currency_code)} · ${safe(new Date(order.created_at).toLocaleDateString('es-PA'))}</div></div></div>`).join('')
-      : '<div class="empty">Todavía no tienes pedidos.</div>';
-  } catch (error) { document.getElementById('clientOrdersList').textContent = error.message; }
+  } catch (error) {
+    if (owner !== currentClient?.id || !openedAsUser) return;
+    document.getElementById('clientInventoryStatus').textContent = 'No se pudo comprobar el inventario. Actualiza antes de enviar.';
+    if (!clientOrderVariants.length) list.textContent = error.message;
+  }
+  await orders;
+  if (owner !== currentClient?.id || !openedAsUser) return;
   await window.DonasOrderFeedback?.restore();
 }
 
 function clientOrderStatus(status) {
-  return ({PENDING:'Pendiente',ACCEPTED:'Aceptado',OUT_FOR_DELIVERY:'En camino',COMPLETED:'Entregado',CANCELLED:'Cancelado'})[status] || 'Recibido';
+  return ({PENDING:'Recibido',ACCEPTED:'Aceptado',OUT_FOR_DELIVERY:'En camino',COMPLETED:'Entregado',CANCELLED:'Cancelado'})[status] || 'Estado por verificar';
 }
 
 function renderClientFlavors() {
@@ -1233,34 +1299,44 @@ function updateClientOrderTotal() {
 
 async function submitClientOrder() {
   if (customerOrderSubmitting) return;
+  const owner=currentClient?.id, token=sessionStorage.getItem('donasCustomerToken');
+  if (!owner || !openedAsUser || !token) return;
+  const sameSession=()=>owner===currentClient?.id && token===sessionStorage.getItem('donasCustomerToken') && openedAsUser;
   const message = document.getElementById('clientOrderMessage');
   const locationText = document.getElementById('clientDeliveryLocation').value.trim();
   const items = clientOrderVariants.map(item => ({productVariantId:item.id,quantity:customerOrderQuantities.get(String(item.id)) || 0})).filter(item => item.quantity);
   const feedback=window.DonasOrderFeedback;
-  const saved=feedback.read();
+  const saved=feedback.read(owner);
   if (!saved?.pending && (!items.length || locationText.length < 3)) { message.textContent = 'Elige tus donas y escribe tu ubicación.'; return; }
   if (!saved?.pending && clientOrderVariants.some(item=>!item.available && customerOrderQuantities.get(String(item.id)))) { message.textContent='Revisa los sabores deshabilitados antes de pedir.'; return; }
   const payload=saved?.pending?.payload || {idempotencyKey:crypto.randomUUID(), deliveryLocation:locationText,
     customerNotes:document.getElementById('clientDeliveryNotes').value.trim(),
     paymentMethod:document.querySelector('input[name="clientPayment"]:checked').value,items};
   const button = document.getElementById('clientOrderButton');
-  try { feedback.write({...saved,pending:{payload}}); } catch (_) { message.textContent='Permite el almacenamiento de esta sesión para conservar tu envío y vuelve a intentar.'; return; }
+  try { feedback.write({...saved,pending:{payload}},owner); } catch (_) { message.textContent='Permite el almacenamiento de esta sesión para conservar tu envío y vuelve a intentar.'; return; }
   customerOrderSubmitting=true;
   button.disabled = true; button.textContent = 'Verificando pedido…'; message.textContent = '';
   feedback.lock(true);
   try {
-    const result = await customerRequest('/api/orders', { method:'POST', body:JSON.stringify(payload),signal:AbortSignal.timeout(20000) });
-    if (!/^[0-9a-f-]{36}$/i.test(result?.id || '') || !/^DR-[0-9A-F]{10}$/.test(result?.public_code || '')) throw new Error('El servidor no devolvió una confirmación verificable. Recupera el mismo envío.');
-    feedback.write({confirmed:result.public_code});
+    const result = await customerRequest('/api/orders', { method:'POST', body:JSON.stringify(payload),timeoutMs:20000 });
+    if (!/^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i.test(result?.id || '') || !/^DR-[0-9A-F]{10}$/.test(result?.public_code || '')) throw new Error('El servidor no devolvió una confirmación verificable. Recupera el mismo envío.');
+    if (!sameSession()) return;
+    feedback.write({confirmed:result.public_code},owner);
     customerOrderPendingKey = null; customerOrderQuantities.clear();
     message.textContent = 'Pedido '+result.public_code+' recibido. Pagarás al recibir.';
     feedback.show(result,!result.replayed);
+    window.DonasCustomerOrders?.created(result);
+    refreshSharedStock();
   } catch (error) {
-    if (error.status===400 || error.code==='OUT_OF_STOCK') feedback.write({...saved,pending:null});
+    if (!sameSession()) return;
+    const rejected=['VALIDATION_ERROR','INVALID_JSON','INVALID_QUANTITY','INVALID_ITEMS','INVALID_PRODUCT_VARIANT','INVALID_PAYMENT_METHOD','OUT_OF_STOCK'];
+    if (error.status < 500 && rejected.includes(error.code)) feedback.write({...saved,pending:null},owner);
     message.textContent = error.message || 'No se pudo verificar el pedido. Recupera el mismo envío.';
   } finally {
+    if (!sameSession()) return;
     customerOrderSubmitting=false; feedback.lock(false); button.textContent = 'Confirmar pedido';
     renderClientFlavors(); await feedback.restore();
+    if (!feedback.read()?.pending) refreshSharedStock();
   }
 }
 
@@ -1276,6 +1352,7 @@ async function saveCustomerPassword() {
     const result = await customerRequest('/api/customer/change-password', { method:'POST', body:JSON.stringify({ currentPassword, newPassword }) });
     sessionStorage.setItem('donasCustomerToken', result.accessToken);
     document.getElementById('customerCurrentPassword').value = '';
+    window.DonasCustomerOrders?.start();
     document.getElementById('customerNewPassword').value = '';
     message.textContent = 'Contraseña actualizada. Tus otras sesiones se cerraron.';
   } catch (error) { message.textContent = error.message; }
@@ -1478,9 +1555,9 @@ async function createClient() {
 }
 async function shareNewUsername() {
   if (!newClientData) return;
-  const message = `🍩 Donas Racha — Tu usuario: ${newClientData.username}\nEntra a tu perfil: https://dracha.store/\nLa primera vez, escribe tu usuario y crea tu contraseña.`;
+  const message = `🍩 Drachas — Tu usuario: ${newClientData.username}\nEntra a tu perfil: https://dracha.store/\nLa primera vez, escribe tu usuario y crea tu contraseña.`;
   try {
-    if (navigator.share) await navigator.share({ title:'Donas Racha', text:message });
+    if (navigator.share) await navigator.share({ title:'Drachas', text:message });
     else { await navigator.clipboard.writeText(message); showToast('Usuario y enlace copiados'); }
   } catch (error) {
     if (error.name !== 'AbortError') showToast('No se pudo compartir el usuario');
@@ -1496,7 +1573,7 @@ function sendNewWA() {
   const msg = encodeURIComponent(
 `Hola ${newClientData.name},
 
-*Te damos la bienvenida a Donas Racha.*
+*Te damos la bienvenida a Drachas.*
 Ya formas parte de nuestro programa de fidelización.
 
 *Entra a tu perfil:*
@@ -1514,7 +1591,7 @@ Desde tu perfil podrás:
 - Conocer cómo funciona el programa.
 - Canjear tus puntos en la tienda.
 
-Gracias por elegir Donas Racha.`
+Gracias por elegir Drachas.`
   );
 
   window.open(
@@ -1659,12 +1736,13 @@ function esc(s){ return String(s ?? '').replace(/\\/g,'\\\\').replace(/'/g,"\\'"
 <script src="assets/js/admin-operations.js?v=1.5.1"></script>
 <script src="assets/js/daily-business.js?v=2.0.0"></script>
 
-<script src="assets/js/order-confirmation.js"></script>
+<script src="assets/js/order-confirmation.js?v=drachas-1"></script>
+<script src="assets/js/customer-orders.js?v=drachas-1"></script>
 <script src="assets/js/shared-inventory-refresh.js"></script>
 <script src="assets/js/catalog-realtime.js"></script>
 <script src="assets/js/admin-redemptions.js"></script>
 <script src="assets/js/admin-loyalty.js"></script>
-<script src="assets/js/motion.js"></script>
-<script src="assets/js/client-tour.js" defer></script>
+<script src="assets/js/motion.js?v=drachas-1"></script>
+<script src="assets/js/client-tour.js?v=drachas-1" defer></script>
 </body>
 </html>

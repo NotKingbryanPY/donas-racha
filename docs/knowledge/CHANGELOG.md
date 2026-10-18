@@ -1,5 +1,17 @@
 # Historial de decisiones y documentación
 
+## 2026-10-18 — Drachas C y seguimiento del cliente implementados
+
+El usuario eligió C y autorizó aplicar el rebranding y Pedidos. Logo Dr/dona trazado, variantes ligeras, favicon/social y marca visible Drachas. Activos destacados, contador/perfil, detalle propietario enlazable, historial paginado y avisos15s visible/con activos; caché/generación/abort/backoff, dedupe y offline explícitos. customerRequest conserva HTTP status, rechazos conocidos liberan intento y timeout conserva payload/UUID. Recibo solo después de confirmar, contextual, detalles/pago/WhatsApp y animación1s reducida/única. Tutorial1 conserva progreso y solo restaura foco si estaba activo. Sin SQL, secretos, APK o flujos retirados. [Informe y validación](../DRACHAS_WEB_2026-10-18.md); CI/publicación se registran al verificarse.
+
+## 2026-10-17 — aprobación visual de Pedidos y propuestas Drachas
+
+El usuario aprobó la propuesta de Pedidos y solicitó primero plan/logos de rebranding a Drachas con los colores actuales. Se generaron e inspeccionaron tres PNG, guardados con sus prompts en docs/previews/drachas; [plan](../DRACHAS_REBRANDING_PROPUESTA.md). A/R glaseada recomendada como punto de partida; B/DR y C/D-r requieren refinar lectura. No hay logo elegido, vector final, cambio de runtime o despliegue. Se preservan datos, dominio, paquete/firma, sesiones y autoridad Supabase. Implementación de Pedidos pendiente junto con identidad final; FCM físico continúa como pendiente independiente.
+
+## 2026-10-17 — auditoría y propuesta web, sin implementación
+
+Se documenta [análisis de confirmación/seguimiento](../PEDIDOS_WEB_PROPUESTA_2026-10-17.md) solicitado antes de aprobar cambios. Verificados: refresco solo de catálogo/stock, sin avisos de pedidos, jerarquía débil, geometría de dona y pérdida del status HTTP (repro400 aislada). Pruebas existentes de navegador, navegación, tutorial y protección de rutas PASS. Propuesta interactiva con datos ficticios y marca actual; nueva arquitectura de seguimiento aún no activa. No cambia producción, APK, SQL ni el estado pendiente de FCM Android. Rebranding Drachas reservado para instrucciones posteriores.
+
 ## 2026-10-14 — publicación del diagnóstico de segundo plano
 
 Verificación posterior14octubre21:43UTC: CI0b86b8d aprobado (web/API/SQL/browser/concurrencia y conocimiento), PR46 integrado en main6074252. Vercel dpl_HBYZRt4CtzXXeU6q7aTWxeEsN4bw Production Ready y alias www.dracha.store comprobados. Web/productos/inventario200; avisos/despacho/pedidos anónimos401. No se generó un pedido ni se modificó el APK/SQL/secretos. La consulta de logs del nuevo emisor no devolvió eventos correlacionables todavía; no demuestra cola vacía ni entrega. Se pidió SELECT de metadata y diagnóstico/prueba del A23. El fallo físico fuera de app sigue pendiente, no resuelto por esta instrumentación.

@@ -59,6 +59,8 @@ const deferred=()=>{let resolve;const promise=new Promise(r=>resolve=r);return {
     assert.equal(await page.locator('#userEnterBtn').getAttribute('aria-busy'),null);
     await page.locator('#client-tab-history').focus();await page.keyboard.press('Enter');
     assert.equal(await page.evaluate(()=>document.activeElement.id),'client-tab-history');
+    await page.evaluate(()=>DonasTour.onLogin(currentClient.id));
+    assert.equal(await page.evaluate(()=>document.activeElement.id),'client-tab-history','completed onboarding cannot steal focus from navigation');
     assert.equal(await page.locator('.brand-intro').count(),0);
     await page.locator('#client-tab-profile').click();
     await page.getByRole('button',{name:'Ver todas',exact:false}).focus();await page.keyboard.press('Enter');
@@ -91,7 +93,7 @@ const deferred=()=>{let resolve;const promise=new Promise(r=>resolve=r);return {
       document.getElementById('clientProfileSection').style.display='none';
       document.getElementById('clientDeliverySection').style.display='';
       clientInventoryEnforced=true;
-      clientOrderVariants=[{id:'flavor-a',name:'Chocolate',unit_price_cents:100,currency_code:'USD',inventory:{counted:true,available_quantity:2}}];
+      clientOrderVariants=[{id:'flavor-a',name:'Chocolate',available:true,unit_price_cents:100,currency_code:'USD',inventory:{counted:true,available_quantity:2}}];
       renderClientFlavors();
     });
     await page.getByRole('button',{name:'Añadir Chocolate'}).focus();

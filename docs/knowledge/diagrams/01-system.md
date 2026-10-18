@@ -5,7 +5,9 @@
 ```mermaid
 flowchart LR
   android["Android2.1: Pedidos/Hoy/Stock/Historial"] --> api["API Vercel autenticada"]
-  web["Web y Dashboard"] --> api
+  web["Drachas web y Dashboard"] --> api
+  customer["Cliente: sesión propia dr1"] --> web
+  web --> tracking["Seguimiento15s visible con activos"] --> api
   api --> pg["Supabase: autoridad comercial"]
   android --> room["Room7: caché por usuario y outbox"]
   auth["Supabase Auth + ADMIN/SELLER"] --> api

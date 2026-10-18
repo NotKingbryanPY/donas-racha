@@ -8,6 +8,11 @@ stateDiagram-v2
   OUT_FOR_DELIVERY --> CANCELLED
   COMPLETED --> [*]
   CANCELLED --> [*]
+  note left of PENDING
+    Recibo tras confirmación verificable
+    Seguimiento web15s por propietario
+    Sin nueva transacción de stock o pago
+  end note
   note right of COMPLETED
     Pago + stock + fidelidad existentes
     WEB_SALE nuevo: ingreso/costo, sin otra salida

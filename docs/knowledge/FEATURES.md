@@ -22,3 +22,7 @@
 | iOS | etapa posterior, sin build/distribución nuevos |
 
 No hay borrado definitivo ni reversión automática de ventas confirmadas en esta versión. Rechazos conservan evidencia; corregir unidades exige motivo. Gestión de pedidos disponible nativa y en Dashboard. Emisor configurado; el usuario informó una prueba real recibida en Samsung A23 y recuperación programada. Falta confirmar recepción fuera de app/bloqueado y pedido real completo; compilar no certifica esos recorridos.
+
+## Web Drachas18octubre
+
+Identidad C vectorial, favicon/social/PNG derivados. Activos destacados, contador/acceso desde Perfil, detalle privado, historial paginado y enlace recuperable. Actualización15s visible/con activos, banner/toast deduplicados, offline identificado y backoff. Recibo con artículos/pago/entrega/WhatsApp, animación1s solo confirmada, movimiento reducido, sin repetir por render. Tutorial conserva versión/progreso y carrito móvil legible. Avisos dentro de web; no notificaciones del sistema con navegador cerrado. [Informe y pruebas](../DRACHAS_WEB_2026-10-18.md).

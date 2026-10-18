@@ -1,6 +1,14 @@
-# Donas Racha / Donas Control: guía para IA
+# Drachas / Donas Control: guía para IA
 
-Revisión: 14 octubre 2026. Leer primero [AGENTS](../../AGENTS.md), esta guía y el [diagnóstico previo](../DONAS_CONTROL_2_AUDITORIA.md). La aclaración del14octubre prioriza Pedidos nativos y notificaciones FCM fuera de la app, además de la operación diaria; sustituye la retirada total del12octubre. La web permanece operativa. No restaurar automáticamente la integración móvil antigua.
+Revisión: 18 octubre 2026. Leer primero [AGENTS](../../AGENTS.md), esta guía y el [diagnóstico previo](../DONAS_CONTROL_2_AUDITORIA.md). La aclaración del14octubre prioriza Pedidos nativos y notificaciones FCM fuera de la app, además de la operación diaria; sustituye la retirada total del12octubre. La web permanece operativa. No restaurar automáticamente la integración móvil antigua.
+
+## Drachas web: identidad y pedidos, 18 octubre 2026
+
+El usuario eligió la propuesta C y autorizó aplicar el conjunto. [Informe vigente](../DRACHAS_WEB_2026-10-18.md). Marca visible Drachas y logo vectorial Dr/dona + achas, sin renombrar dominio, IDs/SKU/códigos DR-, tokens, tablas/RPC ni paquete/firma Android. Maestro assets/images/drachas-logo.svg; scripts/build-brand-assets.cjs deriva iconos/PNG/social con resvg de desarrollo. La web conserva Nunito y paleta oscura/lavanda/rosa.
+
+Implementado: activos primero, badge/acceso desde Perfil, detalle privado enlazable y recibo contextual. customer-orders.js consulta por propietario cada15s solo visible/online/con activos; reconexión, backoff, timeout, generación de sesión y dedupe de avisos. API separa activos50/histórico10, timestamps precisos y paginación, no expone notas/actores internos. customerRequest conserva status/code y un rechazo conocido libera el intento; timeout conserva payload/UUID. Creación verifica respuesta antes de animar1s; no repite tras replay/render/recarga y respeta movimiento reducido. Tutorial versión1/progreso/selectores conservados; carga completada no roba foco.
+
+Sin migración SQL ni cambio de secretos, Firebase o APK. La sesión cliente dr1 propia continúa detrás de API; no es Supabase Realtime. Son avisos del cliente dentro de la web; no Web Push ni garantía instantánea. FCM físico Android sigue pendiente por separado. Las pruebas y publicación se registran en VALIDATION y el informe, distinguiendo fixtures de producción.
 
 ## Arquitectura vigente
 
