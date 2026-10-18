@@ -17,3 +17,8 @@ Android2.1.1/código17/Room7: mismo SDK/material/workmanager; el seguimiento del
 ## Identidad y seguimiento Drachas
 
 Sin dependencias nuevas del runtime. SVG trazado sin fuentes externas; Nunito local del producto se conserva. build-brand-assets.cjs usa @resvg/resvg-js2.6.2 de desarrollo mediante RESVG_MODULE o módulo instalado, para PNG/favicon/social. No se empaqueta con la API. AbortController propio evita depender de AbortSignal.timeout en el navegador; Web Locks es mejora progresiva para dedupe, con fallback. Sin Firebase/FCM web nuevo.
+
+
+## Portada de recompensas — 18 octubre 2026
+
+La portada nueva no añade paquetes, fuentes, servicios, Firebase o imágenes remotas. Conserva Nunito local. Solo HTML/CSS/JS; fotografía real pendiente. Reutiliza la API getCliente y catálogo existentes.

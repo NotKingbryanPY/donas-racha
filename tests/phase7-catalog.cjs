@@ -14,7 +14,8 @@ for (const fragment of ['id="sabores"', 'id="publicCatalog"', 'renderPublicCatal
 assert.match(products, /unit_price_cents,currency_code,available/);
 assert.match(css, /\.donut-order-card/);
 assert.match(html, /id="catalogOrderBtn"[^>]*onclick="beginCustomerOrder\(\)"/);
-assert.equal((html.match(/Entrar a mi perfil/g) || []).length, 1);
+assert.equal((html.match(/Ver mis recompensas/g) || []).length, 1);
+assert.match(html,/href="\?profile=1&amp;view=shop"/);
 
 // Keep the compact price accurate when availability or catalog pricing changes.
 const vm = require('node:vm');

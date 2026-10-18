@@ -57,3 +57,8 @@ Investigación de avisos fuera de app: usuario A23 informa pedido sin aviso tras
 GET customer/orders autentica dr1, deriva customer_id y lee activos50/historial10 por página. Caché solo en memoria, updated_at preciso, respuestas de generaciones viejas descartadas. Cambio real anuncia una vez; baseline silencioso. Sin activos/oculta/offline se detiene; al volver recupera. stock/cart se refrescan por otro flujo. Una transición que cruza ambas consultas se resuelve por versión, sin otra escritura.
 
 POST conserva payload/UUID por dueño en sessionStorage. Solo rechazos conocidos liberan; timeout incierto recupera el mismo envío. Logout borra formulario/caché/DOM y cancela lecturas, conservando el intento de su dueño. Recibo confirmado carga detalle privado; error de lectura no fabrica éxito ni deshace la creación. Enlace de pedido sobrevive a recarga con autenticación; no expone actores/notas internas. Dedupe mínimo100códigos por cliente en localStorage, Web Locks/storage events cuando existen, sin tokens/direcciones. No Web Push. [Detalle](../DRACHAS_WEB_2026-10-18.md).
+
+
+## Portada de recompensas — 18 octubre 2026
+
+Portada: anónimo sin lectura privada ni saldo supuesto. ID/token guardados → getCliente autenticado → verificar propietario/forma/generación → nextRewardState → seis tramos visuales y texto en puntos. RenderProfilePreview alimenta el mismo componente tras consultas/canjes. Cambio de identidad aborta/limpia y descarta respuestas antiguas. Solo memoria; sin polling. Precio y disponibilidad mantienen renderPublicCatalog.

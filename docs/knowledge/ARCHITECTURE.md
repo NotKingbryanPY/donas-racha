@@ -33,3 +33,8 @@ Investigación de avisos fuera de app: usuario A23 informa pedido sin aviso tras
 ## Drachas y seguimiento web, 18octubre2026
 
 Web pública ahora Drachas. customer-orders.js mantiene caché por propietario/token y generación, un request en vuelo y polling15s visible/online con activos; catálogo mantiene su invalidación independiente. API dr1 del cliente separa activos/historial con paginación, timestamps y filtros customer_id. La doble lectura se reconcilia por versión; acciones comerciales conservan RPC/transacciones. order-confirmation.js gestiona recibo/detalle sin repetir creación. Sin nueva ruta lambda, SQL o base paralela. [Informe](../DRACHAS_WEB_2026-10-18.md).
+
+
+## Portada de recompensas — 18 octubre 2026
+
+La portada usa landing.css/landing.js sobre el HTML existente. Selección nextRewardState compartida con Perfil. Al restaurar una sesión, una lectura privada getCliente por la API actual; no hay polling, nueva autoridad comercial ni endpoint. Estilos delimitados por #roleOverlay y fotografía pendiente explícita. Ver ../DRACHAS_PORTADA_2026-10-18.md.

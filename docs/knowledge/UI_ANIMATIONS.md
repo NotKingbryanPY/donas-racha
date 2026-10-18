@@ -1,5 +1,9 @@
 # Interfaz y diseño
 
+## Portada sobria de recompensas
+
+Referencia18octubre en landing.css, aislada de Perfil/Dashboard. Hero y tarjeta en dos columnas desde900px; orden vertical móvil. Logo SVG y Nunito conservados. Fondo100E17/tarjetas17121F, lilaBE8AEE, botones7928C4/8B3BD4 y divisores332A3E. Se elimina el DOM de órbitas/dona flotante/torre y se limita el tilt/reveal a pantallas privadas. Sellos adaptables con valores reales en puntos; estado anónimo sin progreso ficticio. Foto pendiente: espacio beige identificado y reemplazable. [Implementación y límites](../DRACHAS_PORTADA_2026-10-18.md).
+
 ## Implementación aprobada Drachas18octubre
 
 C elegida: SVG Dr/dona y glaseado + achas, versiones ligeras e iconos, marca visible en web. Pedidos activos antes del formulario; badge/perfil, progreso real, detalles y anteriores. Recibo nativo contextual con consulta verificada, símbolo1s→check, reduced motion y celebración única. Sin re-render idéntico del detalle, conserva expansión/foco. Carrito320px en grid para que los nombres no se partan. Tutorial1 solo cambia marca/texto y evita foco al detener un tutorial inactivo. [Informe](../DRACHAS_WEB_2026-10-18.md).

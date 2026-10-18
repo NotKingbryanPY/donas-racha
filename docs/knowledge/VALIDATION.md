@@ -1,5 +1,11 @@
 # Verificación de Drachas y Donas Control
 
+## Portada de recompensas — 18 octubre 2026
+
+PASS landing-web.cjs a320/390/768/1024/1440: sin desbordamiento, seis sellos dentro del ancho, apilado móvil/dos columnas, precio desde catálogo, Ranking/tienda/pedido, foco, puntos disponibles (no históricos/compras), reducción al canjear y limpieza al salir. Restaurar sesión y cambiar de cuenta con la lectura anterior retenida conserva el saldo nuevo. Capturas de hero/pedidos revisadas a390/1440 con fixtures. Un primer arranque local agotó30s en navegación; repetición completa y diagnóstico de carga pasaron sin relajar aserciones/timeout. No es evidencia de un fallo de producción.
+
+Regresiones locales PASS: integración de pedidos360/768/1440, navegación/historial cliente y staff, interacción/movimiento, catálogo SDK real con proveedores simulados, contrato de precio/agotado y sintaxis. Logo intacto; sin SQL, cuentas, pedidos o saldos de producción modificados. Foto real pendiente con placeholder explícito autorizado. Sin prueba física de Safari iPad o lector de pantalla. Ver [informe](../DRACHAS_PORTADA_2026-10-18.md); CI y despliegue se registran en la PR correspondiente.
+
 ## Web Drachas — 18 de octubre de 2026
 
 Ajuste posterior de Ver confirmación: regresión existente `integration-order-web.cjs` y sintaxis PASS. Inspección temporal sobre sus fixtures a 360/768/1440 px confirmó foco de teclado visible de 3 px y apertura del diálogo con Enter. Tamaños medidos: 286×91,39 px en móvil y 618×76 px en tablet/escritorio; el texto envuelve sin fijar la altura. Capturas `test-output/integration/receipt-button-*.png` revisadas con datos ficticios. Contraste calculado sobre colores sólidos: título 13,87:1 y ayuda 8,84:1 en reposo; mínimos 11,23:1 y 7,15:1 en pulsación. No equivale a certificar toda la página ni a una prueba física de lector de pantalla o Safari iPad. La evidencia de despliegue se adjunta a la PR correspondiente; estos resultados de navegador son locales.

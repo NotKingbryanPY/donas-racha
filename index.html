@@ -119,6 +119,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
 <link rel="stylesheet" href="assets/css/redesign.css?v=2.0.0">
 <link rel="stylesheet" href="assets/css/drachas-brand.css?v=1">
 <link rel="stylesheet" href="assets/css/customer-orders.css?v=2">
+<link rel="stylesheet" href="assets/css/landing.css?v=1">
 </head>
 <body>
 
@@ -128,33 +129,53 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
       <a class="brand-row" href="#" aria-label="Drachas, inicio" onclick="goToRoleScreen();return false">
         <img class="brand-lockup" src="assets/images/drachas-logo.svg" width="190" height="42" alt="Drachas">
       </a>
-      <div class="landing-nav"><a class="nav-link" href="#sabores">Sabores</a><button class="nav-link" onclick="showPublicRanking()">Ranking <span aria-hidden="true">↗</span></button><span class="campus-tag">HECHO PARA TU CAMPUS</span></div>
+      <nav class="landing-nav" aria-label="Navegación principal"><a class="nav-link" href="#sabores">Sabores</a><button class="nav-link" onclick="showPublicRanking()">Ranking</button><a class="landing-profile-link" href="?profile=1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2Z"/></svg>Mi perfil</a></nav>
     </header>
     <section class="landing-hero">
       <div class="hero-copy">
         <p class="eyebrow"><span></span> UN ANTOJO. MUCHAS RECOMPENSAS.</p>
-        <h1 id="welcomeHeading" class="welcome-title">Lo bueno<br>se vuelve <em>racha.</em></h1>
-        <p class="welcome-desc">Tu próxima dona también suma.<br>Compra, sube de nivel y convierte tus puntos en algo delicioso.</p>
-        <div class="hero-actions"><button class="btn btn-primary role-client-cta" onclick="customerWantsOrder=false;goToUserLogin()">Entrar a mi perfil <span aria-hidden="true">↗</span></button></div>
-        <div class="hero-footnote"><span class="small-ring" aria-hidden="true"></span> Pequeños antojos. Grandes motivos para volver.</div>
+        <h1 id="welcomeHeading" class="welcome-title"><span>Cada antojo</span><em>suma.</em></h1>
+        <p class="welcome-desc">Disfruta tus donas favoritas y acércate a tu próxima recompensa.</p>
+        <div class="hero-actions"><a class="btn btn-primary role-client-cta" href="?profile=1&amp;view=shop">Ver mis recompensas <span aria-hidden="true">→</span></a></div>
       </div>
-      <div class="hero-art" aria-label="Dona de vainilla con sprinkles, presentación ilustrativa">
-        <div class="hero-orbit orbit-one" aria-hidden="true"></div><div class="hero-orbit orbit-two" aria-hidden="true"></div>
-        <div class="hero-media"><img id="heroDonut" src="assets/images/donut-hero.webp" srcset="assets/images/donut-hero-small.webp 480w, assets/images/donut-hero.webp 960w" sizes="(max-width: 759px) 92vw, 520px" width="960" height="960" fetchpriority="high" alt="Dona de glaseado blanco con sprinkles de colores"></div>
-        <div class="floating-label flavor-label"><span class="label-spark" aria-hidden="true">✦</span><span>El antojo de siempre.<br><b>Una nueva forma de disfrutarlo.</b></span></div>
-        <div class="floating-label reward-label"><span aria-hidden="true">✧</span><span>CADA COMPRA CUENTA<b>Tu racha empieza contigo</b></span></div>
-        <span class="art-caption">VAINILLA · CHOCOLATE · SPRINKLES</span>
+      <div class="landing-rewards">
+        <article class="landing-reward-card" aria-labelledby="landingRewardTitle">
+          <img class="landing-reward-logo" src="assets/images/drachas-logo.svg" width="150" height="33" alt="Drachas">
+          <p class="landing-reward-label">TU TARJETA DE RECOMPENSAS</p>
+          <h2 id="landingRewardTitle">Tu próxima recompensa</h2>
+          <div id="landingRewardMeter" class="landing-reward-meter">
+            <div class="landing-stamps" aria-hidden="true">
+              <span class="landing-stamp"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg></span>
+              <span class="landing-stamp"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg></span>
+              <span class="landing-stamp"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg></span>
+              <span class="landing-stamp"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg></span>
+              <span class="landing-stamp"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg></span>
+              <span class="landing-stamp landing-stamp-gift"><svg viewBox="0 0 24 24"><path d="M4 10h16v11H4ZM3 6h18v4H3ZM12 6v15M12 6C7 6 5 5 5 3s5-3 7 3ZM12 6c5 0 7-1 7-3s-5-3-7 3Z"/></svg></span>
+            </div>
+          </div>
+          <p id="landingRewardStatus" class="landing-reward-status">Tu progreso, en tu perfil</p>
+          <p id="landingRewardTarget" class="landing-reward-target">Acumula puntos y canjéalos por premios.</p>
+          <p id="landingRewardHint" class="landing-reward-hint">Tu próxima recompensa está cerca.</p>
+          <span class="landing-reward-rule">CANJES CON PUNTOS</span>
+        </article>
+        <p class="landing-reward-caption">Compra. Acumula. Disfruta.</p>
       </div>
     </section>
     <section id="sabores" class="catalog-section" aria-labelledby="catalogHeading">
       <div class="donut-order-card">
-        <div class="donut-order-image"><img src="assets/images/donut-stack.webp" srcset="assets/images/donut-stack-small.webp 400w, assets/images/donut-stack.webp 800w" sizes="(min-width:760px) 320px, 180px" width="800" height="800" loading="lazy" decoding="async" alt="Cuatro donas apiladas: chocolate, vainilla, chocolate con chispas y vainilla con chispas"></div>
+        <figure class="landing-product-photo" data-photo-state="placeholder">
+          <div class="landing-product-photo-slot" role="img" aria-label="Espacio reservado para una fotografía real de una dona de chocolate y otra de vainilla, sobre papel de panadería claro">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15h10l4-6h8l4 6h10v25H6Z"/><circle cx="24" cy="27" r="8"/><path d="M35 21h1"/></svg>
+            <p>El antojo, al natural.</p><span>Espacio para nuestra fotografía de producto</span>
+          </div>
+          <figcaption><span>Chocolate</span><span>Vainilla</span></figcaption>
+        </figure>
         <div class="donut-order-copy">
           <p class="eyebrow"><span></span> UN ANTOJO A TU MEDIDA</p>
-          <h2 id="catalogHeading">Pide tus donas favoritas.</h2>
+          <h2 id="catalogHeading">Elige tu próximo antojo.</h2>
           <p class="donut-order-flavors">Chocolate o vainilla, con o sin chispas.<br>Elige tus sabores desde tu perfil.</p>
           <div id="publicCatalog" class="donut-order-meta" aria-live="polite" aria-busy="true"><span class="donut-order-status">Consultando precio…</span></div>
-          <button id="catalogOrderBtn" class="btn btn-primary" onclick="beginCustomerOrder()">Hacer pedido <span aria-hidden="true">↗</span></button>
+          <button id="catalogOrderBtn" class="btn btn-primary" onclick="beginCustomerOrder()">Hacer pedido <span aria-hidden="true">→</span></button>
           <p class="donut-order-payment">Entregas solo en el Edificio 4.<br>Pago al recibir: efectivo o Yappy</p>
         </div>
       </div>
@@ -870,9 +891,11 @@ function goToRoleScreen() {
   document.getElementById('roleOverlay').classList.remove('hidden');
   document.getElementById('loginOverlay').classList.add('hidden');
   document.getElementById('userOverlay').classList.add('hidden');
+  window.DonasLanding?.sync();
 }
 
 function goToAdminLogin() {
+  window.DonasLanding?.reset();
   cancelCustomerLogin();
   document.getElementById('roleOverlay').classList.add('hidden');
   document.getElementById('loginOverlay').classList.remove('hidden');
@@ -881,6 +904,7 @@ function goToAdminLogin() {
 }
 
 function goToUserLogin() {
+  window.DonasLanding?.reset();
   window.DonasCustomerOrders?.stop();
   window.DonasOrderFeedback?.reset();
   resetCustomerOrderForm();
@@ -1188,17 +1212,20 @@ function openProfilePanel(id) {
   if (!panel || (id === 'customerPasswordSettings' && !openedAsUser)) return;
   panel.showModal();
 }
-function renderProfilePreview(c) {
+function nextRewardState(c) {
   // Only real, active rewards returned by the API; use spendable balance after redemptions.
   const rewards = (c.shopItems || []).filter(r => Number.isFinite(Number(r.cost)) && Number(r.cost) > 0).sort((a,b) => Number(a.cost) - Number(b.cost));
-  const reward = rewards[0];
-  const available = Math.max(0, Number(c.pointsAvailable) || 0);
+  return {reward:rewards[0],available:Math.max(0,Number(c.pointsAvailable) || 0)};
+}
+function renderProfilePreview(c) {
+  const {reward,available}=nextRewardState(c);
   const el = document.getElementById('nextReward');
   if (!reward) el.innerHTML = '<p class="empty">Aún no hay premios disponibles. Tus puntos siguen guardados.</p>';
   else {
     const cost = Number(reward.cost), remaining = Math.max(0, cost - available), pct = Math.min(100, available / cost * 100);
     el.innerHTML = `<span class="reward-icon" aria-hidden="true">${safe(reward.emoji || '🎁')}</span><div class="reward-copy"><b>${safe(reward.name)}</b><span class="muted"> · ${cost} puntos</span><div class="reward-track" role="progressbar" aria-label="Puntos para ${safe(reward.name)}" aria-valuemin="0" aria-valuemax="${cost}" aria-valuenow="${Math.min(available,cost)}"><span style="width:${pct}%"></span></div><small>${remaining ? `Te faltan ${remaining} puntos` : '¡Ya puedes canjearlo!'}</small></div>${openedAsUser ? '<button class="text-action" onclick="setClientTab(&quot;shop&quot;)" aria-label="Ver tienda de recompensas">›</button>' : ''}`;
   }
+  window.DonasLanding?.renderRewards(c);
   const purchases = (c.recentHistory || []).filter(h => h.entryType ? ['PURCHASE_EARN','HISTORICAL_PURCHASES'].includes(h.entryType) : h.type === 'purchase').slice(0,3);
   document.getElementById('recentPurchases').innerHTML = purchases.length ? purchases.map(h => `<div class="recent-purchase"><span class="purchase-icon" aria-hidden="true">🍩</span><div><b>${h.entryType==='HISTORICAL_PURCHASES' ? safe(h.purchaseCount) + ' compras anteriores' : 'Compra registrada'}</b><small>${safe(fmtDateTime(h.date))}</small></div><strong>${Number(h.points) > 0 ? '+' + Number(h.points) + ' pts' : 'Registrada'}</strong></div>`).join('') : '<p class="empty">Todavía no tienes compras registradas.</p>';
 }
@@ -1747,7 +1774,8 @@ function esc(s){ return String(s ?? '').replace(/\\/g,'\\\\').replace(/'/g,"\\'"
 <script src="assets/js/catalog-realtime.js"></script>
 <script src="assets/js/admin-redemptions.js"></script>
 <script src="assets/js/admin-loyalty.js"></script>
-<script src="assets/js/motion.js?v=drachas-1"></script>
+<script src="assets/js/motion.js?v=landing-1"></script>
+<script src="assets/js/landing.js?v=1"></script>
 <script src="assets/js/client-tour.js?v=drachas-1" defer></script>
 </body>
 </html>

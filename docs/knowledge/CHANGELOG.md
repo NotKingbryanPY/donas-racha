@@ -1,5 +1,9 @@
 # Historial de decisiones y documentación
 
+## 2026-10-18 — portada de recompensas según referencia
+
+Hero «Cada antojo / suma.», tarjeta de recompensas, navegación Sabores/Ranking/Mi perfil y panel de pedidos sobrio; logo y funciones existentes preservados. CSS público aislado y movimiento decorativo retirado de portada. nextRewardState comparte selección real con Perfil; seis sellos representan puntos disponibles, sin inventar seis compras. Una lectura privada al restaurar sesión, cancelación/generación y limpieza al cambiar identidad. Precio/disponibilidad conservan catálogo. Sin foto real verificada: espacio reemplazable identificado; imágenes flotante/torre fuera del DOM público. Nueva prueba responsive/rutas/saldo/identidad; [informe y límites](../DRACHAS_PORTADA_2026-10-18.md). Sin API/SQL/secretos/Android nuevos.
+
 ## 2026-10-18 — acceso a la confirmación más visible
 
 El usuario mostró el botón Ver confirmación demasiado tenue y pegado a Confirmar pedido en iPad. Se ajustan solo HTML/CSS: tarjeta secundaria de ancho completo, recibo/ayuda, borde y foco visibles, altura mínima 76 px y separación 14 px. Nombre/descripción del control y relación con el diálogo nativo explícitos. `customer-orders.css?v=2` evita conservar el estilo anterior en caché. La recuperación pendiente recibe espacio/ancho propios. Regresión existente de pedidos y sintaxis PASS; inspección de navegador a360/768/1440 comprobó apertura con Enter y foco de3px. Sin cambios API, sesiones, pedidos, SQL o APK.

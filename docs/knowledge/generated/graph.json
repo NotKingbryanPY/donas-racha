@@ -1,10 +1,10 @@
 {
-  "source_commit": "83d46b25d9fce9cc9088989bfd32f625112d60b5",
+  "source_commit": "941a4f3664b80960cd6a67f8f964d40998a9bfd7",
   "scope": "working tree; lexical extraction, production unverified",
   "schema_version": 1,
   "extractor_version": 4,
   "hash_algorithm": "sha256; text CRLF normalized to LF; vendor/binary literal",
-  "model_sha256": "16ddcc774e3c1b9466ceb194a5978fda5b2d311854c35bc1df79a09c524c9be9",
+  "model_sha256": "f75c024bdc3e2001ac8db3002b92422dce1a3ba9929aaa74d0e488c6b54e6573",
   "limitations": [
     "No AST ni call graph exhaustivo",
     "No resuelve funciones renombradas ni overloads SQL",
@@ -11611,6 +11611,18 @@
       ]
     },
     {
+      "id": "file:assets/css/landing.css",
+      "type": "archivo",
+      "label": "assets/css/landing.css",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "assets/css/landing.css",
+          "line": 1
+        }
+      ]
+    },
+    {
       "id": "file:assets/css/redesign.css",
       "type": "archivo",
       "label": "assets/css/redesign.css",
@@ -12789,6 +12801,83 @@
       ]
     },
     {
+      "id": "file:assets/js/landing.js",
+      "type": "archivo",
+      "label": "assets/js/landing.js",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "assets/js/landing.js",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "file:assets/js/landing.js:function:draw:16",
+      "type": "function",
+      "label": "draw",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "assets/js/landing.js",
+          "line": 16,
+          "symbol": "draw"
+        }
+      ]
+    },
+    {
+      "id": "file:assets/js/landing.js:function:record:34",
+      "type": "function",
+      "label": "record",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "assets/js/landing.js",
+          "line": 34,
+          "symbol": "record"
+        }
+      ]
+    },
+    {
+      "id": "file:assets/js/landing.js:function:renderRewards:39",
+      "type": "function",
+      "label": "renderRewards",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "assets/js/landing.js",
+          "line": 39,
+          "symbol": "renderRewards"
+        }
+      ]
+    },
+    {
+      "id": "file:assets/js/landing.js:function:reset:7",
+      "type": "function",
+      "label": "reset",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "assets/js/landing.js",
+          "line": 7,
+          "symbol": "reset"
+        }
+      ]
+    },
+    {
+      "id": "file:assets/js/landing.js:function:sync:43",
+      "type": "function",
+      "label": "sync",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "assets/js/landing.js",
+          "line": 43,
+          "symbol": "sync"
+        }
+      ]
+    },
+    {
       "id": "file:assets/js/motion.js",
       "type": "archivo",
       "label": "assets/js/motion.js",
@@ -13279,6 +13368,18 @@
       "refs": [
         {
           "path": "docs/DONAS_CONTROL_AVISOS_SEGUNDO_PLANO.md",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "file:docs/DRACHAS_PORTADA_2026-10-18.md",
+      "type": "archivo",
+      "label": "docs/DRACHAS_PORTADA_2026-10-18.md",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "docs/DRACHAS_PORTADA_2026-10-18.md",
           "line": 1
         }
       ]
@@ -13844,1197 +13945,1210 @@
       ]
     },
     {
-      "id": "file:index.html:function:api:677",
+      "id": "file:index.html:function:api:698",
       "type": "function",
       "label": "api",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 677,
+          "line": 698,
           "symbol": "api"
         }
       ]
     },
     {
-      "id": "file:index.html:function:apiPost:851",
+      "id": "file:index.html:function:apiPost:872",
       "type": "function",
       "label": "apiPost",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 851,
+          "line": 872,
           "symbol": "apiPost"
         }
       ]
     },
     {
-      "id": "file:index.html:function:backendRequest:682",
+      "id": "file:index.html:function:backendRequest:703",
       "type": "function",
       "label": "backendRequest",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 682,
+          "line": 703,
           "symbol": "backendRequest"
         }
       ]
     },
     {
-      "id": "file:index.html:function:beginCustomerOrder:810",
+      "id": "file:index.html:function:beginCustomerOrder:831",
       "type": "function",
       "label": "beginCustomerOrder",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 810,
+          "line": 831,
           "symbol": "beginCustomerOrder"
         }
       ]
     },
     {
-      "id": "file:index.html:function:cancelCustomerLogin:1009",
+      "id": "file:index.html:function:cancelCustomerLogin:1033",
       "type": "function",
       "label": "cancelCustomerLogin",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1009,
+          "line": 1033,
           "symbol": "cancelCustomerLogin"
         }
       ]
     },
     {
-      "id": "file:index.html:function:changeClientOrderQty:1280",
+      "id": "file:index.html:function:changeClientOrderQty:1307",
       "type": "function",
       "label": "changeClientOrderQty",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1280,
+          "line": 1307,
           "symbol": "changeClientOrderQty"
         }
       ]
     },
     {
-      "id": "file:index.html:function:checkLogin:897",
+      "id": "file:index.html:function:checkLogin:921",
       "type": "function",
       "label": "checkLogin",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 897,
+          "line": 921,
           "symbol": "checkLogin"
         }
       ]
     },
     {
-      "id": "file:index.html:function:clearCustomerViewUrl:570",
+      "id": "file:index.html:function:clearCustomerViewUrl:591",
       "type": "function",
       "label": "clearCustomerViewUrl",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 570,
+          "line": 591,
           "symbol": "clearCustomerViewUrl"
         }
       ]
     },
     {
-      "id": "file:index.html:function:clearStaffViewUrl:585",
+      "id": "file:index.html:function:clearStaffViewUrl:606",
       "type": "function",
       "label": "clearStaffViewUrl",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 585,
+          "line": 606,
           "symbol": "clearStaffViewUrl"
         }
       ]
     },
     {
-      "id": "file:index.html:function:clientGoBack:959",
+      "id": "file:index.html:function:clientGoBack:983",
       "type": "function",
       "label": "clientGoBack",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 959,
+          "line": 983,
           "symbol": "clientGoBack"
         }
       ]
     },
     {
-      "id": "file:index.html:function:clientOrderStatus:1268",
+      "id": "file:index.html:function:clientOrderStatus:1295",
       "type": "function",
       "label": "clientOrderStatus",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1268,
+          "line": 1295,
           "symbol": "clientOrderStatus"
         }
       ]
     },
     {
-      "id": "file:index.html:function:closeInfoModal:670",
+      "id": "file:index.html:function:closeInfoModal:691",
       "type": "function",
       "label": "closeInfoModal",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 670,
+          "line": 691,
           "symbol": "closeInfoModal"
         }
       ]
     },
     {
-      "id": "file:index.html:function:completeCustomerActivation:1393",
+      "id": "file:index.html:function:completeCustomerActivation:1420",
       "type": "function",
       "label": "completeCustomerActivation",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1393,
+          "line": 1420,
           "symbol": "completeCustomerActivation"
         }
       ]
     },
     {
-      "id": "file:index.html:function:completeCustomerRecovery:1417",
+      "id": "file:index.html:function:completeCustomerRecovery:1444",
       "type": "function",
       "label": "completeCustomerRecovery",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1417,
+          "line": 1444,
           "symbol": "completeCustomerRecovery"
         }
       ]
     },
     {
-      "id": "file:index.html:function:confettiBurst:1734",
+      "id": "file:index.html:function:confettiBurst:1761",
       "type": "function",
       "label": "confettiBurst",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1734,
+          "line": 1761,
           "symbol": "confettiBurst"
         }
       ]
     },
     {
-      "id": "file:index.html:function:createClient:1538",
+      "id": "file:index.html:function:createClient:1565",
       "type": "function",
       "label": "createClient",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1538,
+          "line": 1565,
           "symbol": "createClient"
         }
       ]
     },
     {
-      "id": "file:index.html:function:customerRequest:815",
+      "id": "file:index.html:function:customerRequest:836",
       "type": "function",
       "label": "customerRequest",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 815,
+          "line": 836,
           "symbol": "customerRequest"
         }
       ]
     },
     {
-      "id": "file:index.html:function:customerViewFromUrl:555",
+      "id": "file:index.html:function:customerViewFromUrl:576",
       "type": "function",
       "label": "customerViewFromUrl",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 555,
+          "line": 576,
           "symbol": "customerViewFromUrl"
         }
       ]
     },
     {
-      "id": "file:index.html:function:doSearch:980",
+      "id": "file:index.html:function:doSearch:1004",
       "type": "function",
       "label": "doSearch",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 980,
+          "line": 1004,
           "symbol": "doSearch"
         }
       ]
     },
     {
-      "id": "file:index.html:function:enterAfterPasswordSetup:1381",
+      "id": "file:index.html:function:enterAfterPasswordSetup:1408",
       "type": "function",
       "label": "enterAfterPasswordSetup",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1381,
+          "line": 1408,
           "symbol": "enterAfterPasswordSetup"
         }
       ]
     },
     {
-      "id": "file:index.html:function:esc:1739",
+      "id": "file:index.html:function:esc:1766",
       "type": "function",
       "label": "esc",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1739,
+          "line": 1766,
           "symbol": "esc"
         }
       ]
     },
     {
-      "id": "file:index.html:function:filterAdminClients:1690",
+      "id": "file:index.html:function:filterAdminClients:1717",
       "type": "function",
       "label": "filterAdminClients",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1690,
+          "line": 1717,
           "symbol": "filterAdminClients"
         }
       ]
     },
     {
-      "id": "file:index.html:function:flattenCatalog:755",
+      "id": "file:index.html:function:flattenCatalog:776",
       "type": "function",
       "label": "flattenCatalog",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 755,
+          "line": 776,
           "symbol": "flattenCatalog"
         }
       ]
     },
     {
-      "id": "file:index.html:function:flavorTone:764",
+      "id": "file:index.html:function:flavorTone:785",
       "type": "function",
       "label": "flavorTone",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 764,
+          "line": 785,
           "symbol": "flavorTone"
         }
       ]
     },
     {
-      "id": "file:index.html:function:fmtDate:1735",
+      "id": "file:index.html:function:fmtDate:1762",
       "type": "function",
       "label": "fmtDate",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1735,
+          "line": 1762,
           "symbol": "fmtDate"
         }
       ]
     },
     {
-      "id": "file:index.html:function:fmtDateTime:1736",
+      "id": "file:index.html:function:fmtDateTime:1763",
       "type": "function",
       "label": "fmtDateTime",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1736,
+          "line": 1763,
           "symbol": "fmtDateTime"
         }
       ]
     },
     {
-      "id": "file:index.html:function:formatMoney:772",
+      "id": "file:index.html:function:formatMoney:793",
       "type": "function",
       "label": "formatMoney",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 772,
+          "line": 793,
           "symbol": "formatMoney"
         }
       ]
     },
     {
-      "id": "file:index.html:function:goHome:951",
+      "id": "file:index.html:function:goHome:975",
       "type": "function",
       "label": "goHome",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 951,
+          "line": 975,
           "symbol": "goHome"
         }
       ]
     },
     {
-      "id": "file:index.html:function:goToAdminLogin:875",
+      "id": "file:index.html:function:goToAdminLogin:897",
       "type": "function",
       "label": "goToAdminLogin",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 875,
+          "line": 897,
           "symbol": "goToAdminLogin"
         }
       ]
     },
     {
-      "id": "file:index.html:function:goToRoleScreen:862",
+      "id": "file:index.html:function:goToRoleScreen:883",
       "type": "function",
       "label": "goToRoleScreen",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 862,
+          "line": 883,
           "symbol": "goToRoleScreen"
         }
       ]
     },
     {
-      "id": "file:index.html:function:goToUserLogin:883",
+      "id": "file:index.html:function:goToUserLogin:906",
       "type": "function",
       "label": "goToUserLogin",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 883,
+          "line": 906,
           "symbol": "goToUserLogin"
         }
       ]
     },
     {
-      "id": "file:index.html:function:hideOverlays:855",
+      "id": "file:index.html:function:hideOverlays:876",
       "type": "function",
       "label": "hideOverlays",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 855,
+          "line": 876,
           "symbol": "hideOverlays"
         }
       ]
     },
     {
-      "id": "file:index.html:function:initial:1737",
+      "id": "file:index.html:function:initial:1764",
       "type": "function",
       "label": "initial",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1737,
+          "line": 1764,
           "symbol": "initial"
         }
       ]
     },
     {
-      "id": "file:index.html:function:loadAdminClients:1725",
+      "id": "file:index.html:function:loadAdminClients:1752",
       "type": "function",
       "label": "loadAdminClients",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1725,
+          "line": 1752,
           "symbol": "loadAdminClients"
         }
       ]
     },
     {
-      "id": "file:index.html:function:loadAdminDashboard:1638",
+      "id": "file:index.html:function:loadAdminDashboard:1665",
       "type": "function",
       "label": "loadAdminDashboard",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1638,
+          "line": 1665,
           "symbol": "loadAdminDashboard"
         }
       ]
     },
     {
-      "id": "file:index.html:function:loadAdminRanking:1720",
+      "id": "file:index.html:function:loadAdminRanking:1747",
       "type": "function",
       "label": "loadAdminRanking",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1720,
+          "line": 1747,
           "symbol": "loadAdminRanking"
         }
       ]
     },
     {
-      "id": "file:index.html:function:loadAdminStats:1691",
+      "id": "file:index.html:function:loadAdminStats:1718",
       "type": "function",
       "label": "loadAdminStats",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1691,
+          "line": 1718,
           "symbol": "loadAdminStats"
         }
       ]
     },
     {
-      "id": "file:index.html:function:loadClientDelivery:1239",
+      "id": "file:index.html:function:loadClientDelivery:1266",
       "type": "function",
       "label": "loadClientDelivery",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1239,
+          "line": 1266,
           "symbol": "loadClientDelivery"
         }
       ]
     },
     {
-      "id": "file:index.html:function:loadClientInlineRanking:1444",
+      "id": "file:index.html:function:loadClientInlineRanking:1471",
       "type": "function",
       "label": "loadClientInlineRanking",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1444,
+          "line": 1471,
           "symbol": "loadClientInlineRanking"
         }
       ]
     },
     {
-      "id": "file:index.html:function:loadConfig:1705",
+      "id": "file:index.html:function:loadConfig:1732",
       "type": "function",
       "label": "loadConfig",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1705,
+          "line": 1732,
           "symbol": "loadConfig"
         }
       ]
     },
     {
-      "id": "file:index.html:function:loadHomeRanking:972",
+      "id": "file:index.html:function:loadHomeRanking:996",
       "type": "function",
       "label": "loadHomeRanking",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 972,
+          "line": 996,
           "symbol": "loadHomeRanking"
         }
       ]
     },
     {
-      "id": "file:index.html:function:loadRanking:1611",
+      "id": "file:index.html:function:loadRanking:1638",
       "type": "function",
       "label": "loadRanking",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1611,
+          "line": 1638,
           "symbol": "loadRanking"
         }
       ]
     },
     {
-      "id": "file:index.html:function:loginCustomerById:1014",
+      "id": "file:index.html:function:loginCustomerById:1038",
       "type": "function",
       "label": "loginCustomerById",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1014,
+          "line": 1038,
           "symbol": "loginCustomerById"
         }
       ]
     },
     {
-      "id": "file:index.html:function:logout:922",
+      "id": "file:index.html:function:logout:946",
       "type": "function",
       "label": "logout",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 922,
+          "line": 946,
           "symbol": "logout"
         }
       ]
     },
     {
-      "id": "file:index.html:function:openClient:1074",
+      "id": "file:index.html:function:nextRewardState:1215",
+      "type": "function",
+      "label": "nextRewardState",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "index.html",
+          "line": 1215,
+          "symbol": "nextRewardState"
+        }
+      ]
+    },
+    {
+      "id": "file:index.html:function:openClient:1098",
       "type": "function",
       "label": "openClient",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1074,
+          "line": 1098,
           "symbol": "openClient"
         }
       ]
     },
     {
-      "id": "file:index.html:function:openInfoModal:663",
+      "id": "file:index.html:function:openInfoModal:684",
       "type": "function",
       "label": "openInfoModal",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 663,
+          "line": 684,
           "symbol": "openInfoModal"
         }
       ]
     },
     {
-      "id": "file:index.html:function:openProfilePanel:1186",
+      "id": "file:index.html:function:openProfilePanel:1210",
       "type": "function",
       "label": "openProfilePanel",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1186,
+          "line": 1210,
           "symbol": "openProfilePanel"
         }
       ]
     },
     {
-      "id": "file:index.html:function:openUserById:995",
+      "id": "file:index.html:function:openUserById:1019",
       "type": "function",
       "label": "openUserById",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 995,
+          "line": 1019,
           "symbol": "openUserById"
         }
       ]
     },
     {
-      "id": "file:index.html:function:preloadSupabaseProducts:745",
+      "id": "file:index.html:function:preloadSupabaseProducts:766",
       "type": "function",
       "label": "preloadSupabaseProducts",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 745,
+          "line": 766,
           "symbol": "preloadSupabaseProducts"
         }
       ]
     },
     {
-      "id": "file:index.html:function:progressiveRanking:739",
+      "id": "file:index.html:function:progressiveRanking:760",
       "type": "function",
       "label": "progressiveRanking",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 739,
+          "line": 760,
           "symbol": "progressiveRanking"
         }
       ]
     },
     {
-      "id": "file:index.html:function:rankingBack:958",
+      "id": "file:index.html:function:rankingBack:982",
       "type": "function",
       "label": "rankingBack",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 958,
+          "line": 982,
           "symbol": "rankingBack"
         }
       ]
     },
     {
-      "id": "file:index.html:function:redeemItem:1482",
+      "id": "file:index.html:function:redeemItem:1509",
       "type": "function",
       "label": "redeemItem",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1482,
+          "line": 1509,
           "symbol": "redeemItem"
         }
       ]
     },
     {
-      "id": "file:index.html:function:registerPurchase:1502",
+      "id": "file:index.html:function:registerPurchase:1529",
       "type": "function",
       "label": "registerPurchase",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1502,
+          "line": 1529,
           "symbol": "registerPurchase"
         }
       ]
     },
     {
-      "id": "file:index.html:function:renderAdminClients:1681",
+      "id": "file:index.html:function:renderAdminClients:1708",
       "type": "function",
       "label": "renderAdminClients",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1681,
+          "line": 1708,
           "symbol": "renderAdminClients"
         }
       ]
     },
     {
-      "id": "file:index.html:function:renderAdminConfig:1668",
+      "id": "file:index.html:function:renderAdminConfig:1695",
       "type": "function",
       "label": "renderAdminConfig",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1668,
+          "line": 1695,
           "symbol": "renderAdminConfig"
         }
       ]
     },
     {
-      "id": "file:index.html:function:renderAdminRanking:1677",
+      "id": "file:index.html:function:renderAdminRanking:1704",
       "type": "function",
       "label": "renderAdminRanking",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1677,
+          "line": 1704,
           "symbol": "renderAdminRanking"
         }
       ]
     },
     {
-      "id": "file:index.html:function:renderAdminStats:1656",
+      "id": "file:index.html:function:renderAdminStats:1683",
       "type": "function",
       "label": "renderAdminStats",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1656,
+          "line": 1683,
           "symbol": "renderAdminStats"
         }
       ]
     },
     {
-      "id": "file:index.html:function:renderBadges:1181",
+      "id": "file:index.html:function:renderBadges:1205",
       "type": "function",
       "label": "renderBadges",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1181,
+          "line": 1205,
           "symbol": "renderBadges"
         }
       ]
     },
     {
-      "id": "file:index.html:function:renderClient:1105",
+      "id": "file:index.html:function:renderClient:1129",
       "type": "function",
       "label": "renderClient",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1105,
+          "line": 1129,
           "symbol": "renderClient"
         }
       ]
     },
     {
-      "id": "file:index.html:function:renderClientFlavors:1272",
+      "id": "file:index.html:function:renderClientFlavors:1299",
       "type": "function",
       "label": "renderClientFlavors",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1272,
+          "line": 1299,
           "symbol": "renderClientFlavors"
         }
       ]
     },
     {
-      "id": "file:index.html:function:renderHistory:1205",
+      "id": "file:index.html:function:renderHistory:1232",
       "type": "function",
       "label": "renderHistory",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1205,
+          "line": 1232,
           "symbol": "renderHistory"
         }
       ]
     },
     {
-      "id": "file:index.html:function:renderHitos:1177",
+      "id": "file:index.html:function:renderHitos:1201",
       "type": "function",
       "label": "renderHitos",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1177,
+          "line": 1201,
           "symbol": "renderHitos"
         }
       ]
     },
     {
-      "id": "file:index.html:function:renderPointRules:1460",
+      "id": "file:index.html:function:renderPointRules:1487",
       "type": "function",
       "label": "renderPointRules",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1460,
+          "line": 1487,
           "symbol": "renderPointRules"
         }
       ]
     },
     {
-      "id": "file:index.html:function:renderProfilePreview:1191",
+      "id": "file:index.html:function:renderProfilePreview:1220",
       "type": "function",
       "label": "renderProfilePreview",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1191,
+          "line": 1220,
           "symbol": "renderProfilePreview"
         }
       ]
     },
     {
-      "id": "file:index.html:function:renderPublicCatalog:778",
+      "id": "file:index.html:function:renderPublicCatalog:799",
       "type": "function",
       "label": "renderPublicCatalog",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 778,
+          "line": 799,
           "symbol": "renderPublicCatalog"
         }
       ]
     },
     {
-      "id": "file:index.html:function:renderRankingItems:1617",
+      "id": "file:index.html:function:renderRankingItems:1644",
       "type": "function",
       "label": "renderRankingItems",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1617,
+          "line": 1644,
           "symbol": "renderRankingItems"
         }
       ]
     },
     {
-      "id": "file:index.html:function:renderRedemptions:1475",
+      "id": "file:index.html:function:renderRedemptions:1502",
       "type": "function",
       "label": "renderRedemptions",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1475,
+          "line": 1502,
           "symbol": "renderRedemptions"
         }
       ]
     },
     {
-      "id": "file:index.html:function:renderShop:1466",
+      "id": "file:index.html:function:renderShop:1493",
       "type": "function",
       "label": "renderShop",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1466,
+          "line": 1493,
           "symbol": "renderShop"
         }
       ]
     },
     {
-      "id": "file:index.html:function:requireAuth:933",
+      "id": "file:index.html:function:requireAuth:957",
       "type": "function",
       "label": "requireAuth",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 933,
+          "line": 957,
           "symbol": "requireAuth"
         }
       ]
     },
     {
-      "id": "file:index.html:function:resetCustomerLoginState:1001",
+      "id": "file:index.html:function:resetCustomerLoginState:1025",
       "type": "function",
       "label": "resetCustomerLoginState",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1001,
+          "line": 1025,
           "symbol": "resetCustomerLoginState"
         }
       ]
     },
     {
-      "id": "file:index.html:function:resetCustomerOrderForm:543",
+      "id": "file:index.html:function:resetCustomerOrderForm:564",
       "type": "function",
       "label": "resetCustomerOrderForm",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 543,
+          "line": 564,
           "symbol": "resetCustomerOrderForm"
         }
       ]
     },
     {
-      "id": "file:index.html:function:restoreStaffView:590",
+      "id": "file:index.html:function:restoreStaffView:611",
       "type": "function",
       "label": "restoreStaffView",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 590,
+          "line": 611,
           "symbol": "restoreStaffView"
         }
       ]
     },
     {
-      "id": "file:index.html:function:safe:1738",
+      "id": "file:index.html:function:safe:1765",
       "type": "function",
       "label": "safe",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1738,
+          "line": 1765,
           "symbol": "safe"
         }
       ]
     },
     {
-      "id": "file:index.html:function:saveCustomerPassword:1348",
+      "id": "file:index.html:function:saveCustomerPassword:1375",
       "type": "function",
       "label": "saveCustomerPassword",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1348,
+          "line": 1375,
           "symbol": "saveCustomerPassword"
         }
       ]
     },
     {
-      "id": "file:index.html:function:saveQuickConfig:1708",
+      "id": "file:index.html:function:saveQuickConfig:1735",
       "type": "function",
       "label": "saveQuickConfig",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1708,
+          "line": 1735,
           "symbol": "saveQuickConfig"
         }
       ]
     },
     {
-      "id": "file:index.html:function:sendNewWA:1571",
+      "id": "file:index.html:function:sendNewWA:1598",
       "type": "function",
       "label": "sendNewWA",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1571,
+          "line": 1598,
           "symbol": "sendNewWA"
         }
       ]
     },
     {
-      "id": "file:index.html:function:setClientRanking:1436",
+      "id": "file:index.html:function:setClientRanking:1463",
       "type": "function",
       "label": "setClientRanking",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1436,
+          "line": 1463,
           "symbol": "setClientRanking"
         }
       ]
     },
     {
-      "id": "file:index.html:function:setClientTab:1212",
+      "id": "file:index.html:function:setClientTab:1239",
       "type": "function",
       "label": "setClientTab",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1212,
+          "line": 1239,
           "symbol": "setClientTab"
         }
       ]
     },
     {
-      "id": "file:index.html:function:shareNewUsername:1561",
+      "id": "file:index.html:function:shareNewUsername:1588",
       "type": "function",
       "label": "shareNewUsername",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1561,
+          "line": 1588,
           "symbol": "shareNewUsername"
         }
       ]
     },
     {
-      "id": "file:index.html:function:showAdmin:1626",
+      "id": "file:index.html:function:showAdmin:1653",
       "type": "function",
       "label": "showAdmin",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1626,
+          "line": 1653,
           "symbol": "showAdmin"
         }
       ]
     },
     {
-      "id": "file:index.html:function:showCustomerActivation:1367",
+      "id": "file:index.html:function:showCustomerActivation:1394",
       "type": "function",
       "label": "showCustomerActivation",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1367,
+          "line": 1394,
           "symbol": "showCustomerActivation"
         }
       ]
     },
     {
-      "id": "file:index.html:function:showCustomerRecovery:1374",
+      "id": "file:index.html:function:showCustomerRecovery:1401",
       "type": "function",
       "label": "showCustomerRecovery",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1374,
+          "line": 1401,
           "symbol": "showCustomerRecovery"
         }
       ]
     },
     {
-      "id": "file:index.html:function:showPublicRanking:1610",
+      "id": "file:index.html:function:showPublicRanking:1637",
       "type": "function",
       "label": "showPublicRanking",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1610,
+          "line": 1637,
           "symbol": "showPublicRanking"
         }
       ]
     },
     {
-      "id": "file:index.html:function:showScreen:936",
+      "id": "file:index.html:function:showScreen:960",
       "type": "function",
       "label": "showScreen",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 936,
+          "line": 960,
           "symbol": "showScreen"
         }
       ]
     },
     {
-      "id": "file:index.html:function:showToast:1733",
+      "id": "file:index.html:function:showToast:1760",
       "type": "function",
       "label": "showToast",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1733,
+          "line": 1760,
           "symbol": "showToast"
         }
       ]
     },
     {
-      "id": "file:index.html:function:submitClientOrder:1305",
+      "id": "file:index.html:function:submitClientOrder:1332",
       "type": "function",
       "label": "submitClientOrder",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1305,
+          "line": 1332,
           "symbol": "submitClientOrder"
         }
       ]
     },
     {
-      "id": "file:index.html:function:tryShowAdmin:934",
+      "id": "file:index.html:function:tryShowAdmin:958",
       "type": "function",
       "label": "tryShowAdmin",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 934,
+          "line": 958,
           "symbol": "tryShowAdmin"
         }
       ]
     },
     {
-      "id": "file:index.html:function:updateClientOrderTotal:1298",
+      "id": "file:index.html:function:updateClientOrderTotal:1325",
       "type": "function",
       "label": "updateClientOrderTotal",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1298,
+          "line": 1325,
           "symbol": "updateClientOrderTotal"
         }
       ]
     },
     {
-      "id": "file:index.html:function:updateCustomerViewUrl:559",
+      "id": "file:index.html:function:updateCustomerViewUrl:580",
       "type": "function",
       "label": "updateCustomerViewUrl",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 559,
+          "line": 580,
           "symbol": "updateCustomerViewUrl"
         }
       ]
     },
     {
-      "id": "file:index.html:function:updateStaffViewUrl:576",
+      "id": "file:index.html:function:updateStaffViewUrl:597",
       "type": "function",
       "label": "updateStaffViewUrl",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 576,
+          "line": 597,
           "symbol": "updateStaffViewUrl"
         }
       ]
     },
     {
-      "id": "file:index.html:function:vercelApi:711",
+      "id": "file:index.html:function:vercelApi:732",
       "type": "function",
       "label": "vercelApi",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 711,
+          "line": 732,
           "symbol": "vercelApi"
         }
       ]
     },
     {
-      "id": "file:index.html:function:vercelPost:728",
+      "id": "file:index.html:function:vercelPost:749",
       "type": "function",
       "label": "vercelPost",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 728,
+          "line": 749,
           "symbol": "vercelPost"
         }
       ]
@@ -21958,6 +22072,31 @@
       ]
     },
     {
+      "id": "file:tests/landing-web.cjs",
+      "type": "archivo",
+      "label": "tests/landing-web.cjs",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "tests/landing-web.cjs",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "file:tests/landing-web.cjs:function:fixture:7",
+      "type": "function",
+      "label": "fixture",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "tests/landing-web.cjs",
+          "line": 7,
+          "symbol": "fixture"
+        }
+      ]
+    },
+    {
       "id": "file:tests/manual-inventory-postgres.mjs",
       "type": "archivo",
       "label": "tests/manual-inventory-postgres.mjs",
@@ -25642,6 +25781,26 @@
       ]
     },
     {
+      "id": "ui:landing-rewards",
+      "type": "componente",
+      "label": "Portada sobria y progreso real en puntos",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "assets/js/landing.js",
+          "line": 1
+        },
+        {
+          "path": "assets/css/landing.css",
+          "line": 1
+        },
+        {
+          "path": "tests/landing-web.cjs",
+          "line": 1
+        }
+      ]
+    },
+    {
       "id": "ui:notification-check",
       "type": "componente",
       "label": "Comprobación de avisos según WorkInfo",
@@ -25988,6 +26147,42 @@
       "refs": [
         {
           "path": "api/_lib/customer_handlers/orders.js",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "source": "system:web",
+      "target": "ui:landing-rewards",
+      "type": "IMPLEMENTA",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "index.html",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "source": "ui:landing-rewards",
+      "target": "feature:loyalty",
+      "type": "LEE_DE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "assets/js/landing.js",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "source": "ui:landing-rewards",
+      "target": "feature:drachas-brand",
+      "type": "DEPENDE_DE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "assets/css/landing.css",
           "line": 1
         }
       ]
@@ -37744,6 +37939,71 @@
       ]
     },
     {
+      "source": "file:assets/js/landing.js",
+      "target": "file:assets/js/landing.js:function:reset:7",
+      "type": "CONTIENE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "assets/js/landing.js",
+          "line": 7,
+          "symbol": "reset"
+        }
+      ]
+    },
+    {
+      "source": "file:assets/js/landing.js",
+      "target": "file:assets/js/landing.js:function:draw:16",
+      "type": "CONTIENE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "assets/js/landing.js",
+          "line": 16,
+          "symbol": "draw"
+        }
+      ]
+    },
+    {
+      "source": "file:assets/js/landing.js",
+      "target": "file:assets/js/landing.js:function:record:34",
+      "type": "CONTIENE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "assets/js/landing.js",
+          "line": 34,
+          "symbol": "record"
+        }
+      ]
+    },
+    {
+      "source": "file:assets/js/landing.js",
+      "target": "file:assets/js/landing.js:function:renderRewards:39",
+      "type": "CONTIENE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "assets/js/landing.js",
+          "line": 39,
+          "symbol": "renderRewards"
+        }
+      ]
+    },
+    {
+      "source": "file:assets/js/landing.js",
+      "target": "file:assets/js/landing.js:function:sync:43",
+      "type": "CONTIENE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "assets/js/landing.js",
+          "line": 43,
+          "symbol": "sync"
+        }
+      ]
+    },
+    {
       "source": "file:assets/js/motion.js",
       "target": "file:assets/js/motion.js:function:customerWelcome:17",
       "type": "CONTIENE",
@@ -38044,1196 +38304,1209 @@
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:resetCustomerOrderForm:543",
+      "target": "file:index.html:function:resetCustomerOrderForm:564",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 543,
+          "line": 564,
           "symbol": "resetCustomerOrderForm"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:customerViewFromUrl:555",
-      "type": "CONTIENE",
-      "status": "CONFIRMADO_CODIGO",
-      "refs": [
-        {
-          "path": "index.html",
-          "line": 555,
-          "symbol": "customerViewFromUrl"
-        }
-      ]
-    },
-    {
-      "source": "file:index.html",
-      "target": "file:index.html:function:updateCustomerViewUrl:559",
-      "type": "CONTIENE",
-      "status": "CONFIRMADO_CODIGO",
-      "refs": [
-        {
-          "path": "index.html",
-          "line": 559,
-          "symbol": "updateCustomerViewUrl"
-        }
-      ]
-    },
-    {
-      "source": "file:index.html",
-      "target": "file:index.html:function:clearCustomerViewUrl:570",
-      "type": "CONTIENE",
-      "status": "CONFIRMADO_CODIGO",
-      "refs": [
-        {
-          "path": "index.html",
-          "line": 570,
-          "symbol": "clearCustomerViewUrl"
-        }
-      ]
-    },
-    {
-      "source": "file:index.html",
-      "target": "file:index.html:function:updateStaffViewUrl:576",
+      "target": "file:index.html:function:customerViewFromUrl:576",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
           "line": 576,
+          "symbol": "customerViewFromUrl"
+        }
+      ]
+    },
+    {
+      "source": "file:index.html",
+      "target": "file:index.html:function:updateCustomerViewUrl:580",
+      "type": "CONTIENE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "index.html",
+          "line": 580,
+          "symbol": "updateCustomerViewUrl"
+        }
+      ]
+    },
+    {
+      "source": "file:index.html",
+      "target": "file:index.html:function:clearCustomerViewUrl:591",
+      "type": "CONTIENE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "index.html",
+          "line": 591,
+          "symbol": "clearCustomerViewUrl"
+        }
+      ]
+    },
+    {
+      "source": "file:index.html",
+      "target": "file:index.html:function:updateStaffViewUrl:597",
+      "type": "CONTIENE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "index.html",
+          "line": 597,
           "symbol": "updateStaffViewUrl"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:clearStaffViewUrl:585",
+      "target": "file:index.html:function:clearStaffViewUrl:606",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 585,
+          "line": 606,
           "symbol": "clearStaffViewUrl"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:restoreStaffView:590",
+      "target": "file:index.html:function:restoreStaffView:611",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 590,
+          "line": 611,
           "symbol": "restoreStaffView"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:openInfoModal:663",
+      "target": "file:index.html:function:openInfoModal:684",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 663,
+          "line": 684,
           "symbol": "openInfoModal"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:closeInfoModal:670",
+      "target": "file:index.html:function:closeInfoModal:691",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 670,
+          "line": 691,
           "symbol": "closeInfoModal"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:api:677",
+      "target": "file:index.html:function:api:698",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 677,
+          "line": 698,
           "symbol": "api"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:backendRequest:682",
+      "target": "file:index.html:function:backendRequest:703",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 682,
+          "line": 703,
           "symbol": "backendRequest"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:vercelApi:711",
+      "target": "file:index.html:function:vercelApi:732",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 711,
+          "line": 732,
           "symbol": "vercelApi"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:vercelPost:728",
+      "target": "file:index.html:function:vercelPost:749",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 728,
+          "line": 749,
           "symbol": "vercelPost"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:progressiveRanking:739",
+      "target": "file:index.html:function:progressiveRanking:760",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 739,
+          "line": 760,
           "symbol": "progressiveRanking"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:preloadSupabaseProducts:745",
+      "target": "file:index.html:function:preloadSupabaseProducts:766",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 745,
+          "line": 766,
           "symbol": "preloadSupabaseProducts"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:flattenCatalog:755",
+      "target": "file:index.html:function:flattenCatalog:776",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 755,
+          "line": 776,
           "symbol": "flattenCatalog"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:flavorTone:764",
+      "target": "file:index.html:function:flavorTone:785",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 764,
+          "line": 785,
           "symbol": "flavorTone"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:formatMoney:772",
+      "target": "file:index.html:function:formatMoney:793",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 772,
+          "line": 793,
           "symbol": "formatMoney"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:renderPublicCatalog:778",
+      "target": "file:index.html:function:renderPublicCatalog:799",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 778,
+          "line": 799,
           "symbol": "renderPublicCatalog"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:beginCustomerOrder:810",
+      "target": "file:index.html:function:beginCustomerOrder:831",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 810,
+          "line": 831,
           "symbol": "beginCustomerOrder"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:customerRequest:815",
+      "target": "file:index.html:function:customerRequest:836",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 815,
+          "line": 836,
           "symbol": "customerRequest"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:apiPost:851",
+      "target": "file:index.html:function:apiPost:872",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 851,
+          "line": 872,
           "symbol": "apiPost"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:hideOverlays:855",
+      "target": "file:index.html:function:hideOverlays:876",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 855,
+          "line": 876,
           "symbol": "hideOverlays"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:goToRoleScreen:862",
-      "type": "CONTIENE",
-      "status": "CONFIRMADO_CODIGO",
-      "refs": [
-        {
-          "path": "index.html",
-          "line": 862,
-          "symbol": "goToRoleScreen"
-        }
-      ]
-    },
-    {
-      "source": "file:index.html",
-      "target": "file:index.html:function:goToAdminLogin:875",
-      "type": "CONTIENE",
-      "status": "CONFIRMADO_CODIGO",
-      "refs": [
-        {
-          "path": "index.html",
-          "line": 875,
-          "symbol": "goToAdminLogin"
-        }
-      ]
-    },
-    {
-      "source": "file:index.html",
-      "target": "file:index.html:function:goToUserLogin:883",
+      "target": "file:index.html:function:goToRoleScreen:883",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
           "line": 883,
-          "symbol": "goToUserLogin"
+          "symbol": "goToRoleScreen"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:checkLogin:897",
+      "target": "file:index.html:function:goToAdminLogin:897",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
           "line": 897,
+          "symbol": "goToAdminLogin"
+        }
+      ]
+    },
+    {
+      "source": "file:index.html",
+      "target": "file:index.html:function:goToUserLogin:906",
+      "type": "CONTIENE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "index.html",
+          "line": 906,
+          "symbol": "goToUserLogin"
+        }
+      ]
+    },
+    {
+      "source": "file:index.html",
+      "target": "file:index.html:function:checkLogin:921",
+      "type": "CONTIENE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "index.html",
+          "line": 921,
           "symbol": "checkLogin"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:logout:922",
+      "target": "file:index.html:function:logout:946",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 922,
+          "line": 946,
           "symbol": "logout"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:requireAuth:933",
+      "target": "file:index.html:function:requireAuth:957",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 933,
+          "line": 957,
           "symbol": "requireAuth"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:tryShowAdmin:934",
-      "type": "CONTIENE",
-      "status": "CONFIRMADO_CODIGO",
-      "refs": [
-        {
-          "path": "index.html",
-          "line": 934,
-          "symbol": "tryShowAdmin"
-        }
-      ]
-    },
-    {
-      "source": "file:index.html",
-      "target": "file:index.html:function:showScreen:936",
-      "type": "CONTIENE",
-      "status": "CONFIRMADO_CODIGO",
-      "refs": [
-        {
-          "path": "index.html",
-          "line": 936,
-          "symbol": "showScreen"
-        }
-      ]
-    },
-    {
-      "source": "file:index.html",
-      "target": "file:index.html:function:goHome:951",
-      "type": "CONTIENE",
-      "status": "CONFIRMADO_CODIGO",
-      "refs": [
-        {
-          "path": "index.html",
-          "line": 951,
-          "symbol": "goHome"
-        }
-      ]
-    },
-    {
-      "source": "file:index.html",
-      "target": "file:index.html:function:rankingBack:958",
+      "target": "file:index.html:function:tryShowAdmin:958",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
           "line": 958,
+          "symbol": "tryShowAdmin"
+        }
+      ]
+    },
+    {
+      "source": "file:index.html",
+      "target": "file:index.html:function:showScreen:960",
+      "type": "CONTIENE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "index.html",
+          "line": 960,
+          "symbol": "showScreen"
+        }
+      ]
+    },
+    {
+      "source": "file:index.html",
+      "target": "file:index.html:function:goHome:975",
+      "type": "CONTIENE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "index.html",
+          "line": 975,
+          "symbol": "goHome"
+        }
+      ]
+    },
+    {
+      "source": "file:index.html",
+      "target": "file:index.html:function:rankingBack:982",
+      "type": "CONTIENE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "index.html",
+          "line": 982,
           "symbol": "rankingBack"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:clientGoBack:959",
+      "target": "file:index.html:function:clientGoBack:983",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 959,
+          "line": 983,
           "symbol": "clientGoBack"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:loadHomeRanking:972",
+      "target": "file:index.html:function:loadHomeRanking:996",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 972,
+          "line": 996,
           "symbol": "loadHomeRanking"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:doSearch:980",
+      "target": "file:index.html:function:doSearch:1004",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 980,
+          "line": 1004,
           "symbol": "doSearch"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:openUserById:995",
+      "target": "file:index.html:function:openUserById:1019",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 995,
+          "line": 1019,
           "symbol": "openUserById"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:resetCustomerLoginState:1001",
+      "target": "file:index.html:function:resetCustomerLoginState:1025",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1001,
+          "line": 1025,
           "symbol": "resetCustomerLoginState"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:cancelCustomerLogin:1009",
+      "target": "file:index.html:function:cancelCustomerLogin:1033",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1009,
+          "line": 1033,
           "symbol": "cancelCustomerLogin"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:loginCustomerById:1014",
+      "target": "file:index.html:function:loginCustomerById:1038",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1014,
+          "line": 1038,
           "symbol": "loginCustomerById"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:openClient:1074",
+      "target": "file:index.html:function:openClient:1098",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1074,
+          "line": 1098,
           "symbol": "openClient"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:renderClient:1105",
+      "target": "file:index.html:function:renderClient:1129",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1105,
+          "line": 1129,
           "symbol": "renderClient"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:renderHitos:1177",
+      "target": "file:index.html:function:renderHitos:1201",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1177,
+          "line": 1201,
           "symbol": "renderHitos"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:renderBadges:1181",
-      "type": "CONTIENE",
-      "status": "CONFIRMADO_CODIGO",
-      "refs": [
-        {
-          "path": "index.html",
-          "line": 1181,
-          "symbol": "renderBadges"
-        }
-      ]
-    },
-    {
-      "source": "file:index.html",
-      "target": "file:index.html:function:openProfilePanel:1186",
-      "type": "CONTIENE",
-      "status": "CONFIRMADO_CODIGO",
-      "refs": [
-        {
-          "path": "index.html",
-          "line": 1186,
-          "symbol": "openProfilePanel"
-        }
-      ]
-    },
-    {
-      "source": "file:index.html",
-      "target": "file:index.html:function:renderProfilePreview:1191",
-      "type": "CONTIENE",
-      "status": "CONFIRMADO_CODIGO",
-      "refs": [
-        {
-          "path": "index.html",
-          "line": 1191,
-          "symbol": "renderProfilePreview"
-        }
-      ]
-    },
-    {
-      "source": "file:index.html",
-      "target": "file:index.html:function:renderHistory:1205",
+      "target": "file:index.html:function:renderBadges:1205",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
           "line": 1205,
+          "symbol": "renderBadges"
+        }
+      ]
+    },
+    {
+      "source": "file:index.html",
+      "target": "file:index.html:function:openProfilePanel:1210",
+      "type": "CONTIENE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "index.html",
+          "line": 1210,
+          "symbol": "openProfilePanel"
+        }
+      ]
+    },
+    {
+      "source": "file:index.html",
+      "target": "file:index.html:function:nextRewardState:1215",
+      "type": "CONTIENE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "index.html",
+          "line": 1215,
+          "symbol": "nextRewardState"
+        }
+      ]
+    },
+    {
+      "source": "file:index.html",
+      "target": "file:index.html:function:renderProfilePreview:1220",
+      "type": "CONTIENE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "index.html",
+          "line": 1220,
+          "symbol": "renderProfilePreview"
+        }
+      ]
+    },
+    {
+      "source": "file:index.html",
+      "target": "file:index.html:function:renderHistory:1232",
+      "type": "CONTIENE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "index.html",
+          "line": 1232,
           "symbol": "renderHistory"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:setClientTab:1212",
-      "type": "CONTIENE",
-      "status": "CONFIRMADO_CODIGO",
-      "refs": [
-        {
-          "path": "index.html",
-          "line": 1212,
-          "symbol": "setClientTab"
-        }
-      ]
-    },
-    {
-      "source": "file:index.html",
-      "target": "file:index.html:function:loadClientDelivery:1239",
+      "target": "file:index.html:function:setClientTab:1239",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
           "line": 1239,
+          "symbol": "setClientTab"
+        }
+      ]
+    },
+    {
+      "source": "file:index.html",
+      "target": "file:index.html:function:loadClientDelivery:1266",
+      "type": "CONTIENE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "index.html",
+          "line": 1266,
           "symbol": "loadClientDelivery"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:clientOrderStatus:1268",
+      "target": "file:index.html:function:clientOrderStatus:1295",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1268,
+          "line": 1295,
           "symbol": "clientOrderStatus"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:renderClientFlavors:1272",
+      "target": "file:index.html:function:renderClientFlavors:1299",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1272,
+          "line": 1299,
           "symbol": "renderClientFlavors"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:changeClientOrderQty:1280",
+      "target": "file:index.html:function:changeClientOrderQty:1307",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1280,
+          "line": 1307,
           "symbol": "changeClientOrderQty"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:updateClientOrderTotal:1298",
+      "target": "file:index.html:function:updateClientOrderTotal:1325",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1298,
+          "line": 1325,
           "symbol": "updateClientOrderTotal"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:submitClientOrder:1305",
+      "target": "file:index.html:function:submitClientOrder:1332",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1305,
+          "line": 1332,
           "symbol": "submitClientOrder"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:saveCustomerPassword:1348",
+      "target": "file:index.html:function:saveCustomerPassword:1375",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1348,
+          "line": 1375,
           "symbol": "saveCustomerPassword"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:showCustomerActivation:1367",
+      "target": "file:index.html:function:showCustomerActivation:1394",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1367,
+          "line": 1394,
           "symbol": "showCustomerActivation"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:showCustomerRecovery:1374",
+      "target": "file:index.html:function:showCustomerRecovery:1401",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1374,
+          "line": 1401,
           "symbol": "showCustomerRecovery"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:enterAfterPasswordSetup:1381",
+      "target": "file:index.html:function:enterAfterPasswordSetup:1408",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1381,
+          "line": 1408,
           "symbol": "enterAfterPasswordSetup"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:completeCustomerActivation:1393",
+      "target": "file:index.html:function:completeCustomerActivation:1420",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1393,
+          "line": 1420,
           "symbol": "completeCustomerActivation"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:completeCustomerRecovery:1417",
-      "type": "CONTIENE",
-      "status": "CONFIRMADO_CODIGO",
-      "refs": [
-        {
-          "path": "index.html",
-          "line": 1417,
-          "symbol": "completeCustomerRecovery"
-        }
-      ]
-    },
-    {
-      "source": "file:index.html",
-      "target": "file:index.html:function:setClientRanking:1436",
-      "type": "CONTIENE",
-      "status": "CONFIRMADO_CODIGO",
-      "refs": [
-        {
-          "path": "index.html",
-          "line": 1436,
-          "symbol": "setClientRanking"
-        }
-      ]
-    },
-    {
-      "source": "file:index.html",
-      "target": "file:index.html:function:loadClientInlineRanking:1444",
+      "target": "file:index.html:function:completeCustomerRecovery:1444",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
           "line": 1444,
+          "symbol": "completeCustomerRecovery"
+        }
+      ]
+    },
+    {
+      "source": "file:index.html",
+      "target": "file:index.html:function:setClientRanking:1463",
+      "type": "CONTIENE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "index.html",
+          "line": 1463,
+          "symbol": "setClientRanking"
+        }
+      ]
+    },
+    {
+      "source": "file:index.html",
+      "target": "file:index.html:function:loadClientInlineRanking:1471",
+      "type": "CONTIENE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "index.html",
+          "line": 1471,
           "symbol": "loadClientInlineRanking"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:renderPointRules:1460",
+      "target": "file:index.html:function:renderPointRules:1487",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1460,
+          "line": 1487,
           "symbol": "renderPointRules"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:renderShop:1466",
+      "target": "file:index.html:function:renderShop:1493",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1466,
+          "line": 1493,
           "symbol": "renderShop"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:renderRedemptions:1475",
-      "type": "CONTIENE",
-      "status": "CONFIRMADO_CODIGO",
-      "refs": [
-        {
-          "path": "index.html",
-          "line": 1475,
-          "symbol": "renderRedemptions"
-        }
-      ]
-    },
-    {
-      "source": "file:index.html",
-      "target": "file:index.html:function:redeemItem:1482",
-      "type": "CONTIENE",
-      "status": "CONFIRMADO_CODIGO",
-      "refs": [
-        {
-          "path": "index.html",
-          "line": 1482,
-          "symbol": "redeemItem"
-        }
-      ]
-    },
-    {
-      "source": "file:index.html",
-      "target": "file:index.html:function:registerPurchase:1502",
+      "target": "file:index.html:function:renderRedemptions:1502",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
           "line": 1502,
+          "symbol": "renderRedemptions"
+        }
+      ]
+    },
+    {
+      "source": "file:index.html",
+      "target": "file:index.html:function:redeemItem:1509",
+      "type": "CONTIENE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "index.html",
+          "line": 1509,
+          "symbol": "redeemItem"
+        }
+      ]
+    },
+    {
+      "source": "file:index.html",
+      "target": "file:index.html:function:registerPurchase:1529",
+      "type": "CONTIENE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "index.html",
+          "line": 1529,
           "symbol": "registerPurchase"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:createClient:1538",
+      "target": "file:index.html:function:createClient:1565",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1538,
+          "line": 1565,
           "symbol": "createClient"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:shareNewUsername:1561",
+      "target": "file:index.html:function:shareNewUsername:1588",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1561,
+          "line": 1588,
           "symbol": "shareNewUsername"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:sendNewWA:1571",
+      "target": "file:index.html:function:sendNewWA:1598",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1571,
+          "line": 1598,
           "symbol": "sendNewWA"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:showPublicRanking:1610",
+      "target": "file:index.html:function:showPublicRanking:1637",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1610,
+          "line": 1637,
           "symbol": "showPublicRanking"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:loadRanking:1611",
-      "type": "CONTIENE",
-      "status": "CONFIRMADO_CODIGO",
-      "refs": [
-        {
-          "path": "index.html",
-          "line": 1611,
-          "symbol": "loadRanking"
-        }
-      ]
-    },
-    {
-      "source": "file:index.html",
-      "target": "file:index.html:function:renderRankingItems:1617",
-      "type": "CONTIENE",
-      "status": "CONFIRMADO_CODIGO",
-      "refs": [
-        {
-          "path": "index.html",
-          "line": 1617,
-          "symbol": "renderRankingItems"
-        }
-      ]
-    },
-    {
-      "source": "file:index.html",
-      "target": "file:index.html:function:showAdmin:1626",
-      "type": "CONTIENE",
-      "status": "CONFIRMADO_CODIGO",
-      "refs": [
-        {
-          "path": "index.html",
-          "line": 1626,
-          "symbol": "showAdmin"
-        }
-      ]
-    },
-    {
-      "source": "file:index.html",
-      "target": "file:index.html:function:loadAdminDashboard:1638",
+      "target": "file:index.html:function:loadRanking:1638",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
           "line": 1638,
+          "symbol": "loadRanking"
+        }
+      ]
+    },
+    {
+      "source": "file:index.html",
+      "target": "file:index.html:function:renderRankingItems:1644",
+      "type": "CONTIENE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "index.html",
+          "line": 1644,
+          "symbol": "renderRankingItems"
+        }
+      ]
+    },
+    {
+      "source": "file:index.html",
+      "target": "file:index.html:function:showAdmin:1653",
+      "type": "CONTIENE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "index.html",
+          "line": 1653,
+          "symbol": "showAdmin"
+        }
+      ]
+    },
+    {
+      "source": "file:index.html",
+      "target": "file:index.html:function:loadAdminDashboard:1665",
+      "type": "CONTIENE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "index.html",
+          "line": 1665,
           "symbol": "loadAdminDashboard"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:renderAdminStats:1656",
+      "target": "file:index.html:function:renderAdminStats:1683",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1656,
+          "line": 1683,
           "symbol": "renderAdminStats"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:renderAdminConfig:1668",
+      "target": "file:index.html:function:renderAdminConfig:1695",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1668,
+          "line": 1695,
           "symbol": "renderAdminConfig"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:renderAdminRanking:1677",
+      "target": "file:index.html:function:renderAdminRanking:1704",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1677,
+          "line": 1704,
           "symbol": "renderAdminRanking"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:renderAdminClients:1681",
-      "type": "CONTIENE",
-      "status": "CONFIRMADO_CODIGO",
-      "refs": [
-        {
-          "path": "index.html",
-          "line": 1681,
-          "symbol": "renderAdminClients"
-        }
-      ]
-    },
-    {
-      "source": "file:index.html",
-      "target": "file:index.html:function:filterAdminClients:1690",
-      "type": "CONTIENE",
-      "status": "CONFIRMADO_CODIGO",
-      "refs": [
-        {
-          "path": "index.html",
-          "line": 1690,
-          "symbol": "filterAdminClients"
-        }
-      ]
-    },
-    {
-      "source": "file:index.html",
-      "target": "file:index.html:function:loadAdminStats:1691",
-      "type": "CONTIENE",
-      "status": "CONFIRMADO_CODIGO",
-      "refs": [
-        {
-          "path": "index.html",
-          "line": 1691,
-          "symbol": "loadAdminStats"
-        }
-      ]
-    },
-    {
-      "source": "file:index.html",
-      "target": "file:index.html:function:loadConfig:1705",
-      "type": "CONTIENE",
-      "status": "CONFIRMADO_CODIGO",
-      "refs": [
-        {
-          "path": "index.html",
-          "line": 1705,
-          "symbol": "loadConfig"
-        }
-      ]
-    },
-    {
-      "source": "file:index.html",
-      "target": "file:index.html:function:saveQuickConfig:1708",
+      "target": "file:index.html:function:renderAdminClients:1708",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
           "line": 1708,
-          "symbol": "saveQuickConfig"
+          "symbol": "renderAdminClients"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:loadAdminRanking:1720",
+      "target": "file:index.html:function:filterAdminClients:1717",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1720,
-          "symbol": "loadAdminRanking"
+          "line": 1717,
+          "symbol": "filterAdminClients"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:loadAdminClients:1725",
+      "target": "file:index.html:function:loadAdminStats:1718",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1725,
-          "symbol": "loadAdminClients"
+          "line": 1718,
+          "symbol": "loadAdminStats"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:showToast:1733",
+      "target": "file:index.html:function:loadConfig:1732",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1733,
-          "symbol": "showToast"
+          "line": 1732,
+          "symbol": "loadConfig"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:confettiBurst:1734",
-      "type": "CONTIENE",
-      "status": "CONFIRMADO_CODIGO",
-      "refs": [
-        {
-          "path": "index.html",
-          "line": 1734,
-          "symbol": "confettiBurst"
-        }
-      ]
-    },
-    {
-      "source": "file:index.html",
-      "target": "file:index.html:function:fmtDate:1735",
+      "target": "file:index.html:function:saveQuickConfig:1735",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
           "line": 1735,
+          "symbol": "saveQuickConfig"
+        }
+      ]
+    },
+    {
+      "source": "file:index.html",
+      "target": "file:index.html:function:loadAdminRanking:1747",
+      "type": "CONTIENE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "index.html",
+          "line": 1747,
+          "symbol": "loadAdminRanking"
+        }
+      ]
+    },
+    {
+      "source": "file:index.html",
+      "target": "file:index.html:function:loadAdminClients:1752",
+      "type": "CONTIENE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "index.html",
+          "line": 1752,
+          "symbol": "loadAdminClients"
+        }
+      ]
+    },
+    {
+      "source": "file:index.html",
+      "target": "file:index.html:function:showToast:1760",
+      "type": "CONTIENE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "index.html",
+          "line": 1760,
+          "symbol": "showToast"
+        }
+      ]
+    },
+    {
+      "source": "file:index.html",
+      "target": "file:index.html:function:confettiBurst:1761",
+      "type": "CONTIENE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "index.html",
+          "line": 1761,
+          "symbol": "confettiBurst"
+        }
+      ]
+    },
+    {
+      "source": "file:index.html",
+      "target": "file:index.html:function:fmtDate:1762",
+      "type": "CONTIENE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "index.html",
+          "line": 1762,
           "symbol": "fmtDate"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:fmtDateTime:1736",
+      "target": "file:index.html:function:fmtDateTime:1763",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1736,
+          "line": 1763,
           "symbol": "fmtDateTime"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:initial:1737",
+      "target": "file:index.html:function:initial:1764",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1737,
+          "line": 1764,
           "symbol": "initial"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:safe:1738",
+      "target": "file:index.html:function:safe:1765",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1738,
+          "line": 1765,
           "symbol": "safe"
         }
       ]
     },
     {
       "source": "file:index.html",
-      "target": "file:index.html:function:esc:1739",
+      "target": "file:index.html:function:esc:1766",
       "type": "CONTIENE",
       "status": "CONFIRMADO_CODIGO",
       "refs": [
         {
           "path": "index.html",
-          "line": 1739,
+          "line": 1766,
           "symbol": "esc"
         }
       ]
@@ -46674,6 +46947,19 @@
           "path": "tests/knowledge-system.py",
           "line": 141,
           "symbol": "test_unmapped_area_prevents_review"
+        }
+      ]
+    },
+    {
+      "source": "file:tests/landing-web.cjs",
+      "target": "file:tests/landing-web.cjs:function:fixture:7",
+      "type": "CONTIENE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "tests/landing-web.cjs",
+          "line": 7,
+          "symbol": "fixture"
         }
       ]
     },

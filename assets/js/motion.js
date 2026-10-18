@@ -91,7 +91,7 @@
     });
   }
   const seen = new WeakSet();
-  const reveals = ' .feature-card, #screen-client .card, #screen-client .stat-card, #screen-client .rank-item, #screen-client .shop-item, #screen-ranking .rank-item';
+  const reveals = '#screen-client .card, #screen-client .stat-card, #screen-client .rank-item, #screen-client .shop-item, #screen-ranking .rank-item';
   const observer = 'IntersectionObserver' in window ? new IntersectionObserver(entries => {
     entries.forEach(({target, isIntersecting}) => {
       if (!isIntersecting) return;
@@ -130,9 +130,9 @@
   }
   document.addEventListener('pointermove', e => {
     if (lite() || !fine.matches || e.pointerType === 'touch') { resetTilt(); return; }
-    const target = e.target.closest('.hero-art, .feature-card, #screen-client .shop-item');
+    const target = e.target.closest('#screen-client .shop-item');
     if (!target) { resetTilt(); return; }
-    const surface = target.matches('.hero-art') ? target.querySelector('.hero-media') : target;
+    const surface = target;
     if (tilted !== surface) { resetTilt(); tilted = surface; }
     cancelAnimationFrame(frame);
     frame = requestAnimationFrame(() => {

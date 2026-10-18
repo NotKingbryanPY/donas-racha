@@ -1030,5 +1030,26 @@
       "index.html"
     ],
     "note": "Revisados HTML/CSS de Ver confirmación: ancho, separación, altura adaptable, nombre/ayuda, relación con diálogo y foco. Regresión existente pedidos y sintaxis PASS; inspección360/768/1440 con Enter/foco de3px y capturas. Contraste medido en los tres estados. Sin JS/API/SQL/credenciales; publicación se verificará en PR."
+  },
+  {
+    "date": "2026-10-18T18:20:31-05:00",
+    "commit": "941a4f3664b80960cd6a67f8f964d40998a9bfd7",
+    "areas": [
+      "api",
+      "operations",
+      "web"
+    ],
+    "changed_files": [
+      ".github/workflows/mobile-contracts.yml",
+      "assets/css/landing.css",
+      "assets/js/landing.js",
+      "assets/js/motion.js",
+      "docs/DRACHAS_PORTADA_2026-10-18.md",
+      "index.html",
+      "tests/landing-web.cjs",
+      "tests/phase7-catalog.cjs",
+      "tests/regression.cjs"
+    ],
+    "note": "Revisados portada, CSS delimitado, nextRewardState compartida, backend getCliente propietario existente, una lectura privada sin polling, generaciones/abort/cambio de cuenta y rutas shop/pedido. Nueva suite320/390/768/1024/1440 y restauración/aislamiento PASS tras primer timeout local sin cambios; regresiones pedido/navegación/motion/catálogo/sintaxis PASS. Foto real pendiente explícita; sin API/SQL/secretos nuevos. Publicación se certifica en PR."
   }
 ]

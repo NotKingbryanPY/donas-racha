@@ -21,3 +21,8 @@
 | iOS | Pospuesto; no IPA ni paridad declarada |
 
 Antes de dar por terminada integración real: aplicar SQL, comprobar permisos, cuenta ADMIN/SELLER, compra/venta/consumo/cierre desde APK firmado y lectura web/inventario. Distinguir confirmado por tests, deploy HTTP y recorrido físico.
+
+
+## Portada de recompensas — 18 octubre 2026
+
+Foto real de portada pendiente: no se encontró un recurso de producto verificable que cumpla la dirección solicitada. El usuario autorizó dejar espacio reemplazable. No presentar las imágenes anteriores o una foto generada como producto real. Ver docs/DRACHAS_PORTADA_2026-10-18.md.

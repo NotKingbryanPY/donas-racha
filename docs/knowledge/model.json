@@ -365,6 +365,26 @@
           "line": 1
         }
       ]
+    },
+    {
+      "id": "ui:landing-rewards",
+      "type": "componente",
+      "label": "Portada sobria y progreso real en puntos",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "assets/js/landing.js",
+          "line": 1
+        },
+        {
+          "path": "assets/css/landing.css",
+          "line": 1
+        },
+        {
+          "path": "tests/landing-web.cjs",
+          "line": 1
+        }
+      ]
     }
   ],
   "edges": [
@@ -676,6 +696,42 @@
       "refs": [
         {
           "path": "api/_lib/customer_handlers/orders.js",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "source": "system:web",
+      "target": "ui:landing-rewards",
+      "type": "IMPLEMENTA",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "index.html",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "source": "ui:landing-rewards",
+      "target": "feature:loyalty",
+      "type": "LEE_DE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "assets/js/landing.js",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "source": "ui:landing-rewards",
+      "target": "feature:drachas-brand",
+      "type": "DEPENDE_DE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "assets/css/landing.css",
           "line": 1
         }
       ]
