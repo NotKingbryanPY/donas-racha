@@ -23,6 +23,7 @@ jobs:
           npm ci --no-audit --no-fund
           node tests/session-resilience.cjs
           node tests/shared-inventory-refresh.cjs
+          node tests/phase7-catalog.cjs
           node tests/public-realtime-config.cjs
           node tests/catalog-realtime.cjs
           node tests/inventory-revision-api.cjs
@@ -76,6 +77,7 @@ jobs:
             sleep 1
           done
           node tests/integration-order-web.cjs
+          node tests/landing-web.cjs
           node tests/customer-order-tracking-web.cjs
           node tests/customer-navigation.cjs
           node tests/customer-tour-motion.cjs

@@ -78,7 +78,7 @@ const fixture = () => ({id:'C-DEMO',username:'cliente.demo',name:'Cliente de pru
   await page.getByRole('button',{name:'Ranking',exact:true}).click();
   await page.waitForSelector('#rankingList .rank-item');await noOverflow('ranking');
   await page.evaluate(()=>rankingBack());
-  await page.getByRole('button',{name:'Entrar a mi perfil'}).click();
+  await page.getByRole('link',{name:'Mi perfil',exact:true}).click();
   await noOverflow('client login');
   await page.locator('#userClientIdInput').fill('INVALID');await page.locator('#userEnterBtn').click();
   await page.waitForFunction(()=>!document.getElementById('userOverlay').classList.contains('hidden'));

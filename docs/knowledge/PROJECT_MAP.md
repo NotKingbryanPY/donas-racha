@@ -17,3 +17,8 @@ Investigación de avisos fuera de app: usuario A23 informa pedido sin aviso tras
 ## Entradas web Drachas
 
 assets/images/drachas-logo.svg es maestro trazado; scripts/build-brand-assets.cjs genera variantes. CSS drachas-brand.css/customer-orders.css separa identidad/seguimiento. customer-orders.js maneja caché/ciclo/avisos; order-confirmation.js recibo/detalle. API _lib/customer_handlers/orders.js lista por propietario y orders/[publicCode].js protege detalle. Pruebas customer-order-tracking-api.cjs y customer-order-tracking-web.cjs. Sin tocar APK/Room/SQL. [Informe18octubre](../DRACHAS_WEB_2026-10-18.md).
+
+
+## Portada de recompensas — 18 octubre 2026
+
+assets/css/landing.css y assets/js/landing.js: portada sobria y tarjeta privada de puntos. index.html: nextRewardState compartida con renderProfilePreview y rutas de navegación existentes. tests/landing-web.cjs: responsive, navegación, saldo y aislamiento de identidad. Informe docs/DRACHAS_PORTADA_2026-10-18.md.

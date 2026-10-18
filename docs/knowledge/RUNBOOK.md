@@ -63,3 +63,8 @@ Verificación posterior14octubre21:43UTC: CI0b86b8d aprobado (web/API/SQL/browse
 ## Web Drachas18octubre
 
 No requiere SQL ni recrear variables Firebase/Supabase. Maestro SVG assets/images/drachas-logo.svg; regenerar variantes con node scripts/build-brand-assets.cjs y @resvg/resvg-js2.6.2 (RESVG_MODULE si está fuera de node_modules). Pruebas nuevas API/customer-order-tracking y navegador bajo serve-fixture.cjs. Suite/CI existente y knowledge deben pasar antes de integrar. Publicación mediante PR/main de repositorio ya ligado a Vercel; comprobar Ready, marca/iconos/HTTP y privados401. No afirmar recorrido de cliente autenticado por una lectura pública. [Informe](../DRACHAS_WEB_2026-10-18.md).
+
+
+## Portada de recompensas — 18 octubre 2026
+
+Para cambiar fotografía, seguir docs/DRACHAS_PORTADA_2026-10-18.md: sustituir placeholder y su descripción por img real optimizado, mantener figcaption y revisar móvil. No editar saldos ni fijar precio de portada: usa catálogo. Comprobaciones: landing-web.cjs, phase7-catalog.cjs, navegación y pedidos; proveedores de prueba simulados. Conservar customer view=shop y beginCustomerOrder.

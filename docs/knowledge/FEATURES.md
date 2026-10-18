@@ -26,3 +26,8 @@ No hay borrado definitivo ni reversión automática de ventas confirmadas en est
 ## Web Drachas18octubre
 
 Identidad C vectorial, favicon/social/PNG derivados. Activos destacados, contador/acceso desde Perfil, detalle privado, historial paginado y enlace recuperable. Actualización15s visible/con activos, banner/toast deduplicados, offline identificado y backoff. Recibo con artículos/pago/entrega/WhatsApp, animación1s solo confirmada, movimiento reducido, sin repetir por render. Tutorial conserva versión/progreso y carrito móvil legible. Avisos dentro de web; no notificaciones del sistema con navegador cerrado. [Informe y pruebas](../DRACHAS_WEB_2026-10-18.md).
+
+
+## Portada de recompensas — 18 octubre 2026
+
+Portada: titular y tarjeta real de puntos, seis sellos visuales sin regla ficticia de compras, enlaces a perfil/tienda y pedido existente, precio dinámico y responsive. Foto de producto pendiente representada por espacio beige reemplazable, sin imagen falsa. Logo y tutorial conservados.
