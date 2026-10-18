@@ -73,6 +73,10 @@ async function fixture(context,profile){
   await page.evaluate(()=>{sessionStorage.setItem('donasCustomerId','COTHER123');sessionStorage.setItem('donasCustomerToken','dr1.new');goToRoleScreen();});
   await page.waitForFunction(()=>document.getElementById('landingRewardStatus').textContent==='75 de 150 puntos');gate.resolve();await page.waitForTimeout(250);
   assert.equal(await page.locator('#landingRewardStatus').textContent(),'75 de 150 puntos','a late old-account read cannot restore the old balance');assert.equal(requested,2);
+  await page.evaluate(()=>window.dispatchEvent(new PageTransitionEvent('pagehide')));
+  assert.equal(await page.locator('.landing-stamp.is-earned').count(),0,'history cache must not retain the private snapshot');
+  await page.evaluate(()=>window.dispatchEvent(new PageTransitionEvent('pageshow',{persisted:true})));
+  await page.waitForFunction(()=>document.getElementById('landingRewardStatus').textContent==='75 de 150 puntos');assert.equal(requested,3,'restored history rechecks the current identity');
   await page.evaluate(()=>{sessionStorage.clear();goToRoleScreen();});assert.equal(await page.locator('.landing-stamp.is-earned').count(),0);
   await context.close();console.log('PASS landing restored session: bounded private read, account switch and late response isolation');
  }finally{await browser.close();}

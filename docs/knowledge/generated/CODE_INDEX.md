@@ -2,7 +2,7 @@
 
 Generado por `python scripts/knowledge.py generate`. Nombres extraídos, sin contenido de credenciales ni datos.
 
-Commit fuente: `941a4f3664b80960cd6a67f8f964d40998a9bfd7`; 474 archivos. El inventario incluye metadatos de recursos binarios, esquemas Room y SDK vendorizado; no interpreta su código generado.
+Commit fuente: `8c7152fb9ad1ade06d434e7bc1233f76012d05e5`; 474 archivos. El inventario incluye metadatos de recursos binarios, esquemas Room y SDK vendorizado; no interpreta su código generado.
 
 [Volver al mapa](../PROJECT_MAP.md)
 
@@ -1757,7 +1757,7 @@ Commit fuente: `941a4f3664b80960cd6a67f8f964d40998a9bfd7`; 474 archivos. El inve
 
 ## assets/js/landing.js
 
-[assets/js/landing.js:L1](../../../assets/js/landing.js#L1) · 66 líneas · SHA-256 `a1517e878aea`
+[assets/js/landing.js:L1](../../../assets/js/landing.js#L1) · 68 líneas · SHA-256 `c650b9f1b588`
 
 - `function reset` — [assets/js/landing.js:L7](../../../assets/js/landing.js#L7)
 - `function draw` — [assets/js/landing.js:L16](../../../assets/js/landing.js#L16)
@@ -1885,7 +1885,7 @@ Commit fuente: `941a4f3664b80960cd6a67f8f964d40998a9bfd7`; 474 archivos. El inve
 
 ## docs/DRACHAS_PORTADA_2026-10-18.md
 
-[docs/DRACHAS_PORTADA_2026-10-18.md:L1](../../../docs/DRACHAS_PORTADA_2026-10-18.md#L1) · 37 líneas · SHA-256 `9c9c5924d184`
+[docs/DRACHAS_PORTADA_2026-10-18.md:L1](../../../docs/DRACHAS_PORTADA_2026-10-18.md#L1) · 39 líneas · SHA-256 `1de0a650f451`
 
 ## docs/DRACHAS_REBRANDING_PROPUESTA.md
 
@@ -3178,7 +3178,7 @@ Commit fuente: `941a4f3664b80960cd6a67f8f964d40998a9bfd7`; 474 archivos. El inve
 
 ## tests/landing-web.cjs
 
-[tests/landing-web.cjs:L1](../../../tests/landing-web.cjs#L1) · 79 líneas · SHA-256 `6e186662bbd0`
+[tests/landing-web.cjs:L1](../../../tests/landing-web.cjs#L1) · 83 líneas · SHA-256 `40cfafd46d8d`
 
 - `function fixture` — [tests/landing-web.cjs:L7](../../../tests/landing-web.cjs#L7)
 

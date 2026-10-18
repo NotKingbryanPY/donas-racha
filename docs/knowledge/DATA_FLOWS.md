@@ -62,3 +62,5 @@ POST conserva payload/UUID por dueño en sessionStorage. Solo rechazos conocidos
 ## Portada de recompensas — 18 octubre 2026
 
 Portada: anónimo sin lectura privada ni saldo supuesto. ID/token guardados → getCliente autenticado → verificar propietario/forma/generación → nextRewardState → seis tramos visuales y texto en puntos. RenderProfilePreview alimenta el mismo componente tras consultas/canjes. Cambio de identidad aborta/limpia y descarta respuestas antiguas. Solo memoria; sin polling. Precio y disponibilidad mantienen renderPublicCatalog.
+
+La portada limpia su snapshot en pagehide antes de BFCache y vuelve a verificar la identidad en pageshow.persisted. Se comprueba con eventos de historial simulados; no se afirma una prueba física de Safari.

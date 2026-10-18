@@ -1,5 +1,5 @@
 {
-  "source_commit": "941a4f3664b80960cd6a67f8f964d40998a9bfd7",
+  "source_commit": "8c7152fb9ad1ade06d434e7bc1233f76012d05e5",
   "scope": "working tree; lexical extraction, production unverified",
   "schema_version": 1,
   "extractor_version": 4,
@@ -7922,8 +7922,8 @@
     },
     {
       "path": "assets/js/landing.js",
-      "sha256": "a1517e878aea1b055c94cc06e3b9b955b186191fffbe4ce8d8eccdb1590a1fbf",
-      "bytes": 4904,
+      "sha256": "c650b9f1b588b8c850de5449319f9c5727065b2cc4fd5e01a22c7b6d7d339630",
+      "bytes": 5075,
       "symbols": [
         {
           "name": "reset",
@@ -7963,7 +7963,7 @@
         }
       ],
       "animations": [],
-      "lines": 66
+      "lines": 68
     },
     {
       "path": "assets/js/motion.js",
@@ -8406,8 +8406,8 @@
     },
     {
       "path": "docs/DRACHAS_PORTADA_2026-10-18.md",
-      "sha256": "9c9c5924d18408d1b4e75328d7fc22eb0c234a3584c847793531473684b4972a",
-      "bytes": 4885,
+      "sha256": "1de0a650f4511d9b3e244fb7cc74a5d37979149a9201f13001357e11662e99e7",
+      "bytes": 5137,
       "symbols": [],
       "imports": [],
       "rpc_calls": [],
@@ -8416,7 +8416,7 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 37
+      "lines": 39
     },
     {
       "path": "docs/DRACHAS_REBRANDING_PROPUESTA.md",
@@ -19846,8 +19846,8 @@
     },
     {
       "path": "tests/landing-web.cjs",
-      "sha256": "6e186662bbd0743b4e8ccdac1de3ce0fec57a3c36d06f36a83de8dbe4efb497a",
-      "bytes": 7905,
+      "sha256": "40cfafd46d8d082fdaaa9511129e48f990633e273352ba9c21cf4b35b5b8b761",
+      "bytes": 8411,
       "symbols": [
         {
           "name": "fixture",
@@ -19879,7 +19879,7 @@
         }
       ],
       "animations": [],
-      "lines": 79
+      "lines": 83
     },
     {
       "path": "tests/manual-inventory-postgres.mjs",

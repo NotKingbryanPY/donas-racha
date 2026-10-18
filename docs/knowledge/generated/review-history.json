@@ -1051,5 +1051,20 @@
       "tests/regression.cjs"
     ],
     "note": "Revisados portada, CSS delimitado, nextRewardState compartida, backend getCliente propietario existente, una lectura privada sin polling, generaciones/abort/cambio de cuenta y rutas shop/pedido. Nueva suite320/390/768/1024/1440 y restauración/aislamiento PASS tras primer timeout local sin cambios; regresiones pedido/navegación/motion/catálogo/sintaxis PASS. Foto real pendiente explícita; sin API/SQL/secretos nuevos. Publicación se certifica en PR."
+  },
+  {
+    "date": "2026-10-18T18:25:17-05:00",
+    "commit": "8c7152fb9ad1ade06d434e7bc1233f76012d05e5",
+    "areas": [
+      "api",
+      "operations",
+      "web"
+    ],
+    "changed_files": [
+      "assets/js/landing.js",
+      "docs/DRACHAS_PORTADA_2026-10-18.md",
+      "tests/landing-web.cjs"
+    ],
+    "note": "Revisados listeners pagehide/pageshow: limpiar snapshot antes de historial, revalidar identidad al volver y abortar lectores anteriores. Prueba de eventos añadida a la suite de portada. Código base8c7152f pasó CI completo; validación del head actualizado se registra en PR. No prueba física Safari ni cambios de servidor."
   }
 ]

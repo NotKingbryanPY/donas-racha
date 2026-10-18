@@ -24,6 +24,8 @@ landing.js recibe el perfil verificado desde el render existente. Al abrir la po
 
 La copia en memoria es el último perfil verificado; no es una suscripción en tiempo real. Error, ausencia de sesión o datos incompletos muestran acceso al perfil. Salir o cambiar de cuenta limpia el progreso. El servidor continúa autorizando canjes y calculando saldos.
 
+pagehide limpia saldo y lectura antes de que el navegador guarde la página en su historial; pageshow con persisted vuelve a verificar la identidad actual. Evita recuperar una tarjeta privada antigua al volver desde otra sesión con el botón Atrás.
+
 ## Fotografía pendiente
 
 No se encontró una fotografía de producto verificable y adecuada entre los recursos existentes. Se utiliza el espacio beige identificado «Espacio para nuestra fotografía de producto» y las etiquetas HTML Chocolate/Vainilla. No se usa la captura como fondo ni una imagen generada presentada como producto real.

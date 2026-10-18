@@ -62,5 +62,7 @@
       }
     })();return flight;
   }
+  window.addEventListener('pagehide',reset);
+  window.addEventListener('pageshow',event=>{if(event.persisted && !el('roleOverlay').classList.contains('hidden'))sync();});
   window.DonasLanding={renderRewards,reset,sync};reset();
 })();
