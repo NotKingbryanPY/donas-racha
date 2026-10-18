@@ -4,6 +4,8 @@
 
 | Tema | Estado / límite |
 |---|---|
+| Confirmación/seguimiento web | IMPLEMENTADO18octubre: activos/avisos15s, estados/pago reales, error HTTP tipado, recuperación idempotente, detalle privado/paginación y recibo animado. Ver DRACHAS_WEB_2026-10-18.md para pruebas/CI/publicación. No equivale a Web Push ni resuelve FCM Android |
+| Identidad Drachas | C elegida por el usuario y adaptada a maestro SVG trazado, PNG/iconos/social derivados y marca visible. Conservar colores/datos/paquete; estado de publicación y revisión en DRACHAS_WEB_2026-10-18.md |
 | Activación SQL v2 | VALIDADA_POR_RESULTADO_USUARIO: DAILY_V2_READY con jornada, ambas RPC restringidas, RLS, trigger e integridad correctos. No repetir instalación. El agente no accedió a Studio; falta operación autenticada desde APK y lectura coincidente en web |
 | Stock/costo inicial | Se preservan cantidades. Un sabor tenía reservas superiores al conteo en evidencia histórica; comprobar físico. El costo del stock anterior es desconocido hasta evidencia válida |
 | Datos viejos | Room preservado; pendientes históricos no se reenvían. Necesitan conciliación de compras/ventas ya reflejadas en conteos centrales |

@@ -10,7 +10,7 @@ module.exports = withApi(['GET'], async req => {
   const { user, customer } = await requireCustomer(req);
   await enforceRateLimit(req, 'read_order', 60, 60, user.id);
   const query = new URLSearchParams({
-    select: 'id,public_code,customer_id,status,payment_method,payment_status,currency_code,subtotal_cents,discount_cents,total_cents,created_at,updated_at,completed_at,cancelled_at,order_items(product_name_snapshot,variant_name_snapshot,sku_snapshot,quantity,unit_price_cents,line_total_cents),order_events(from_status,to_status,actor_type,note,created_at)',
+    select: 'id,public_code,customer_id,status,payment_method,payment_status,currency_code,subtotal_cents,discount_cents,total_cents,created_at,updated_at,completed_at,cancelled_at,delivery_location,order_items(product_name_snapshot,variant_name_snapshot,sku_snapshot,quantity,unit_price_cents,line_total_cents),order_events(from_status,to_status,created_at)',
     public_code: `eq.${publicCode}`,
     customer_id: `eq.${customer.id}`,
     limit: '1'

@@ -900,5 +900,108 @@
       "docs/DONAS_CONTROL_AVISOS_SEGUNDO_PLANO.md"
     ],
     "note": "Verificados CI de PR46, Production Ready y HTTP protegido; no eventos correlacionables ni resultado privado/recepción física afirmados"
+  },
+  {
+    "date": "2026-10-17T23:28:48-05:00",
+    "commit": "8819943e80a66cdd2fe2b57f18f487c6abe7d35a",
+    "areas": [
+      "api",
+      "operations",
+      "web"
+    ],
+    "changed_files": [
+      "docs/PEDIDOS_WEB_PROPUESTA_2026-10-17.md"
+    ],
+    "note": "Auditoria web de pedidos: fuentes, sesion dr1, errores HTTP, refresco, tutorial, pruebas y propuesta documental revisados. Diseno pendiente de aprobacion; sin cambios de runtime ni despliegue."
+  },
+  {
+    "date": "2026-10-17T23:30:41-05:00",
+    "commit": "8819943e80a66cdd2fe2b57f18f487c6abe7d35a",
+    "areas": [
+      "api",
+      "operations",
+      "web"
+    ],
+    "changed_files": [
+      "docs/PEDIDOS_WEB_PROPUESTA_2026-10-17.md"
+    ],
+    "note": "Propuesta web revisada: fuentes y contratos actuales, reproduccion HTTP400, baseline de pruebas PASS; ejemplo interactivo inspeccionado en Brave a 320/390/736px y escritorio. Sin implementacion funcional o despliegue."
+  },
+  {
+    "date": "2026-10-17T23:56:44-05:00",
+    "commit": "8819943e80a66cdd2fe2b57f18f487c6abe7d35a",
+    "areas": [
+      "operations",
+      "web"
+    ],
+    "changed_files": [
+      "docs/DRACHAS_REBRANDING_PROPUESTA.md",
+      "docs/PEDIDOS_WEB_PROPUESTA_2026-10-17.md",
+      "docs/previews/drachas/concepto-a-r-glaseada.png",
+      "docs/previews/drachas/concepto-b-monograma-dr.png",
+      "docs/previews/drachas/concepto-c-dona-tipografica.png",
+      "docs/previews/drachas/prompts.json"
+    ],
+    "note": "Identidad Drachas: paleta y referencias actuales revisadas, tres propuestas raster y prompts inspeccionados, plan documentado y aprobacion visual de Pedidos registrada. Sin cambios de runtime ni despliegue."
+  },
+  {
+    "date": "2026-10-18T00:37:03-05:00",
+    "commit": "8819943e80a66cdd2fe2b57f18f487c6abe7d35a",
+    "areas": [
+      "api",
+      "firebase",
+      "operations",
+      "web"
+    ],
+    "changed_files": [
+      ".github/workflows/mobile-contracts.yml",
+      "admin-claims.html",
+      "api/_lib/customer_handlers/orders.js",
+      "api/_lib/supabase.js",
+      "api/orders/[publicCode].js",
+      "assets/css/customer-orders.css",
+      "assets/css/drachas-brand.css",
+      "assets/images/drachas-icon-180.png",
+      "assets/images/drachas-icon-32.png",
+      "assets/images/drachas-icon.svg",
+      "assets/images/drachas-logo-dark.svg",
+      "assets/images/drachas-logo-mono.svg",
+      "assets/images/drachas-logo.png",
+      "assets/images/drachas-logo.svg",
+      "assets/images/drachas-social.png",
+      "assets/images/drachas-symbol.png",
+      "assets/images/drachas-symbol.svg",
+      "assets/images/drachas-word.svg",
+      "assets/js/client-tour.js",
+      "assets/js/customer-orders.js",
+      "assets/js/motion.js",
+      "assets/js/order-confirmation.js",
+      "customer.html",
+      "docs/DRACHAS_REBRANDING_PROPUESTA.md",
+      "docs/DRACHAS_WEB_2026-10-18.md",
+      "docs/PEDIDOS_WEB_PROPUESTA_2026-10-17.md",
+      "index.html",
+      "scripts/build-brand-assets.cjs",
+      "tests/customer-order-tracking-api.cjs",
+      "tests/customer-order-tracking-web.cjs",
+      "tests/motion-interactions.cjs"
+    ],
+    "note": "Revisados código y diffs de Drachas C, activos/historial propietarios, transporte y recibo, tiempos/generaciones/abort, recuperación 400/401, tutorial/foco, SVG y variantes; 17 suites API/contratos y 8 browser PASS con proveedores simulados. Dependientes auth/FCM y diagramas 04/05 revisados: sin cambios Firebase, Android o SQL. Producción y recorrido privado real todavía no certificados."
+  },
+  {
+    "date": "2026-10-18T00:37:45-05:00",
+    "commit": "8819943e80a66cdd2fe2b57f18f487c6abe7d35a",
+    "areas": [
+      "api",
+      "firebase",
+      "operations",
+      "web"
+    ],
+    "changed_files": [
+      "assets/images/drachas-symbol.svg",
+      "assets/images/drachas-word.svg",
+      "scripts/build-brand-assets.cjs"
+    ],
+    "note": "Drachas C y seguimiento privado revisados: 17 suites API/contratos y 8 browser PASS; 401/reintento y foco tardío comprobados. Maestro SVG y derivados reproducibles sin fuentes; reglas de espacios aplicadas al generador. Auth/FCM dependientes sin cambio funcional. Producción aún pendiente."
   }
 ]

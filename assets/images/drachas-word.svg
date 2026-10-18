@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="150 0 360 112" role="img" aria-labelledby="title desc">
+  <title id="title">Drachas</title>
+  <desc id="desc">Una dona glaseada se une a la r del nombre Drachas.</desc>
+  <defs>
+    <g id="dr">
+      <path d="M10 13Q10 7 17 7H46C69 7 82 16 94 33Q99 40 110 42L106 52C97 47 88 44 80 46Q70 49 65 45Q59 42 56 34Q53 27 46 28Q38 28 34 38Q29 50 20 50Q10 49 10 42Z"/>
+      <path d="M10 55Q23 61 33 47C30 67 37 80 51 80C66 80 73 68 70 52Q81 46 89 51C97 64 91 84 77 93Q65 101 49 101C26 101 10 85 10 64Z"/>
+      <path d="M96 51Q105 55 114 47Q122 41 132 43Q142 44 149 53L139 65Q133 58 126 59Q115 60 115 74V100H96Z"/>
+    </g>
+    <g id="a">
+      <path fill-rule="evenodd" d="M31 0C14 0 2 13 2 31S14 62 31 62Q44 62 51 54V60H66V2H51V9Q44 0 31 0ZM34 15C44 15 51 22 51 31S44 47 34 47S18 40 18 31S24 15 34 15Z"/>
+    </g>
+    <g id="c"><path d="M57 10L46 21Q40 15 33 15C23 15 17 22 17 31S23 47 33 47Q41 47 47 40L58 51Q48 62 32 62C14 62 1 49 1 31S14 0 32 0Q47 0 57 10Z"/></g>
+    <g id="h"><path d="M3 0H19V35Q25 28 36 28C51 28 60 39 60 55V88H44V58Q44 43 33 43Q19 43 19 59V88H3Z"/></g>
+    <g id="s"><path d="M51 8L43 20Q34 14 26 14Q18 14 18 19Q18 23 32 26C47 29 55 34 55 44C55 57 43 64 28 64Q11 64 0 55L8 43Q18 51 29 51Q39 51 39 46Q39 42 25 39C10 36 3 31 3 21C3 8 14 1 28 1Q42 1 51 8Z"/></g>
+  </defs>
+
+  <g fill="#FAF6FF"><use href="#a" x="155" y="39"/><use href="#c" x="230" y="39"/><use href="#h" x="296" y="13"/><use href="#a" x="363" y="39"/><use href="#s" x="439" y="37"/></g>
+</svg>

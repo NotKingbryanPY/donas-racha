@@ -35,6 +35,8 @@ async function readResponse(response) {
     if (message.includes('IDEMPOTENCY_CONFLICT')) throw new ApiError(409, 'IDEMPOTENCY_CONFLICT', 'La clave de idempotencia ya fue usada con otros datos.');
     if (message.includes('ADMIN_REQUIRED')) throw new ApiError(403, 'ADMIN_REQUIRED', 'La cuenta no tiene permisos administrativos.');
     if (message.includes('INVALID_OPERATION')) throw new ApiError(400, 'INVALID_OPERATION', 'Los datos de la operación no son válidos.');
+    if (message.includes('INVALID_PRODUCT_VARIANT')) throw new ApiError(400,'INVALID_PRODUCT_VARIANT','Este sabor ya no está disponible para el pedido. Actualiza el catálogo y revisa tu selección.');
+    if (message.includes('INVALID_ITEMS')) throw new ApiError(400,'INVALID_ITEMS','Revisa los sabores y las cantidades del pedido.');
     if (message.includes('CATALOG_CONFLICT')) throw new ApiError(409, 'CATALOG_CONFLICT', 'El sabor cambió mientras lo editabas. Pulsa Consultar catálogo y revisa la versión actual.');
     if (code==='23505' && message.includes('product_variants_product_name_unique')) throw new ApiError(409,'FLAVOR_NAME_EXISTS','Ya existe un sabor con ese nombre. Usa otro nombre.');
     if (message.includes('FOUR_FLAVORS_REQUIRED')) throw new ApiError(400,'FOUR_FLAVORS_REQUIRED','Completa los cuatro sabores. Escribe 0 cuando no queden.');

@@ -52,3 +52,7 @@ Room7 añade solo staff_order_cache(ownerId PK,json,receivedAt); 6→7 no toca t
 SQL03 habilita cron/pg_net/Vault y helpers privados. CRON_SECRET viaja desde Vercel a Vault por RPC ADMIN/servidor, nunca desde frontend. Net guarda headers descifrados: schema/tablas/funciones quedan cerradas a PUBLIC/anon/authenticated. Otros cron se conservan; una falla de permisos aborta el instalador.
 
 orders-v2/05_delivery_diagnosis.sql es una consulta READ ONLY de metadata sobre orders/order_push_jobs/push_devices/app_user_roles ya existentes. No es migración ni activación. Devuelve pedidos incluso sin job y excluye tokens, usuarios y datos personales. Privilegios/RLS/stock permanecen. accepted_by_fcm_at es aceptación FCM, no confirmación Android.
+
+## Lecturas Drachas18octubre: sin migración
+
+Se reutilizan orders(id/public_code/customer_id/status/payment_method/payment_status/currency_code/total_cents/created_at/updated_at/completed_at/cancelled_at/delivery_location), order_items y order_events. Filtro propietario siempre en servidor, activos e histórico separados y paginados; datos no-store. Detalle ya no selecciona actor_type/note, solo estados/fechas. No cambia RLS, grants, transacciones, tablas, registros o códigos DR-. INVALID_PRODUCT_VARIANT/INVALID_ITEMS de SQL se traducen a rechazos400 conocidos sin imprimir mensajes internos.

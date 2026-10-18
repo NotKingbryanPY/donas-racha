@@ -301,6 +301,70 @@
           "line": 1
         }
       ]
+    },
+    {
+      "id": "feature:customer-tracking",
+      "type": "componente",
+      "label": "Drachas: seguimiento propietario y avisos15s visibles",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "assets/js/customer-orders.js",
+          "line": 1
+        },
+        {
+          "path": "tests/customer-order-tracking-web.cjs",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "feature:drachas-brand",
+      "type": "componente",
+      "label": "Identidad C trazada y variantes derivadas",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "assets/images/drachas-logo.svg",
+          "line": 1
+        },
+        {
+          "path": "scripts/build-brand-assets.cjs",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "ui:verified-receipt",
+      "type": "componente",
+      "label": "Recibo contextual verificado, recuperación y movimiento reducido",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "assets/js/order-confirmation.js",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "endpoint:customer-orders",
+      "type": "funcionalidad",
+      "label": "Listado paginado y detalle de pedidos propios",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "api/_lib/customer_handlers/orders.js",
+          "line": 1
+        },
+        {
+          "path": "api/orders/[publicCode].js",
+          "line": 1
+        },
+        {
+          "path": "tests/customer-order-tracking-api.cjs",
+          "line": 1
+        }
+      ]
     }
   ],
   "edges": [
@@ -540,6 +604,78 @@
       "refs": [
         {
           "path": "api/_lib/order-notification-push.js",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "source": "system:web",
+      "target": "feature:customer-tracking",
+      "type": "IMPLEMENTA",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "index.html",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "source": "system:web",
+      "target": "feature:drachas-brand",
+      "type": "IMPLEMENTA",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "assets/css/drachas-brand.css",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "source": "feature:customer-tracking",
+      "target": "endpoint:customer-orders",
+      "type": "LLAMA_A",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "assets/js/customer-orders.js",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "source": "feature:customer-tracking",
+      "target": "ui:verified-receipt",
+      "type": "LLAMA_A",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "assets/js/customer-orders.js",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "source": "ui:verified-receipt",
+      "target": "endpoint:customer-orders",
+      "type": "LLAMA_A",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "assets/js/order-confirmation.js",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "source": "endpoint:customer-orders",
+      "target": "system:supabase",
+      "type": "LEE_DE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "api/_lib/customer_handlers/orders.js",
           "line": 1
         }
       ]

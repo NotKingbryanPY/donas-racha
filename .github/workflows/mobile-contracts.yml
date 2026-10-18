@@ -32,6 +32,8 @@ jobs:
           node tests/security-contract.cjs
           node tests/web-script-syntax.cjs
           node tests/customer-order-auth.cjs
+          node tests/customer-order-identity.cjs
+          node tests/customer-order-tracking-api.cjs
           node tests/notification-order-api.cjs
           node tests/staff-notification-api.cjs
           node tests/staff-notification-provider.cjs
@@ -74,6 +76,10 @@ jobs:
             sleep 1
           done
           node tests/integration-order-web.cjs
+          node tests/customer-order-tracking-web.cjs
+          node tests/customer-navigation.cjs
+          node tests/customer-tour-motion.cjs
+          node tests/motion-interactions.cjs
           node tests/catalog-realtime-web.cjs
           node tests/admin-inventory-web.cjs
           node tests/daily-business-web.cjs

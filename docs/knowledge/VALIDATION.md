@@ -1,4 +1,16 @@
-# Verificación de Donas Control 2
+# Verificación de Drachas y Donas Control
+
+## Web Drachas — 18 de octubre de 2026
+
+Implementación y revisión local de la propuesta C y el seguimiento de pedidos. Pasaron 17 suites de contratos/API y ocho suites de navegador: confirmación e idempotencia, seguimiento nuevo, navegación, tutorial, interacciones/movimiento, catálogo, inventario y resumen diario. Los escenarios usan proveedores simulados; no se creó ningún pedido de producción.
+
+El seguimiento nuevo se comprueba a 320/390/768 px, incluido un ciclo real de 15 s en 390 px, parada tras finalizar todos los pedidos, aviso único por cambio, carrito conservado, desconexión/reconexión, cancelación, enlace privado/recarga/volver, pago, rechazo HTTP 400 recuperable y respuesta tardía tras salir. Un rechazo 401 oculta la información y una consulta verificada posterior restaura las tarjetas. La API verifica que A no pueda leer pedidos de B, paginación de activos antiguos/historial, campos públicos del evento y timestamps. La regresión de confirmación existente cubre 360/768/1440 px, envío ambiguo, mismo UUID/payload, doble clic, WhatsApp y movimiento reducido.
+
+Los recursos SVG/PNG se generaron y revisaron visualmente; las capturas de `test-output/drachas` son datos de prueba. El tutorial conserva versión y progreso, y una regresión verifica que su consulta tardía no quite el foco de la navegación. Ocho pruebas del sistema de conocimiento pasaron. CI, PR y comprobación pública de Production se registrarán en [la entrega web](../DRACHAS_WEB_2026-10-18.md) al completarse.
+
+Límites: no hay recorrido privado real de un cliente autenticado ni aviso con navegador cerrado. No hay cambio de APK, SQL o secretos. El fallo físico de FCM Android continúa pendiente en su informe separado.
+
+## Verificaciones históricas de Android y datos compartidos
 
 Mantenimiento2.1.1: PASS120 pruebas Android (19 suites,0 fallos/errores), lintDebug/lintOfficial y build/R8 firmado. Tres regresiones nuevas comprueban finalización, fallo/reintento y lifecycle de la comprobación. Firma anterior, paquete/código17/API23–35, alineación16KB y escaneo992 entradas sin contenido privilegiado aprobados; APK/hash en [informe2.1.1](../DONAS_CONTROL_2_1_1_AVISOS.md). CI86b0971 Android/API/web/SQL/browser/concurrencia/conocimiento PASS; PR44 integrado en main y Production Ready, descarga2.1.1/hash verificados200. El usuario confirmó prueba del sistema en A23 y recuperación programada en2.1.0, luego FAILED en2.1.1. Renovación corta del servidor corregida/verificada con input sintético; autenticación exacta del A23 y pedidos bloqueado/segundo plano siguen pendientes.
 

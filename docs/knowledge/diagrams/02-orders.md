@@ -1,6 +1,6 @@
 # Pedidos existentes y recibo nuevo
 
-[Contexto](../AI_CONTEXT.md). Código local revisado; activación real pendiente.
+[Contexto](../AI_CONTEXT.md). Estados compartidos existentes y seguimiento web Drachas; la evidencia de publicación se registra en VALIDATION.md.
 
 ```mermaid
 stateDiagram-v2
@@ -13,6 +13,11 @@ stateDiagram-v2
   OUT_FOR_DELIVERY --> CANCELLED
   COMPLETED --> [*]
   CANCELLED --> [*]
+  note left of PENDING
+    Recibo tras confirmación verificable
+    Seguimiento web15s por propietario
+    Sin nueva transacción de stock o pago
+  end note
   note right of COMPLETED
     Pago + stock + fidelidad existentes
     WEB_SALE nuevo: ingreso/costo, sin otra salida

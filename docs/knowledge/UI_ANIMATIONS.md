@@ -1,5 +1,11 @@
 # Interfaz y diseño
 
+## Implementación aprobada Drachas18octubre
+
+C elegida: SVG Dr/dona y glaseado + achas, versiones ligeras e iconos, marca visible en web. Pedidos activos antes del formulario; badge/perfil, progreso real, detalles y anteriores. Recibo nativo contextual con consulta verificada, símbolo1s→check, reduced motion y celebración única. Sin re-render idéntico del detalle, conserva expansión/foco. Carrito320px en grid para que los nombres no se partan. Tutorial1 solo cambia marca/texto y evita foco al detener un tutorial inactivo. [Informe](../DRACHAS_WEB_2026-10-18.md).
+
+## Android y evolución anterior
+
 La inspección de renders nativos corrigió la acción Consumo que partía una palabra en pantallas pequeñas, eliminó códigos internos de estado como PURCHASE del encabezado y añadió indicador lavanda de navegación activa. Los teclados de cantidades/cajas son enteros; importes permiten decimales. La prueba de captura comprueba texto y el número de líneas de esa acción.
 
 [Contexto](AI_CONTEXT.md) · [Pantallas](diagrams/06-ui.md)
