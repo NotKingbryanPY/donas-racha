@@ -1,10 +1,14 @@
 # Verificación de Drachas y Donas Control
 
+## Imagen natural de portada — 18 octubre 2026
+
+PASS local landing-web.cjs a320/390/768/1024/1440: WebP local decodificado, sin placeholder, ambos productos completos en relación3:2, imagen encima del texto en móvil y junto al texto en escritorio, sin desbordamiento. Se conservan las verificaciones de precio, rutas, foco, puntos reales, salida y respuesta tardía de otra cuenta. Capturas de pedidos390/1440 inspeccionadas visualmente. WebP de23872/79622/169584bytes; el navegador selecciona según ancho/densidad. Logo intacto. La primera aserción de naturalWidth se corrigió porque srcset devuelve dimensiones intrínsecas ajustadas a densidad; ahora comprueba carga, proporción y recurso seleccionado. Sin pruebas físicas Safari/iPad ni modificación de datos de producción. CI y evidencia del despliegue se registran en la PR correspondiente.
+
 ## Portada de recompensas — 18 octubre 2026
 
 PASS landing-web.cjs a320/390/768/1024/1440: sin desbordamiento, seis sellos dentro del ancho, apilado móvil/dos columnas, precio desde catálogo, Ranking/tienda/pedido, foco, puntos disponibles (no históricos/compras), reducción al canjear y limpieza al salir. Restaurar sesión y cambiar de cuenta con la lectura anterior retenida conserva el saldo nuevo. Capturas de hero/pedidos revisadas a390/1440 con fixtures. Un primer arranque local agotó30s en navegación; repetición completa y diagnóstico de carga pasaron sin relajar aserciones/timeout. No es evidencia de un fallo de producción.
 
-Regresiones locales PASS: integración de pedidos360/768/1440, navegación/historial cliente y staff, interacción/movimiento, catálogo SDK real con proveedores simulados, contrato de precio/agotado y sintaxis. La tarjeta limpia al recibir pagehide y reconsulta la identidad al restaurar historial con pageshow.persisted; escenario simulado añadido a la suite nueva. Logo intacto; sin SQL, cuentas, pedidos o saldos de producción modificados. Foto real pendiente con placeholder explícito autorizado. Sin prueba física de Safari iPad o lector de pantalla. Ver [informe](../DRACHAS_PORTADA_2026-10-18.md); CI y despliegue se registran en la PR correspondiente.
+Regresiones locales PASS: integración de pedidos360/768/1440, navegación/historial cliente y staff, interacción/movimiento, catálogo SDK real con proveedores simulados, contrato de precio/agotado y sintaxis. La tarjeta limpia al recibir pagehide y reconsulta la identidad al restaurar historial con pageshow.persisted; escenario simulado añadido a la suite nueva. Logo intacto; sin SQL, cuentas, pedidos o saldos de producción modificados. La entrega posterior reemplaza ese placeholder por una imagen ilustrativa generada a petición del usuario; ver sección de fotografía de la portada y evidencia de su PR. Sin prueba física de Safari iPad o lector de pantalla. Ver [informe](../DRACHAS_PORTADA_2026-10-18.md); CI y despliegue se registran en la PR correspondiente.
 
 ## Web Drachas — 18 de octubre de 2026
 

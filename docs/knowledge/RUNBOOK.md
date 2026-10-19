@@ -67,4 +67,4 @@ No requiere SQL ni recrear variables Firebase/Supabase. Maestro SVG assets/image
 
 ## Portada de recompensas — 18 octubre 2026
 
-Para cambiar fotografía, seguir docs/DRACHAS_PORTADA_2026-10-18.md: sustituir placeholder y su descripción por img real optimizado, mantener figcaption y revisar móvil. No editar saldos ni fijar precio de portada: usa catálogo. Comprobaciones: landing-web.cjs, phase7-catalog.cjs, navegación y pedidos; proveedores de prueba simulados. Conservar customer view=shop y beginCustomerOrder.
+La imagen de portada ya está en assets/images/drachas-doughnuts-natural-{480,960,1536}.webp. Para reemplazarla, seguir docs/DRACHAS_PORTADA_2026-10-18.md: mantener srcset/sizes, dimensiones3:2, texto alternativo, etiquetas y procedencia. No volver al placeholder. CSS landing?v=2 renueva caché. Revisar ambos productos completos en móvil/escritorio. No editar saldos ni fijar precio de portada: usa catálogo. Comprobaciones: landing-web.cjs, phase7-catalog.cjs, navegación y pedidos; proveedores de prueba simulados. Conservar customer view=shop y beginCustomerOrder.

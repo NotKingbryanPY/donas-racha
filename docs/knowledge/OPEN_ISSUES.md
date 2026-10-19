@@ -25,4 +25,4 @@ Antes de dar por terminada integración real: aplicar SQL, comprobar permisos, c
 
 ## Portada de recompensas — 18 octubre 2026
 
-Foto real de portada pendiente: no se encontró un recurso de producto verificable que cumpla la dirección solicitada. El usuario autorizó dejar espacio reemplazable. No presentar las imágenes anteriores o una foto generada como producto real. Ver docs/DRACHAS_PORTADA_2026-10-18.md.
+Espacio vacío de portada resuelto: el usuario autorizó después generar la pareja chocolate/vainilla e integrarla. Imagen ilustrativa identificada, optimizada y local. Una fotografía propia del negocio puede reemplazarla en el futuro; conservar la procedencia y las etiquetas correctas. Ver docs/DRACHAS_PORTADA_2026-10-18.md.

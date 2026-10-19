@@ -21,4 +21,4 @@ assets/images/drachas-logo.svg es maestro trazado; scripts/build-brand-assets.cj
 
 ## Portada de recompensas — 18 octubre 2026
 
-assets/css/landing.css y assets/js/landing.js: portada sobria y tarjeta privada de puntos. index.html: nextRewardState compartida con renderProfilePreview y rutas de navegación existentes. tests/landing-web.cjs: responsive, navegación, saldo y aislamiento de identidad. Informe docs/DRACHAS_PORTADA_2026-10-18.md.
+assets/css/landing.css y assets/js/landing.js: portada sobria y tarjeta privada de puntos. index.html: nextRewardState compartida con renderProfilePreview y rutas de navegación existentes. assets/images/drachas-doughnuts-natural-{480,960,1536}.webp: imagen ilustrativa autorizada. tests/landing-web.cjs: responsive, imagen cargada sin recorte, navegación, saldo y aislamiento de identidad. Informe docs/DRACHAS_PORTADA_2026-10-18.md.

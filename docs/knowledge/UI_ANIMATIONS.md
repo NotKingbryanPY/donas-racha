@@ -2,7 +2,7 @@
 
 ## Portada sobria de recompensas
 
-Referencia18octubre en landing.css, aislada de Perfil/Dashboard. Hero y tarjeta en dos columnas desde900px; orden vertical móvil. Logo SVG y Nunito conservados. Fondo100E17/tarjetas17121F, lilaBE8AEE, botones7928C4/8B3BD4 y divisores332A3E. Se elimina el DOM de órbitas/dona flotante/torre y se limita el tilt/reveal a pantallas privadas. Sellos adaptables con valores reales en puntos; estado anónimo sin progreso ficticio. Foto pendiente: espacio beige identificado y reemplazable. [Implementación y límites](../DRACHAS_PORTADA_2026-10-18.md).
+Referencia18octubre en landing.css, aislada de Perfil/Dashboard. Hero y tarjeta en dos columnas desde900px; orden vertical móvil. Logo SVG y Nunito conservados. Fondo100E17/tarjetas17121F, lilaBE8AEE, botones7928C4/8B3BD4 y divisores332A3E. Se elimina el DOM de órbitas/dona flotante/torre y se limita el tilt/reveal a pantallas privadas. Sellos adaptables con valores reales en puntos; estado anónimo sin progreso ficticio. Pareja chocolate/vainilla generada por solicitud del usuario, con nota Imagen ilustrativa, WebP480/960/1536, dimensiones explícitas, carga diferida y proporción3:2 sin recorte. [Implementación y límites](../DRACHAS_PORTADA_2026-10-18.md).
 
 ## Implementación aprobada Drachas18octubre
 
