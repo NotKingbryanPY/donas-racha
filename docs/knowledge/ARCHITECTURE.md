@@ -37,4 +37,4 @@ Web pública ahora Drachas. customer-orders.js mantiene caché por propietario/t
 
 ## Portada de recompensas — 18 octubre 2026
 
-La portada usa landing.css/landing.js sobre el HTML existente. Selección nextRewardState compartida con Perfil. Al restaurar una sesión, una lectura privada getCliente por la API actual; no hay polling, nueva autoridad comercial ni endpoint. Estilos delimitados por #roleOverlay y fotografía pendiente explícita. Ver ../DRACHAS_PORTADA_2026-10-18.md.
+La portada usa landing.css/landing.js sobre el HTML existente. Selección nextRewardState compartida con Perfil. Al restaurar una sesión, una lectura privada getCliente por la API actual; no hay polling, nueva autoridad comercial ni endpoint. Estilos delimitados por #roleOverlay y imagen ilustrativa local adaptable, sin llamadas al generador en ejecución. Ver ../DRACHAS_PORTADA_2026-10-18.md.

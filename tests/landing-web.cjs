@@ -35,7 +35,18 @@ async function fixture(context,profile){
    assert.equal(await page.locator('#landingRewardMeter').getAttribute('role'),null);
    assert.equal(await page.locator('#publicCatalog strong').textContent(),'B/.1.00');
    assert.equal(await page.locator('#roleOverlay .hero-art,#roleOverlay img[src*="donut-hero"],#roleOverlay img[src*="donut-stack"]').count(),0);
-   assert.equal(await page.locator('[data-photo-state="placeholder"]').count(),1);
+   assert.equal(await page.locator('[data-photo-state="placeholder"]').count(),0);
+   const photo=page.locator('.landing-product-photo img');await photo.scrollIntoViewIfNeeded();
+   await photo.evaluate(img=>img.decode());
+   assert(await photo.evaluate(img=>img.naturalWidth>0 && Math.abs(img.naturalWidth/img.naturalHeight-1.5)<.02 && /drachas-doughnuts-natural-(480|960|1536)\.webp$/.test(img.currentSrc)),'responsive local photograph loads (intrinsic dimensions are density corrected for srcset)');
+   assert.equal(await page.locator('.landing-product-photo figcaption small').textContent(),'Imagen ilustrativa');
+   const photoLayout=await page.evaluate(()=>{
+    const image=document.querySelector('.landing-product-photo img').getBoundingClientRect(),copy=document.querySelector('.donut-order-copy').getBoundingClientRect();
+    return {ratio:image.width/image.height,visibleWidth:image.width,copyX:copy.x,copyY:copy.y,imageX:image.x,imageBottom:image.bottom};
+   });
+   assert(Math.abs(photoLayout.ratio-1.5)<.01,'both doughnuts remain in the uncropped 3:2 image');
+   assert(photoLayout.visibleWidth>0 && photoLayout.visibleWidth<=width,'photograph fits the viewport');
+   if(width>=900)assert(photoLayout.copyX>photoLayout.imageX);else assert(photoLayout.copyY>=photoLayout.imageBottom,'mobile photograph appears above the order copy');
    const layout=await page.evaluate(()=>{
     const root=document.getElementById('roleOverlay'),hero=document.querySelector('.hero-copy').getBoundingClientRect(),card=document.querySelector('.landing-rewards').getBoundingClientRect();
     return {overflow:root.scrollWidth>root.clientWidth,hero:{x:hero.x,bottom:hero.bottom},card:{x:card.x,y:card.y},circles:[...document.querySelectorAll('.landing-stamp')].map(n=>{const r=n.getBoundingClientRect();return {left:r.left,right:r.right};})};

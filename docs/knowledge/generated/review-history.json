@@ -1066,5 +1066,23 @@
       "tests/landing-web.cjs"
     ],
     "note": "Revisados listeners pagehide/pageshow: limpiar snapshot antes de historial, revalidar identidad al volver y abortar lectores anteriores. Prueba de eventos añadida a la suite de portada. Código base8c7152f pasó CI completo; validación del head actualizado se registra en PR. No prueba física Safari ni cambios de servidor."
+  },
+  {
+    "date": "2026-10-18T19:29:54-05:00",
+    "commit": "c76135d6176657776894a2b246de1de8f5043049",
+    "areas": [
+      "operations",
+      "web"
+    ],
+    "changed_files": [
+      "assets/css/landing.css",
+      "assets/images/drachas-doughnuts-natural-1536.webp",
+      "assets/images/drachas-doughnuts-natural-480.webp",
+      "assets/images/drachas-doughnuts-natural-960.webp",
+      "docs/DRACHAS_PORTADA_2026-10-18.md",
+      "index.html",
+      "tests/landing-web.cjs"
+    ],
+    "note": "Revisados HTML/CSS, imagen original image_gen y WebP480/960/1536 locales, srcset/sizes, dimensiones3:2 sin recorte, etiquetas y procedencia ilustrativa. Capturas390/1440 inspeccionadas; landing320/390/768/1024/1440 y aislamiento de sesión PASS; catálogo PASS. Logo/rutas/API/SQL intactos. Guías actualizadas con prompt y mantenimiento. Publicación se certifica en PR."
   }
 ]

@@ -1,5 +1,5 @@
 {
-  "source_commit": "8c7152fb9ad1ade06d434e7bc1233f76012d05e5",
+  "source_commit": "c76135d6176657776894a2b246de1de8f5043049",
   "scope": "working tree; lexical extraction, production unverified",
   "schema_version": 1,
   "extractor_version": 4,
@@ -7047,8 +7047,8 @@
     },
     {
       "path": "assets/css/landing.css",
-      "sha256": "d6d264d3580c0faa42a1feba59a3a20f35fe7a087e1fdaa29c11fc9ab5bc3ec0",
-      "bytes": 7787,
+      "sha256": "7a46d8ff8e91027b166e94c802d34db6853eac1ad01147580816f304a4a9143e",
+      "bytes": 7452,
       "symbols": [],
       "imports": [],
       "rpc_calls": [],
@@ -7262,6 +7262,45 @@
       "path": "assets/images/donut-stack.webp",
       "sha256": "447c5d303aa011c3aa1783864022a68610ee391ff83128fba54676a2c28a1948",
       "bytes": 60516,
+      "symbols": [],
+      "imports": [],
+      "rpc_calls": [],
+      "tables": [],
+      "sql_objects": [],
+      "sql_changes": [],
+      "endpoints": [],
+      "animations": []
+    },
+    {
+      "path": "assets/images/drachas-doughnuts-natural-1536.webp",
+      "sha256": "ae41c35731438e0b73c8880152796fb29f3c2f363a29e8f0e3d89bc74d289dee",
+      "bytes": 169584,
+      "symbols": [],
+      "imports": [],
+      "rpc_calls": [],
+      "tables": [],
+      "sql_objects": [],
+      "sql_changes": [],
+      "endpoints": [],
+      "animations": []
+    },
+    {
+      "path": "assets/images/drachas-doughnuts-natural-480.webp",
+      "sha256": "b7dfc5d7d50749ef280af15c1ebbae45b7128ceed94c930ac0f719a143141759",
+      "bytes": 23872,
+      "symbols": [],
+      "imports": [],
+      "rpc_calls": [],
+      "tables": [],
+      "sql_objects": [],
+      "sql_changes": [],
+      "endpoints": [],
+      "animations": []
+    },
+    {
+      "path": "assets/images/drachas-doughnuts-natural-960.webp",
+      "sha256": "7415f3b0f42648c14de0c40c4aaf8bd73993e1cd92d73eb2be9011d1ac30fa96",
+      "bytes": 79622,
       "symbols": [],
       "imports": [],
       "rpc_calls": [],
@@ -8406,8 +8445,8 @@
     },
     {
       "path": "docs/DRACHAS_PORTADA_2026-10-18.md",
-      "sha256": "1de0a650f4511d9b3e244fb7cc74a5d37979149a9201f13001357e11662e99e7",
-      "bytes": 5137,
+      "sha256": "e3d4aca13f4125d81c8e050e304217363040745aae6dc65b5a3ca7231a8bab17",
+      "bytes": 7473,
       "symbols": [],
       "imports": [],
       "rpc_calls": [],
@@ -8416,7 +8455,7 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 39
+      "lines": 49
     },
     {
       "path": "docs/DRACHAS_REBRANDING_PROPUESTA.md",
@@ -8969,473 +9008,473 @@
     },
     {
       "path": "index.html",
-      "sha256": "e1bf8a647a6d115ef9fc73711c6784ccab7ae2cf360c51915bff356ab32debec",
-      "bytes": 130009,
+      "sha256": "fb8c2a553a31dfe53d242510a1065c78568b8ac081315d5621275f215a37bbfe",
+      "bytes": 130117,
       "symbols": [
         {
           "name": "resetCustomerOrderForm",
           "kind": "function",
-          "line": 564
+          "line": 563
         },
         {
           "name": "customerViewFromUrl",
           "kind": "function",
-          "line": 576
+          "line": 575
         },
         {
           "name": "updateCustomerViewUrl",
           "kind": "function",
-          "line": 580
+          "line": 579
         },
         {
           "name": "clearCustomerViewUrl",
           "kind": "function",
-          "line": 591
+          "line": 590
         },
         {
           "name": "updateStaffViewUrl",
           "kind": "function",
-          "line": 597
+          "line": 596
         },
         {
           "name": "clearStaffViewUrl",
           "kind": "function",
-          "line": 606
+          "line": 605
         },
         {
           "name": "restoreStaffView",
           "kind": "function",
-          "line": 611
+          "line": 610
         },
         {
           "name": "openInfoModal",
           "kind": "function",
-          "line": 684
+          "line": 683
         },
         {
           "name": "closeInfoModal",
           "kind": "function",
-          "line": 691
+          "line": 690
         },
         {
           "name": "api",
           "kind": "function",
-          "line": 698
+          "line": 697
         },
         {
           "name": "backendRequest",
           "kind": "function",
-          "line": 703
+          "line": 702
         },
         {
           "name": "vercelApi",
           "kind": "function",
-          "line": 732
+          "line": 731
         },
         {
           "name": "vercelPost",
           "kind": "function",
-          "line": 749
+          "line": 748
         },
         {
           "name": "progressiveRanking",
           "kind": "function",
-          "line": 760
+          "line": 759
         },
         {
           "name": "preloadSupabaseProducts",
           "kind": "function",
-          "line": 766
+          "line": 765
         },
         {
           "name": "flattenCatalog",
           "kind": "function",
-          "line": 776
+          "line": 775
         },
         {
           "name": "flavorTone",
           "kind": "function",
-          "line": 785
+          "line": 784
         },
         {
           "name": "formatMoney",
           "kind": "function",
-          "line": 793
+          "line": 792
         },
         {
           "name": "renderPublicCatalog",
           "kind": "function",
-          "line": 799
+          "line": 798
         },
         {
           "name": "beginCustomerOrder",
           "kind": "function",
-          "line": 831
+          "line": 830
         },
         {
           "name": "customerRequest",
           "kind": "function",
-          "line": 836
+          "line": 835
         },
         {
           "name": "apiPost",
           "kind": "function",
-          "line": 872
+          "line": 871
         },
         {
           "name": "hideOverlays",
           "kind": "function",
-          "line": 876
+          "line": 875
         },
         {
           "name": "goToRoleScreen",
           "kind": "function",
-          "line": 883
+          "line": 882
         },
         {
           "name": "goToAdminLogin",
           "kind": "function",
-          "line": 897
+          "line": 896
         },
         {
           "name": "goToUserLogin",
           "kind": "function",
-          "line": 906
+          "line": 905
         },
         {
           "name": "checkLogin",
           "kind": "function",
-          "line": 921
+          "line": 920
         },
         {
           "name": "logout",
           "kind": "function",
-          "line": 946
+          "line": 945
         },
         {
           "name": "requireAuth",
           "kind": "function",
-          "line": 957
+          "line": 956
         },
         {
           "name": "tryShowAdmin",
           "kind": "function",
-          "line": 958
+          "line": 957
         },
         {
           "name": "showScreen",
           "kind": "function",
-          "line": 960
+          "line": 959
         },
         {
           "name": "goHome",
           "kind": "function",
-          "line": 975
+          "line": 974
         },
         {
           "name": "rankingBack",
           "kind": "function",
-          "line": 982
+          "line": 981
         },
         {
           "name": "clientGoBack",
           "kind": "function",
-          "line": 983
+          "line": 982
         },
         {
           "name": "loadHomeRanking",
           "kind": "function",
-          "line": 996
+          "line": 995
         },
         {
           "name": "doSearch",
           "kind": "function",
-          "line": 1004
+          "line": 1003
         },
         {
           "name": "openUserById",
           "kind": "function",
-          "line": 1019
+          "line": 1018
         },
         {
           "name": "resetCustomerLoginState",
           "kind": "function",
-          "line": 1025
+          "line": 1024
         },
         {
           "name": "cancelCustomerLogin",
           "kind": "function",
-          "line": 1033
+          "line": 1032
         },
         {
           "name": "loginCustomerById",
           "kind": "function",
-          "line": 1038
+          "line": 1037
         },
         {
           "name": "openClient",
           "kind": "function",
-          "line": 1098
+          "line": 1097
         },
         {
           "name": "renderClient",
           "kind": "function",
-          "line": 1129
+          "line": 1128
         },
         {
           "name": "renderHitos",
           "kind": "function",
-          "line": 1201
+          "line": 1200
         },
         {
           "name": "renderBadges",
           "kind": "function",
-          "line": 1205
+          "line": 1204
         },
         {
           "name": "openProfilePanel",
           "kind": "function",
-          "line": 1210
+          "line": 1209
         },
         {
           "name": "nextRewardState",
           "kind": "function",
-          "line": 1215
+          "line": 1214
         },
         {
           "name": "renderProfilePreview",
           "kind": "function",
-          "line": 1220
+          "line": 1219
         },
         {
           "name": "renderHistory",
           "kind": "function",
-          "line": 1232
+          "line": 1231
         },
         {
           "name": "setClientTab",
           "kind": "function",
-          "line": 1239
+          "line": 1238
         },
         {
           "name": "loadClientDelivery",
           "kind": "function",
-          "line": 1266
+          "line": 1265
         },
         {
           "name": "clientOrderStatus",
           "kind": "function",
-          "line": 1295
+          "line": 1294
         },
         {
           "name": "renderClientFlavors",
           "kind": "function",
-          "line": 1299
+          "line": 1298
         },
         {
           "name": "changeClientOrderQty",
           "kind": "function",
-          "line": 1307
+          "line": 1306
         },
         {
           "name": "updateClientOrderTotal",
           "kind": "function",
-          "line": 1325
+          "line": 1324
         },
         {
           "name": "submitClientOrder",
           "kind": "function",
-          "line": 1332
+          "line": 1331
         },
         {
           "name": "saveCustomerPassword",
           "kind": "function",
-          "line": 1375
+          "line": 1374
         },
         {
           "name": "showCustomerActivation",
           "kind": "function",
-          "line": 1394
+          "line": 1393
         },
         {
           "name": "showCustomerRecovery",
           "kind": "function",
-          "line": 1401
+          "line": 1400
         },
         {
           "name": "enterAfterPasswordSetup",
           "kind": "function",
-          "line": 1408
+          "line": 1407
         },
         {
           "name": "completeCustomerActivation",
           "kind": "function",
-          "line": 1420
+          "line": 1419
         },
         {
           "name": "completeCustomerRecovery",
           "kind": "function",
-          "line": 1444
+          "line": 1443
         },
         {
           "name": "setClientRanking",
           "kind": "function",
-          "line": 1463
+          "line": 1462
         },
         {
           "name": "loadClientInlineRanking",
           "kind": "function",
-          "line": 1471
+          "line": 1470
         },
         {
           "name": "renderPointRules",
           "kind": "function",
-          "line": 1487
+          "line": 1486
         },
         {
           "name": "renderShop",
           "kind": "function",
-          "line": 1493
+          "line": 1492
         },
         {
           "name": "renderRedemptions",
           "kind": "function",
-          "line": 1502
+          "line": 1501
         },
         {
           "name": "redeemItem",
           "kind": "function",
-          "line": 1509
+          "line": 1508
         },
         {
           "name": "registerPurchase",
           "kind": "function",
-          "line": 1529
+          "line": 1528
         },
         {
           "name": "createClient",
           "kind": "function",
-          "line": 1565
+          "line": 1564
         },
         {
           "name": "shareNewUsername",
           "kind": "function",
-          "line": 1588
+          "line": 1587
         },
         {
           "name": "sendNewWA",
           "kind": "function",
-          "line": 1598
+          "line": 1597
         },
         {
           "name": "showPublicRanking",
           "kind": "function",
-          "line": 1637
+          "line": 1636
         },
         {
           "name": "loadRanking",
           "kind": "function",
-          "line": 1638
+          "line": 1637
         },
         {
           "name": "renderRankingItems",
           "kind": "function",
-          "line": 1644
+          "line": 1643
         },
         {
           "name": "showAdmin",
           "kind": "function",
-          "line": 1653
+          "line": 1652
         },
         {
           "name": "loadAdminDashboard",
           "kind": "function",
-          "line": 1665
+          "line": 1664
         },
         {
           "name": "renderAdminStats",
           "kind": "function",
-          "line": 1683
+          "line": 1682
         },
         {
           "name": "renderAdminConfig",
           "kind": "function",
-          "line": 1695
+          "line": 1694
         },
         {
           "name": "renderAdminRanking",
           "kind": "function",
-          "line": 1704
+          "line": 1703
         },
         {
           "name": "renderAdminClients",
           "kind": "function",
-          "line": 1708
+          "line": 1707
         },
         {
           "name": "filterAdminClients",
           "kind": "function",
-          "line": 1717
+          "line": 1716
         },
         {
           "name": "loadAdminStats",
           "kind": "function",
-          "line": 1718
+          "line": 1717
         },
         {
           "name": "loadConfig",
           "kind": "function",
-          "line": 1732
+          "line": 1731
         },
         {
           "name": "saveQuickConfig",
           "kind": "function",
-          "line": 1735
+          "line": 1734
         },
         {
           "name": "loadAdminRanking",
           "kind": "function",
-          "line": 1747
+          "line": 1746
         },
         {
           "name": "loadAdminClients",
           "kind": "function",
-          "line": 1752
+          "line": 1751
         },
         {
           "name": "showToast",
           "kind": "function",
-          "line": 1760
+          "line": 1759
         },
         {
           "name": "confettiBurst",
           "kind": "function",
-          "line": 1761
+          "line": 1760
         },
         {
           "name": "fmtDate",
           "kind": "function",
-          "line": 1762
+          "line": 1761
         },
         {
           "name": "fmtDateTime",
           "kind": "function",
-          "line": 1763
+          "line": 1762
         },
         {
           "name": "initial",
           "kind": "function",
-          "line": 1764
+          "line": 1763
         },
         {
           "name": "safe",
           "kind": "function",
-          "line": 1765
+          "line": 1764
         },
         {
           "name": "esc",
           "kind": "function",
-          "line": 1766
+          "line": 1765
         }
       ],
       "imports": [],
@@ -9446,59 +9485,59 @@
       "endpoints": [
         {
           "value": "/api/auth/session",
-          "line": 649
+          "line": 648
         },
         {
           "value": "/api/backend",
-          "line": 705
+          "line": 704
         },
         {
           "value": "/api/auth/session",
-          "line": 714
+          "line": 713
         },
         {
           "value": "/api/ranking",
-          "line": 762
+          "line": 761
         },
         {
           "value": "/api/products",
-          "line": 768
+          "line": 767
         },
         {
           "value": "/api/auth/session",
-          "line": 928
+          "line": 927
         },
         {
           "value": "/api/customer/session",
-          "line": 1050
+          "line": 1049
         },
         {
           "value": "/api/backend?",
-          "line": 1059
+          "line": 1058
         },
         {
           "value": "/api/products",
-          "line": 1274
+          "line": 1273
         },
         {
           "value": "/api/products",
-          "line": 1274
+          "line": 1273
         },
         {
           "value": "/api/orders",
-          "line": 1353
+          "line": 1352
         },
         {
           "value": "/api/customer/change-password",
-          "line": 1384
+          "line": 1383
         },
         {
           "value": "/api/customer/activation",
-          "line": 1430
+          "line": 1429
         },
         {
           "value": "/api/customer/password",
-          "line": 1455
+          "line": 1454
         }
       ],
       "animations": [
@@ -9507,7 +9546,7 @@
           "line": 72
         }
       ],
-      "lines": 1781
+      "lines": 1780
     },
     {
       "path": "ios/.gitignore",
@@ -19846,8 +19885,8 @@
     },
     {
       "path": "tests/landing-web.cjs",
-      "sha256": "40cfafd46d8d082fdaaa9511129e48f990633e273352ba9c21cf4b35b5b8b761",
-      "bytes": 8411,
+      "sha256": "8c8e734fb4500dc0872e735a0d5f4bc7e578611f6394379b12cfd6ac78b9ec64",
+      "bytes": 9675,
       "symbols": [
         {
           "name": "fixture",
@@ -19879,7 +19918,7 @@
         }
       ],
       "animations": [],
-      "lines": 83
+      "lines": 94
     },
     {
       "path": "tests/manual-inventory-postgres.mjs",

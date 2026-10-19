@@ -26,14 +26,24 @@ La copia en memoria es el último perfil verificado; no es una suscripción en t
 
 pagehide limpia saldo y lectura antes de que el navegador guarde la página en su historial; pageshow con persisted vuelve a verificar la identidad actual. Evita recuperar una tarjeta privada antigua al volver desde otra sesión con el botón Atrás.
 
-## Fotografía pendiente
+## Imagen de producto: ilustración autorizada
 
-No se encontró una fotografía de producto verificable y adecuada entre los recursos existentes. Se utiliza el espacio beige identificado «Espacio para nuestra fotografía de producto» y las etiquetas HTML Chocolate/Vainilla. No se usa la captura como fondo ni una imagen generada presentada como producto real.
+El usuario solicitó después generar una imagen realista e integrarla en el espacio vacío. image_gen (herramienta integrada, sin CLI/API propia) creó la pareja: chocolate izquierda y vainilla derecha, papel claro, fondo beige y luz natural. Es una ilustración fotográfica; figcaption muestra «Imagen ilustrativa» y no se afirma que sea una fotografía de los productos reales del negocio. Logo y catálogo no cambian.
 
-Reemplazo: editar solo la figura .landing-product-photo en index.html. Sustituir el contenido de .landing-product-photo-slot por un img local con texto alternativo, dimensiones y carga diferida. Retirar role=img y su descripción de espacio reservado del contenedor; actualizar data-photo-state y conservar figcaption. Dirección solicitada: dos donas lado a lado sobre papel claro/superficie beige, iluminación natural, sin composición dramática. Optimizar el archivo y revisar móvil antes de publicar. No requiere SQL o credenciales.
+Activos locales: assets/images/drachas-doughnuts-natural-480.webp (480×320,23872bytes), -960.webp (960×640,79622bytes) y -1536.webp (1536×1024,169584bytes). Pillow del runtime de desarrollo solo redimensionó/comprimió el original1536×1024, sin recorte ni retoque creativo; no se añade una dependencia a la web. El PNG original se conserva en el directorio de imágenes generadas de Codex.
+
+La figura reemplaza cámara/texto de reserva por picture/img con srcset, sizes, dimensiones, loading=lazy y decoding=async. Proporción3:2 completa en todos los anchos; en escritorio la imagen se centra verticalmente si el texto requiere más altura. Etiquetas HTML Chocolate/Vainilla y nota de procedencia debajo, imagen encima del texto en móvil. landing.css?v=2 renueva caché. No requiere SQL, credenciales, Firebase o cambios de rutas.
+
+Mantenimiento: conservar ambos sabores completos y la relación de aspecto al sustituir los WebP. Actualizar nombres/srcset/sizes, dimensiones y procedencia si cambia el origen; solo retirar la nota de ilustración si se dispone de una fotografía real verificada.
+
+### Prompt final usado
+
+Use case: photorealistic-natural. Asset type: landscape food photograph for the Drachas website order card. Primary request: exactly two simple ring doughnuts placed side by side on lightly crinkled pale bakery parchment on a plain warm beige tabletop. The chocolate-glazed doughnut is on the left and the vanilla-glazed doughnut is on the right, matching HTML flavor labels below the photograph. Natural small bakery products, modest thin coating, soft golden dough, believable slight imperfections and authentic texture. Composition: landscape 3:2, photographed from nearly overhead with a subtle angle; both doughnuts entirely visible, similar size, central horizontal pair with generous paper around the edges to allow responsive cropping. Soft natural window light, restrained warm colors, gentle realistic shadows, sharp edible detail without excessive gloss. Calm professional editorial food photography. No sprinkles, no extra doughnuts, no stacks, no trays, no props, no hands, no floating objects, no dramatic background, no text, no logos, no watermark. This is a standalone photograph asset, not a website mockup.
 
 ## Verificación
 
 landing-web.cjs verifica320/390/768/1024/1440px: seis sellos dentro del ancho, orden responsive, precio real del fixture, rutas a Ranking/tienda/pedidos, foco, puntos disponibles frente a históricos/compras, canje reflejado y limpieza al salir. Otro caso restaura sesión y cambia de cuenta con una lectura retenida: la respuesta antigua no repone el saldo anterior.
 
 El primer arranque local de Chromium agotó30s al cargar. La repetición completa pasó sin ampliar tiempos ni relajar aserciones; un diagnóstico posterior confirmó servidor200 y documento completo. Capturas locales con fixtures en test-output/landing; no son cuentas o compras de producción. Regresiones de pedidos, navegación, catálogo y movimiento se ejecutan aparte. Evidencia de CI y publicación en la PR de esta entrega; sin prueba física de Safari iPad o lector de pantalla afirmada.
+
+Verificación de la imagen añadida: landing-web.cjs pasó a320/390/768/1024/1440, decodificando cada recurso seleccionado y comprobando proporción completa3:2, ausencia del placeholder, posición móvil/escritorio y rutas existentes. Capturas390/1440 inspeccionadas visualmente. srcset ajusta naturalWidth/naturalHeight por densidad; se valida proporción y carga, no se confunde ese valor con el ancho físico del archivo. Evidencia CI y publicación en la PR de esta actualización.

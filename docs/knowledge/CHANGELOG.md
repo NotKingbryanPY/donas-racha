@@ -1,5 +1,9 @@
 # Historial de decisiones y documentación
 
+## 2026-10-18 — imagen natural en el panel de pedidos
+
+Por solicitud expresa del usuario, image_gen creó dos donas chocolate/vainilla sobre papel claro y superficie beige. El placeholder de portada se sustituye por WebP locales480/960/1536, srcset/sizes, dimensiones estables, carga diferida, etiquetas y nota Imagen ilustrativa. No se altera el logo, catálogo, rutas, recompensas ni lógica de pedidos. CSS de portada?v=2. Guía actualizada con procedencia, prompt y mantenimiento; comprobación responsive y publicación en la PR de esta entrega.
+
 ## 2026-10-18 — portada de recompensas según referencia
 
 Hero «Cada antojo / suma.», tarjeta de recompensas, navegación Sabores/Ranking/Mi perfil y panel de pedidos sobrio; logo y funciones existentes preservados. CSS público aislado y movimiento decorativo retirado de portada. nextRewardState comparte selección real con Perfil; seis sellos representan puntos disponibles, sin inventar seis compras. Una lectura privada al restaurar sesión, cancelación/generación y limpieza al cambiar identidad. Precio/disponibilidad conservan catálogo. Sin foto real verificada: espacio reemplazable identificado; imágenes flotante/torre fuera del DOM público. Nueva prueba responsive/rutas/saldo/identidad; [informe y límites](../DRACHAS_PORTADA_2026-10-18.md). Sin API/SQL/secretos/Android nuevos.

@@ -30,4 +30,4 @@ Identidad C vectorial, favicon/social/PNG derivados. Activos destacados, contado
 
 ## Portada de recompensas — 18 octubre 2026
 
-Portada: titular y tarjeta real de puntos, seis sellos visuales sin regla ficticia de compras, enlaces a perfil/tienda y pedido existente, precio dinámico y responsive. Foto de producto pendiente representada por espacio beige reemplazable, sin imagen falsa. Logo y tutorial conservados.
+Portada: titular y tarjeta real de puntos, seis sellos visuales sin regla ficticia de compras, enlaces a perfil/tienda y pedido existente, precio dinámico y responsive. El espacio beige se reemplazó por una imagen ilustrativa de chocolate/vainilla autorizada por el usuario, con etiquetas HTML y tres resoluciones WebP. No se presenta como fotografía de los productos reales. Logo y tutorial conservados.

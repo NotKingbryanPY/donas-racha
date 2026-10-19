@@ -21,4 +21,4 @@ Sin dependencias nuevas del runtime. SVG trazado sin fuentes externas; Nunito lo
 
 ## Portada de recompensas — 18 octubre 2026
 
-La portada nueva no añade paquetes, fuentes, servicios, Firebase o imágenes remotas. Conserva Nunito local. Solo HTML/CSS/JS; fotografía real pendiente. Reutiliza la API getCliente y catálogo existentes.
+La portada nueva no añade paquetes, fuentes, servicios, Firebase o imágenes remotas. Conserva Nunito local. Solo HTML/CSS/JS y tres WebP locales de la ilustración autorizada (24/80/170KB, redondeados). image_gen creó el original; Pillow del runtime de desarrollo solo redimensionó/comprimió. Sin dependencia nueva de ejecución. Reutiliza la API getCliente y catálogo existentes.
