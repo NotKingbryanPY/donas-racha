@@ -27,6 +27,8 @@ jobs:
           node tests/public-realtime-config.cjs
           node tests/catalog-realtime.cjs
           node tests/inventory-revision-api.cjs
+          node tests/weekly-ranking-api.cjs
+          node tests/public-ranking-privacy.cjs
           node tests/daily-operations-api.cjs
           node tests/web-only.cjs
           node tests/full-supabase-backend.cjs
@@ -46,6 +48,7 @@ jobs:
       - name: Apply migrations and exercise shared stock and roles
         run: |
           node tests/shared-inventory-postgres.mjs
+          node tests/weekly-ranking-postgres.mjs
           node tests/seller-role-postgres.mjs
           node tests/manual-inventory-postgres.mjs
           node tests/pilot-catalog-postgres.mjs
@@ -77,6 +80,7 @@ jobs:
             sleep 1
           done
           node tests/integration-order-web.cjs
+          node tests/rankings-web.cjs
           node tests/landing-web.cjs
           node tests/customer-order-tracking-web.cjs
           node tests/customer-navigation.cjs

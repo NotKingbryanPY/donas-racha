@@ -17,4 +17,5 @@ erDiagram
   CUSTOMERS ||--o| LOYALTY_ACCOUNTS : puntos_conservados
   PUSH_DEVICES ||--o{ ORDER_PUSH_JOBS : destinatario
   ORDERS ||--o{ ORDER_PUSH_JOBS : evento_confirmado
+  CUSTOMERS ||--o{ LOYALTY_TRANSACTIONS : compras_fechadas
 ```

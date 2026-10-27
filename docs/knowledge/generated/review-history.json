@@ -1084,5 +1084,34 @@
       "tests/landing-web.cjs"
     ],
     "note": "Revisados HTML/CSS, imagen original image_gen y WebP480/960/1536 locales, srcset/sizes, dimensiones3:2 sin recorte, etiquetas y procedencia ilustrativa. Capturas390/1440 inspeccionadas; landing320/390/768/1024/1440 y aislamiento de sesión PASS; catálogo PASS. Logo/rutas/API/SQL intactos. Guías actualizadas con prompt y mantenimiento. Publicación se certifica en PR."
+  },
+  {
+    "date": "2026-10-27T10:55:25-05:00",
+    "commit": "184848c3768380abbc389f963e8b80045a21da86",
+    "areas": [
+      "api",
+      "database",
+      "operations",
+      "web"
+    ],
+    "changed_files": [
+      ".github/workflows/mobile-contracts.yml",
+      "api/_lib/admin_handlers/weekly-ranking.js",
+      "api/admin/customers/[route].js",
+      "assets/css/rankings.css",
+      "assets/js/rankings.js",
+      "docs/RANKING_2026-10-27.md",
+      "docs/previews/ranking-hall-of-fame.png",
+      "docs/previews/ranking-semanal.png",
+      "index.html",
+      "supabase/migrations/202610270001_weekly_ranking.sql",
+      "supabase/sql-editor/weekly-ranking/00_preflight.sql",
+      "supabase/sql-editor/weekly-ranking/02_verify.sql",
+      "tests/rankings-web.cjs",
+      "tests/regression.cjs",
+      "tests/weekly-ranking-api.cjs",
+      "tests/weekly-ranking-postgres.mjs"
+    ],
+    "note": "ranking-publico-podio-semanal-privado-ledger-panama-pruebas-locales"
   }
 ]

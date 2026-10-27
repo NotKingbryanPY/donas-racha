@@ -56,3 +56,7 @@ orders-v2/05_delivery_diagnosis.sql es una consulta READ ONLY de metadata sobre 
 ## Lecturas Drachas18octubre: sin migración
 
 Se reutilizan orders(id/public_code/customer_id/status/payment_method/payment_status/currency_code/total_cents/created_at/updated_at/completed_at/cancelled_at/delivery_location), order_items y order_events. Filtro propietario siempre en servidor, activos e histórico separados y paginados; datos no-store. Detalle ya no selecciona actor_type/note, solo estados/fechas. No cambia RLS, grants, transacciones, tablas, registros o códigos DR-. INVALID_PRODUCT_VARIANT/INVALID_ITEMS de SQL se traducen a rechazos400 conocidos sin imprimir mensajes internos.
+
+## Ranking semanal — 27 octubre 2026
+
+Migración202610270001: índice parcial loyalty_transactions_weekly_purchases_idx(occurred_at,customer_id) WHERE entry_type=PURCHASE_EARN y RPC estable/security definer api_staff_weekly_ranking(uuid,date,integer), search_path vacío. Solo service_role; valida actor ADMIN/SELLER. Filtra intervalo lunes Panamá a lunes siguiente exclusivo, agrupa count/sum puntos por cliente, orden compras/puntos/UUID, límite100. Devuelve weekStart/weekEnd/currentWeek/timezone/weeks/ranking. El ledger fechado guarda la historia; sin nuevas tablas ni copias de saldos ni jobs. Incluye desactivados para conservar historial; nombres actuales. Ajustes sin fecha y totales importados no se atribuyen a semanas. [Activación y límites](../RANKING_2026-10-27.md).

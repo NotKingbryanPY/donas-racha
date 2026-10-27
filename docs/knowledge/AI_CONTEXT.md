@@ -2,6 +2,10 @@
 
 Revisión: 18 octubre 2026. Leer primero [AGENTS](../../AGENTS.md), esta guía y el [diagnóstico previo](../DONAS_CONTROL_2_AUDITORIA.md). La aclaración del14octubre prioriza Pedidos nativos y notificaciones FCM fuera de la app, además de la operación diaria; sustituye la retirada total del12octubre. La web permanece operativa. No restaurar automáticamente la integración móvil antigua.
 
+## Rankings Drachas — 27 octubre 2026
+
+[Entrega y activación](../RANKING_2026-10-27.md). Ranking público conserva API sin IDs y añade podio Hall of Fame responsive; perfil usa el mismo render. `?staff=weekly-ranking` requiere ADMIN/SELLER en API y RPC. Semana lunes 00:00 Panamá; `PURCHASE_EARN` fechado es la autoridad y archivo de semanas, sin borrar/reiniciar saldos ni cron. 3 compras acreditadas/día como hasta ahora, no cantidades de donas ni ajustes sin fecha. Historia por fechas, nombres actuales y clientes desactivados incluidos; máximo100, orden por compras/puntos/UUID. Historial/enlace/recarga, DOM privado limpio y respuestas tardías descartadas. Migración202610270001 y preflight/verify listos, no aplicados a producción en esta entrega local. Pruebas SQL/API/browser aisladas; no confundir con despliegue real.
+
 ## Drachas web: identidad y pedidos, 18 octubre 2026
 
 Portada vigente: [referencia de recompensas y pedidos](../DRACHAS_PORTADA_2026-10-18.md). Hero «Cada antojo / suma.», tarjeta sobria y colores limitados a #roleOverlay; logo conservado. landing.css/landing.js y rutas a perfil/shop/pedido existentes. nextRewardState comparte selección real con Perfil; seis sellos son tramos de puntos, no seis compras. Anónimo sin saldo inventado; sesión guardada puede leer una vez el perfil propietario por la API existente, con cancelación/generación y limpieza al salir. Sin polling ni SQL nuevo. Imagen ilustrativa autorizada: pareja chocolate/vainilla sobre papel beige, generada con image_gen y servida desde WebP locales de480/960/1536px. Ambas donas completas, tamaños adaptables y nota visible de ilustración; no es una fotografía de productos reales del negocio. Dona flotante y torre retiradas de la portada. Sin cambios de FCM/Android.

@@ -64,3 +64,7 @@ POST conserva payload/UUID por dueño en sessionStorage. Solo rechazos conocidos
 Portada: anónimo sin lectura privada ni saldo supuesto. ID/token guardados → getCliente autenticado → verificar propietario/forma/generación → nextRewardState → seis tramos visuales y texto en puntos. RenderProfilePreview alimenta el mismo componente tras consultas/canjes. Cambio de identidad aborta/limpia y descarta respuestas antiguas. Solo memoria; sin polling. Precio y disponibilidad mantienen renderPublicCatalog.
 
 La portada limpia su snapshot en pagehide antes de BFCache y vuelve a verificar la identidad en pageshow.persisted. Se comprueba con eventos de historial simulados; no se afirma una prueba física de Safari.
+
+## Rankings — 27 octubre 2026
+
+Público: api/ranking → api_public_ranking → render compartido Hall of Fame, sin IDs ni acciones a perfiles privados. Perfil conserva la misma API pública; cada cambio de categoría invalida respuestas anteriores. Semanal: enlace staff → login existente si falta sesión → adminRequest con renovación existente → requireStaff → rate limit → api_staff_weekly_ranking con actor verificado → ledger PURCHASE_EARN por semana Panamá. El RPC solo lee; no acredita ni altera compras. Semana nueva usa intervalo nuevo, historia sigue en SQL. UI selecciona semanas y conserva URL; limpiar al salir/logout evita render tardío privado. [Detalle](../RANKING_2026-10-27.md).

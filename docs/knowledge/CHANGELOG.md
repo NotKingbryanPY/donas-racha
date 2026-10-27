@@ -1,5 +1,9 @@
 # Historial de decisiones y documentación
 
+## 27 octubre 2026 — Salón de la Fama y semanal privado
+
+Áreas web/api/database/operations. Podio público inspirado en referencia, renderer compartido, endpoint semanal ADMIN/SELLER y RPC por intervalos del ledger conservado. Sin cron/borrado, historial y URL por semana, permisos privados, escape/generaciones y pruebas aisladas SQL/API/browser. Índice/RPC nuevos, preflight/verify listos. [Entrega, límites y activación pendiente](../RANKING_2026-10-27.md).
+
 ## 2026-10-18 — imagen natural en el panel de pedidos
 
 Por solicitud expresa del usuario, image_gen creó dos donas chocolate/vainilla sobre papel claro y superficie beige. El placeholder de portada se sustituye por WebP locales480/960/1536, srcset/sizes, dimensiones estables, carga diferida, etiquetas y nota Imagen ilustrativa. No se altera el logo, catálogo, rutas, recompensas ni lógica de pedidos. CSS de portada?v=2. Guía actualizada con procedencia, prompt y mantenimiento; comprobación responsive y publicación en la PR de esta entrega.

@@ -385,6 +385,42 @@
           "line": 1
         }
       ]
+    },
+    {
+      "id": "feature:rankings",
+      "type": "funcionalidad",
+      "label": "Salón de la Fama y semanas privadas",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "assets/js/rankings.js",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "endpoint:weekly-ranking",
+      "type": "funcionalidad",
+      "label": "Ranking semanal ADMIN y SELLER",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "api/_lib/admin_handlers/weekly-ranking.js",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "rpc:api_staff_weekly_ranking",
+      "type": "funcionalidad",
+      "label": "Semanas Panamá del ledger persistente",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "supabase/migrations/202610270001_weekly_ranking.sql",
+          "line": 1
+        }
+      ]
     }
   ],
   "edges": [
@@ -732,6 +768,54 @@
       "refs": [
         {
           "path": "assets/css/landing.css",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "source": "system:web",
+      "target": "feature:rankings",
+      "type": "CONTIENE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "index.html",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "source": "feature:rankings",
+      "target": "endpoint:weekly-ranking",
+      "type": "LLAMA_A",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "assets/js/rankings.js",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "source": "endpoint:weekly-ranking",
+      "target": "rpc:api_staff_weekly_ranking",
+      "type": "LLAMA_A",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "api/_lib/admin_handlers/weekly-ranking.js",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "source": "rpc:api_staff_weekly_ranking",
+      "target": "feature:loyalty",
+      "type": "LEE_DE",
+      "status": "CONFIRMADO_CODIGO",
+      "refs": [
+        {
+          "path": "supabase/migrations/202610270001_weekly_ranking.sql",
           "line": 1
         }
       ]

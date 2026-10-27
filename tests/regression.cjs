@@ -76,7 +76,7 @@ const fixture = () => ({id:'C-DEMO',username:'cliente.demo',name:'Cliente de pru
   assert(await page.locator('#screen-home').evaluate(el=>el.inert));
   await page.screenshot({path:path.join(out,`landing-${width}.png`),fullPage:true});
   await page.getByRole('button',{name:'Ranking',exact:true}).click();
-  await page.waitForSelector('#rankingList .rank-item');await noOverflow('ranking');
+  await page.waitForSelector('#rankingList .hall-row');await noOverflow('ranking');
   await page.evaluate(()=>rankingBack());
   await page.getByRole('link',{name:'Mi perfil',exact:true}).click();
   await noOverflow('client login');
