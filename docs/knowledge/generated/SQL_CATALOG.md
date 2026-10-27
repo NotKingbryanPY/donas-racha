@@ -1222,3 +1222,12 @@ Declaraciones en migraciones ordenadas por nombre. **No es un esquema materializ
 - cambio/permisos `drop trigger` (`if`; abrir SQL para objeto completo) — [supabase/migrations/202610140001_staff_order_notifications.sql:L82](../../../supabase/migrations/202610140001_staff_order_notifications.sql#L82)
 - cambio/permisos `revoke execute` (`on`; abrir SQL para objeto completo) — [supabase/migrations/202610140001_staff_order_notifications.sql:L152](../../../supabase/migrations/202610140001_staff_order_notifications.sql#L152)
 - cambio/permisos `grant execute` (`on`; abrir SQL para objeto completo) — [supabase/migrations/202610140001_staff_order_notifications.sql:L156](../../../supabase/migrations/202610140001_staff_order_notifications.sql#L156)
+
+## 202610270001_weekly_ranking.sql
+
+[supabase/migrations/202610270001_weekly_ranking.sql:L1](../../../supabase/migrations/202610270001_weekly_ranking.sql#L1)
+
+- index `loyalty_transactions_weekly_purchases_idx` — [supabase/migrations/202610270001_weekly_ranking.sql:L7](../../../supabase/migrations/202610270001_weekly_ranking.sql#L7)
+- función `api_staff_weekly_ranking` — [supabase/migrations/202610270001_weekly_ranking.sql:L11](../../../supabase/migrations/202610270001_weekly_ranking.sql#L11)
+- cambio/permisos `revoke all` (`on`; abrir SQL para objeto completo) — [supabase/migrations/202610270001_weekly_ranking.sql:L55](../../../supabase/migrations/202610270001_weekly_ranking.sql#L55)
+- cambio/permisos `grant execute` (`on`; abrir SQL para objeto completo) — [supabase/migrations/202610270001_weekly_ranking.sql:L56](../../../supabase/migrations/202610270001_weekly_ranking.sql#L56)

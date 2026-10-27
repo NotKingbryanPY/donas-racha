@@ -120,6 +120,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
 <link rel="stylesheet" href="assets/css/drachas-brand.css?v=1">
 <link rel="stylesheet" href="assets/css/customer-orders.css?v=2">
 <link rel="stylesheet" href="assets/css/landing.css?v=2">
+<link rel="stylesheet" href="assets/css/rankings.css?v=1">
 </head>
 <body>
 
@@ -249,6 +250,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
       <div class="quick-actions">
         <button class="btn btn-primary" onclick="showScreen('screen-new')">➕ Nuevo cliente</button>
         <a id="claimCodesLink" class="btn btn-outline" href="/admin-claims.html">🔐 Códigos de contraseña</a>
+        <a class="btn btn-outline" href="?staff=weekly-ranking" onclick="event.preventDefault();showWeeklyRanking()">🏆 Ranking semanal</a>
         <button id="staffDashboardButton" class="btn btn-ghost" onclick="showAdmin()">📊 Dashboard</button>
         <button class="btn btn-red" onclick="logout()">Cerrar sesión</button>
       </div>
@@ -329,7 +331,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
         <button id="client-rank-tab-nivel" class="tab" onclick="setClientRanking('nivel')">👑 Nivel</button>
       </div>
       <div class="card">
-        <div class="card-title">🏆 Ranking completo</div>
+        <div class="card-title">🏆 Salón de la Fama</div>
         <div id="clientRankingList"><div class="empty">Cargando ranking...</div></div>
       </div>
     </div>
@@ -416,7 +418,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
 </div>
 
 <div id="screen-ranking" class="screen">
-  <div class="header"><h1>🏆 Ranking Drachas</h1><p>Competencia universitaria UTP</p></div>
+  <div class="header"><h1>Salón de la Fama</h1><p>Las leyendas de Drachas se ganan su lugar.</p></div>
   <div class="wrap">
     <button class="back-btn" onclick="rankingBack()">← Volver</button>
     <div class="tabs">
@@ -426,7 +428,23 @@ button,input,select{font:inherit}button{border:0;cursor:pointer}input,select{bor
       <button id="tab-nivel" class="tab" onclick="loadRanking('nivel')">👑 Nivel</button>
       <button id="tab-canjes" class="tab" onclick="loadRanking('canjes')">🎁 Canjes</button>
     </div>
-    <div class="card"><div id="rankingList"><div class="empty">Cargando...</div></div></div>
+    <div class="card ranking-shell"><div id="rankingList" aria-live="polite"><div class="empty">Cargando...</div></div></div>
+  </div>
+</div>
+
+<div id="screen-weekly-ranking" class="screen">
+  <div class="header"><span class="weekly-private">🔒 Solo vendedores y administradores</span><h1>La semana tiene sus leyendas.</h1><p>Ranking semanal de compras de clientes</p></div>
+  <div class="wrap">
+    <div class="weekly-heading-actions"><button class="back-btn" onclick="goHome()">← Centro de ventas</button><button id="weeklyRefresh" class="btn btn-outline">Actualizar</button></div>
+    <div class="weekly-toolbar">
+      <label for="weeklyRankingHistory">Semana e historial</label>
+      <select id="weeklyRankingHistory" disabled><option>Cargando semanas…</option></select>
+      <div class="weekly-navigation"><button id="weeklyPrevious" class="btn btn-outline" disabled>← Anterior</button><button id="weeklyCurrent" class="btn btn-primary" disabled>Semana actual</button><button id="weeklyNext" class="btn btn-outline" disabled>Siguiente →</button></div>
+      <p id="weeklyRankingPeriod" class="weekly-period"></p>
+      <p id="weeklyRankingStatus" class="weekly-status" role="status"></p>
+    </div>
+    <div id="weeklyRankingList" aria-live="polite"></div>
+    <p class="weekly-note">De lunes a domingo, hora de Panamá. Se cuentan las compras acreditadas por el programa (hasta 3 al día por cliente), tanto presenciales como de pedidos completados. Los ajustes históricos sin fecha no suman aquí. Los empates se ordenan por puntos ganados y luego por un identificador estable. El historial permanece guardado al comenzar una nueva semana.</p>
   </div>
 </div>
 
@@ -552,6 +570,8 @@ let customerLoginController = null;
 let newClientData = null;
 let openedAsUser = false;
 let lastRankingEntry = 'role';
+let publicRankingGeneration = 0;
+let clientRankingGeneration = 0;
 let customerWantsOrder = false;
 let customerSelectedFlavor = null;
 let customerOrderQuantities = new Map();
@@ -592,24 +612,26 @@ function clearCustomerViewUrl() {
   ['profile','view','id','flavor','order'].forEach(key => url.searchParams.delete(key));
   if (url.href !== location.href) window.history.replaceState(null,'',url);
 }
-const staffViews = new Set(['home','dashboard','new','client','ranking']);
+const staffViews = new Set(['home','dashboard','new','client','ranking','weekly-ranking']);
 function updateStaffViewUrl(view, mode = 'push', clientId = '') {
   if (!requireAuth() || openedAsUser || !staffViews.has(view)) return;
   const url = new URL(location.href);
   ['profile','view','flavor','order'].forEach(key => url.searchParams.delete(key));
   url.searchParams.set('staff',view);
+  if (view !== 'weekly-ranking') url.searchParams.delete('week');
   if (view === 'client' && clientId) url.searchParams.set('id',clientId);
   else url.searchParams.delete('id');
   if (url.href !== location.href && mode !== 'none') window.history[mode === 'replace' ? 'replaceState' : 'pushState'](null,'',url);
 }
 function clearStaffViewUrl() {
   const url = new URL(location.href);
-  ['staff','id'].forEach(key => url.searchParams.delete(key));
+  ['staff','id','week'].forEach(key => url.searchParams.delete(key));
   if (url.href !== location.href) window.history.replaceState(null,'',url);
 }
 async function restoreStaffView(mode = 'replace') {
   const query = new URLSearchParams(location.search);
   const view = query.get('staff');
+  if (view === 'weekly-ranking') return showWeeklyRanking(mode, query.get('week') || '');
   if (view === 'dashboard') return showAdmin(mode);
   if (view === 'new') return showScreen('screen-new',mode);
   if (view === 'ranking') return showPublicRanking(mode);
@@ -654,6 +676,8 @@ window.addEventListener('load', async () => {
     }
     hideOverlays();
     await restoreStaffView();
+  } else if (customerLink.get('staff') === 'weekly-ranking') {
+    goToAdminLogin();
   } else {
     goToRoleScreen();
     loadHomeRanking();
@@ -880,6 +904,7 @@ function hideOverlays() {
 }
 
 function goToRoleScreen() {
+  window.DrachasWeeklyRanking?.clear();
   window.DonasCustomerOrders?.stop();
   window.DonasOrderFeedback?.reset();
   resetCustomerOrderForm();
@@ -943,6 +968,7 @@ async function checkLogin() {
 }
 
 function logout() {
+  window.DrachasWeeklyRanking?.clear();
   clientRequestVersion++;
   currentClient = null;
   sessionStorage.removeItem('donasAdminAccessToken');
@@ -957,6 +983,7 @@ function requireAuth() { return !!sessionStorage.getItem('donasAdminAccessToken'
 function tryShowAdmin() { requireAuth() ? showAdmin() : goToAdminLogin(); }
 
 function showScreen(id, historyMode = 'push') {
+  if (id !== 'screen-weekly-ranking') window.DrachasWeeklyRanking?.clear();
   if (id !== 'screen-client') window.DonasCustomerOrders?.stop();
   if (id !== 'screen-client') window.DonasTour?.stop();
   clientRequestVersion++;
@@ -967,7 +994,7 @@ function showScreen(id, historyMode = 'push') {
   }
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  const staffScreen = {'screen-home':'home','screen-admin':'dashboard','screen-new':'new','screen-ranking':'ranking'}[id];
+  const staffScreen = {'screen-home':'home','screen-admin':'dashboard','screen-new':'new','screen-ranking':'ranking','screen-weekly-ranking':'weekly-ranking'}[id];
   if (staffScreen) updateStaffViewUrl(staffScreen,historyMode);
 }
 
@@ -977,6 +1004,12 @@ function goHome(historyMode = 'push') {
   document.getElementById('claimCodesLink').hidden = !isAdmin;
   document.getElementById('staffDashboardButton').textContent = '📊 Dashboard';
   showScreen('screen-home',historyMode); loadHomeRanking();
+}
+function showWeeklyRanking(historyMode = 'push', week = '') {
+  if (!requireAuth()) { goToAdminLogin(); return; }
+  openedAsUser = false;
+  showScreen('screen-weekly-ranking',historyMode);
+  window.DrachasWeeklyRanking.load(week);
 }
 function rankingBack() { requireAuth() ? goHome() : goToRoleScreen(); }
 function clientGoBack() {
@@ -1468,16 +1501,19 @@ function setClientRanking(type) {
 }
 
 async function loadClientInlineRanking(type='racha') {
+  const version = ++clientRankingGeneration;
   const inlineEl = document.getElementById('clientInlineRanking');
   const listEl = document.getElementById('clientRankingList');
   try {
     if (inlineEl && type === 'racha') inlineEl.innerHTML = '<div class="empty">Cargando ranking...</div>';
     if (listEl) listEl.innerHTML = '<div class="empty">Cargando ranking...</div>';
     const data = await api('getRanking', { type, limit:10 });
-    const html = renderRankingItems(data.ranking || [], type, true);
+    if (version !== clientRankingGeneration) return;
+    const html = renderRankingItems(data.ranking || [], type, false);
     if (inlineEl && type === 'racha') inlineEl.innerHTML = html;
     if (listEl) listEl.innerHTML = html;
   } catch (err) {
+    if (version !== clientRankingGeneration) return;
     const msg = '<div class="empty">No se pudo cargar el ranking.</div>';
     if (inlineEl && type === 'racha') inlineEl.innerHTML = msg;
     if (listEl) listEl.innerHTML = msg;
@@ -1635,18 +1671,14 @@ Gracias por elegir Drachas.`
 
 function showPublicRanking(historyMode = 'push') { lastRankingEntry = requireAuth() ? 'home' : 'role'; hideOverlays(); showScreen('screen-ranking',historyMode); loadRanking('compras'); }
 async function loadRanking(type) {
+  const version = ++publicRankingGeneration;
   ['compras','puntos','racha','nivel','canjes'].forEach(t => document.getElementById('tab-'+t).classList.toggle('active', t===type));
   const el = document.getElementById('rankingList'); el.innerHTML = '<div class="empty">Cargando...</div>';
-  try { const data = await api('getRanking', { type, limit:50 }); el.innerHTML = renderRankingItems(data.ranking || [], type, false); }
-  catch (err) { el.innerHTML = '<div class="empty">No se pudo cargar.</div>'; }
+  try { const data = await api('getRanking', { type, limit:50 }); if (version !== publicRankingGeneration) return; el.innerHTML = renderRankingItems(data.ranking || [], type, false); }
+  catch (err) { if (version === publicRankingGeneration) el.innerHTML = '<div class="empty">No se pudo cargar.</div>'; }
 }
 function renderRankingItems(list, type, compact) {
-  if (!list.length) return '<div class="empty">Sin datos todavía</div>';
-  const medals = ['🥇','🥈','🥉']; const classes = ['gold','silver','bronze'];
-  return list.map((c,i) => {
-    const val = type==='compras'?`${c.totalPurchases||0} 🍩`:type==='puntos'?`${c.pointsTotal||0} pts`:type==='canjes'?`${c.redemptionsMade||c.rewardsEarned||0} 🎁`:type==='nivel'?`${c.levelEmoji||'🥉'} ${safe(c.levelName||'Bronce')}`:`${c.currentStreak||0} 🔥`;
-    return `<div class="rank-item" onclick="${requireAuth() && c.id?`openClient('${esc(c.id)}', false)`:''}"><div style="width:30px;text-align:center;font-size:20px;font-weight:900">${medals[i]||i+1}</div><div class="avatar ${classes[i]||''}">${initial(c.name)}</div><div class="grow"><div class="name">${safe(c.name)}</div><div class="sub">${c.levelEmoji||'🥉'} ${safe(c.levelName||'Bronce')} · ${c.totalPurchases||0} compras · ${c.pointsTotal||0} pts</div></div><div class="pill ${type==='racha'?'hot':''}">${val}</div></div>`;
-  }).join('');
+  return window.DrachasRanking.render(list, type, compact);
 }
 
 async function showAdmin(historyMode = 'push') {
@@ -1766,6 +1798,7 @@ function esc(s){ return String(s ?? '').replace(/\\/g,'\\\\').replace(/'/g,"\\'"
 </script>
 <script src="assets/js/admin-operations.js?v=1.5.1"></script>
 <script src="assets/js/daily-business.js?v=2.0.0"></script>
+<script src="assets/js/rankings.js?v=1"></script>
 
 <script src="assets/js/order-confirmation.js?v=drachas-1"></script>
 <script src="assets/js/customer-orders.js?v=drachas-1"></script>

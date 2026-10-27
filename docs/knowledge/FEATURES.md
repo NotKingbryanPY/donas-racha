@@ -31,3 +31,7 @@ Identidad C vectorial, favicon/social/PNG derivados. Activos destacados, contado
 ## Portada de recompensas — 18 octubre 2026
 
 Portada: titular y tarjeta real de puntos, seis sellos visuales sin regla ficticia de compras, enlaces a perfil/tienda y pedido existente, precio dinámico y responsive. El espacio beige se reemplazó por una imagen ilustrativa de chocolate/vainilla autorizada por el usuario, con etiquetas HTML y tres resoluciones WebP. No se presenta como fotografía de los productos reales. Logo y tutorial conservados.
+
+## Rankings — 27 octubre 2026
+
+Salón de la Fama público y en Perfil con top3 oro/plata/bronce y lista completa; conserva categorías y datos públicos sin IDs. Ranking semanal privado de clientes para SELLER/ADMIN, enlace propio, historial y navegación por lunes. Reinicio de intervalo cada lunes Panamá sin borrado ni cron. Solo compras acreditadas (máximo3/día), no donas/unidades ni ajustes antiguos sin fecha. [Reglas, capturas y activación](../RANKING_2026-10-27.md).

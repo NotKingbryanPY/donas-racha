@@ -27,3 +27,7 @@ La imagen generada es una propuesta, no captura del APK. Los resultados de rende
 2.1 abre Pedidos; conserva Hoy/Stock/Historial y paleta oscura/lavanda. Lista activa/recientes, detalle, acciones y diagnóstico real de avisos. Notification tap abre UUID propietario; reduced motion web/tutorial no se alteran. Renders nativos de Pedidos/detalle son fixtures ilustrativos, no pedidos/recepción física de producción.
 
 2.1.1 elimina el texto de comprobación persistente en orderFeedback. La tarjeta Avisos muestra el diagnóstico y un mensaje específico del WorkInfo manual; botón deshabilitado mientras espera/ejecuta y recuperado al finalizar. Se distingue pendiente de Android, falta de red, reintento y cancelación. Resultado de comprobación no equivale a recepción del aviso en pantalla. No añade animación, polling ni un servicio permanente.
+
+## Podio Hall of Fame — 27 octubre 2026
+
+Trofeos SVG propios, columnas y banda morada estáticos, sin loops ni confeti nuevo. Podio 2–1–3 con campeón elevado, responsive incluso320px; listas semánticas y botones nativos para perfiles privados autorizados, foco visible, labels/status y escape de nombres. Render público nunca contiene IDs de acceso. El panel semanal borra DOM y generaciones al salir/logout. [Capturas de fixtures](../RANKING_2026-10-27.md).

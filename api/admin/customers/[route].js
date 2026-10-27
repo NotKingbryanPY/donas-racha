@@ -5,6 +5,7 @@ const handlers = Object.freeze({
   catalog: require('../../_lib/admin_handlers/catalog'),
   inventory: require('../../_lib/admin_handlers/inventory'),
   daily: require('../../_lib/admin_handlers/daily'),
+  'weekly-ranking': require('../../_lib/admin_handlers/weekly-ranking'),
   'order-notifications': require('../../_lib/admin_handlers/order-notifications'),
   'claim-token': require('../../_lib/admin_handlers/claim-token')
 });

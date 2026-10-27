@@ -68,3 +68,7 @@ No requiere SQL ni recrear variables Firebase/Supabase. Maestro SVG assets/image
 ## Portada de recompensas — 18 octubre 2026
 
 La imagen de portada ya está en assets/images/drachas-doughnuts-natural-{480,960,1536}.webp. Para reemplazarla, seguir docs/DRACHAS_PORTADA_2026-10-18.md: mantener srcset/sizes, dimensiones3:2, texto alternativo, etiquetas y procedencia. No volver al placeholder. CSS landing?v=2 renueva caché. Revisar ambos productos completos en móvil/escritorio. No editar saldos ni fijar precio de portada: usa catálogo. Comprobaciones: landing-web.cjs, phase7-catalog.cjs, navegación y pedidos; proveedores de prueba simulados. Conservar customer view=shop y beginCustomerOrder.
+
+## Activar ranking semanal — 27 octubre 2026
+
+Seguir [entrega/activación](../RANKING_2026-10-27.md): preflight metadata, única migración202610270001, verificación de permisos y despliegue web/API existente. Sin cron ni nuevos secretos; no ejecutar seeds ni paquetes móviles. Enlace privado `/?staff=weekly-ranking`; fecha lunes en `week`. Falta SQL:503/WEEKLY_RANKING_SETUP_REQUIRED. Producción y recorrido con cuentas reales pendientes.

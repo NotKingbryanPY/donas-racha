@@ -1,10 +1,10 @@
 {
-  "source_commit": "c76135d6176657776894a2b246de1de8f5043049",
+  "source_commit": "184848c3768380abbc389f963e8b80045a21da86",
   "scope": "working tree; lexical extraction, production unverified",
   "schema_version": 1,
   "extractor_version": 4,
   "hash_algorithm": "sha256; text CRLF normalized to LF; vendor/binary literal",
-  "model_sha256": "f75c024bdc3e2001ac8db3002b92422dce1a3ba9929aaa74d0e488c6b54e6573",
+  "model_sha256": "c8a8c687d26052098ae6f388e9b473534a0868a6ecf64af5fd0ace9fdaccd03f",
   "files": [
     {
       "path": ".env.example",
@@ -76,8 +76,8 @@
     },
     {
       "path": ".github/workflows/mobile-contracts.yml",
-      "sha256": "33044319678e217bab3b55a5cd0c73bfba86bcca9c21db022727885decef212b",
-      "bytes": 4823,
+      "sha256": "6eba85ca5358bfd5756fd9bba097b7651f42236bd8111ea4eb17218bd11e9ce6",
+      "bytes": 5002,
       "symbols": [],
       "imports": [],
       "rpc_calls": [],
@@ -86,7 +86,7 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 113
+      "lines": 117
     },
     {
       "path": ".gitignore",
@@ -5306,6 +5306,42 @@
       "lines": 79
     },
     {
+      "path": "api/_lib/admin_handlers/weekly-ranking.js",
+      "sha256": "9fbfac3f1bd9d1129c9e4ca568ce3820ce0f8b8348a148850146a627699fdec4",
+      "bytes": 1184,
+      "symbols": [],
+      "imports": [
+        {
+          "target": "api/_lib/http.js",
+          "line": 1
+        },
+        {
+          "target": "api/_lib/auth.js",
+          "line": 2
+        },
+        {
+          "target": "api/_lib/rate-limit.js",
+          "line": 3
+        },
+        {
+          "target": "api/_lib/supabase.js",
+          "line": 4
+        }
+      ],
+      "rpc_calls": [
+        {
+          "name": "api_staff_weekly_ranking",
+          "line": 16
+        }
+      ],
+      "tables": [],
+      "sql_objects": [],
+      "sql_changes": [],
+      "endpoints": [],
+      "animations": [],
+      "lines": 24
+    },
+    {
       "path": "api/_lib/auth.js",
       "sha256": "eca01756cfb5dc1645937c75e653926a5e34b22a2ffe80f9b9013e8794d4eb58",
       "bytes": 2389,
@@ -5981,8 +6017,8 @@
     },
     {
       "path": "api/admin/customers/[route].js",
-      "sha256": "56c818bf18eddf73638034cf5250efdd9a6ced173cfca87a2de49afd54fda487",
-      "bytes": 989,
+      "sha256": "bff29f83d1119c15e988891354ead064fdbbb70caf8747048db24ee708aeb392",
+      "bytes": 1062,
       "symbols": [],
       "imports": [
         {
@@ -6006,16 +6042,20 @@
           "line": 7
         },
         {
-          "target": "api/_lib/admin_handlers/order-notifications.js",
+          "target": "api/_lib/admin_handlers/weekly-ranking.js",
           "line": 8
         },
         {
-          "target": "api/_lib/admin_handlers/claim-token.js",
+          "target": "api/_lib/admin_handlers/order-notifications.js",
           "line": 9
         },
         {
+          "target": "api/_lib/admin_handlers/claim-token.js",
+          "line": 10
+        },
+        {
           "target": "api/_lib/mobile-retired.js",
-          "line": 11
+          "line": 12
         }
       ],
       "rpc_calls": [],
@@ -6024,7 +6064,7 @@
       "sql_changes": [],
       "endpoints": [],
       "animations": [],
-      "lines": 21
+      "lines": 22
     },
     {
       "path": "api/admin/orders/[id]/payment.js",
@@ -7058,6 +7098,20 @@
       "endpoints": [],
       "animations": [],
       "lines": 35
+    },
+    {
+      "path": "assets/css/rankings.css",
+      "sha256": "383069c3ac84eb817ce28547e17e5de67277bbb94a0a3718174f805a95ed65ca",
+      "bytes": 7074,
+      "symbols": [],
+      "imports": [],
+      "rpc_calls": [],
+      "tables": [],
+      "sql_objects": [],
+      "sql_changes": [],
+      "endpoints": [],
+      "animations": [],
+      "lines": 9
     },
     {
       "path": "assets/css/redesign.css",
@@ -8105,6 +8159,46 @@
       "lines": 86
     },
     {
+      "path": "assets/js/rankings.js",
+      "sha256": "39c841319af4ba68ca06d94951108bfa9553aa0b7686e848e6db06969ef2a586",
+      "bytes": 8067,
+      "symbols": [
+        {
+          "name": "score",
+          "kind": "function",
+          "line": 8
+        },
+        {
+          "name": "render",
+          "kind": "function",
+          "line": 13
+        },
+        {
+          "name": "clear",
+          "kind": "function",
+          "line": 40
+        },
+        {
+          "name": "load",
+          "kind": "function",
+          "line": 49
+        }
+      ],
+      "imports": [],
+      "rpc_calls": [],
+      "tables": [],
+      "sql_objects": [],
+      "sql_changes": [],
+      "endpoints": [
+        {
+          "value": "/api/admin/customers/weekly-ranking",
+          "line": 58
+        }
+      ],
+      "animations": [],
+      "lines": 87
+    },
+    {
       "path": "assets/js/shared-inventory-refresh.js",
       "sha256": "b111ca8ef025bc1ebfae68d3b02212e3dc596dba032511437156dfffc59e8e4e",
       "bytes": 2487,
@@ -8626,6 +8720,20 @@
       "lines": 17
     },
     {
+      "path": "docs/RANKING_2026-10-27.md",
+      "sha256": "07615a53d0188ca4a4204bffc65a7168550be6ee6a77ae3e7952c3172d5c62ac",
+      "bytes": 4911,
+      "symbols": [],
+      "imports": [],
+      "rpc_calls": [],
+      "tables": [],
+      "sql_objects": [],
+      "sql_changes": [],
+      "endpoints": [],
+      "animations": [],
+      "lines": 34
+    },
+    {
       "path": "docs/RECUPERAR_SQL_02.md",
       "sha256": "85817fd0fe3ad997e6f62ba6e1c667e5638cdf30d7d3eddf04f58605f9427645",
       "bytes": 3949,
@@ -8900,6 +9008,32 @@
       "animations": []
     },
     {
+      "path": "docs/previews/ranking-hall-of-fame.png",
+      "sha256": "d63f989b147bb13259819557c4013f680a9ec55b27f6598dd8a2bd2c4600b3d2",
+      "bytes": 253612,
+      "symbols": [],
+      "imports": [],
+      "rpc_calls": [],
+      "tables": [],
+      "sql_objects": [],
+      "sql_changes": [],
+      "endpoints": [],
+      "animations": []
+    },
+    {
+      "path": "docs/previews/ranking-semanal.png",
+      "sha256": "3a7bb15daebc10ae662e6b6186e6d7728a23b006234ba78605b04003d05068bd",
+      "bytes": 298584,
+      "symbols": [],
+      "imports": [],
+      "rpc_calls": [],
+      "tables": [],
+      "sql_objects": [],
+      "sql_changes": [],
+      "endpoints": [],
+      "animations": []
+    },
+    {
       "path": "downloads/Donas-Control-2.0.0-oficial.apk.sha256",
       "sha256": "12efc831737faed54577260f197abae41e059ba458346a0448fffd153337aeb7",
       "bytes": 98,
@@ -9008,473 +9142,478 @@
     },
     {
       "path": "index.html",
-      "sha256": "fb8c2a553a31dfe53d242510a1065c78568b8ac081315d5621275f215a37bbfe",
-      "bytes": 130117,
+      "sha256": "b36aec7e9aea902381a0b7ea8a3f002223ae11dba2916e65af2848a589750bea",
+      "bytes": 132051,
       "symbols": [
         {
           "name": "resetCustomerOrderForm",
           "kind": "function",
-          "line": 563
+          "line": 583
         },
         {
           "name": "customerViewFromUrl",
           "kind": "function",
-          "line": 575
+          "line": 595
         },
         {
           "name": "updateCustomerViewUrl",
           "kind": "function",
-          "line": 579
+          "line": 599
         },
         {
           "name": "clearCustomerViewUrl",
           "kind": "function",
-          "line": 590
+          "line": 610
         },
         {
           "name": "updateStaffViewUrl",
           "kind": "function",
-          "line": 596
+          "line": 616
         },
         {
           "name": "clearStaffViewUrl",
           "kind": "function",
-          "line": 605
+          "line": 626
         },
         {
           "name": "restoreStaffView",
           "kind": "function",
-          "line": 610
+          "line": 631
         },
         {
           "name": "openInfoModal",
           "kind": "function",
-          "line": 683
+          "line": 707
         },
         {
           "name": "closeInfoModal",
           "kind": "function",
-          "line": 690
+          "line": 714
         },
         {
           "name": "api",
           "kind": "function",
-          "line": 697
+          "line": 721
         },
         {
           "name": "backendRequest",
           "kind": "function",
-          "line": 702
+          "line": 726
         },
         {
           "name": "vercelApi",
           "kind": "function",
-          "line": 731
+          "line": 755
         },
         {
           "name": "vercelPost",
           "kind": "function",
-          "line": 748
+          "line": 772
         },
         {
           "name": "progressiveRanking",
           "kind": "function",
-          "line": 759
+          "line": 783
         },
         {
           "name": "preloadSupabaseProducts",
           "kind": "function",
-          "line": 765
+          "line": 789
         },
         {
           "name": "flattenCatalog",
           "kind": "function",
-          "line": 775
+          "line": 799
         },
         {
           "name": "flavorTone",
           "kind": "function",
-          "line": 784
+          "line": 808
         },
         {
           "name": "formatMoney",
           "kind": "function",
-          "line": 792
+          "line": 816
         },
         {
           "name": "renderPublicCatalog",
           "kind": "function",
-          "line": 798
+          "line": 822
         },
         {
           "name": "beginCustomerOrder",
           "kind": "function",
-          "line": 830
+          "line": 854
         },
         {
           "name": "customerRequest",
           "kind": "function",
-          "line": 835
+          "line": 859
         },
         {
           "name": "apiPost",
           "kind": "function",
-          "line": 871
+          "line": 895
         },
         {
           "name": "hideOverlays",
           "kind": "function",
-          "line": 875
+          "line": 899
         },
         {
           "name": "goToRoleScreen",
           "kind": "function",
-          "line": 882
+          "line": 906
         },
         {
           "name": "goToAdminLogin",
           "kind": "function",
-          "line": 896
+          "line": 921
         },
         {
           "name": "goToUserLogin",
           "kind": "function",
-          "line": 905
+          "line": 930
         },
         {
           "name": "checkLogin",
           "kind": "function",
-          "line": 920
+          "line": 945
         },
         {
           "name": "logout",
           "kind": "function",
-          "line": 945
+          "line": 970
         },
         {
           "name": "requireAuth",
           "kind": "function",
-          "line": 956
+          "line": 982
         },
         {
           "name": "tryShowAdmin",
           "kind": "function",
-          "line": 957
+          "line": 983
         },
         {
           "name": "showScreen",
           "kind": "function",
-          "line": 959
+          "line": 985
         },
         {
           "name": "goHome",
           "kind": "function",
-          "line": 974
+          "line": 1001
+        },
+        {
+          "name": "showWeeklyRanking",
+          "kind": "function",
+          "line": 1008
         },
         {
           "name": "rankingBack",
           "kind": "function",
-          "line": 981
+          "line": 1014
         },
         {
           "name": "clientGoBack",
           "kind": "function",
-          "line": 982
+          "line": 1015
         },
         {
           "name": "loadHomeRanking",
           "kind": "function",
-          "line": 995
+          "line": 1028
         },
         {
           "name": "doSearch",
           "kind": "function",
-          "line": 1003
+          "line": 1036
         },
         {
           "name": "openUserById",
           "kind": "function",
-          "line": 1018
+          "line": 1051
         },
         {
           "name": "resetCustomerLoginState",
           "kind": "function",
-          "line": 1024
+          "line": 1057
         },
         {
           "name": "cancelCustomerLogin",
           "kind": "function",
-          "line": 1032
+          "line": 1065
         },
         {
           "name": "loginCustomerById",
           "kind": "function",
-          "line": 1037
+          "line": 1070
         },
         {
           "name": "openClient",
           "kind": "function",
-          "line": 1097
+          "line": 1130
         },
         {
           "name": "renderClient",
           "kind": "function",
-          "line": 1128
+          "line": 1161
         },
         {
           "name": "renderHitos",
           "kind": "function",
-          "line": 1200
+          "line": 1233
         },
         {
           "name": "renderBadges",
           "kind": "function",
-          "line": 1204
+          "line": 1237
         },
         {
           "name": "openProfilePanel",
           "kind": "function",
-          "line": 1209
+          "line": 1242
         },
         {
           "name": "nextRewardState",
           "kind": "function",
-          "line": 1214
+          "line": 1247
         },
         {
           "name": "renderProfilePreview",
           "kind": "function",
-          "line": 1219
+          "line": 1252
         },
         {
           "name": "renderHistory",
           "kind": "function",
-          "line": 1231
+          "line": 1264
         },
         {
           "name": "setClientTab",
           "kind": "function",
-          "line": 1238
+          "line": 1271
         },
         {
           "name": "loadClientDelivery",
           "kind": "function",
-          "line": 1265
+          "line": 1298
         },
         {
           "name": "clientOrderStatus",
           "kind": "function",
-          "line": 1294
+          "line": 1327
         },
         {
           "name": "renderClientFlavors",
           "kind": "function",
-          "line": 1298
+          "line": 1331
         },
         {
           "name": "changeClientOrderQty",
           "kind": "function",
-          "line": 1306
+          "line": 1339
         },
         {
           "name": "updateClientOrderTotal",
           "kind": "function",
-          "line": 1324
+          "line": 1357
         },
         {
           "name": "submitClientOrder",
           "kind": "function",
-          "line": 1331
+          "line": 1364
         },
         {
           "name": "saveCustomerPassword",
           "kind": "function",
-          "line": 1374
+          "line": 1407
         },
         {
           "name": "showCustomerActivation",
           "kind": "function",
-          "line": 1393
+          "line": 1426
         },
         {
           "name": "showCustomerRecovery",
           "kind": "function",
-          "line": 1400
+          "line": 1433
         },
         {
           "name": "enterAfterPasswordSetup",
           "kind": "function",
-          "line": 1407
+          "line": 1440
         },
         {
           "name": "completeCustomerActivation",
           "kind": "function",
-          "line": 1419
+          "line": 1452
         },
         {
           "name": "completeCustomerRecovery",
           "kind": "function",
-          "line": 1443
+          "line": 1476
         },
         {
           "name": "setClientRanking",
           "kind": "function",
-          "line": 1462
+          "line": 1495
         },
         {
           "name": "loadClientInlineRanking",
           "kind": "function",
-          "line": 1470
+          "line": 1503
         },
         {
           "name": "renderPointRules",
           "kind": "function",
-          "line": 1486
+          "line": 1522
         },
         {
           "name": "renderShop",
           "kind": "function",
-          "line": 1492
+          "line": 1528
         },
         {
           "name": "renderRedemptions",
           "kind": "function",
-          "line": 1501
+          "line": 1537
         },
         {
           "name": "redeemItem",
           "kind": "function",
-          "line": 1508
+          "line": 1544
         },
         {
           "name": "registerPurchase",
           "kind": "function",
-          "line": 1528
+          "line": 1564
         },
         {
           "name": "createClient",
           "kind": "function",
-          "line": 1564
+          "line": 1600
         },
         {
           "name": "shareNewUsername",
           "kind": "function",
-          "line": 1587
+          "line": 1623
         },
         {
           "name": "sendNewWA",
           "kind": "function",
-          "line": 1597
+          "line": 1633
         },
         {
           "name": "showPublicRanking",
           "kind": "function",
-          "line": 1636
+          "line": 1672
         },
         {
           "name": "loadRanking",
           "kind": "function",
-          "line": 1637
+          "line": 1673
         },
         {
           "name": "renderRankingItems",
           "kind": "function",
-          "line": 1643
+          "line": 1680
         },
         {
           "name": "showAdmin",
           "kind": "function",
-          "line": 1652
+          "line": 1684
         },
         {
           "name": "loadAdminDashboard",
           "kind": "function",
-          "line": 1664
+          "line": 1696
         },
         {
           "name": "renderAdminStats",
           "kind": "function",
-          "line": 1682
+          "line": 1714
         },
         {
           "name": "renderAdminConfig",
           "kind": "function",
-          "line": 1694
+          "line": 1726
         },
         {
           "name": "renderAdminRanking",
           "kind": "function",
-          "line": 1703
+          "line": 1735
         },
         {
           "name": "renderAdminClients",
           "kind": "function",
-          "line": 1707
+          "line": 1739
         },
         {
           "name": "filterAdminClients",
           "kind": "function",
-          "line": 1716
+          "line": 1748
         },
         {
           "name": "loadAdminStats",
           "kind": "function",
-          "line": 1717
+          "line": 1749
         },
         {
           "name": "loadConfig",
           "kind": "function",
-          "line": 1731
+          "line": 1763
         },
         {
           "name": "saveQuickConfig",
           "kind": "function",
-          "line": 1734
+          "line": 1766
         },
         {
           "name": "loadAdminRanking",
           "kind": "function",
-          "line": 1746
+          "line": 1778
         },
         {
           "name": "loadAdminClients",
           "kind": "function",
-          "line": 1751
+          "line": 1783
         },
         {
           "name": "showToast",
           "kind": "function",
-          "line": 1759
+          "line": 1791
         },
         {
           "name": "confettiBurst",
           "kind": "function",
-          "line": 1760
+          "line": 1792
         },
         {
           "name": "fmtDate",
           "kind": "function",
-          "line": 1761
+          "line": 1793
         },
         {
           "name": "fmtDateTime",
           "kind": "function",
-          "line": 1762
+          "line": 1794
         },
         {
           "name": "initial",
           "kind": "function",
-          "line": 1763
+          "line": 1795
         },
         {
           "name": "safe",
           "kind": "function",
-          "line": 1764
+          "line": 1796
         },
         {
           "name": "esc",
           "kind": "function",
-          "line": 1765
+          "line": 1797
         }
       ],
       "imports": [],
@@ -9485,59 +9624,59 @@
       "endpoints": [
         {
           "value": "/api/auth/session",
-          "line": 648
+          "line": 670
         },
         {
           "value": "/api/backend",
-          "line": 704
+          "line": 728
         },
         {
           "value": "/api/auth/session",
-          "line": 713
+          "line": 737
         },
         {
           "value": "/api/ranking",
-          "line": 761
+          "line": 785
         },
         {
           "value": "/api/products",
-          "line": 767
+          "line": 791
         },
         {
           "value": "/api/auth/session",
-          "line": 927
+          "line": 952
         },
         {
           "value": "/api/customer/session",
-          "line": 1049
+          "line": 1082
         },
         {
           "value": "/api/backend?",
-          "line": 1058
+          "line": 1091
         },
         {
           "value": "/api/products",
-          "line": 1273
+          "line": 1306
         },
         {
           "value": "/api/products",
-          "line": 1273
+          "line": 1306
         },
         {
           "value": "/api/orders",
-          "line": 1352
+          "line": 1385
         },
         {
           "value": "/api/customer/change-password",
-          "line": 1383
+          "line": 1416
         },
         {
           "value": "/api/customer/activation",
-          "line": 1429
+          "line": 1462
         },
         {
           "value": "/api/customer/password",
-          "line": 1454
+          "line": 1487
         }
       ],
       "animations": [
@@ -9546,7 +9685,7 @@
           "line": 72
         }
       ],
-      "lines": 1780
+      "lines": 1813
     },
     {
       "path": "ios/.gitignore",
@@ -16206,6 +16345,43 @@
       "lines": 161
     },
     {
+      "path": "supabase/migrations/202610270001_weekly_ranking.sql",
+      "sha256": "2448663812ca902f11fa69115231b2755671b9f5b0d8342313454a9c9e9053f0",
+      "bytes": 2673,
+      "symbols": [
+        {
+          "name": "api_staff_weekly_ranking",
+          "kind": "sql_function",
+          "line": 11
+        }
+      ],
+      "imports": [],
+      "rpc_calls": [],
+      "tables": [],
+      "sql_objects": [
+        {
+          "kind": "index",
+          "name": "loyalty_transactions_weekly_purchases_idx",
+          "line": 7
+        }
+      ],
+      "sql_changes": [
+        {
+          "kind": "revoke all",
+          "target": "on",
+          "line": 55
+        },
+        {
+          "kind": "grant execute",
+          "target": "on",
+          "line": 56
+        }
+      ],
+      "endpoints": [],
+      "animations": [],
+      "lines": 58
+    },
+    {
       "path": "supabase/rollback/202609200001_phase2_down.sql",
       "sha256": "665e303129eb0e458a86901ba9360291bbec0863dd5572345c3a0c0333af712b",
       "bytes": 1195,
@@ -18505,6 +18681,34 @@
       "lines": 20
     },
     {
+      "path": "supabase/sql-editor/weekly-ranking/00_preflight.sql",
+      "sha256": "875a8fa62cdf11944ca48ef6ec8d21f17ecd3e31a6b1f77e34554db5ad406cb9",
+      "bytes": 695,
+      "symbols": [],
+      "imports": [],
+      "rpc_calls": [],
+      "tables": [],
+      "sql_objects": [],
+      "sql_changes": [],
+      "endpoints": [],
+      "animations": [],
+      "lines": 10
+    },
+    {
+      "path": "supabase/sql-editor/weekly-ranking/02_verify.sql",
+      "sha256": "fd17aa07e1477fca069b6a7a8d1b2f543388f795991bd71bfbc47c419c40b302",
+      "bytes": 853,
+      "symbols": [],
+      "imports": [],
+      "rpc_calls": [],
+      "tables": [],
+      "sql_objects": [],
+      "sql_changes": [],
+      "endpoints": [],
+      "animations": [],
+      "lines": 11
+    },
+    {
       "path": "tests/admin-inventory-web.cjs",
       "sha256": "0d572411bbbc1c778ff5bc2ecd979b8630885c9a422b17b5539a5c335b720034",
       "bytes": 7970,
@@ -20324,6 +20528,33 @@
       "lines": 52
     },
     {
+      "path": "tests/rankings-web.cjs",
+      "sha256": "c7ae4a472dc0e3322d284973b08d8cb683b8b71281bde069fa7a73fec02ee579",
+      "bytes": 5952,
+      "symbols": [],
+      "imports": [],
+      "rpc_calls": [],
+      "tables": [],
+      "sql_objects": [],
+      "sql_changes": [],
+      "endpoints": [
+        {
+          "value": "/api/auth/session",
+          "line": 18
+        },
+        {
+          "value": "/api/admin/customers/weekly-ranking",
+          "line": 19
+        },
+        {
+          "value": "/api/ranking",
+          "line": 25
+        }
+      ],
+      "animations": [],
+      "lines": 70
+    },
+    {
       "path": "tests/redemption-api.cjs",
       "sha256": "ed22df099f5a69aa1c5a70dab2cacbaf47deccacc102edefd4e5cb18b775305f",
       "bytes": 3070,
@@ -20369,8 +20600,8 @@
     },
     {
       "path": "tests/regression.cjs",
-      "sha256": "5dfe05ed21eda0c311a6b75b89ed043083b93e488ddd0f515af4296913ef19eb",
-      "bytes": 22096,
+      "sha256": "a0aec71a5cb7b78dc06b20b72668bed8c0c2b98c46bc82da6f782e628a65921a",
+      "bytes": 22095,
       "symbols": [],
       "imports": [],
       "rpc_calls": [],
@@ -20858,6 +21089,44 @@
       "endpoints": [],
       "animations": [],
       "lines": 11
+    },
+    {
+      "path": "tests/weekly-ranking-api.cjs",
+      "sha256": "980d81333dd87b5c7a9cda30a1f721e66d716e74fa957a231d9f22323be4894d",
+      "bytes": 2521,
+      "symbols": [],
+      "imports": [
+        {
+          "target": "api/admin/customers/[route].js",
+          "line": 19
+        }
+      ],
+      "rpc_calls": [],
+      "tables": [],
+      "sql_objects": [],
+      "sql_changes": [],
+      "endpoints": [
+        {
+          "value": "/api/admin/customers/weekly-ranking",
+          "line": 22
+        }
+      ],
+      "animations": [],
+      "lines": 37
+    },
+    {
+      "path": "tests/weekly-ranking-postgres.mjs",
+      "sha256": "fe9ffe95e126ca68992b0148b86fa829f1a6e76fcd9f52adcd6b71a2e0675800",
+      "bytes": 5801,
+      "symbols": [],
+      "imports": [],
+      "rpc_calls": [],
+      "tables": [],
+      "sql_objects": [],
+      "sql_changes": [],
+      "endpoints": [],
+      "animations": [],
+      "lines": 69
     }
   ]
 }
